@@ -437,6 +437,7 @@ int srcml_archive_set_tabstop(struct srcml_archive* archive, size_t tabstop) {
  * @param language a language
  *
  * Set the given extension to be associate with the given language.
+ * The language NONE disables the extension.
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
@@ -1169,6 +1170,13 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
     std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding));
 
     // buffer stuff
+    // the buffer members and xmlParserInputBufferGrow() are deprecated in libxml2 2.14+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable: 4996)
+#endif
     if (encoding != XML_CHAR_ENCODING_NONE && input && input->encoder) {
 
 #ifdef LIBXML2_NEW_BUFFER
@@ -1189,6 +1197,10 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
 
         xmlParserInputBufferGrow(input.get(), buffer_size > 4096 ? (int)buffer_size : 4096);
     }
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
+#pragma GCC diagnostic pop
 
     return srcml_archive_read_open_internal(archive, std::move(input));
 }
@@ -1208,7 +1220,18 @@ int srcml_archive_read_open_FILE(struct srcml_archive* archive, FILE* srcml_file
     if (archive == nullptr || srcml_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    // xmlParserInputBufferCreateFile() is deprecated in libxml2 2.14+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable: 4996)
+#endif
     std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE));
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
+#pragma GCC diagnostic pop
 
     return srcml_archive_read_open_internal(archive, std::move(input));
 }
@@ -1428,7 +1451,11 @@ void srcml_archive_close(struct srcml_archive* archive) {
     if (archive->buffer && archive->size) {
 
         // record the size before the buffer is detached
+        // xmlBuffer::use is deprecated in libxml2 2.14+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         *archive->size = (size_t) archive->xbuffer->use;
+#pragma GCC diagnostic pop
         (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
     }
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Objective-C" url="call" filename="keyword_call_m">
+
+<!-- Invalid syntax on its own, but possible in srcQL -->
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="Objective-C">
+<expr><encode>@encode<argument_list>()</argument_list></encode></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="Objective-C">
+<expr><selector>@selector<argument_list>()</argument_list></selector></expr>
+</unit>
+
+</unit>

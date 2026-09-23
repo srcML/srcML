@@ -29,6 +29,18 @@ add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/sr
 
 find_program(PANDOC_EXE REQUIRED NAMES pandoc pandoc.exe)
 
+# Supported languages from libsrcml, e.g., "C, C++, C\#, and Java"
+file(STRINGS ${CMAKE_SOURCE_DIR}/src/libsrcml/libsrcml.cpp LANGS_LINE REGEX "langs\\[\\] = ")
+string(REGEX MATCHALL "\"[^\"]+\"" LANGS "${LANGS_LINE}")
+if(NOT LANGS)
+    message(FATAL_ERROR "Unable to find the language list langs[] in src/libsrcml/libsrcml.cpp")
+endif()
+list(TRANSFORM LANGS REPLACE "\"" "")
+list(TRANSFORM LANGS REPLACE "#" "\\\\#")
+list(POP_BACK LANGS LAST_LANG)
+list(JOIN LANGS ", " LANGUAGE_LIST)
+set(LANGUAGE_LIST "${LANGUAGE_LIST}, and ${LAST_LANG}")
+
 # Configure file properties used to configure the file srcml.cfg
 set(CLIENT_VERSION "1.1.0")
 set(HELP_FLAG_LONG "help")
@@ -41,6 +53,10 @@ set(QUIET_FLAG_LONG "quiet")
 set(QUIET_FLAG_SHORT "q")
 set(OUTPUT_FLAG_LONG "output")
 set(OUTPUT_FLAG_SHORT "o")
+set(FROM_CLIPBOARD_FLAG_LONG "from-clipboard")
+set(FROM_CLIPBOARD_FLAG_SHORT "p")
+set(TO_CLIPBOARD_FLAG_LONG "to-clipboard")
+set(TO_CLIPBOARD_FLAG_SHORT "c")
 set(JOBS_FLAG_LONG "jobs")
 set(JOBS_FLAG_SHORT "j")
 

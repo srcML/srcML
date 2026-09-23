@@ -18,8 +18,11 @@
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
 #include <srcml_utilities.hpp>
+#include <clip.h>
 #include <cassert>
+#include <cstdlib>
 #include <inttypes.h>
+#include <string>
 #include <string_view>
 
 using namespace ::std::literals::string_view_literals;
@@ -214,6 +217,62 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
 void create_src(const srcml_request_t& srcml_request,
                 const srcml_input_t& input_sources,
                 const srcml_output_dest& destination) {
+
+    if (destination.protocol == "clipboard"sv) {
+
+        // srcml->src collected into the system clipboard
+        std::string text;
+        for (auto& input_source : input_sources) {
+
+            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
+
+            // move to the requested unit
+            for (int i = 1; i < srcml_request.unit; ++i)
+                srcml_archive_skip_unit(arch.get());
+
+            int count = 0;
+            while (true) {
+                std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(arch.get()));
+                if (!unit)
+                    break;
+
+                if (srcml_request.src_encoding)
+                    srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->data());
+                if (srcml_request.eol)
+                    srcml_unit_set_eol(unit.get(), *srcml_request.eol);
+
+                // separate units by a newline
+                if (count)
+                    text += '\n';
+
+                char* buffer = nullptr;
+                size_t size = 0;
+                if (srcml_unit_unparse_memory(unit.get(), &buffer, &size) == SRCML_STATUS_OK && buffer) {
+                    text.append(buffer, size);
+                    free(buffer);
+                }
+                ++count;
+
+                // only the requested single unit
+                if (srcml_request.unit)
+                    break;
+            }
+        }
+
+        // clip uses X11 on Linux; with no display server it cannot place data on
+        // a clipboard, yet clip::set_text() still reports success, so detect the
+        // headless case up front (clip connects via xcb, which needs DISPLAY)
+        if (
+#if !defined(_WIN32) && !defined(__APPLE__)
+            !getenv("DISPLAY") ||
+#endif
+            !clip::set_text(text)) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to write text to the clipboard");
+            exit(1);
+        }
+
+        return;
+    }
 
     if (option(SRCML_COMMAND_TO_DIRECTORY)) {
 

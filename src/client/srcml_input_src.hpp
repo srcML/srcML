@@ -88,6 +88,10 @@ public:
     archive_entry* pentry = nullptr;
     std::string_view buffer;
     bool issrcML = false;
+
+    // in-memory input (e.g., clipboard) backing store, kept alive for the
+    // lifetime of an archive_read_open_memory() reading from it
+    std::shared_ptr<std::string> memory;
 };
 
 struct srcMLReadArchiveError {

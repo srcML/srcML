@@ -156,9 +156,6 @@ capture_output
 uncapture_output
 ( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/special_characters_utf8.cpp) > sub/special_characters_utf16.cpp
 ( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/chinese_characters_utf8.cpp) > sub/chinese_characters_utf16.cpp
-
-special_characters_utf16_actual=$(< sub/special_characters_utf16.cpp)
-chinese_characters_utf16_actual=$(< sub/chinese_characters_utf16.cpp)
 capture_output
 
 # create input srcML files from UTF16 encoding. use srcML files to output UTF16 files
@@ -203,6 +200,21 @@ check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.c
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp --output-src -o sub/chinese_characters_utf16-srcml.cpp
 check_file sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
 
+# a multibyte sequence split across the end of a read of the input is not an error,
+# as the rest of it is in the data read next
+# "// " and 508 more characters put the four bytes of the UTF-16LE surrogate pair
+# at 1022 through 1025, so that it is split across the 1024 byte read
+padding=$(printf 'x%.0s' {1..508})
+
+uncapture_output
+createfile sub/split.cpp "// $padding\xf0\x9f\x98\x80 tail\na;\n"
+iconv -f UTF-8 -t UTF-16LE sub/split.cpp > sub/split_UTF-16LE.cpp
+capture_output
+
+srcml --src-encoding "UTF-16LE" sub/split_UTF-16LE.cpp -o sub/split.xml
+srcml sub/split.xml --output-src --src-encoding "UTF-16LE" -o sub/split_src.cpp
+check_file sub/split_src.cpp sub/split_UTF-16LE.cpp
+
 # Not supported on all platforms
 if [[ "$OSTYPE" == 'msys' ]]; then
     exit 0
@@ -210,6 +222,21 @@ fi
 
 srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
 check "$foutput"
+
+# a multibyte sequence split across the end of a read of the input is not an error,
+# as the rest of it is in the data read next
+# "// " and 508 more characters put the four bytes of the UTF-16LE surrogate pair
+# at 1022 through 1025, so that it is split across the 1024 byte read
+padding=$(printf 'x%.0s' {1..508})
+
+uncapture_output
+createfile sub/split.cpp "// $padding\xf0\x9f\x98\x80 tail\na;\n"
+iconv -f UTF-8 -t UTF-16LE sub/split.cpp > sub/split_UTF-16LE.cpp
+capture_output
+
+srcml --src-encoding "UTF-16LE" sub/split_UTF-16LE.cpp -o sub/split.xml
+srcml sub/split.xml --output-src --src-encoding "UTF-16LE" -o sub/split_src.cpp
+check_file sub/split_src.cpp sub/split_UTF-16LE.cpp
 
 # Not supported on all platforms
 if [[ "$OSTYPE" != "darwin"*  ]]; then

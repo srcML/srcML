@@ -806,4 +806,36 @@ Func {a}
 <expr_stmt><expr><literal type="string">rB"a"</literal></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">fr"a"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">fR"a"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">Fr"a"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">FR"a"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">fr'a'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">fR'a'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">Fr'a'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">FR'a'</literal></expr></expr_stmt>
+</unit>
+
 </unit>

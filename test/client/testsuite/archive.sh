@@ -38,8 +38,22 @@ defineXML nestedfile <<- 'STDOUT'
 	</unit>
 STDOUT
 
+defineXML nestedfilemultilanguage <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="REVISION" language="C++" filename="sub/b.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+
+	<unit revision="REVISION" language="Python" filename="sub/c.py" hash="9db33fa0cd63d5bcc994a2d10aee7aa1c6cf5234"><expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt></unit>
+
+	</unit>
+STDOUT
+
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
+createfile sub/c.py "c = 1"
 
 # test that two files will output in an archive by default
 srcml sub/a.cpp sub/b.cpp
@@ -62,6 +76,26 @@ check sub/ab.cpp.xml "$nestedfile"
 
 srcml -o sub/ab.cpp.xml sub/a.cpp sub/b.cpp
 check sub/ab.cpp.xml "$nestedfile"
+
+# Test archive with multiple languages
+
+srcml sub/a.cpp sub/b.cpp sub/c.py
+check "$nestedfilemultilanguage"
+
+srcml sub/a.cpp sub/b.cpp sub/c.py
+check "$nestedfilemultilanguage"
+
+srcml sub/a.cpp sub/b.cpp sub/c.py -o sub/abc.xml
+check sub/abc.xml "$nestedfilemultilanguage"
+
+srcml sub/a.cpp sub/b.cpp sub/c.py -o sub/abc.xml
+check sub/abc.xml "$nestedfilemultilanguage"
+
+srcml -o sub/abc.xml sub/a.cpp sub/b.cpp sub/c.py
+check sub/abc.xml "$nestedfilemultilanguage"
+
+srcml -o sub/abc.xml sub/a.cpp sub/b.cpp sub/c.py
+check sub/abc.xml "$nestedfilemultilanguage"
 
 # test explicit archive flag
 srcml sub/a.cpp --archive

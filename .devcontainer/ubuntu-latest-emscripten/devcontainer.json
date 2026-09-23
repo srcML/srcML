@@ -1,0 +1,15 @@
+{
+	"name": "srcml-ubuntu-latest-emscripten",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"workspaceFolder": "/workspaces/srcML",
+	"containerEnv": {
+		"EMSDK": "/opt/emsdk",
+		"VCPKG_ROOT": "/opt/vcpkg"
+	}
+}

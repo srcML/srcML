@@ -31,7 +31,9 @@ ENV TZ=US/Michigan
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Update and install dependencies
-RUN zypper --non-interactive install --no-recommends \
+RUN zypper --non-interactive refresh \
+    && zypper --non-interactive update \
+    && zypper --non-interactive install --no-recommends --allow-downgrade \
     bzip2 \
     ccache \
     curl \
@@ -41,6 +43,7 @@ RUN zypper --non-interactive install --no-recommends \
     libarchive-devel \
     libcurl-devel \
     libopenssl-devel \
+    libxcb-devel \
     libxml2-devel \
     libxslt-devel \
     make \

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="string">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">"a"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">"ab"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">"a\"b"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">"a'b'"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">"a\
+b"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'a'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\\'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\n'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\t'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\r'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\b'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\%'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\f'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\0'</literal> <literal type="string">'\1'</literal> <literal type="string">'\2'</literal> <literal type="string">'\3'</literal> <literal type="string">'\4'</literal> <literal type="string">'\5'</literal> <literal type="string">'\6'</literal> <literal type="string">'\7'</literal> <literal type="string">'\8'</literal> <literal type="string">'\9'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\14'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\?'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="string">'\''</literal></expr></expr_stmt>
+</unit>
+
+</unit>

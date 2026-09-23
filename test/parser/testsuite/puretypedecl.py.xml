@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="puretypedecl">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>bool</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>char</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>float</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>double</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <literal type="null">None</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>wchar_t</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>char</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>signed</name></expr>, <expr><name>char</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>signed</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>short</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>short</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>signed</name></expr>, <expr><name>short</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>long</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>signed</name></expr>, <expr><name>long</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>long</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>long</name></expr>, <expr><name>double</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <name>__int64</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>__int64</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>long</name></expr>, <expr><name>long</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>long</name></expr>, <expr><name>long</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>v</name> <operator>=</operator> <tuple><expr><name>signed</name></expr>, <expr><name>long</name></expr>, <expr><name>long</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+</unit>

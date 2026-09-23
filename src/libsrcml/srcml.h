@@ -66,7 +66,7 @@ typedef SSIZE_T ssize_t;
 /** String containing markup version */
 #define SRCML_VERSION_STRING "1.0.0"
 /** Number representing libsrcml version */
-#define SRCML_LIBSRCML_VERSION_NUMBER 100000
+#define SRCML_LIBSRCML_VERSION_NUMBER 100100
 /** String containing libsrcml version */
 #define SRCML_LIBSRCML_VERSION_STRING "1.1.0"
 /**@}*/
@@ -424,6 +424,7 @@ LIBSRCML_DECL int srcml_set_tabstop(size_t tabstop);
 
 /**
  * Associate an extension with a supported source-code language on the srcML
+ * The language NONE disables the extension.
  * @param extension A source file extension
  * @param language A supported source code language
  * @return SRCML_STATUS_OK on success
@@ -923,6 +924,7 @@ LIBSRCML_DECL int srcml_archive_set_tabstop(struct srcml_archive* archive, size_
 
 /**
  * Set an extension to be associated with a given source-code language
+ * The language NONE disables the extension.
  * @param archive A srcml_archive that associates the given extension with a language
  * @param extension A file extension
  * @param language A supported source-code language
@@ -1534,6 +1536,12 @@ LIBSRCML_DECL int srcml_unit_register_namespace(struct srcml_unit* unit, const c
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_unit_add_attribute(struct srcml_unit* unit, const char* uri, const char* name, const char* value);
+
+/**
+ * @param unit A srcml_unit
+ * @return The archive the unit belong to on success, or NULL
+ */
+LIBSRCML_DECL struct srcml_archive* srcml_unit_get_archive(const struct srcml_unit* unit);
 
 /**
  * Number of custom attributes

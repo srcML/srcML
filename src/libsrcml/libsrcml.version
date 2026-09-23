@@ -179,7 +179,6 @@ LIBSRCML_1.1 {
     global:
         srcml_unit_get_src;
         srcml_unit_get_src_size;
-        srcml_archive_register_namespace;
         srcml_unit_get_namespace_uri;
         srcml_unit_get_namespace_prefix;
         srcml_unit_get_namespace_size;
@@ -201,11 +200,12 @@ LIBSRCML_1.1 {
         srcml_unit_get_attribute_prefix;
         srcml_unit_get_attribute_name;
         srcml_unit_get_attribute_value;
-        srcml_append_transform_xpath;
-        srcml_append_transform_xpath_element;
-        srcml_append_transform_xpath_attribute;
-        srcml_append_transform_srcql_attribute;
         srcml_append_transform_srcql;
         srcml_append_transform_srcql_element;
         srcml_append_transform_srcql_attribute;
 } LIBSRCML_1.0;
+
+LIBSRCML_1.2 {
+    global:
+        srcml_unit_get_archive;
+} LIBSRCML_1.1;

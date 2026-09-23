@@ -39,4 +39,75 @@
 </block_content></block></else></try>
 </unit>
 
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <try>try<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block>    <catch>except <expr><name>ZeroDivisionError</name></expr><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'error'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></catch>    <else>else<block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'try_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></try></block_content></block></if></if_stmt><expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'after'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <for>for <control><expr><name>i</name></expr> <range>in <expr><name>arr</name></expr></range></control><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block>    <else>else<block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'for_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></for></block_content></block></if></if_stmt><expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'after'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <while>while <condition><expr><name>x</name></expr></condition><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block>    <else>else<block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'while_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></while></block_content></block></if></if_stmt><expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'after'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <for>for <control><expr><name>i</name></expr> <range>in <expr><name>arr</name></expr></range></control><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block>    <else>else<block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'for_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></for></block_content></block><catch>except <expr><name>ZeroDivisionError</name></expr><block>:<block_content>
+    <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'error'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><name>arr</name></expr></range></control><block>:<block_content>
+    <while>while <condition><expr><name>x</name></expr></condition><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block>    <else>else<block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'while_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></while></block_content></block></for><expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'after'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <try>try<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block>    <catch>except <expr><name>ZeroDivisionError</name></expr><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'error'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try></block_content></block></if><else>else<block>:<block_content>
+    <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'if_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></if_stmt><expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'after'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><name>arr</name></expr></range></control><block>:<block_content>
+    <try>try<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block>    <catch>except <expr><name>ZeroDivisionError</name></expr><block>:<block_content>
+        <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'error'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try></block_content></block><else>else<block>:<block_content>
+    <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'for_else'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></else></for><expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><literal type="string">'after'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 </unit>

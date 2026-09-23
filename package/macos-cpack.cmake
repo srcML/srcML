@@ -38,7 +38,7 @@ set(CPACK_PACKAGE_FILE_NAME "${BASE_SRCML_FILE_NAME}")
 # Targets for installing generated packages
 add_custom_target(install_package
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
-    COMMAND installer -dumplog -pkg ${BASE_SRCML_FILE_NAME}.pkg -target /
+    COMMAND sudo installer -dumplog -pkg ${BASE_SRCML_FILE_NAME}.pkg -target /
 )
 add_custom_target(install_archive
     WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}

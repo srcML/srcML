@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="catch">
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block><catch>except <expr><name>a</name></expr><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block><catch>except <expr><name>a</name></expr> <alias>as <expr><name>b</name></expr></alias><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block><catch>except <expr><tuple>(<expr><name>a</name></expr>, <expr><name>b</name></expr>)</tuple></expr> <alias>as <expr><name>c</name></expr></alias><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block><catch>except<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+</unit>

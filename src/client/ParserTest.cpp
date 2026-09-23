@@ -28,16 +28,20 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     if (request->url)
         url = *request->url;
 
-    if (previous_filename.empty() || (request->parsertest_filename != previous_filename)) {
+    const char* language = srcml_unit_get_language(unit);
+    if (!language) 
+        return;
 
+    bool new_archive = previous_filename.empty() || (request->parsertest_filename != previous_filename);
+
+    if (new_archive) {
         previous_filename = request->parsertest_filename;
         count = 0;
+        unit_language.clear();
+    }
 
-        if (!srcml_unit_get_language(unit))
-            return;
-
-        unit_language = srcml_unit_get_language(unit);
-
+    if (unit_language != language) {
+        unit_language = language;
         std::ostringstream sout;
         sout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language;
         sout << std::setw(FIELD_WIDTH_URL) << std::left << url;
@@ -100,14 +104,14 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             std::count(ssout.begin(), ssout.end(), '\n') > CUTOFF) {
 
             // find where the strings are different
-            auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin());
+            auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin(), ssout.end());
 
             // backup to right after the previous newline
-            while (off.first != sxml.begin() && *off.first != '\n') {
+            while (off.first != sxml.begin() && (off.first == sxml.end() || *off.first != '\n')) {
                 off.first = std::prev(off.first);
                 off.second = std::prev(off.second);
             }
-            if (*off.first == '\n') {
+            if (off.first != sxml.end() && *off.first == '\n') {
                 off.first = std::next(off.first);
                 off.second = std::next(off.second);
             }
@@ -117,21 +121,21 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             ssout.erase(ssout.begin(), off.second);
 
             // find where the strings are different at the end
-            const auto endoff = std::mismatch(sxml.rbegin(), sxml.rend(), ssout.rbegin());
+            const auto endoff = std::mismatch(sxml.rbegin(), sxml.rend(), ssout.rbegin(), ssout.rend());
 
-            // backup to right before the previous newline
-            while (off.first != sxml.begin() && *off.first != '\n') {
-                off.first = std::prev(off.first);
-                off.second = std::prev(off.second);
+            auto sxml_cut  = endoff.first.base();
+            auto ssout_cut = endoff.second.base();
+            while (sxml_cut != sxml.end() && *sxml_cut != '\n') {
+                sxml_cut  = std::next(sxml_cut);
+                ssout_cut = std::next(ssout_cut);
             }
-            if (*off.first == '\n') {
-                off.first = std::next(off.first);
-                off.second = std::next(off.second);
+            if (sxml_cut != sxml.end()) {
+                sxml_cut  = std::next(sxml_cut);
+                ssout_cut = std::next(ssout_cut);
             }
 
-            // remove the common end of the strings
-            sxml.resize(sxml.size() - std::distance(sxml.rbegin(), endoff.first));
-            ssout.resize(ssout.size() - std::distance(ssout.rbegin(), endoff.second));
+            sxml.erase(sxml_cut, sxml.end());
+            ssout.erase(ssout_cut, ssout.end());
         }
 
         // record for the error report

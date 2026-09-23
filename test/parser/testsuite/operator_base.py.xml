@@ -1,0 +1,1924 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="operator">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>-</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>*</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>/</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>%</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>^</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>|</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;&lt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple><expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple><expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple><expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple><expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple><expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>==</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>!=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>and</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><literal type="number">1</literal> <operator>or</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>b</name></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><call><name><name>a</name><operator>.</operator><name>b</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><operator>+</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>a</name><index>[<expr><operator>:</operator></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple><expr><name>a</name></expr>, <expr><name>b</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><tuple>()</tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><call><name>type</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;</operator> <operator>~</operator><call><name>a</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <operator>-</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <operator>+</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <operator>not</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <operator>~</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <call><name>int</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>]</array></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr> ]</array></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<function>def <name>f</name><parameter_list>(<parameter><name>a</name></parameter>, <parameter><name>b</name></parameter>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<comment type="line">#* a */2</comment>
+</unit>
+
+</unit>

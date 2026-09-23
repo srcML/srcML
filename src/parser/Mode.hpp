@@ -257,6 +257,9 @@ const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
 /** mode to exclude the block content tag */
 const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
 
+/** mode for a property */
+const static srcMLState::MODE_TYPE MODE_PROPERTY;
+
 /** mode for c-attribute processing */
 const static srcMLState::MODE_TYPE MODE_INCLUDE_ATTRIBUTE;
 
