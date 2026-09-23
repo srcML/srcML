@@ -74,8 +74,20 @@ check "$secondlinecolumn"
 srcml n.cpp:2:3 --output-src
 check ";\n"
 
-# the end of the line is a valid column
+# a column past the last column of the line starts at the end of the line
+defineXML blankline <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="n.cpp">
+	</unit>
+STDOUT
+
 srcml n.cpp:2:4 --output-src
+check "\n"
+
+srcml n.cpp:2:4
+check "$blankline"
+
+srcml n.cpp:2:9 --output-src
 check "\n"
 
 # the last line of a file with no line terminator
@@ -108,17 +120,20 @@ STDOUT
 srcml n.cpp:2 m.cpp:1
 check "$archive"
 
-# a line past the end of the file is an error
+# a line past the end of the file has no source
+defineXML empty <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="n.cpp"/>
+STDOUT
+
 srcml n.cpp:9 --output-src
-check_exit 1
+check ""
 
-# a column past the end of the line is an error
-srcml n.cpp:2:5 --output-src
-check_exit 1
+srcml n.cpp:9
+check "$empty"
 
-# a line past the end of the file is an error, even with a column
 srcml n.cpp:9:1 --output-src
-check_exit 1
+check ""
 
 # a zero line or column is part of the filename
 srcml n.cpp:2:0 --output-src

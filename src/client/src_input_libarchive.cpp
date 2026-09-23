@@ -511,28 +511,24 @@ schedule:
                     start = (size_t) (nl - buf.begin()) + 1;
                 }
 
+                // a line past the end of the file has no source
                 if (cur != input_file.line || start >= buf.size()) {
-                    SRCMLstatus(ERROR_MSG, "srcml: Requested line %d out of range in %s", input_file.line, input_file.resource);
-                    return count;
+                    buf.clear();
+
+                } else {
+
+                    // end of line N, retaining the line terminator
+                    auto eol = std::find(buf.begin() + (std::ptrdiff_t) start, buf.end(), '\n');
+
+                    // a column starts the line at that position, clamped to the end of the line
+                    if (input_file.column != 0)
+                        start += (size_t) std::min<std::ptrdiff_t>(input_file.column - 1, eol - (buf.begin() + (std::ptrdiff_t) start));
+
+                    std::vector<char> line(buf.begin() + (std::ptrdiff_t) start, eol == buf.end() ? buf.end() : eol + 1);
+                    if (line.empty() || line.back() != '\n')
+                        line.push_back('\n');
+                    buf.swap(line);
                 }
-
-                // end of line N, retaining the line terminator
-                auto eol = std::find(buf.begin() + (std::ptrdiff_t) start, buf.end(), '\n');
-
-                // a column starts the line at that position, where the end of the line is a valid position
-                if (input_file.column != 0) {
-                    if (input_file.column - 1 > eol - (buf.begin() + (std::ptrdiff_t) start)) {
-                        SRCMLstatus(ERROR_MSG, "srcml: Requested column %d out of range on line %d in %s", input_file.column, input_file.line, input_file.resource);
-                        return count;
-                    }
-
-                    start += (size_t) input_file.column - 1;
-                }
-
-                std::vector<char> line(buf.begin() + (std::ptrdiff_t) start, eol == buf.end() ? buf.end() : eol + 1);
-                if (line.empty() || line.back() != '\n')
-                    line.push_back('\n');
-                buf.swap(line);
             }
 
             queue.schedule(prequest);
