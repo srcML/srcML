@@ -495,6 +495,35 @@ schedule:
 
             prequest->status = !prequest->language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
+            // a "filename:N" suffix keeps only line N of the read buffer
+            if (input_file.line != 0) {
+                auto& buf = prequest->buffer;
+
+                // advance to the start of line N
+                size_t start = 0;
+                int cur = 1;
+                for (; cur < input_file.line; ++cur) {
+                    auto nl = std::find(buf.begin() + (std::ptrdiff_t) start, buf.end(), '\n');
+                    if (nl == buf.end()) {
+                        start = buf.size();
+                        break;
+                    }
+                    start = (size_t) (nl - buf.begin()) + 1;
+                }
+
+                if (cur != input_file.line || start >= buf.size()) {
+                    SRCMLstatus(ERROR_MSG, "srcml: Requested line %d out of range in %s", input_file.line, input_file.resource);
+                    return count;
+                }
+
+                // end of line N, retaining the line terminator
+                auto eol = std::find(buf.begin() + (std::ptrdiff_t) start, buf.end(), '\n');
+                std::vector<char> line(buf.begin() + (std::ptrdiff_t) start, eol == buf.end() ? buf.end() : eol + 1);
+                if (line.empty() || line.back() != '\n')
+                    line.push_back('\n');
+                buf.swap(line);
+            }
+
             queue.schedule(prequest);
 
             ++count;

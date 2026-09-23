@@ -55,6 +55,18 @@ srcml_input_src::srcml_input_src(std::string_view other) {
             resource = resource.substr(0, query_pos);
         }
     }
+
+    // local files may carry a trailing line-number suffix, e.g. "main.cpp:1"
+    if (protocol == "file"sv) {
+        size_t colon_pos = resource.rfind(':');
+        if (colon_pos != std::string::npos && colon_pos + 1 < resource.size() &&
+            resource.find_first_not_of("0123456789", colon_pos + 1) == std::string::npos) {
+            line = std::stoi(resource.substr(colon_pos + 1));
+            resource = resource.substr(0, colon_pos);
+            filename = src_prefix_add_uri(protocol, resource);
+        }
+    }
+
     exists = false;
 
     if (protocol == "file"sv) {

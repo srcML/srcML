@@ -8,16 +8,90 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test position
-defineXML src <<- 'STDOUT'
+# test a line suffix, e.g., "n.cpp:2", on an input filename
+
+define src <<- 'STDOUT'
 	n1;
 	n2;
 	n3;
 STDOUT
 
+defineXML wholefile <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="n.cpp"><expr_stmt><expr><name>n1</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>n2</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>n3</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+defineXML secondline <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="n.cpp"><expr_stmt><expr><name>n2</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
 createfile n.cpp "$src"
 
-cat n.cpp
-
+# first, middle, and last line
 srcml n.cpp:1 --output-src
 check "n1;\n"
+
+srcml n.cpp:2 --output-src
+check "n2;\n"
+
+srcml n.cpp:3 --output-src
+check "n3;\n"
+
+# a line suffix only changes the source, not the unit
+srcml n.cpp:2
+check "$secondline"
+
+# no suffix is the entire file
+srcml n.cpp
+check "$wholefile"
+
+# the filename extension is still used for the language
+srcml n.cpp:2 --show-language
+check "C++\n"
+
+# the last line of a file with no line terminator
+createfile m.cpp "a1;\na2;"
+
+srcml m.cpp:2 --output-src
+check "a2;\n"
+
+# a suffix on a compressed file
+createfile g.cpp "$src"
+gzip -f g.cpp
+
+srcml g.cpp.gz:2 --output-src
+check "n2;\n"
+
+# a suffix on each input file of an archive
+defineXML archive <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" filename="n.cpp" hash="4c867350266d08ee9d4d96a58e4069797812f83c"><expr_stmt><expr><name>n2</name></expr>;</expr_stmt>
+	</unit>
+
+	<unit revision="REVISION" language="C++" filename="m.cpp" hash="2abeb44dccef9c1bfa06c76db4d076c1a48626d5"><expr_stmt><expr><name>a1</name></expr>;</expr_stmt>
+	</unit>
+
+	</unit>
+STDOUT
+
+srcml n.cpp:2 m.cpp:1
+check "$archive"
+
+# a line past the end of the file is an error
+srcml n.cpp:9 --output-src
+check_exit 1
+
+# a non-numeric suffix is part of the filename
+srcml n.cpp:abc --output-src
+check_exit 1
+
+# a suffix on a file that does not exist
+srcml nonexistent.cpp:1 --output-src
+check_exit 1
