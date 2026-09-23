@@ -56,19 +56,42 @@ srcml_input_src::srcml_input_src(std::string_view other) {
         }
     }
 
-    // local files may carry a trailing line-number suffix, e.g. "main.cpp:1"
+    // local files may carry a trailing line, and column, suffix, e.g. "main.cpp:191" or "main.cpp:191:5"
     if (protocol == "file"sv) {
-        size_t colon_pos = resource.rfind(':');
-        if (colon_pos != std::string::npos && colon_pos + 1 < resource.size() &&
-            resource.find_first_not_of("0123456789", colon_pos + 1) == std::string::npos) {
-            try {
-                line = std::stoi(resource.substr(colon_pos + 1));
-                resource = resource.substr(0, colon_pos);
-                filename = src_prefix_add_uri(protocol, resource);
 
+        // remove a trailing ":N", where N is non-zero, returning N, or 0 when there is none
+        auto pop_position = [](std::string& s) {
+
+            size_t colon_pos = s.rfind(':');
+            if (colon_pos == std::string::npos || colon_pos + 1 >= s.size() ||
+                s.find_first_not_of("0123456789", colon_pos + 1) != std::string::npos)
+                return 0;
+
+            int position = 0;
+            try {
+                position = std::stoi(s.substr(colon_pos + 1));
             } catch (const std::out_of_range&) {
-                // a number too large for a line is part of the filename
+                // a number too large for a position is part of the filename
+                return 0;
             }
+
+            if (position != 0)
+                s = s.substr(0, colon_pos);
+
+            return position;
+        };
+
+        if (int last = pop_position(resource); last != 0) {
+
+            // two positions are ":line:column", a single position is ":line"
+            if (int first = pop_position(resource); first != 0) {
+                line = first;
+                column = last;
+            } else {
+                line = last;
+            }
+
+            filename = src_prefix_add_uri(protocol, resource);
         }
     }
 

@@ -81,8 +81,9 @@ public:
     bool isdirectoryform = false;
     bool skip = false;
     int unit = 0;
-    // optional source line number from a "filename:N" suffix (0 = none)
+    // optional source line, and column, from a "filename:LINE" or "filename:LINE:COLUMN" suffix (0 = none)
     int line = 0;
+    int column = 0;
 
     // pre-read of stdin
     bool preReadLibarchive = false;

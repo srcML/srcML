@@ -495,7 +495,7 @@ schedule:
 
             prequest->status = !prequest->language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-            // a "filename:N" suffix keeps only line N of the read buffer
+            // a "filename:LINE" or "filename:LINE:COLUMN" suffix keeps only that part of the read buffer
             if (input_file.line != 0) {
                 auto& buf = prequest->buffer;
 
@@ -518,6 +518,17 @@ schedule:
 
                 // end of line N, retaining the line terminator
                 auto eol = std::find(buf.begin() + (std::ptrdiff_t) start, buf.end(), '\n');
+
+                // a column starts the line at that position, where the end of the line is a valid position
+                if (input_file.column != 0) {
+                    if (input_file.column - 1 > eol - (buf.begin() + (std::ptrdiff_t) start)) {
+                        SRCMLstatus(ERROR_MSG, "srcml: Requested column %d out of range on line %d in %s", input_file.column, input_file.line, input_file.resource);
+                        return count;
+                    }
+
+                    start += (size_t) input_file.column - 1;
+                }
+
                 std::vector<char> line(buf.begin() + (std::ptrdiff_t) start, eol == buf.end() ? buf.end() : eol + 1);
                 if (line.empty() || line.back() != '\n')
                     line.push_back('\n');

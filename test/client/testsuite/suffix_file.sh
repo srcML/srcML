@@ -54,6 +54,30 @@ check "$wholefile"
 srcml n.cpp:2 --show-language
 check "C++\n"
 
+# a column starts the line at that position
+srcml n.cpp:2:1 --output-src
+check "n2;\n"
+
+srcml n.cpp:2:2 --output-src
+check "2;\n"
+
+defineXML secondlinecolumn <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="n.cpp"><expr_stmt><expr><literal type="number">2</literal></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+srcml n.cpp:2:2
+check "$secondlinecolumn"
+
+# the last column of the line
+srcml n.cpp:2:3 --output-src
+check ";\n"
+
+# the end of the line is a valid column
+srcml n.cpp:2:4 --output-src
+check "\n"
+
 # the last line of a file with no line terminator
 createfile m.cpp "a1;\na2;"
 
@@ -86,6 +110,21 @@ check "$archive"
 
 # a line past the end of the file is an error
 srcml n.cpp:9 --output-src
+check_exit 1
+
+# a column past the end of the line is an error
+srcml n.cpp:2:5 --output-src
+check_exit 1
+
+# a line past the end of the file is an error, even with a column
+srcml n.cpp:9:1 --output-src
+check_exit 1
+
+# a zero line or column is part of the filename
+srcml n.cpp:2:0 --output-src
+check_exit 1
+
+srcml n.cpp:0:2 --output-src
 check_exit 1
 
 # a non-numeric suffix is part of the filename
