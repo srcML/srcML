@@ -51,6 +51,14 @@ int main(int, char* argv[]) {
         dassert(srcml_check_language("Python"), 32);
     }
 
+    {
+        dassert(srcml_check_language("JavaScript"), 64);
+    }
+
+    {
+        dassert(srcml_check_language("CMake"), 128);
+    }
+
     /*
       srcml_markup_version_string
     */
@@ -98,7 +106,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        dassert(srcml_get_language_list_size(), 6);
+        dassert(srcml_get_language_list_size(), 8);
     }
 
     /*
@@ -126,11 +134,19 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_get_language_list(5), std::string("Objective-C"));
+        dassert(srcml_get_language_list(5), std::string("JavaScript"));
     }
 
     {
-        dassert(srcml_get_language_list(6), 0);
+        dassert(srcml_get_language_list(6), std::string("CMake"));
+    }
+
+    {
+        dassert(srcml_get_language_list(7), std::string("Objective-C"));
+    }
+
+    {
+        dassert(srcml_get_language_list(8), 0);
     }
 
     /*

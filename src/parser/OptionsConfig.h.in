@@ -1,0 +1,7 @@
+#ifndef OPTIONS_CONFIG_H
+#define OPTIONS_CONFIG_H
+
+#define CMAKE_OPTIONS_FILE_BUILD "@CMAKE_GENERATED_SOURCE_DIR@/cmake_options.csv"
+#define CMAKE_OPTIONS_FILE_INSTALL "@CMAKE_INSTALL_FULL_DATADIR@/srcml/cmake_options.csv"
+
+#endif

@@ -33,7 +33,9 @@ enum PREFIXES { SRC,
        CPP,
        ERR,
        POS,
-       OMP
+       OMP,
+       TS,
+       JSX
 };
 
 class srcMLOutput;

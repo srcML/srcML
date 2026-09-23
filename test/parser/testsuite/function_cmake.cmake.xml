@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="function">
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>foo</name></expr>)<block/>endfunction()</function>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>bar</name></expr>)<block>
+
+</block>endfunction()</function>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>load_omp</name></expr>)<block>
+    <command><name>set</name><argument_list>(<argument><expr><name>OPENMP_STANDALONE_BUILD</name></expr></argument> <argument><expr><name>TRUE</name></expr></argument>)</argument_list></command>
+    <command><name>set</name><argument_list>(<argument><expr><name>LIBOMP_ENABLE_SHARED</name></expr></argument> <argument><expr><name>TRUE</name></expr></argument>)</argument_list></command>
+    <command><name>set</name><argument_list>(<argument><expr><name>CMAKE_BUILD_TYPE</name></expr></argument> <argument><expr><name>Release</name></expr></argument>)</argument_list></command>
+    <command><name>set</name><argument_list>(<argument><expr><name>OPENMP_ENABLE_LIBOMPTARGET</name></expr></argument> <argument><expr><name>OFF</name></expr></argument> <option><name>CACHE</name> <argument><expr><name>BOOL</name></expr></argument> <argument><expr><literal type="string">"LLVM OpenMP"</literal></expr></argument></option>)</argument_list></command>
+    <command><name>add_subdirectory</name><argument_list>(<argument><expr><literal type="string"><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr>/3rdparty/openmp</literal></expr></argument>)</argument_list></command>
+</block>endfunction()</function>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>target_link_boost_test</name></expr> <parameter><expr><name>target</name></expr></parameter>)<block>
+    <command><name>target_link_libraries</name><argument_list>(<argument><expr><name><expr type="name">${<name>target</name>}</expr></name></expr></argument> <option><name>PRIVATE</name> <argument><expr><literal type="string">Boost::unit_test_framework</literal></expr></argument></option>)</argument_list></command>
+    <command><name>target_link_libraries</name><argument_list>(<argument><expr><name><expr type="name">${<name>target</name>}</expr></name></expr></argument> <option><name>PRIVATE</name> <argument><expr><literal type="string">Boost::program_options</literal></expr></argument></option>)</argument_list></command>
+</block>endfunction()</function>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>install_conf</name></expr> <parameter><expr><name>src</name></expr></parameter> <parameter><expr><name>dest</name></expr></parameter>)<block>
+  <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <operator>IS_ABSOLUTE</operator> <literal type="string">"<expr type="name">${<name>src</name>}</expr>"</literal></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>src</name></expr></argument> <argument><expr><literal type="string">"<expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr>/<expr type="name">${<name>src</name>}</expr>"</literal></expr></argument>)</argument_list></command>
+  </block></if>endif()</if_stmt>
+  <if_stmt><if>if <condition>(<expr><operator>NOT</operator> <operator>IS_ABSOLUTE</operator> <literal type="string">"<expr type="name">${<name>dest</name>}</expr>"</literal></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>dest</name></expr></argument> <argument><expr><literal type="string">"<expr type="name">${<name>CMAKE_INSTALL_PREFIX</name>}</expr>/<expr type="name">${<name>dest</name>}</expr>"</literal></expr></argument>)</argument_list></command>
+  </block></if>endif()</if_stmt>
+</block>endfunction()</function>
+</unit>
+
+</unit>

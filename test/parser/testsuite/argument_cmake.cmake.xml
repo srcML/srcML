@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="argument">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"a b"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>hello</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>TRUE</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>FALSE</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="number">3.10</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="number">1.0.0</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><flag>-v</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><flag>-rf</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><flag>--version</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><flag>/W</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><flag>/w*</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">v1.0.0</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">1.0yueytwy</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">file.cpp</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">path/to/folder</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">path/to/file.txt</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">/root/path</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">/root/path/to/file.cmake</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">C:\windows\path</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">[=[bracket]=]</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">[==[bracket]==]</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">[==[bracket [===[with]===] inner]==]</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">&gt;</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">&gt;&gt;</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">+</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"[["</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">[["]]</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">\"\"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"\"\""</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">HE-L\^LO\ HOW\ ARE\ YOU</literal></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

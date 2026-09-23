@@ -115,8 +115,10 @@ header "pre_include_cpp" {
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
+#include "OptionsConfig.h"
 #include <string>
 #include <string_view>
+#include <algorithm>
 #include <deque>
 #include <array>
 #include <stack>
@@ -124,6 +126,9 @@ header "post_include_hpp" {
 #include <ModeStack.hpp>
 #include <srcml_options.hpp>
 #include <cstdlib>
+#include <fstream>
+#include <filesystem>
+#include <unordered_map>
 #undef CONST
 #undef VOID
 #undef DELETE
@@ -211,6 +216,84 @@ struct TokenPosition {
 
     antlr::RefToken* token;
     int* sp;
+};
+
+static std::vector<std::string> split(const std::string& s, char delimiter) {
+        std::vector<std::string> tokens;
+        std::string token;
+        for (char c : s) {
+            if (c == delimiter) {
+                if (!token.empty())
+                    tokens.push_back(token);
+                token.clear();
+            } else {
+                token += c;
+            }
+        }
+        if (!token.empty())
+            tokens.push_back(token);
+        return tokens;
+    }
+
+class CMakeOptionsSet {
+public:
+    static CMakeOptionsSet& getInstance() {
+        static CMakeOptionsSet instance;
+        return instance;
+    }
+
+    bool checkCommand(std::string command) {
+        return data.find(command) != data.end();
+    }
+
+    std::vector<std::string> getCommandVector(std::string command_name, std::string command_type) {
+        if (data[command_name].find(command_type) != data[command_name].end()) {
+            return data[command_name][command_type];
+        }
+        else if (data[command_name].find("_") != data[command_name].end()) {
+            return data[command_name]["_"];
+        }
+        else {
+            return std::vector<std::string>();
+        }
+    }
+
+
+private:
+    CMakeOptionsSet() {
+        std::ifstream in;
+
+        if (std::filesystem::exists(CMAKE_OPTIONS_FILE_INSTALL))
+            in.open(CMAKE_OPTIONS_FILE_INSTALL);
+        else
+            in.open(CMAKE_OPTIONS_FILE_BUILD);
+
+        if (!in.is_open())
+            std::cerr << "Could not locate the CMake Options file" << std::endl;
+
+        std::string line;
+        while (std::getline(in, line)) {
+            std::vector<std::string> values = split(line,',');
+            std::string command_name = values[0];
+            if (data.find(command_name) != data.end()) {
+                data.insert(std::make_pair(command_name,std::unordered_map<std::string,std::vector<std::string>>()));
+            }
+
+            for (std::string command_type_option : split(values[1],':')) {
+                std::string command_type = split(command_type_option,'|')[0];
+                data[command_name].insert(std::make_pair(command_type,std::vector<std::string>()));
+                for (size_t i = 1; i < values.size(); ++i) {
+                    if (values[i] != "_") {
+                        data[command_name][command_type].push_back(values[i]);
+                    }
+                }
+            }
+        }
+
+        in.close();
+    }
+
+    std::unordered_map<std::string, std::unordered_map<std::string,std::vector<std::string>>> data;
 };
 
 }
@@ -707,7 +790,6 @@ tokens {
     SDOXYGEN_PY;
     SELLIPSIS;
     SEXEC_PYTHON2;
-    SFUNCTION_STATEMENT;
     SGLOBAL;
     SHASHBANG_COMMENT;
     SHASHTAG_COMMENT;
@@ -725,6 +807,66 @@ tokens {
     SWITH_STATEMENT;
     SYIELD_STATEMENT;
     SYIELD_FROM_STATEMENT;
+
+    // JavaScript
+    SCOMPUTED_PROPERTY;
+    SDEBUGGER_STATEMENT;
+    SDECLARATION_CONST;
+    SDECLARATION_LET;
+    SDECLARATION_STATIC;
+    SDECLARATION_USING;
+    SDECLARATION_VAR;
+    SEXPORT_STATEMENT;
+    SFUNCTION_GENERATOR_STATEMENT;
+    SFUNCTION_GET_STATEMENT;
+    SFUNCTION_SET_STATEMENT;
+    SHTML_COMMENT;
+    SNAME_LIST;
+    SOBJECT_JS;
+    SREGEX_JS;
+    SUNDEFINED_JS;
+    SYIELD_GENERATOR_STATEMENT;
+
+    // JavaScript XML (JSX)
+    SJSX_LITERAL;
+
+    // TypeScript
+    STS_ATTRIBUTE;
+    STS_CONSTRAINT;
+    STS_DECLARE_STATEMENT;
+    STS_ENUM;
+    STS_EXTENDS;
+    STS_FUNCTION_DECLARATION;
+    STS_IMPLEMENTS;
+    STS_INTERFACE;
+    STS_MODIFIER;
+    STS_NAMESPACE;
+    STS_OPERATOR;
+    STS_SPECIFIER;
+    STS_TYPE;
+    STS_TYPEDEF;
+
+    // CMake
+    SBLOCK_STATEMENT;
+    SBRACKET_ARGUMENT;
+    SBOOLEAN_VALUE_TRUE;
+    SBOOLEAN_VALUE_FALSE;
+    SCOMMAND;
+    SCOMPILER_FLAG_CMAKE;
+    SEXPRESSION_NAME;
+    SEXPRESSION_ENV;
+    SEXPRESSION_CACHE;
+    SEXPRESSION_GENERATOR;
+    SINCLUDE_CMAKE;
+    SLIST_LISTS;
+    SLIST_ITEMS;
+    SLIST_ZIP;
+    SMACRO_DEFINITION;
+    SOPTION;
+    SPROPAGATE;
+    SRANGE_IN_CMAKE;
+    SRANGE_RANGE_CMAKE;
+    SSCOPE;
 }
 
 /*
@@ -758,12 +900,27 @@ public:
     int nxt_token = -1;
     TokenPosition prevTokenPosition;
     int last_consumed = -1;
+    int last_consumed_guessing_mode = -1;
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
     std::deque<char> lparen_types_py;
+    std::deque<char> lparen_types_js;
+    std::deque<char> lcurly_types_js;
+    std::deque<std::string> bracket_types_js;  // '(' and '{'
+    size_t super_list_curly_types_size_js = 0;
     bool in_template_param = false;
+    bool processed_statement = false;
+    bool is_pseudo_terminate = false;
+    bool skip_pseudoblock_terminate = false;
+    bool skip_expression_markup_js = false;
+    bool skip_lone_lambda_js = false;
+    bool is_ternary_colon = true;
+    int lambda_depth = 0;
+    int tempops_count_ts = 0;
+    int super_count_js = 0;
+    int current_decl_type_js = 0;
     int start_count = 0;
 
     static const antlr::BitSet keyword_name_token_set;
@@ -776,6 +933,7 @@ public:
     static const antlr::BitSet skip_tokens_set;
     static const antlr::BitSet class_tokens_set;
     static const antlr::BitSet decl_specifier_tokens_set;
+    static const antlr::BitSet general_operator_tokens_set;
     static const antlr::BitSet identifier_list_tokens_set;
     static const antlr::BitSet whitespace_token_set;
     static const antlr::BitSet duplex_keyword_set;
@@ -785,6 +943,22 @@ public:
     static const antlr::BitSet right_bracket_py_token_set;
     static const antlr::BitSet comment_py_token_set;
     static const antlr::BitSet multiline_literals_py_token_set;
+    static const antlr::BitSet decl_start_js_token_set;
+    static const antlr::BitSet specifier_js_token_set;
+    static const antlr::BitSet post_specifier_js_token_set;
+    static const antlr::BitSet table_keywords_js_token_set;
+    static const antlr::BitSet name_differentiator_js_token_set;
+    static const antlr::BitSet name_differentiator_subset_js_token_set;
+    static const antlr::BitSet insert_terminate_js_token_set;
+    static const antlr::BitSet insert_terminate_eol_js_token_set;
+    static const antlr::BitSet keyword_expression_pair_js_token_set;
+    static const antlr::BitSet declaration_specifiers_ts_token_set;
+    static const antlr::BitSet function_declaration_specifiers_ts_token_set;
+    static const antlr::BitSet cmake_end_statement_commands;
+    static const antlr::BitSet cmake_foreach_ranges;
+    static const antlr::BitSet cmake_foreach_lists;
+    static const antlr::BitSet cmake_keywords;
+    static const antlr::BitSet cmake_expansion_expr_tokens;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -819,9 +993,14 @@ public:
     void endAllModes();
 
     virtual void consume() {
-        // do not update last_consumed if in Python guessing mode or the token is in the skip_tokens_set
-        if ((!inLanguage(LANGUAGE_PYTHON) || inputState->guessing==0) && !skip_tokens_set.member((unsigned int) LA(1)))
-            last_consumed = LA(1);
+        // do not update last_consumed if the token is in the skip_tokens_set
+        if (!skip_tokens_set.member((unsigned int) LA(1))) {
+            // use a separate variable when in guessing mode for Python/JavaScript
+            if ((inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && inputState->guessing!=0)
+                last_consumed_guessing_mode = LA(1);
+            else
+                last_consumed = LA(1);
+        }
 
         LLkParser::consume();
     }
@@ -848,30 +1027,78 @@ public:
     static constexpr std::size_t DUPLEX_RULES_SIZE = 700;
 
     // The duplex keyword values must start at a value 100 greater than the duplex rule size directly above
-    // Increment each new duplex keyword token by an additional one (except the first)
+    /* Python */
     static constexpr std::size_t PY_EXCEPT_MULTOPS = DUPLEX_RULES_SIZE + 100;
-    static constexpr std::size_t PY_YIELD_PY_FROM  = DUPLEX_RULES_SIZE + 101; // incremented by 1 after the first
+    static constexpr std::size_t PY_YIELD_PY_FROM  = DUPLEX_RULES_SIZE + 101;  // incremented by 1 after the first
 
-    // The Python rule size must be 200 greater than the duplex rule size
-    // If there are ever more than 100 duplex keywords, this has to change
-    static constexpr std::size_t PYTHON_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
+    /* JavaScript */
+    static constexpr std::size_t JS_CATCH_LPAREN     = DUPLEX_RULES_SIZE + 100;
+    static constexpr std::size_t JS_ELSE_IF          = DUPLEX_RULES_SIZE + 101;  // incremented by 1 after the first
+    static constexpr std::size_t JS_FUNCTION_MULTOPS = DUPLEX_RULES_SIZE + 102;
+    static constexpr std::size_t JS_GET_LBRACKET     = DUPLEX_RULES_SIZE + 103;
+    static constexpr std::size_t JS_SET_LBRACKET     = DUPLEX_RULES_SIZE + 104;
+    static constexpr std::size_t JS_STATIC_LCURLY    = DUPLEX_RULES_SIZE + 105;
+    static constexpr std::size_t JS_WITH_LPAREN      = DUPLEX_RULES_SIZE + 106;
+    static constexpr std::size_t JS_YIELD_MULTOPS    = DUPLEX_RULES_SIZE + 107;
 
-    // If downstream helpers expect INDEX, provide aliases matching the absolute codes above.
-    // If the helpers instead expect 0-based indices, change these to 0 and 1 respectively.
+    // Any language rule size must be 200 greater than the duplex rule size
+    // If there are ever more than 100 duplex keywords in a single language, this must change
+    static constexpr std::size_t PYTHON_RULES_SIZE     = DUPLEX_RULES_SIZE + 200;
+    static constexpr std::size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
+    static constexpr std::size_t CMAKE_RULES_SIZE      = DUPLEX_RULES_SIZE + 200;
+
+    // If downstream helpers expect INDEX, provide aliases matching the absolute codes above
+    // If the helpers instead expect 0-based indices, change these to 0 and 1 respectively
+    /* Python */
     static constexpr std::size_t PY_EXCEPT_MULTOPS_INDEX = PY_EXCEPT_MULTOPS;
     static constexpr std::size_t PY_YIELD_PY_FROM_INDEX  = PY_YIELD_PY_FROM;
 
+    /* JavaScript */
+    static constexpr std::size_t JS_CATCH_LPAREN_INDEX     = JS_CATCH_LPAREN;
+    static constexpr std::size_t JS_ELSE_IF_INDEX          = JS_ELSE_IF;
+    static constexpr std::size_t JS_FUNCTION_MULTOPS_INDEX = JS_FUNCTION_MULTOPS;
+    static constexpr std::size_t JS_GET_LBRACKET_INDEX     = JS_GET_LBRACKET;
+    static constexpr std::size_t JS_SET_LBRACKET_INDEX     = JS_SET_LBRACKET;
+    static constexpr std::size_t JS_STATIC_LCURLY_INDEX    = JS_STATIC_LCURLY;
+    static constexpr std::size_t JS_WITH_LPAREN_INDEX      = JS_WITH_LPAREN;
+    static constexpr std::size_t JS_YIELD_MULTOPS_INDEX    = JS_YIELD_MULTOPS;
+
     // Static getters that materialize the arrays once in static storage
-    static inline const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE>& getStaticDuplexKeywords() {
+    /* Python */
+    static inline const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE>& getStaticPythonDuplexKeywords() {
         static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords =
-            getDuplexKeywords<DUPLEX_RULES_SIZE>(PY_EXCEPT_MULTOPS_INDEX, PY_YIELD_PY_FROM_INDEX);
+            getPythonDuplexKeywords<DUPLEX_RULES_SIZE>(PY_EXCEPT_MULTOPS_INDEX, PY_YIELD_PY_FROM_INDEX);
         return duplexKeywords;
     }
 
     static inline const std::array<Rule, PYTHON_RULES_SIZE>& getStaticPythonRules() {
-        static const std::array<Rule, PYTHON_RULES_SIZE> python_rules =
+        static const std::array<Rule, PYTHON_RULES_SIZE> pythonRules =
             getPythonRules<PYTHON_RULES_SIZE>(PY_EXCEPT_MULTOPS_INDEX, PY_YIELD_PY_FROM_INDEX);
-        return python_rules;
+        return pythonRules;
+    }
+
+    /* JavaScript */
+    static inline const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE>& getStaticJavaScriptDuplexKeywords() {
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords =
+            getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_CATCH_LPAREN_INDEX, JS_ELSE_IF_INDEX, JS_FUNCTION_MULTOPS_INDEX,
+                JS_GET_LBRACKET_INDEX, JS_SET_LBRACKET_INDEX, JS_STATIC_LCURLY_INDEX, JS_WITH_LPAREN_INDEX, JS_YIELD_MULTOPS_INDEX
+            );
+        return duplexKeywords;
+    }
+
+    static inline const std::array<Rule, JAVASCRIPT_RULES_SIZE>& getStaticJavaScriptRules() {
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascriptRules =
+            getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_CATCH_LPAREN_INDEX, JS_ELSE_IF_INDEX, JS_FUNCTION_MULTOPS_INDEX,
+                JS_GET_LBRACKET_INDEX, JS_SET_LBRACKET_INDEX, JS_STATIC_LCURLY_INDEX, JS_WITH_LPAREN_INDEX, JS_YIELD_MULTOPS_INDEX
+            );
+        return javascriptRules;
+    }
+
+    /* CMake */
+    static inline const std::array<Rule, CMAKE_RULES_SIZE>& getStaticCMakeRules() {
+        static const std::array<Rule, CMAKE_RULES_SIZE> cmakeRules =
+            getCMakeRules<CMAKE_RULES_SIZE>();
+        return cmakeRules;
     }
 
     bool processRule(const Rule& rule) {
@@ -905,29 +1132,50 @@ public:
     }
 
     void handleAttributes() {
-        // handle Python decorators
-        if (LA(1) == PY_ATSIGN) {
-            // handle multiple pre-keyword decorators in a row
-            while (LA(1) == PY_ATSIGN) {
-                attribute_py();
-            }
+        // handle multiple pre-keyword Python decorators in a row
+        while (inLanguage(LANGUAGE_PYTHON) && LA(1) == PY_ATSIGN) {
+            attribute_py();
+        }
+
+        // handle multiple pre-keyword TypeScript decorators in a row
+        while (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TS_ATSIGN) {
+            attribute_ts();
         }
     }
 
     void handleSpecifiers() {
-        // handle Python specifiers
-        if (inLanguage(LANGUAGE_PYTHON)) {
-            if (check_valid_specifier_py()) {
-                // handle multiple pre-keyword specifiers in a row
-                while (check_valid_specifier_py()) {
-                    specifier_py();
-                }
-            }
+        // handle multiple pre-keyword Python specifiers in a row
+        while (inLanguage(LANGUAGE_PYTHON) && check_valid_specifier_py()) {
+            specifier_py();
+        }
+
+        // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row
+        // Note: ignore "declare" and "export" statements
+        while (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !inMode(MODE_DECLARE_TS)
+            && !inTransparentMode(MODE_EXPORT_JS)
+            && (check_valid_specifier_js() || LA(1) == TS_ATSIGN)
+        ) {
+            // special case: TypeScript namespace statements
+            if (declaration_specifiers_ts_token_set.member(LA(1)))
+                declaration_specifiers_ts();
+            // special case: TypeScript "abstract"
+            else if (LA(1) == TS_ABSTRACT)
+                function_declaration_specifiers_ts();
+            // special case: TypeScript enums
+            else if (LA(1) == JS_CONST)
+                const_as_specifier_ts();
+            // special case: TypeScript attributes between specifiers
+            else if (LA(1) == TS_ATSIGN)
+                attribute_ts();
+            else
+                specifier_js();
         }
     }
 
     template <size_t SIZE>
-    static constexpr std::array<int, SIZE * SIZE> getDuplexKeywords(const size_t PY_EXCEPT_MULTOPS, const size_t PY_YIELD_PY_FROM) {
+    static constexpr std::array<int, SIZE * SIZE> getPythonDuplexKeywords(const size_t PY_EXCEPT_MULTOPS, const size_t PY_YIELD_PY_FROM) {
         std::array<int, SIZE * SIZE> temp_array{};
         temp_array[PY_EXCEPT + (MULTOPS << 8)] = PY_EXCEPT_MULTOPS;
         temp_array[PY_YIELD + (PY_FROM << 8)] = PY_YIELD_PY_FROM;
@@ -944,10 +1192,10 @@ public:
         temp_array[PY_CASE]     = { SCASE, 0, MODE_STATEMENT | MODE_NEST | MODE_CASE_PY, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_PY | MODE_SUPER_LIST_PY | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
-        temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST, 0, &srcMLParser::if_statement_start, nullptr };
+        temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST, 0, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_FOR_LOOP_PY, MODE_CONTROL | MODE_EXPECT | MODE_FOR_CONTROL_PY, nullptr, nullptr };
-        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start, nullptr };
+        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_TRY, nullptr, nullptr };
         temp_array[WHILE]       = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WHILE_LOOP_PY, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -956,9 +1204,9 @@ public:
         temp_array[PY_2_EXEC]   = { SEXEC_PYTHON2, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[PY_2_PRINT]  = { SPRINT_PYTHON2, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[PY_DELETE]   = { SDELETE, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
-        temp_array[PY_ELIF]     = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start, nullptr };
+        temp_array[PY_ELIF]     = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[PY_EXCEPT]   = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_EXCEPT_PY, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[PY_FUNCTION] = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_PY | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[PY_FUNCTION] = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_PY | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[PY_GLOBAL]   = { SGLOBAL, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
         temp_array[PY_IMPORT]   = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_EXCLUDE_NO_PAREN_TUPLES_PY, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
         temp_array[PY_MATCH]    = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -972,6 +1220,100 @@ public:
         /* DUPLEX KEYWORDS */
         temp_array[PY_EXCEPT_MULTOPS] = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_EXCEPT_PY, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
         temp_array[PY_YIELD_PY_FROM]  = { SYIELD_FROM_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `from`
+
+        return temp_array;
+    }
+
+    template <size_t SIZE>
+    static constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(
+        const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_GET_LBRACKET, const size_t JS_SET_LBRACKET,
+        const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS
+    ) {
+        std::array<int, SIZE * SIZE> temp_array{};
+        temp_array[JS_CATCH + (LPAREN << 8)] = JS_CATCH_LPAREN;
+        temp_array[JS_ELSE + (IF << 8)] = JS_ELSE_IF;
+        temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
+        temp_array[JS_GET + (LBRACKET << 8)] = JS_GET_LBRACKET;
+        temp_array[JS_SET + (LBRACKET << 8)] = JS_SET_LBRACKET;
+        temp_array[JS_STATIC + (LCURLY << 8)] = JS_STATIC_LCURLY;
+        temp_array[JS_WITH + (LPAREN << 8)] = JS_WITH_LPAREN;
+        temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
+        return temp_array;
+    }
+
+    template <size_t SIZE>
+    static constexpr std::array<Rule, SIZE> getJavaScriptRules(
+        const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_GET_LBRACKET, const size_t JS_SET_LBRACKET,
+        const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS
+    ) {
+        std::array<Rule, SIZE> temp_array;
+
+        /* GENERIC STATEMENTS */
+        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::jump_statement_post_js };
+        temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT | MODE_IGNORE_LABEL_JS, nullptr, nullptr };
+        temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
+        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::jump_statement_post_js };
+        temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
+        temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
+        temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::for_control_situational_specifiers_js };  // check for "await" or "each" following the "for"
+        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::condition_js };
+        temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_RETURN_JS, MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, &srcMLParser::condition_js };
+        temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
+        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, &srcMLParser::condition_js };
+
+        /* JAVASCRIPT STATEMENTS */
+        temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
+        temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[JS_EXPORT]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT | MODE_EXPORT_JS, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::property_name_js };
+        temp_array[JS_IMPORT]      = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
+        temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::property_name_js };
+        temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+
+        /* TYPESCRIPT STATEMENTS */
+        temp_array[TS_DECLARE]   = { STS_DECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, nullptr, &srcMLParser::declare_statement_ts };
+        temp_array[TS_ENUM]      = { STS_ENUM, 0, MODE_STATEMENT | MODE_NEST | MODE_ENUM, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_INTERFACE] = { STS_INTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_MODULE]    = { STS_NAMESPACE, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_EXPRESSION, nullptr, nullptr };
+        temp_array[TS_NAMESPACE] = { STS_NAMESPACE, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_EXPRESSION, nullptr, nullptr };
+        temp_array[TS_TYPE]      = { STS_TYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+
+        /* DUPLEX KEYWORDS */
+        temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, &srcMLParser::javascript_parameter_list };  // extra consume for '(' is in the provided rule
+        temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::condition_js };  // rule will consume 'if'
+        temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
+        temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
+        temp_array[JS_SET_LBRACKET]     = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
+        temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
+        temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_WITH_JS | MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
+        temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
+
+        return temp_array;
+    }
+
+
+    template <size_t SIZE>
+    static constexpr std::array<Rule, SIZE> getCMakeRules() {
+        std::array<Rule, SIZE> temp_array;
+
+        /* GENERIC STATEMENTS */
+        temp_array[BREAK]    = { SBREAK_STATEMENT, 0, MODE_STATEMENT , 0, nullptr, &srcMLParser::cmake_end_statement };
+        temp_array[CONTINUE] = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT , 0, nullptr, &srcMLParser::cmake_end_statement };
+        temp_array[IF]       = { SIF, 0, MODE_IF, 0, &srcMLParser::cmake_if_stmt_start, &srcMLParser::cmake_if_stmt };
+        temp_array[RETURN]   = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_PROPAGATE_STATEMENT_CMAKE , 0, nullptr, &srcMLParser::cmake_end_statement };
+        temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_while };
+
+        /* CMAKE STATEMENTS */
+        temp_array[CMAKE_BLOCK]    = { SBLOCK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_block_statement };
+        temp_array[CMAKE_FOREACH]  = { SFOREACH_STATEMENT, 0, MODE_STATEMENT , 0, nullptr, &srcMLParser::cmake_foreach };
+        temp_array[CMAKE_FUNCTION] = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_function };
+        temp_array[CMAKE_MACRO]    = { SMACRO_DEFINITION, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_macro };
 
         return temp_array;
     }
@@ -1081,8 +1423,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // expression_part_default |
 
         // statements that clearly start with a keyword
+        // keyword-based languages (e.g., Python and JavaScript) do not use keyword_statements
         {
-            (
+            !inLanguage(LANGUAGE_KEYWORD_FAMILY)
+            && (
                 LA(1) != TEMPLATE
                 || next_token() != TEMPOPS
             )
@@ -1181,13 +1525,9 @@ catch[...] {
 start_python[] {
         ++start_count;
 
-        /*
-          May need to increase these constants in the future as more tokens are added
-        */
-
-        // Get const references to the static arrays (no stack allocation)
-        const auto& duplexKeywords = getStaticDuplexKeywords();
-        const auto& python_rules = getStaticPythonRules();
+        // get const references to the static arrays (no stack allocation)
+        const auto& duplexKeywords = getStaticPythonDuplexKeywords();
+        const auto& pythonRules = getStaticPythonRules();
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_py.empty())
@@ -1221,7 +1561,7 @@ start_python[] {
 
             // looking for functions or classes
             if (post_attribute_token != -1) {
-                const auto& rule = python_rules[post_attribute_token];
+                const auto& rule = pythonRules[post_attribute_token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
                 }
@@ -1234,7 +1574,7 @@ start_python[] {
 
             // looking for for-loops, functions, or with
             if (post_specifier_token != -1) {
-                const auto& rule = python_rules[post_specifier_token];
+                const auto& rule = pythonRules[post_specifier_token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
                 }
@@ -1253,7 +1593,7 @@ start_python[] {
             }
 
             if (LA(1) != PY_TYPE || is_type_stmt) {
-                const auto& rule = python_rules[token];
+                const auto& rule = pythonRules[token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
                 }
@@ -1328,20 +1668,705 @@ catch[...] {
 }
 
 /*
+  start_javascript
+
+  Utilizes a table-based approach to detect and process statement-starting tokens.
+
+  Whitespace tokens are handled elsewhere and are automagically included
+  in the output stream.
+
+  Order of evaluation is important.
+*/
+start_javascript[] {
+        ++start_count;
+
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+
+        // check for potential statement-start tokens before anything else
+        javascript_statements();
+
+        // if javascript_statements explicitly returns, force another return here so
+        // javascript_rules does not run; applicable for 2+ declaration statements in a row
+        if (processed_statement) {
+            processed_statement = false;
+            return;
+        }
+} :
+        javascript_rules
+;
+exception
+catch[...] {
+        CATCH_DEBUG
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
+/*
+  javascript_statements
+
+  Initializes the table-based approach and checks potential statement tokens for JavaScript.
+  Also includes specifier handling (e.g., "let", "var", "const", "static").
+*/
+javascript_statements[] {
+        ENTRY_DEBUG
+
+        // get const references to the static arrays (no stack allocation)
+        const auto& duplexKeywords = getStaticJavaScriptDuplexKeywords();
+        const auto& javascriptRules = getStaticJavaScriptRules();
+
+        // ensure the lparen deque never starts empty by adding a dummy entry
+        if (lparen_types_js.empty())
+            lparen_types_js.emplace_back('*');
+
+        // ensure the lcurly deque never starts empty by adding a dummy entry
+        if (lcurly_types_js.empty())
+            lcurly_types_js.emplace_back('*');
+
+        // ensure the bracket deque never starts empty by adding a dummy entry
+        if (bracket_types_js.empty())
+            bracket_types_js.emplace_back("*");
+
+        // special case: detect labels that occur before a statement or a block
+        if (
+            !inMode(MODE_IGNORE_LABEL_JS)
+            && last_consumed != COMMA
+            && LA(1) == NAME
+            && next_token() == COLON
+            && !inMode(MODE_PROPERTY_JS)
+            && !inMode(MODE_TERNARY)
+            && !inTransparentMode(MODE_TYPE_TS)
+            && !inPrevMode(MODE_TERNARY)
+            && (next_token_two() != LCURLY || perform_label_with_block_check_js())
+            && (
+                table_keywords_js_token_set.member(next_token_two())
+                || decl_start_js_token_set.member(next_token_two())
+                || next_token_two() == LCURLY
+                || perform_consecutive_label_check_js()
+            )
+        ) {
+            // always process the first label
+            label_js();
+
+            // process any additional consecutive labels, if applicable
+            while (LA(1) == NAME && next_token() == COLON)
+                label_js();
+        }
+
+        // special case: "global {}" is a global declaration in a TypeScript declaration file
+        if (
+            inMode(MODE_STATEMENT)
+            && LA(1) == NAME
+            && LT(1)->getText() == "global"
+            && next_token() == LCURLY
+        ) {
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startElement(STS_DECLARE_STATEMENT);
+
+            startNewMode(MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION);
+            compound_name();
+        }
+
+        // special case: consume TERMINATE separating "then" and "else" portions of multi-line ternary
+        if (
+            LA(1) == TERMINATE
+            && inMode(MODE_EXPRESSION)
+            && inTransparentMode(MODE_THEN)
+            && inTransparentMode(MODE_TERNARY)
+            && next_token() == COLON
+        ) {
+            consume();
+        }
+
+        // special case: the terminate at the end of an expression-statement-defined object
+        // (e.g., "object = { ... }") must be processed here
+        if (LA(1) == TERMINATE) {
+            terminate();
+            processed_statement = true;
+            return;
+        }
+
+        // special case: "with():" is a TypeScript function declaration
+        if (LA(1) == JS_WITH && next_token() == LPAREN && perform_with_as_function_decl_check_ts()) {
+            function_declaration_ts();
+            processed_statement = true;
+            return;
+        }
+
+        // special case: with is only a keyword in certain circumstances
+        if (LA(1) == JS_WITH && !perform_with_statement_check_js()) {
+            // restart parsing treating "with" as a name
+            LT(1)->setType(NAME);
+            processed_statement = true;
+            return;
+        }
+
+        // special case: "*(){...}" is a nameless, keywordless generator function in JavaScript
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
+            && (
+                LA(1) == MULTOPS
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+            && perform_nameless_keywordless_generator_function_check_js()
+        ) {
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            if (perform_top_level_class_check_js()) {
+                startElement(SNOP);
+            }
+            else {
+                startElement(SEXPRESSION_STATEMENT);
+            }
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            if (perform_top_level_class_check_js()) {
+                startElement(SNOP);
+            }
+            else {
+                startElement(SEXPRESSION);
+            }
+
+            nameless_keywordless_generator_function_expression_js();
+            processed_statement = true;
+            return;
+        }
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        if (
+            inMode(MODE_STATEMENT)
+            && LA(1) == TS_ATSIGN
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        ) {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+
+            while (LA(1) == TS_ATSIGN)
+                attribute_ts();
+
+            keywordless_function_expression_js(false);
+            processed_statement = true;
+            return;
+        }
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                specifier_js_token_set.member((unsigned int) LA(1))
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || literal_tokens_set.member((unsigned int) LA(1))
+                || LA(1) == LBRACKET
+                || LA(1) == MULTOPS
+                || LA(1) == NAME
+            )
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        ) {
+            keywordless_function_expression_js(true);
+            processed_statement = true;
+            return;
+        }
+
+        // [TypeScript] looking for nameless function declarations at the statement-level
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
+            && (
+                LA(1) == LPAREN
+                || LA(1) == TEMPOPS
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+            && perform_nameless_function_declaration_check_ts()
+        ) {
+            nameless_function_declaration_ts();
+            processed_statement = true;
+            return;
+        }
+
+        // [TypeScript] looking for function declarations at the statement-level
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
+            && (
+                LA(1) == NAME
+                || LA(1) == LBRACKET
+                || LA(1) == TS_DATSIGN
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+            && perform_function_declaration_check_ts()
+        ) {
+            function_declaration_ts();
+            processed_statement = true;
+            return;
+        }
+
+        // [TypeScript] types at the statement-level can start with:
+        // - a name
+        // - a constraint (i.e., "[NAME]")
+        // - a specifier (i.e., "abstract NAME")
+        // - a "+", "-", or "~" followed by a NAME
+        if (
+            inMode(MODE_STATEMENT)
+            && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && perform_in_class_block_check_js()))
+            && (
+                // type declaration statement in non-interface blocks
+                (
+                    (
+                        inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                        || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+                    )
+                    && perform_declaration_statement_check_ts()
+                )
+                // type declaration statement in interface or enum blocks
+                || (
+                    (inTransparentMode(MODE_INTERFACE_TS) || inTransparentMode(MODE_ENUM))
+                    && (
+                        LA(1) == NAME
+                        || ((LA(1) == LBRACKET || LA(1) == TS_DATSIGN) && next_token() == NAME)
+                        || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        || (
+                            (
+                                (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                                || (LA(1) == DESTOP)
+                            )
+                            && next_token() == NAME
+                        )
+                        || ((LA(1) == STRING_START || LA(1) == CHAR_START) && next_token_two() == COLON)
+                    )
+                    && (
+                        last_consumed == LCURLY
+                        || last_consumed == TERMINATE
+                        || last_consumed == COMMA
+                    )
+                )
+            )
+        ) {
+            declaration_statement_ts();
+            processed_statement = true;
+            return;
+        }
+
+        // [TypeScript] looking for a decorator that occurs before a keyword (or specifiers)
+        if (LA(1) == TS_ATSIGN) {
+            std::array<int, 2> post_specifier_tokens = perform_post_attribute_check_ts();
+
+            // looking for duplex keywords (e.g., "function *")
+            if (duplex_keyword_set.member((unsigned int) post_specifier_tokens[0])) {
+                const auto lookup = duplexKeywords[post_specifier_tokens[0] + (post_specifier_tokens[1] << 8)];
+                if (lookup)
+                    post_specifier_tokens[0] = lookup;
+            }
+
+            // looking for classes or functions (regular/get/set)
+            if (post_specifier_tokens[0] != -1) {
+                const auto& rule = javascriptRules[post_specifier_tokens[0]];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
+        }
+
+        // looking for "*[...](){}" to start a statement-level generator function computed property
+        if (
+            inMode(MODE_STATEMENT)
+            && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && perform_generator_function_computed_property_check_js()
+        ) {
+            keywordless_function_expression_js(true);
+            processed_statement = true;
+            return;
+        }
+
+        // looking for "[...](){}" to start a statement-level computed property function
+        if (
+            inMode(MODE_STATEMENT)
+            && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+            && perform_computed_property_as_function_check_js()
+        ) {
+            keywordless_function_expression_js(true);
+            processed_statement = true;
+            return;
+        }
+
+        // check if the current non-comment token is a specifier that occurs before a statement keyword
+        if (LA(1) != SNOP && inMode(MODE_STATEMENT) && check_valid_specifier_js()) {
+            std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
+
+            // looking for "let", "var", "const", "static", or "using"
+            if (
+                decl_start_js_token_set.member(post_specifier_tokens[0])
+                && post_specifier_tokens[1] != TS_ENUM
+                && (
+                    post_specifier_tokens[0] != JS_STATIC
+                    || (
+                        post_specifier_tokens[0] == JS_STATIC
+                        && post_specifier_tokens[1] != LCURLY
+                        && post_specifier_tokens[1] != JS_GET
+                        && post_specifier_tokens[1] != JS_SET
+                        && post_specifier_tokens[2] != JS_GET
+                        && post_specifier_tokens[2] != JS_SET
+                    )
+                )
+            ) {
+                declaration_statement_js(post_specifier_tokens[0]);
+                // need to make sure a pseudo block ends
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
+                processed_statement = true;
+                return;
+            }
+
+            // looking for duplex keywords (e.g., "function *")
+            if (duplex_keyword_set.member((unsigned int) post_specifier_tokens[0])) {
+                const auto lookup = duplexKeywords[post_specifier_tokens[0] + (post_specifier_tokens[1] << 8)];
+                if (lookup)
+                    post_specifier_tokens[0] = lookup;
+            }
+
+            // looking for enums
+            if (post_specifier_tokens[1] == TS_ENUM) {
+                const auto& rule = javascriptRules[post_specifier_tokens[1]];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
+            // looking for classes or functions (regular/get/set)
+            else if (post_specifier_tokens[0] != -1) {
+                const auto& rule = javascriptRules[post_specifier_tokens[0]];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
+        }
+
+        // special case: declaration statement with no specifiers in a class
+        if (
+            inMode(MODE_STATEMENT)
+            && (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS))
+            && (LA(1) == NAME || LA(1) == LBRACKET)
+            && perform_declaration_in_class_check_js()
+        ) {
+            declaration_statement_js(LA(1));
+            // need to make sure a pseudo block ends
+            endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
+            processed_statement = true;
+            return;
+        }
+
+        // invoke the table to handle keywords
+        if (inMode(MODE_STATEMENT)) {
+            auto token = LA(1);
+
+            // looking for "let", "var", "const", "static", or "using" at the statement level
+            // (Note: do not confuse static declaration with static method in a class)
+            if (
+                decl_start_js_token_set.member(LA(1))
+                && next_token() != TS_ENUM
+                && (
+                    LA(1) != JS_STATIC
+                    || (
+                        LA(1) == JS_STATIC
+                        && next_token() != LCURLY
+                        && next_token() != JS_GET
+                        && next_token() != JS_SET
+                        && next_token_two() != JS_GET
+                        && next_token_two() != JS_SET
+                        && !perform_keywordless_function_check_js()
+                    )
+                )
+            ) {
+                declaration_statement_js(LA(1));
+                // need to make sure a pseudo block ends
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
+                processed_statement = true;
+                return;
+            }
+
+            // special case for TypeScript function declarations with the "function" keyword
+            if (token == JS_FUNCTION && perform_function_declaration_check_ts()) {
+                function_declaration_ts();
+                processed_statement = true;
+                return;
+            }
+
+            // looking for statements that start with a duplex keyword (e.g., "else if")
+            if (duplex_keyword_set.member((unsigned int) LA(1))) {
+                const auto lookup = duplexKeywords[token + (next_token() << 8)];
+                if (lookup)
+                    token = lookup;
+            }
+
+            // special case: looking for "enum" in the table when preceded by "export"
+            if (
+                (
+                    LA(1) == JS_CONST
+                    || LA(1) == JS_EXPORT
+                    || LA(1) == JS_STATIC
+                )
+                && next_token() == TS_ENUM
+            ) {
+                auto nxtoken = next_token();
+
+                const auto& rule = javascriptRules[nxtoken];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
+
+            // special case: looking for "get" or "set" that is really a name
+            if ((LA(1) == JS_GET || LA(1) == JS_SET) && !perform_accessor_is_name_check_js()) {
+                LT(1)->setType(NAME);
+                processed_statement = true;
+                return;
+            }
+
+            // looking for keyword-based statements in the table
+            const auto& rule = javascriptRules[token];
+            if (rule.elementToken && processRule(rule)) {
+                processed_statement = true;
+                return;
+            }
+        }
+} :;
+
+/*
+  javascript_rules
+
+  Processes tokens that do not begin a statement in JavaScript.
+  Includes extra logic that differs from the generic start[] grammar rule.
+*/
+javascript_rules[] {
+        int call_count = 1;
+        CALL_TYPE type = NOCALL;
+        bool in_export_statement = inTransparentMode(MODE_EXPORT_JS);
+        bool in_import_statement = inTransparentMode(MODE_IMPORT_JS);
+
+        ENTRY_DEBUG
+} :
+        // special behavior for import/export statements:
+        // - "default" is a valid specifier [export only]
+        // - "type" is a valid TypeScript specifier [import only]
+        // - bare literals can appear (no expression)
+        // - curly braces begin/end name lists
+        // - "as" denotes special markup
+        // - "from" denotes special markup
+        // - multops ('*') should be treated as a name
+        { in_export_statement || in_import_statement }?
+        (
+            { in_export_statement }?
+            specifier_js |
+
+            { in_import_statement }?
+            type_as_specifier_ts |
+
+            literals | name_list_js | alias_js | from_js | multops_as_name
+        ) |
+
+        // looking for lparen to start a parameter list
+        { inMode(MODE_PARAMETER_LIST_JS) }?
+        javascript_parameter_list
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                colon_type_ts();
+        } |
+
+        // looking for the type (e.g., "= TYPE") in a TypeScript type definition
+        { inTransparentMode(MODE_TYPEDEF) }?
+        (EQUAL type_ts) |
+
+        // looking for an empty control portion of a for-loop (e.g., lparen rparen)
+        { inMode(MODE_FOR_CONTROL_JS) && next_token() == RPAREN }?
+        empty_for_control_js |
+
+        // looking for lparen to start control portion of a for-loop
+        { inMode(MODE_FOR_CONTROL_JS) }?
+        for_control_js |
+
+        // looking for "extends" (JavaScript) or "implements" (TypeScript) for a derivation list
+        { LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS }?
+        super_list_js |
+
+        // end of file
+        eof |
+
+        // end of line
+        line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
+
+        comma |
+
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }?
+        rparen[false] |
+
+        // characters with special actions that usually end currently open elements
+        // special case for blocks (e.g., lambda capture) in lcurly argument lists
+        {
+            !inTransparentMode(MODE_INTERNAL_END_CURLY)
+            || (inMode(MODE_BLOCK_CONTENT) && inTransparentMode(MODE_ARGUMENT | MODE_LIST))
+        }?
+        block_end |
+
+        terminate |
+
+        // do not confuse with expression block or object
+        {
+            (
+                (
+                    (
+                        inTransparentMode(MODE_CONDITION)
+                        || (
+                            !inMode(MODE_EXPRESSION)
+                            && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
+                        )
+                    )
+                    && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+                    && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+                    && !inTransparentMode(MODE_INIT | MODE_EXPECT)
+                    && !inTransparentMode(MODE_ARGUMENT | MODE_EXPECT)
+                )
+                || inTransparentMode(MODE_ANONYMOUS)
+                || inMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP)
+            )
+            && perform_lcurly_differentiator_check_js()
+        }?
+        lcurly |
+
+        { inMode(MODE_ARGUMENT_LIST) }?
+        call_argument_list |
+
+        {
+            !inMode(MODE_INIT)
+            && (
+                !inMode(MODE_EXPRESSION)
+                || inTransparentMode(MODE_DETECT_COLON)
+            )
+        }?
+        colon |
+
+        // must be an expression statement; do not invoke pattern_statements[]
+        {
+            inMode(MODE_NEST | MODE_STATEMENT)
+            || (inPrevMode(MODE_BLOCK) && inMode(MODE_PARAMETER_LIST_JS) && inTransparentMode(MODE_STATEMENT))
+        }?
+        {
+            // @TODO: this is a bug that must exist for the time being;
+            // eventually, fix MODE_PARAMETER_LIST_JS to end properly
+            if (inMode(MODE_PARAMETER_LIST_JS) && inTransparentMode(MODE_STATEMENT)) {
+                endDownOverMode(MODE_STATEMENT);
+                startNewMode(MODE_NEST | MODE_STATEMENT);
+            }
+        }
+        expression_statement[type, call_count] |
+
+        // in the middle of a statement
+        statement_part
+;
+
+/*
+  start_cmake
+
+  Invokes a table-based approach to detecting and handling tokens.
+
+  Whitespace tokens are handled elsewhere and are automagically included
+  in the output stream.
+
+  Order of evaluation is important.
+*/
+start_cmake[] { ENTRY_DEBUG_START ENTRY_DEBUG
+        ++start_count;
+
+        cmake_statement_level();
+}:;
+exception
+catch[...] {
+        CATCH_DEBUG
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
+cmake_statement_level[] { ENTRY_DEBUG
+    // CMake rules adhere to the following form:
+    // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
+    const auto& cmake_rules = getStaticCMakeRules();
+
+    while (LA(1) != 1 /* EOF */) {
+        if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) {
+            // Need to put generic command call
+            init_command_cmake();
+        }
+
+        else if (cmake_end_statement_commands.member(LA(1))) {
+            // Encountered the end of the block, end!
+            break;
+        }
+
+        else {
+            auto token = LA(1);
+            if (next_token() == LPAREN) {
+                const auto& rule = cmake_rules[token];
+                if (rule.elementToken) {
+                    processRule(rule);
+                }
+            }
+            else {
+                // consume to be safe
+                consume();
+            }
+        }
+    }
+}:;
+
+/*
   keyword_statements
 
   Statements that begin with a unique keyword.
 */
 keyword_statements[] { ENTRY_DEBUG } :
         // conditional statements
-        // Python if/elif/else are handled in start_py
-        { !inLanguage(LANGUAGE_PYTHON) }?
         if_statement |
 
-        { !inLanguage(LANGUAGE_PYTHON) && next_token() == IF }?
+        { next_token() == IF }?
         elseif_statement |
 
-        { !inLanguage(LANGUAGE_PYTHON) }?
         else_statement |
 
         switch_statement | switch_case | switch_default |
@@ -1405,7 +2430,7 @@ pattern_statements[] {
         STMT_TYPE stmt_type = NONE;
         CALL_TYPE type = NOCALL;
 
-        // detect the declaration/definition type for non-Python languages
+        // detect the declaration/definition type for non-declarative languages
         if (!inLanguage(LANGUAGE_PYTHON))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
 
@@ -1544,7 +2569,7 @@ pattern_statements[] {
 
         // call
         {
-            !inLanguage(LANGUAGE_PYTHON)
+            !inLanguage(LANGUAGE_KEYWORD_FAMILY)
             && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
             && (
                 inMode(MODE_ACCESS_REGION)
@@ -1571,7 +2596,12 @@ pattern_statements[] {
   An efficient way to view the token after the current LA(1).
 */
 next_token[] returns [unsigned int token] {
-        if (LT(1)->getColumn() == current_column && LT(1)->getLine() == current_line) {
+        // ignore caching the next token if the current token is a JavaScript TERMINATE
+        if (
+            !(inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE)
+            && LT(1)->getColumn() == current_column
+            && LT(1)->getLine() == current_line
+        ) {
             token = nxt_token;
         } else {
             current_column = LT(1)->getColumn();
@@ -1606,6 +2636,24 @@ next_token_two[] returns [int token] {
         consume();
 
         token = LA(1);
+
+        inputState->guessing--;
+        rewind(place);
+} :;
+
+/*
+  next_token_text
+
+  Checks the text of the token after the current LA(1).
+*/
+next_token_text[] returns [std::string token_text] {
+        int place = mark();
+        inputState->guessing++;
+
+        // consume curren token
+        consume();
+
+        token_text = LT(1)->getText();
 
         inputState->guessing--;
         rewind(place);
@@ -1676,6 +2724,82 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
         inputState->guessing--;
         rewind(place);
+} :;
+
+/*
+  look_back_two_modes
+
+  Temporarily pops the two current modes on the mode stack and returns the new top mode.
+*/
+look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            srcMLState::MODE_TYPE current_mode = getMode();
+
+            // end the first mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            current_mode = getMode();
+
+            // end the second mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            // check if "m" is the current mode
+            if (inMode(m))
+                inmode = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  look_back_three_modes
+
+  Temporarily pops the three current modes on the mode stack and returns the new top mode.
+*/
+look_back_three_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            srcMLState::MODE_TYPE current_mode = getMode();
+
+            // end the first mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            current_mode = getMode();
+
+            // end the second mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            current_mode = getMode();
+
+            // end the third mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            // check if "m" is the current mode
+            if (inMode(m))
+                inmode = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
 } :;
 
 /* functions */
@@ -2688,7 +3812,7 @@ objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         objective_c_parameter
-        (objective_c_parameter)*
+        (options { greedy = true; } : objective_c_parameter)*
 ;
 
 /*
@@ -2821,7 +3945,7 @@ dynamic_statement[] { ENTRY_DEBUG } :
 */
 property_implementation_inner[] { ENTRY_DEBUG } :
         property_implementation_name
-        (COMMA property_implementation_name)*
+        (options { greedy = true; } : COMMA property_implementation_name)*
 ;
 
 /*
@@ -2835,7 +3959,7 @@ property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         identifier
-        (property_implementation_initialization)*
+        (options { greedy = true; } : property_implementation_initialization)*
 ;
 
 /*
@@ -2863,6 +3987,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         isempty = false;
         type = NOCALL;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
         int save_first = LA(1);
@@ -2873,7 +3998,25 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         call_count = 0;
 
         try {
+            // do not mark "< <" as a call in JavaScript
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && LA(1) == TEMPOPS
+                && next_token() == TEMPOPS
+            )
+                throw antlr::RecognitionException();
+
             call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
+
+            // do not mark "NAME() =>" as a call in JavaScript
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && (
+                    postcalltoken == JS_ARROW
+                    || (postcalltoken == LBRACKET && !inTransparentMode(MODE_DECORATOR_TS))
+                )
+            )
+                throw antlr::RecognitionException();
 
             // call syntax succeeded
             type = CALL;
@@ -2964,6 +4107,16 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& isempty, int& call_count] { ENTRY_DEBUG } :
         // detect name, which may be the name of a macro or even an expression
         (
+            // allow "!" after a name in JavaScript/TypeScript
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            (
+                function_identifier
+                (
+                    { LA(1) == OPERATORS && LT(1)->getText() == "!" }?
+                    declaration_modifiers_ts
+                )*
+            ) |
+
             function_identifier |
 
             keyword_call_tokens
@@ -2990,6 +4143,11 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
         ]
 
         (
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            paren_pair
+            set_int[call_count, 1]
+            markend[postcalltoken] |
+
             { isoption(parser_options, SRCML_PARSER_OPTION_CPP) || inLanguage(LANGUAGE_PYTHON) }?
             // check for proper form of argument list
             (call_check_paren_pair[argumenttoken] set_int[call_count, call_count + 1])*
@@ -3042,10 +4200,10 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
 
-            { !inLanguage(LANGUAGE_PYTHON) }?
+            { !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
             (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp |
 
-            { !inLanguage(LANGUAGE_PYTHON) }?
+            { !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
             (block_lambda_expression_full) => block_lambda_expression_full |
 
             { inLanguage(LANGUAGE_OBJECTIVE_C) }?
@@ -3098,16 +4256,30 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
 perform_ternary_check[] returns [bool is_ternary] {
         is_ternary = false;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
             ternary_check();
-            if (LA(1) == QMARK)
+            if (
+                LA(1) == QMARK
+                && (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        inLanguage(LANGUAGE_JAVASCRIPT)
+                        && next_token() != EQUAL
+                    )
+                )
+            )
                 is_ternary = true;
         } catch(...) {}
 
-        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
+        // "?:" should not be marked as a ternary in JavaScript
+        if (inLanguage(LANGUAGE_JAVASCRIPT) && is_ternary && next_token() == COLON)
+            is_ternary = false;
+
+        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY) && !inLanguage(LANGUAGE_JAVASCRIPT))
             skip_ternary = true;
 
         inputState->guessing--;
@@ -3132,6 +4304,9 @@ ternary_check[] { ENTRY_DEBUG } :
                 bracket_pair
                 (options { greedy = true; } : paren_pair | curly_pair)* |
 
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                angle_bracket_pair |
+
                 ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
             )
         )
@@ -3148,7 +4323,21 @@ ternary_check[] { ENTRY_DEBUG } :
                 bracket_pair
                 (options { greedy = true; } : paren_pair | curly_pair)* |
 
-                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                angle_bracket_pair |
+
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                curly_pair |
+
+                // disallow ">" if it is the end of a generic argument list
+                { !inLanguage(LANGUAGE_JAVASCRIPT) || !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+                TEMPOPE |
+
+                // disallow "=>" that follows a lambda parameter list
+                { last_consumed_guessing_mode != RPAREN }?
+                JS_ARROW |
+
+                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT | TEMPOPE | JS_ARROW)
             )
         )*
 ;
@@ -3957,7 +5146,7 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         CASE
-        (literals | ~TERMINATE)*
+        (options { greedy = true; } : literals | ~TERMINATE)*
 ;
 
 /*
@@ -3981,7 +5170,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             specifier
         )*
 
-        ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
+        (options { greedy = true; } : { true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
 /*
@@ -4086,7 +5275,7 @@ extern_definition[] { ENTRY_DEBUG } :
 
         EXTERN
 
-        (
+        (options { greedy = true; } :
             extern_alias
             (options { greedy = true; } : variable_identifier)*
         )*
@@ -4133,7 +5322,7 @@ namespace_definition[] { ENTRY_DEBUG } :
 
         (namespace_inline_specifier)*
         NAMESPACE
-        (attribute_cpp)*
+        (options { greedy = true; } : attribute_cpp)*
 ;
 
 /*
@@ -4184,7 +5373,7 @@ namespace_directive[] { ENTRY_DEBUG } :
         )*
 
         USING
-        (attribute_cpp)*
+        (options { greedy = true; } : attribute_cpp)*
 ;
 
 /*
@@ -4263,7 +5452,7 @@ class_directive[] { ENTRY_DEBUG } :
   Handles an Objective-C "@class" name.
 */
 atclass_name[] { ENTRY_DEBUG }:
-        (identifier | COMMA)*
+        (options { greedy = true; } : identifier | COMMA)*
 ;
 
 /*
@@ -4277,7 +5466,7 @@ protocol_declaration[] { ENTRY_DEBUG } :
         }
 
         ATPROTOCOL
-        (variable_identifier | COMMA)*
+        (options { greedy = true; } : variable_identifier | COMMA)*
 ;
 
 /*
@@ -4487,13 +5676,13 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
         (ATINTERFACE | ATIMPLEMENTATION)
 
-        (
+        (options { greedy = true; } :
             { first }?
             objective_c_class_header
             set_bool[first, false]
         )*
 
-        (
+        (options { greedy = true; } :
             lcurly[false]
 
             {
@@ -4524,7 +5713,7 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
         ATPROTOCOL
 
-        (
+        (options { greedy = true; } :
             { first }?
             objective_c_class_header
             set_bool[first, false]
@@ -4563,10 +5752,10 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
         (options { greedy = true; } : derived_list)*
 
         // suppressed ()* warning
-        (category)*
+        (options { greedy = true; } : category)*
 
         // suppressed ()* warning
-        (protocol_list)*
+        (options { greedy = true; } : protocol_list)*
 ;
 
 /*
@@ -4913,7 +6102,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
             specifier
         )*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived_list)
         )*
@@ -4995,7 +6184,7 @@ access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
             ATOPTIONAL
         )
 
-        (
+        (options { greedy = true; } :
             { !inLanguage(LANGUAGE_OBJECTIVE_C) && first }?
             (compound_name)*
             COLON
@@ -5014,7 +6203,12 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
                 content = false;
 
             // special end for conditions
-            if (inTransparentMode(MODE_CONDITION) && !inMode(MODE_ANONYMOUS) && !inMode(MODE_CLASS)) {
+            if (
+                !inLanguage(LANGUAGE_JAVASCRIPT)
+                && inTransparentMode(MODE_CONDITION)
+                && !inMode(MODE_ANONYMOUS)
+                && !inMode(MODE_CLASS)
+            ) {
                 endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
             }
@@ -5073,6 +6267,12 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
                 setMode(MODE_FUNCTION_BODY);
 
             startElement(SBLOCK);
+
+            // lcurly starts a block
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lcurly_types_js.emplace_back('b');  // block LCURLY
+                bracket_types_js.emplace_back("bLCURLY");
+            }
         }
 
         LCURLY
@@ -5081,6 +6281,10 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
             if (content) {
                 startNewMode(MODE_BLOCK_CONTENT);
                 startNoSkipElement(SCONTENT);
+            }
+            // special case: JavaScript/TypeScript blocks that do not contain a block content tag
+            else if (inLanguage(LANGUAGE_JAVASCRIPT) && !content) {
+                startNewMode(MODE_BLOCK_CONTENT);  // mode is still required
             }
         }
 
@@ -5111,6 +6315,18 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
             // the property declaration continues with the initialization and ends at the terminate
             if (inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_PROPERTY) && inMode(MODE_INIT | MODE_EXPECT) && LA(1) == EQUAL)
                 return;
+
+            // ignore auto-inserted terminate, if applicable
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && LA(1) == TERMINATE
+                && (
+                    next_token() == FINALLY
+                    || next_token() == JS_CATCH
+                    || next_token() == JS_ELSE
+                )
+            )
+                consume();
 
             // end all the statements this statement is nested in
             // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
@@ -5150,7 +6366,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
 
   Handles a right curly brace.  Not used directly, but called by block_end.
 */
-rcurly[] { ENTRY_DEBUG } :
+rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = false; ENTRY_DEBUG } :
         {
             // end any elements inside of the block; this is basically endDownToMode(MODE_TOP) but checks for class ending
             if (inTransparentMode(MODE_TOP)) {
@@ -5164,6 +6380,42 @@ rcurly[] { ENTRY_DEBUG } :
                 }
             }
 
+            // found JavaScript rcurly
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lcurly_types_js.empty()) {
+                switch (lcurly_types_js.back()) {
+                    // found JavaScript rcurly that ends a block
+                    case 'b':
+                        lcurly_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "bLCURLY")
+                            bracket_types_js.pop_back();
+
+                        wasblock = true;
+                        break;
+
+                    // found JavaScript rcurly that ends a name list
+                    case 'n':
+                        lcurly_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "nLCURLY")
+                            bracket_types_js.pop_back();
+
+                        break;
+
+                    // found JavaScript rcurly that ends an object
+                    case 'o':
+                        lcurly_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "oLCURLY")
+                            bracket_types_js.pop_back();
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
             // flush any whitespace tokens since sections should end at the last possible place
             flushSkip();
 
@@ -5174,8 +6426,14 @@ rcurly[] { ENTRY_DEBUG } :
             // end any sections inside the mode
             endWhileMode(MODE_TOP_SECTION);
 
+            // ensure block content ends before rcurly
             if (inMode(MODE_BLOCK_CONTENT))
                 endMode(MODE_BLOCK_CONTENT);
+            // special case for block rcurly in JavaScript
+            else if (wasblock && inTransparentMode(MODE_BLOCK_CONTENT)) {
+                endDownToMode(MODE_BLOCK_CONTENT);
+                endMode(MODE_BLOCK_CONTENT);
+            }
 
             if (getCurly() != 0)
                 decCurly();
@@ -5184,8 +6442,45 @@ rcurly[] { ENTRY_DEBUG } :
         RCURLY
 
         {
+            // ensure JavaScript expression blocks end here (except at the end of objects)
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && inMode(MODE_EXPRESSION_BLOCK)
+                && lcurly_types_js.back() != 'o'
+                && bracket_types_js.back() != "oLCURLY"
+            )
+                endMode(MODE_EXPRESSION_BLOCK);
+
             // end the current mode for the block; do not end more than one since they may be nested
-            endMode(MODE_TOP);
+            if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
+                endMode(MODE_TOP);
+            }
+            // special case for JavaScript function expressions enclosed in operator or call parentheses
+            else if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && !inMode(MODE_LAMBDA_JS)
+                && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
+                && (LA(1) == RPAREN && next_token() != LPAREN && last_consumed != RCURLY)
+                && (lparen_types_js.back() == 'o' || lparen_types_js.back() == 'c')
+            ) {
+                endDownToMode(MODE_FUNCTION_EXPRESSION_JS);
+                endMode(MODE_FUNCTION_EXPRESSION_JS);
+                rparen(true);
+            }
+            // end the mode (except for JavaScript lambdas that are inside a call or at the end of an object)
+            else if (
+                (inMode(MODE_TOP) || inMode(MODE_BLOCK))
+                && (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        LA(1) != COMMA
+                        && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
+                        && (!inMode(MODE_EXPRESSION_BLOCK) || lcurly_types_js.back() != 'o' || bracket_types_js.back() != "oLCURLY")
+                    )
+                )
+            ) {
+                endMode();
+            }
         }
 ;
 
@@ -5225,7 +6520,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
                         !inLanguage(LANGUAGE_JAVA)
                         || !inMode(MODE_ENUM | MODE_LIST)
                     )
-                ) && (!inLanguage(LANGUAGE_PYTHON) || !LT(1)->getText().empty())
+                ) && (!inLanguage(LANGUAGE_KEYWORD_FAMILY) || !LT(1)->getText().empty())
             )
                 startElement(SEMPTY);
 
@@ -5243,9 +6538,26 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 terminate_pre[] { ENTRY_DEBUG } :
         {
-            // end any elements inside of the statement
-            if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
-                endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+            // end any elements inside of the statement (non-JavaScript languages)
+            if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+
+                    // a block begins on the next line, so do not end the current statement
+                    if (
+                        inMode(MODE_LCURLY_BLOCK_JS)
+                        && next_token() != LCURLY
+                        && perform_lookahead_lcurly_differentiator_check_js()
+                    ) {
+                        skip_pseudoblock_terminate = true;
+                    }
+                    // otherwise, the statement should end at the TERMINATE
+                    else {
+                        endDownToMode(MODE_STATEMENT);
+                    }
+                }
+                else
+                    endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+            }
 
             if (inTransparentMode(MODE_TRAILING_RETURN)) {
                 endDownToMode(MODE_TRAILING_RETURN);
@@ -5261,6 +6573,27 @@ terminate_pre[] { ENTRY_DEBUG } :
 */
 terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
+            // do not accidentally end a statement requiring a block in JavaScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && skip_pseudoblock_terminate) {
+                skip_pseudoblock_terminate = false;
+                return;
+            }
+
+            // determine if "{" starts a block or an object in JavaScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inMode(MODE_LCURLY_BLOCK_JS) && LA(1) == LCURLY) {
+                // "{" denotes the start of a block
+                if (perform_lcurly_differentiator_check_js()) {
+                    lcurly();
+                }
+                // "{" denotes the start of an object
+                else {
+                    startNoSkipElement(SPSEUDO_BLOCK);
+                    startNoSkipElement(SCONTENT);
+
+                    expression_statement();
+                }
+            }
+
             // end all the statements this statement is nested in; special case when ending then of if statement
             if (
                 (
@@ -5314,7 +6647,7 @@ else_handling[] { ENTRY_DEBUG } :
             // catch and finally statements are nested inside of a try, if at that level; if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
             bool in_for_like_list = inMode(MODE_FOR_LIKE_LIST);
-            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == FINALLY;
+            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == JS_CATCH || LA(1) == FINALLY;
 
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
@@ -5323,7 +6656,7 @@ else_handling[] { ENTRY_DEBUG } :
 
             // handle parts of if
             if (inTransparentMode(MODE_IF) && !(intry && restoftry) && !in_for_like_list) {
-                if (LA(1) != ELSE) {
+                if (LA(1) != ELSE && LA(1) != JS_ELSE) {
                     endDownToMode(MODE_TOP);
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (inMode(MODE_ELSE)) {
@@ -5333,7 +6666,7 @@ else_handling[] { ENTRY_DEBUG } :
                         endMode();
 
                         // we have an extra else that is rogue; it either is a single else statement, or part of an #ifdef ... #else ... #endif
-                        if (LA(1) == ELSE && ifcount == 1)
+                        if ((LA(1) == ELSE || LA(1) == JS_ELSE) && ifcount == 1)
                             break;
 
                         // ending an else means ending an if
@@ -5424,7 +6757,7 @@ statement_part[] {
         { (inLanguage(LANGUAGE_OO)) }?
         throw_list
         complete_arguments
-        (comma complete_arguments)*
+        (options { greedy = true; } : comma complete_arguments)*
         {
             endDownToMode(MODE_LIST);
             endMode(MODE_LIST);
@@ -5507,12 +6840,15 @@ statement_part[] {
         { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
         macro_call |
 
-        { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
+        // colons were not in the expression rule, but that changed with TypeScript
+        { inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != COLON }?
         expression[type, call_count] |
 
         // already in an expression and ran into a keyword; stop the expression and markup the keyword statement
+        // keyword-based languages (e.g., Python and JavaScript) do not use keyword_statements
         {
-            inMode(MODE_EXPRESSION)
+            !inLanguage(LANGUAGE_KEYWORD_FAMILY)
+            && inMode(MODE_EXPRESSION)
             && !(
                 inLanguage(LANGUAGE_OBJECTIVE_C)
                 && LA(1) == IMPORT
@@ -5567,7 +6903,8 @@ statement_part[] {
         keyword_statements |
 
         // already in an expression
-        { inMode(MODE_EXPRESSION) }?
+        // colons were not in the expression rule, but that changed with TypeScript
+        { inMode(MODE_EXPRESSION) && LA(1) != COLON }?
         expression_part_plus_linq |
 
         // call list in member initialization list
@@ -5707,6 +7044,9 @@ statement_part[] {
         // sometimes end up here if a control group ends early or with a for-each
         rparen |
 
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        colon_marked_js |
+
         // seem to end up here for colon in ternary operator
         colon_marked |
 
@@ -5724,6 +7064,11 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
             incParen();
 
             startElement(SOPERATOR);
+
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('o');  // operator LPAREN
+                bracket_types_js.emplace_back("oLPAREN");
+            }
         }
 
         LPAREN
@@ -5750,6 +7095,23 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
+            // ensure comma is unmarked in certain instances for JavaScript
+            if (
+                inTransparentMode(MODE_IMPORT_JS)
+                || inTransparentMode(MODE_EXPORT_JS)
+                || inTransparentMode(MODE_ARRAY_JS)
+                || inTransparentMode(MODE_TYPE_ARRAY_TS)
+                || (
+                    inLanguage(LANGUAGE_JAVASCRIPT)
+                    && (
+                        inTransparentMode(MODE_CONTROL_INCREMENT)
+                        || inTransparentMode(MODE_CONTROL_CONDITION)
+                        || (lparen_types_js.back() == 'c' && bracket_types_js.back() == "cLPAREN")
+                    )
+                )
+            )
+                markup_comma = false;
+
             // comma ends the current condition in a Python assert
             if (
                 inLanguage(LANGUAGE_PYTHON)
@@ -5771,7 +7133,23 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 
             // comma ends the current item in a list or ends the current expression
             if (
-                !inTransparentMode(MODE_PARSE_EOL)
+                (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        inLanguage(LANGUAGE_JAVASCRIPT)
+                        && (
+                            inTransparentMode(MODE_ARRAY_JS)
+                            || inTransparentMode(MODE_TYPE_ARRAY_TS)
+                            || inTransparentMode(MODE_LAMBDA_JS)
+                            || (
+                                perform_in_mode_before_expression_check_js(MODE_ARGUMENT)
+                                || bracket_types_js.back() == "cLPAREN"
+                            )
+                        )
+                        && !perform_in_mode_before_expression_check_js(MODE_RETURN_JS)
+                    )
+                )
+                && !inTransparentMode(MODE_PARSE_EOL)
                 && (
                     inTransparentMode(MODE_LIST)
                     || inTransparentMode(MODE_STATEMENT)
@@ -5928,6 +7306,12 @@ condition[] { ENTRY_DEBUG } :
 
             // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            // lparen starts a condition
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('n');  // condition LPAREN
+                bracket_types_js.emplace_back("nLPAREN");
+            }
         }
 
         LPAREN
@@ -5973,6 +7357,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         int template_count;
         type = NONE;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -7384,6 +8769,11 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 endDownToMode(MODE_CONDITION);
+
+            // record if "?" is nested in "()" or "{}" for JavaScript/TypeScript 
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY)) {
+                is_ternary_colon = perform_colon_differentiator_check_ts();
+            }
         }
 
         qmark_marked
@@ -7395,6 +8785,10 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
                 startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
 
                 startNoSkipElement(STHEN);
+
+                if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE && LT(1)->getText() != ";") {
+                    consume(); // consume inserted terminate in JavaScript
+                }
             }
         }
 ;
@@ -8158,8 +9552,12 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            mixins_ts |
+
             // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            // colons were not in the expression rule, but that changed with TypeScript
+            { (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) && LA(1) != COLON }?
             {
                 // ensure each part of a comma-separated index is marked with an expression tag
                 if (!inMode(MODE_EXPRESSION))
@@ -8304,13 +9702,14 @@ simple_name_optional_template[bool push = true] { CompleteElement element(this);
 
         (
             {
-                inLanguage(LANGUAGE_CXX_FAMILY)
-                || inLanguage(LANGUAGE_JAVA_FAMILY)
-                || inLanguage(LANGUAGE_OBJECTIVE_C)
+                (
+                    inLanguage(LANGUAGE_CXX_FAMILY)
+                    || inLanguage(LANGUAGE_OBJECTIVE_C)
+                    || inLanguage(LANGUAGE_JAVA_FAMILY)
+                )
+                && generic_argument_list_check()
             }?
-            { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
-            /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            generic_argument_list |
 
             (cuda_argument_list) => cuda_argument_list |
 
@@ -8343,12 +9742,12 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
         (
             {
                 inLanguage(LANGUAGE_CXX_FAMILY)
-                || inLanguage(LANGUAGE_JAVA_FAMILY)
                 || inLanguage(LANGUAGE_OBJECTIVE_C)
+                || inLanguage(LANGUAGE_JAVA_FAMILY)
+                || inLanguage(LANGUAGE_JAVASCRIPT)
             }?
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
-            /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            generic_argument_list |
 
             (cuda_argument_list) => cuda_argument_list |
 
@@ -8371,7 +9770,7 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
 
         (
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
+            generic_argument_list
             (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -8405,7 +9804,7 @@ simple_name_optional_template_optional_specifier_destop[bool push = true] {
 
         (
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
+            generic_argument_list
             (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -8688,9 +10087,11 @@ compound_name_inner[bool index] {
             { inLanguage(LANGUAGE_C) }?
             compound_name_c[iscompound] |
 
-            // Python uses the same C++ logic for names
-            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_PYTHON) }?
+            { inLanguage(LANGUAGE_CXX) }?
             compound_name_cpp[iscompound] |
+
+            { inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
+            compound_name_keyword[iscompound] |
 
             macro_type_name_call
         )
@@ -8725,6 +10126,61 @@ compound_name_inner[bool index] {
 */
 multops_star[] { ENTRY_DEBUG } :
         (options { greedy = true; } : multops)*
+;
+
+/*
+  compound_name_keyword
+
+  Handles a compound name for keyword-based languages (e.g., Python and JavaScript).
+*/
+compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
+        { !inLanguage(LANGUAGE_PYTHON) }? generic_argument_list |
+
+        (
+            simple_name_optional_template_keyword
+
+            (options { greedy = true; } :
+                (
+                    ({ inLanguage(LANGUAGE_JAVASCRIPT) }? qmark_period | period)
+
+                    {
+                        // end the name early if the compound name is malformed
+                        if (
+                            inLanguage(LANGUAGE_JAVASCRIPT)
+                            && (
+                                (
+                                    last_consumed == PERIOD
+                                    && LA(1) != NAME
+                                    && !table_keywords_js_token_set.member((unsigned int) LA(1))
+                                )
+                                || (
+                                    last_consumed == QMARK_PERIOD
+                                    && LA(1) != LBRACKET
+                                    && LA(1) != LPAREN
+                                    && LA(1) != NAME
+                                    && !table_keywords_js_token_set.member((unsigned int) LA(1))
+                                )
+                            )
+                        ) {
+                            break;
+                        }
+
+                        iscompound = true;
+                    }
+
+                    (
+                        // optional computed access in JavaScript
+                        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed == QMARK_PERIOD }?
+                        computed_property_js |
+
+                        simple_name_optional_template_keyword |
+
+                        { next_token() == TERMINATE }?
+                        multop_name
+                    )
+                )
+            )*
+        )
 ;
 
 /*
@@ -9261,9 +10717,9 @@ constructor_definition[] { ENTRY_DEBUG } :
 
         constructor_header
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
 ;
 
 /*
@@ -9369,7 +10825,7 @@ destructor_definition[] { ENTRY_DEBUG } :
 
         destructor_header
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 ;
 
 /*
@@ -9478,7 +10934,7 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_OBJECTIVE_C) }?
             objective_c_call |
 
-            { inLanguage(LANGUAGE_PYTHON) }?
+            { inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }?
             compound_name
             call_argument_list |
 
@@ -9503,6 +10959,12 @@ call_argument_list[] { ENTRY_DEBUG } :
             // lparen starts a call
             if (inLanguage(LANGUAGE_PYTHON))
                 lparen_types_py.emplace_back('c');  // call LPAREN
+
+            // lparen starts a call
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('c');  // call LPAREN
+                bracket_types_js.emplace_back("cLPAREN");
+            }
         }
 
         (
@@ -9627,7 +11089,17 @@ ternary_expression[] { ENTRY_DEBUG } :
         }
 
         (
-            { LA(1) == LPAREN }?
+            // do not confuse "(() => ... ? ... : ...)" as two operator LPAREN in JavaScript/TypeScript
+            {
+                LA(1) == LPAREN
+                && (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        inLanguage(LANGUAGE_JAVASCRIPT)
+                        && !(last_consumed == LPAREN && bracket_types_js.back() == "oLPAREN")
+                    )
+                )
+            }?
             expression_process
             lparen_marked
 
@@ -9676,8 +11148,291 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         bool flag;
         bool isempty = false;
 
+        // special case: encountered a "}" when expected a ")" in JavaScript
+        if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RCURLY
+            && bracket_types_js.back().find("LP") != std::string::npos  /* "LPAREN" */
+        ) {
+            if (lcurly_types_js.back() != '*' && lcurly_types_js.back() == bracket_types_js.back()[0])
+                lcurly_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rcurly();
+            return;
+        }
+        // special case: encountered a ")" when expected a "}" in JavaScript
+        else if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RPAREN
+            && bracket_types_js.back().find("LC") != std::string::npos  /* "LCURLY" */
+        ) {
+            if (lparen_types_js.back() != '*' && lparen_types_js.back() == bracket_types_js.back()[0])
+                lparen_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rparen(true);
+            return;
+        }
+
         ENTRY_DEBUG
 } :
+        // special case: "<<", "<<<", etc. that should start a TypeScript generic argument list
+        // note: this is invalid code, but must be handled to avoid crashes and/or infinite loops
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == OPERATORS
+            && LT(1)->getText().find("<<") != std::string::npos
+            && perform_pseudo_generic_argument_list_check_ts()
+        }?
+        pseudo_generic_argument_list |
+
+        // special case: "..." in the LHS of a JavaScript property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && perform_in_mode_before_expression_check_js(MODE_DECL_DESTRUCTURE_JS)
+        }?
+        tripledotop |
+
+        // special case: mark "?", "+?", "-?", and "!" as modifiers in certain TypeScript instances
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+            && (
+                next_token() == COLON
+                || last_consumed == TEMPOPS
+                || last_consumed == COMMA
+            )
+        }?
+        declaration_modifiers_ts |
+
+        // special case: handle TypeScript declaration specifiers in an expression
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == TS_READONLY
+                || inPrevMode(MODE_ARGUMENT)
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+            )
+        }?
+        declaration_specifiers_ts |
+
+        // special case: handle TypeScript function specifiers in an expression
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                bracket_types_js.back() == "oLPAREN"
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+                || last_consumed == JS_EXTENDS
+            )
+        }?
+        function_declaration_specifiers_ts |
+
+        // special case: "default" is a name, not the start of a 'default' statement
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == JS_DEFAULT }?
+        default_as_name |
+
+        // special case: generic types (mixins) using the "extends" keyword in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
+        mixins_ts |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
+        keyword_iife_js |
+
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) using "function"
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_dc_iife_check_js() }?
+        keyword_dc_iife_js |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
+        keywordless_iife_js |
+
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_dc_iife_check_js() }?
+        keywordless_dc_iife_js |
+
+        // special case: JavaScript global context call (e.g., "(,)()")
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_global_context_call_check_js() }?
+        global_context_call_js |
+
+        // special case: JavaScript tagged templates (e.g., a`b`)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_tagged_template_check_js(call_count) }?
+        tagged_template_js[call_count] |
+
+        // special case: JavaScript lambda starts with a lone parameter (optional "async")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !skip_lone_lambda_js
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || (
+                    inTransparentMode(MODE_TYPE_TS)
+                    && (
+                        lambda_depth == 0
+                        || last_consumed != JS_ARROW
+                    )
+                )
+            )
+            && perform_lone_parameter_lambda_check_js()
+        }?
+        lambda_js[false] |
+
+        // special case: TypeScript generic lambdas (e.g., "<TYPE>() => ...") [optional "async"]
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == TEMPOPS || (LA(1) == JS_ASYNC && next_token() == TEMPOPS))
+            && perform_generic_lambda_check_ts()
+        }?
+        generic_lambda_ts |
+
+        // special case: JavaScript lambda starts with a parameter list (optional "async")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
+            && perform_parameter_list_lambda_check_js()
+        }?
+        lambda_js[true] |
+
+        // special case: JavaScript optional chaining with function calls
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
+        optional_call_chain_js |
+
+        // looking for "NAME<>()" to start a generic function call
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == NAME || (LA(1) == JS_AWAIT && next_token() == NAME))
+            && perform_generic_function_call_check_ts()
+        }?
+        generic_function_call_ts |
+
+        // looking for "*[...](){}" to start a generator function computed property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && perform_generator_function_computed_property_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for "[...](){}" to start a computed property function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+            && perform_computed_property_as_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for "[...]:" to start a computed property in an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
+        computed_property_js |
+
+        // looking for lbracket to start an array in JavaScript (note that ")[" starts an index)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != RPAREN }?
+        array_js |
+
+        // looking for "class" to start a class in an expression in JavaScript
+        // Note that "class:" is a property name in an object
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        class_expression_js |
+
+        // looking for "*(){...}" to start a nameless, keywordless generator function in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_nameless_keywordless_generator_function_check_js() }?
+        nameless_keywordless_generator_function_expression_js |
+
+        // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_decorator_function_expression_check_ts() }?
+        {
+            std::array<int, 2> post_specifier_tokens = perform_post_decorator_check_ts();
+
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            if (post_specifier_tokens[0] == JS_GET)
+                startElement(SFUNCTION_GET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_SET)
+                startElement(SFUNCTION_SET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_FUNCTION && post_specifier_tokens[1] == MULTOPS)
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        (
+            attribute_ts
+            (options { greedy = true; } : attribute_ts | specifier_js)*
+            function_expression_js[false]
+        ) |
+
+        // looking for "function" to start a function in an expression in JavaScript
+        // Note that "function:" is a property name in an object
+        { 
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !inTransparentMode(MODE_NAME_LIST_JS)
+            && next_token() != COLON
+            && (
+                (LA(1) != JS_GET && LA(1) != JS_SET)
+                || (
+                    (LA(1) == JS_GET || LA(1) == JS_SET)
+                    && perform_accessor_is_name_check_js()
+                )
+            )
+            && perform_function_expression_check_js()
+        }?
+        function_expression_js[true] |
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for lcurly to start an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        object_js |
+
+        // looking for "yield" or "yield*" to start a yield expression in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        yield_expression_js |
+
+        // looking for name to start a JavaScript subscriptable function call (e.g., "a[]()" or "a.b[]()")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == NAME
+            && (next_token() == LBRACKET || (next_token() == PERIOD && perform_member_access_function_call_check_py()))
+            && perform_subscriptable_function_call_check_py()
+        }?
+        call[call_count]
+        argument |
+
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         UNION |
@@ -9768,6 +11523,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                 dot_dereference |
                 /* Commented-out code: newop | */
 
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                qmark_period |
+
                 // left parentheses
                 { function_pointer_name_check() }?
                 function_pointer_name |
@@ -9787,6 +11545,12 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                     startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
                     startElement(SBLOCK);
+
+                    // lcurly starts a block
+                    if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                        lcurly_types_js.emplace_back('b');  // block LCURLY
+                        bracket_types_js.emplace_back("bLCURLY");
+                    }
                 }
 
                 LCURLY
@@ -10147,6 +11911,7 @@ eat_optional_macro_call[] {
         bool success = false;
 
         // find out if we have a macro call
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -10756,7 +12521,7 @@ catch_statement[] { ENTRY_DEBUG } :
         }
 
         (CATCH | CXX_CATCH)
-        (parameter_list)*
+        (options { greedy = true; } : parameter_list)*
 ;
 
 /*
@@ -11070,13 +12835,20 @@ generic_selection_association_default[] { SingleElement element(this); ENTRY_DEB
 expression_statement_process[] { ENTRY_DEBUG } :
         {
             bool inenumclass = (inLanguage(LANGUAGE_JAVA_FAMILY) && inTransparentMode(MODE_ENUM) && inMode(MODE_CLASS));
+            bool injsclass = (inLanguage(LANGUAGE_JAVASCRIPT) && perform_top_level_class_check_js());
 
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
+            // JavaScript classes should not start expression statement + expression tags
+            if (injsclass) {
+                skip_expression_markup_js = true;
+                startElement(SNOP);
+            }
             // start the element that will end after the terminate
-            if (!inenumclass)
+            else if (!inenumclass) {
                 startElement(SEXPRESSION_STATEMENT);
+            }
         }
 ;
 
@@ -11652,11 +13424,26 @@ pure_expression_block[] { ENTRY_DEBUG } :
 */
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
+            // special tag for TypeScript operators
             if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && (
+                    LA(1) == TS_ATSIGN
+                    || LA(1) == TS_INFER
+                    || LA(1) == TS_IS
+                    || LA(1) == TS_KEYOF
+                    || LA(1) == TS_SATISFIES
+                )
+            ) {
+                startElement(STS_OPERATOR);
+            }
+
+            else if (
                 (LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION))
                 || (LA(1) == PY_IN && !inTransparentMode(MODE_FOR_CONTROL_PY))
-            )
+            ) {
                 startElement(SOPERATOR);
+            }
         }
 
         (
@@ -11693,7 +13480,13 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             // Python
             { next_token() == PY_NOT }? PY_IS PY_NOT | { next_token() == PY_IN }? PY_NOT PY_IN |
-            EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR
+            EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR |
+
+            // JavaScript
+            JS_AS | JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_RANGE_OF | JS_TYPEOF | JS_VOID |
+
+            // TypeScript
+            TS_ATSIGN | TS_INFER | TS_IS | TS_KEYOF | TS_SATISFIES
         )
 ;
 
@@ -11745,11 +13538,12 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
 rparen[bool markup = true, bool end_control_incr = false] {
         bool isempty = getParen() == 0;
         bool wascall = false;
+        bool forcemarkup = false;
 
         ENTRY_DEBUG
 } :
         {
-            if (inLanguage(LANGUAGE_PYTHON)) {
+            if (inLanguage(LANGUAGE_PYTHON) && !lparen_types_py.empty()) {
                 switch (lparen_types_py.back()) {
                     // found Python rparen that ends a call
                     case 'c':
@@ -11767,7 +13561,52 @@ rparen[bool markup = true, bool end_control_incr = false] {
                 }
             }
 
-            if (isempty) {
+            // found JavaScript rparen that ends a call
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lparen_types_js.empty()) {
+                switch (lparen_types_js.back()) {
+                    // found JavaScript rparen that ends a call
+                    case 'c':
+                        lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "cLPAREN")
+                            bracket_types_js.pop_back();
+
+                        break;
+
+                    // found JavaScript rparen that ends a condition
+                    case 'n':
+                        lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "nLPAREN")
+                            bracket_types_js.pop_back();
+
+                        break;
+
+                    // found JavaScript operator rparen; force it to be marked as such
+                    case 'o':
+                        lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "oLPAREN")
+                            bracket_types_js.pop_back();
+
+                        forcemarkup = true;
+                        break;
+
+                    // found JavaScript rparen that ends a parameter list
+                    case 'p':
+                        lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "pLPAREN")
+                            bracket_types_js.pop_back();
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            if (isempty && !forcemarkup) {
                 // additional right parentheses indicates end of non-list modes
                 endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE);
 
@@ -11798,11 +13637,18 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     endMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
-                    startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
+                    if (inLanguage(LANGUAGE_JAVASCRIPT))
+                        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN | MODE_LCURLY_BLOCK_JS);
+                    else
+                        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                     // Commented-out code
                     // start the then element
                     // startNoSkipElement(STHEN);
+
+                    // for JavaScript/TypeScript, do not check for pseudoblocks here
+                    if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE && next_token() == LCURLY)
+                        return;
 
                     if (LA(1) != LCURLY && LA(1) != INDENT) {
                         startNoSkipElement(SPSEUDO_BLOCK);
@@ -11827,6 +13673,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
                 // end while condition, etc. and output pseudo block
                 if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
                     endMode(MODE_LIST);
+
+                    // for JavaScript/TypeScript, do not check for pseudoblocks here
+                    if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE && next_token() == LCURLY)
+                        return;
 
                     if (LA(1) != LCURLY && LA(1) != INDENT) {
                         startNoSkipElement(SPSEUDO_BLOCK);
@@ -11978,6 +13828,19 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  qmark_period
+
+  Handles the optional chaining operator ("?.") in JavaScript.
+*/
+qmark_period[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        QMARK_PERIOD
+;
+
+/*
   member_pointer
 
   Handles the "->" operator.
@@ -12051,8 +13914,15 @@ expression_process[] { ENTRY_DEBUG } :
                 if (inPrevMode(MODE_TERNARY_CONDITION))
                     setMode(MODE_TERNARY_CONDITION);
 
+                // JavaScript classes should not start expression statement + expression tags
+                if (skip_expression_markup_js) {
+                    skip_expression_markup_js = false;
+                    startElement(SNOP);
+                }
                 // start the expression
-                startElement(SEXPRESSION);
+                else {
+                    startElement(SEXPRESSION);
+                }
             }
         }
 ;
@@ -12102,6 +13972,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         bool flag;
         bool isempty = false;
+        ENTRY_DEBUG
 
         // special case: expression that starts a Python tuple without parentheses
         if (
@@ -12116,8 +13987,310 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             return;
         }
 
-        ENTRY_DEBUG
+        // special case: encountered a "}" when expected a ")" in JavaScript
+        if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RCURLY
+            && bracket_types_js.back().find("LP") != std::string::npos  /* "LPAREN" */
+        ) {
+            if (lcurly_types_js.back() != '*' && lcurly_types_js.back() == bracket_types_js.back()[0])
+                lcurly_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rcurly();
+            return;
+        }
+        // special case: encountered a ")" when expected a "}" in JavaScript
+        else if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RPAREN
+            && bracket_types_js.back().find("LC") != std::string::npos  /* "LCURLY" */
+        ) {
+            if (lparen_types_js.back() != '*' && lparen_types_js.back() == bracket_types_js.back()[0])
+                lparen_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rparen(true);
+            return;
+        }
 } :
+        // special case: "<<", "<<<", etc. that should start a TypeScript generic argument list
+        // note: this is invalid code, but must be handled to avoid crashes and/or infinite loops
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == OPERATORS
+            && LT(1)->getText().find("<<") != std::string::npos
+            && perform_pseudo_generic_argument_list_check_ts()
+        }?
+        pseudo_generic_argument_list |
+
+        // special case: "satisfies {" begins a type block in TypeScript
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == TS_SATISFIES
+            && next_token() == LCURLY
+        }?
+        (general_operators expression_block_js) |
+
+        // special case: "..." in the LHS of a JavaScript property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && perform_in_mode_before_expression_check_js(MODE_DECL_DESTRUCTURE_JS)
+        }?
+        tripledotop |
+
+        // special case: mark "?", "+?", "-?", and "!" as modifiers in certain TypeScript instances
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+            && (
+                next_token() == COLON
+                || last_consumed == TEMPOPS
+                || last_consumed == COMMA
+            )
+        }?
+        declaration_modifiers_ts |
+
+        // special case: handle TypeScript declaration specifiers in an expression
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == TS_READONLY
+                || inPrevMode(MODE_ARGUMENT)
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+            )
+        }?
+        declaration_specifiers_ts |
+
+        // special case: handle TypeScript function specifiers in an expression
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                bracket_types_js.back() == "oLPAREN"
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+                || last_consumed == JS_EXTENDS
+            )
+        }?
+        function_declaration_specifiers_ts |
+
+        // special case: "default" is a name, not the start of a 'default' statement
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == JS_DEFAULT }?
+        default_as_name |
+
+        // special case: generic types (mixins) using the "extends" keyword in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
+        mixins_ts |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
+        keyword_iife_js |
+
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) using "function"
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_dc_iife_check_js() }?
+        keyword_dc_iife_js |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
+        keywordless_iife_js |
+
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_dc_iife_check_js() }?
+        keywordless_dc_iife_js |
+
+        // special case: JavaScript global context call (e.g., "(,)()")
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_global_context_call_check_js() }?
+        global_context_call_js |
+
+        // special case: JavaScript tagged templates (e.g., a`b`)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_tagged_template_check_js(call_count) }?
+        tagged_template_js[call_count] |
+
+        // special case: JavaScript lambda starts with a lone parameter (optional "async")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !skip_lone_lambda_js
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || (
+                    inTransparentMode(MODE_TYPE_TS)
+                    && (
+                        lambda_depth == 0
+                        || last_consumed != JS_ARROW
+                    )
+                )
+            )
+            && perform_lone_parameter_lambda_check_js()
+        }?
+        lambda_js[false] |
+
+        // special case: TypeScript generic lambdas (e.g., "<TYPE>() => ...") [optional "async"]
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == TEMPOPS || (LA(1) == JS_ASYNC && next_token() == TEMPOPS))
+            && perform_generic_lambda_check_ts()
+        }?
+        generic_lambda_ts |
+
+        // special case: JavaScript lambda starts with a parameter list (optional "async")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
+            && perform_parameter_list_lambda_check_js()
+        }?
+        lambda_js[true] |
+
+        // special case: JavaScript optional chaining with function calls
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
+        optional_call_chain_js |
+
+        // looking for "EXPR ? EXPR : EXPR" to start a ternary
+        {
+            !skip_ternary
+            && !inMode(MODE_TERNARY_CONDITION)
+            && (
+                !inLanguage(LANGUAGE_JAVA)
+                || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
+            )
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                || (inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN")
+            )
+            && (!inLanguage(LANGUAGE_JAVASCRIPT) || last_consumed != JS_EXTENDS)
+            && perform_ternary_check()
+        }?
+        ternary_expression |
+
+        // looking for "NAME<>()" to start a generic function call
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == NAME || (LA(1) == JS_AWAIT && next_token() == NAME))
+            && perform_generic_function_call_check_ts()
+        }?
+        generic_function_call_ts |
+
+        // looking for "*[...](){}" to start a generator function computed property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
+            && perform_generator_function_computed_property_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for "[...](){}" to start a computed property function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
+            && perform_computed_property_as_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for "[...]:" to start a computed property in an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
+        computed_property_js |
+
+        // looking for lbracket to start an array in JavaScript (note that ")[" starts an index)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != RPAREN }?
+        array_js |
+
+        // looking for "class" to start a class in an expression in JavaScript
+        // Note that "class:" is a property name in an object
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        class_expression_js |
+
+        // looking for "*(){...}" to start a nameless, keywordless generator function in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_nameless_keywordless_generator_function_check_js() }?
+        nameless_keywordless_generator_function_expression_js |
+
+        // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_decorator_function_expression_check_ts() }?
+        {
+            std::array<int, 2> post_specifier_tokens = perform_post_decorator_check_ts();
+
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            if (post_specifier_tokens[0] == JS_GET)
+                startElement(SFUNCTION_GET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_SET)
+                startElement(SFUNCTION_SET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_FUNCTION && post_specifier_tokens[1] == MULTOPS)
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        (
+            attribute_ts
+            (options { greedy = true; } : attribute_ts | specifier_js)*
+            function_expression_js[false]
+        ) |
+
+        // looking for "function" to start a function in an expression in JavaScript
+        // Note that "function:" is a property name in an object
+        { 
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !inTransparentMode(MODE_NAME_LIST_JS)
+            && next_token() != COLON
+            && (
+                (LA(1) != JS_GET && LA(1) != JS_SET)
+                || (
+                    (LA(1) == JS_GET || LA(1) == JS_SET)
+                    && perform_accessor_is_name_check_js()
+                )
+            )
+            && perform_function_expression_check_js()
+        }?
+        function_expression_js[true] |
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
+            && perform_keywordless_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for lcurly to start an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        object_js |
+
+        // looking for "yield" or "yield*" to start a yield expression in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        yield_expression_js |
+
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
         {
             inLanguage(LANGUAGE_PYTHON)
@@ -12126,11 +14299,12 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         variable_identifier_array_grammar_sub[flag] |
 
-        // looking for name to start a Python subscriptable function call (e.g., "a[]()" or "a.b[]()")
+        // looking for name to start a Python or JavaScript subscriptable function call (e.g., "a[]()" or "a.b[]()")
         {
-            inLanguage(LANGUAGE_PYTHON)
+            (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT))
             && LA(1) == NAME
             && (next_token() == LBRACKET || (next_token() == PERIOD && perform_member_access_function_call_check_py()))
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_subscriptable_function_call_check_py()
         }?
         call[call_count]
@@ -12190,17 +14364,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_PYTHON) && !inTransparentMode(MODE_EXCLUDE_NO_PAREN_TUPLES_PY) }?
         type_alias_annotation_py |
 
-        {
-            !skip_ternary
-            && !inMode(MODE_TERNARY_CONDITION)
-            && (
-                !inLanguage(LANGUAGE_JAVA)
-                || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
-            )
-            && perform_ternary_check()
-        }?
-        ternary_expression |
-
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         UNION |
@@ -12232,7 +14395,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             LCURLY
         ) => lambda_expression_cpp |
 
-        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_PYTHON) }?
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
         { inLanguage(LANGUAGE_JAVA) }?
@@ -12262,11 +14425,15 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // call
         // need to distinguish between a call and a macro
+        // also, do not confuse with a TypeScript nameless function declaration
         {
-            type == CALL
-            || (
-                perform_call_check(type, isempty, call_count, -1)
-                && type == CALL
+            (!inLanguage(LANGUAGE_JAVASCRIPT) || LA(1) != TEMPOPS)
+            && (
+                type == CALL
+                || (
+                    perform_call_check(type, isempty, call_count, -1)
+                    && type == CALL
+                )
             )
         }?
         // added argument to correct markup of default parameters using a call
@@ -12297,6 +14464,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             member_pointer_dereference |
             dot_dereference |
             /* Commented-out code: newop | */
+
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            qmark_period |
 
             // left parentheses
             { function_pointer_name_check() }?
@@ -12331,6 +14501,12 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
                 startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
                 startElement(SBLOCK);
+
+                // lcurly starts a block
+                if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                    lcurly_types_js.emplace_back('b');  // block LCURLY
+                    bracket_types_js.emplace_back("bLCURLY");
+                }
             }
 
             LCURLY
@@ -12420,14 +14596,68 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
   Handles various rules for literals.
 */
 literals[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_PYTHON) }?
-        dquote_literal_py |
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        (backtick_literal_js | undefined_literal_js | regex_literal_js | jsx_literal_js) |
 
         { inLanguage(LANGUAGE_PYTHON) }?
-        squote_literal_py |
+        (dquote_literal_py | squote_literal_py) |
 
         string_literal | char_literal | literal | boolean | null_literal |
         complex_literal | nil_literal | none_literal | ellipsis_literal
+;
+
+/*
+  backtick_literal_js
+
+  Treats backticks (e.g., `...`) as a string literal in JavaScript.
+*/
+backtick_literal_js[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (markup)
+                startElement(SSTRING);
+        }
+
+        // if the literal has invalid markup, then it "ends" with a TERMINATE token
+        (BACKTICK_START (BACKTICK_END | TERMINATE))
+;
+
+/*
+  undefined_literal_js
+
+  Handles an "undefined" literal in JavaScript.
+*/
+undefined_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SUNDEFINED_JS);
+        }
+
+        JS_UNDEFINED
+;
+
+/*
+  regex_literal_js
+
+  Handles a regular expression literal (e.g., "/abc/") in JavaScript.
+*/
+regex_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SREGEX_JS);
+        }
+
+        JS_REGEX
+;
+
+/*
+  jsx_literal_js
+
+  Handles special cases of JSX literals (e.g., "(<> ... </>)") in JavaScript code using React.
+*/
+jsx_literal_js[] { LightweightElement element(this); ENTRY_DEBUG }:
+        {
+            startElement(SJSX_LITERAL);
+        }
+
+        JS_JSX_LITERAL
 ;
 
 /*
@@ -12456,7 +14686,8 @@ dquote_literal_py[] {
 
         (
             (STRING_START | DQUOTE_DOCSTRING_START)
-            (STRING_END | RAW_STRING_END | DQUOTE_DOCSTRING_END | DQUOTE_DOXYGEN_END)
+            // if the literal has invalid markup, then it "ends" with a TERMINATE token
+            (STRING_END | RAW_STRING_END | DQUOTE_DOCSTRING_END | DQUOTE_DOXYGEN_END | TERMINATE)
         )
 ;
 
@@ -12488,7 +14719,8 @@ squote_literal_py[bool markup = true] {
 
         (
             (CHAR_START | SQUOTE_DOCSTRING_START)
-            (CHAR_END | SQUOTE_DOCSTRING_END | SQUOTE_DOXYGEN_END)
+            // if the literal has invalid markup, then it "ends" with a TERMINATE token
+            (CHAR_END | SQUOTE_DOCSTRING_END | SQUOTE_DOXYGEN_END | TERMINATE)
         )
 ;
 
@@ -12503,7 +14735,8 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
                 startElement(SSTRING);
         }
 
-        (STRING_START (STRING_END | RAW_STRING_END))
+        // if the literal has invalid markup, then it "ends" with a TERMINATE token
+        (STRING_START (STRING_END | RAW_STRING_END | TERMINATE))
 ;
 
 /*
@@ -12511,11 +14744,16 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
 */
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup)
-                startElement(SCHAR);
+            if (markup) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    startElement(SSTRING);
+                else
+                    startElement(SCHAR);
+            }
         }
 
-        (CHAR_START CHAR_END)
+        // if the literal has invalid markup, then it "ends" with a TERMINATE token
+        (CHAR_START (CHAR_END | TERMINATE))
 ;
 
 /*
@@ -12526,7 +14764,7 @@ null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(SNULL);
         }
 
-        (NULLPTR | NULLLITERAL)
+        (NULLPTR | NULLLITERAL | JS_NULL)
 ;
 
 /*
@@ -12692,7 +14930,7 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
             (options { greedy = true; } : tripledotop)*
         )
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CSHARP) }?
             period
             variable_identifier
@@ -13164,7 +15402,7 @@ parameter_type_count[int& type_count, bool output_type = true] {
         CompleteElement element(this);
         bool is_compound = false;
 
-        if (inLanguage(LANGUAGE_PYTHON))
+        if (inLanguage(LANGUAGE_KEYWORD_FAMILY))
             output_type = false;
 
         ENTRY_DEBUG
@@ -13522,12 +15760,15 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 generic_argument_list_check[] returns [bool is_generic_argument_list] {
         is_generic_argument_list = false;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         int parencount = 0;
         int bracecount = 0;
+        int token_before_tempops = last_consumed;
         bool foundLogicalOperator = false;
+
         while (LA(1) != antlr::Token::EOF_TYPE) {
             if (LA(1) == RPAREN)
                 --parencount;
@@ -13583,6 +15824,31 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
                         is_generic_argument_list = true;
                 }
             }
+        }
+
+        // In JavaScript, "NAME < ... > NAME" denotes operators, not a generic argument list
+        if (
+            is_generic_argument_list
+            && inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == TEMPOPE
+            && (
+                token_before_tempops == NAME
+                || literal_tokens_set.member(token_before_tempops)
+            )
+        ) {
+            consume();  // ">"
+
+            if (
+                (
+                    LA(1) == NAME
+                    || literal_tokens_set.member((unsigned int) LA(1))
+                    || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    || parencount != 0
+                )
+                && !perform_mode_before_mode_statement_check(MODE_FUNCTION_DECL_TS)
+                && !perform_mode_before_mode_statement_check(MODE_DECL_STATEMENT_TS)
+            )
+                is_generic_argument_list = false;
         }
 
         inputState->guessing--;
@@ -13918,6 +16184,10 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
                 (options { generateAmbigWarnings = false; } : template_operators)*
             ) |
 
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            mixins_ts |
+
             template_extends_java |
 
             template_super_java |
@@ -14025,6 +16295,9 @@ tempops[] { ENTRY_DEBUG } :
             // ensure we are in a list mode so that we can end correctly; some uses of tempope will have their own mode
             if (!inMode(MODE_LIST))
                 startNewMode(MODE_LIST);
+
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
+                ++tempops_count_ts;
         }
 
         TEMPOPS
@@ -14044,6 +16317,9 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
 
         {
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
+                --tempops_count_ts;
+
             // end the mode created by the start template operator
             while (inMode(MODE_LIST))
                 endMode(MODE_LIST);
@@ -14154,6 +16430,35 @@ bracket_pair[] { ENTRY_DEBUG } :
         )*
 
         RBRACKET
+;
+
+/*
+  angle_bracket_pair
+
+  Used to match a set of angle brackets.
+*/
+angle_bracket_pair[] { ENTRY_DEBUG } :
+        TEMPOPS
+
+        (
+            { LA(1) == TEMPOPS }?
+            angle_bracket_pair |
+
+            { LA(1) == LBRACKET }?
+            bracket_pair |
+
+            { LA(1) == LCURLY }?
+            curly_pair |
+
+            { LA(1) == LPAREN }?
+            paren_pair |
+
+            qmark |
+
+            ~(QMARK | TEMPOPS | TEMPOPE | RPAREN | RCURLY | RBRACKET | TERMINATE)
+        )*
+
+        TEMPOPE
 ;
 
 /*
@@ -14277,12 +16582,12 @@ enum_class_header[] {} :
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
 
         variable_identifier
-        (COLON enum_type)*
+        (options { greedy = true; } : COLON enum_type)*
 
         (options { greedy = true; } :
             COMMA
             variable_identifier
-            (COLON enum_type)*
+            (options { greedy = true; } : COLON enum_type)*
         )*
 ;
 
@@ -14310,7 +16615,7 @@ enum_csharp_definition[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : variable_identifier)*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived_list)
         )*
@@ -14328,16 +16633,16 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : variable_identifier)*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived_list)
         )*
 
-        (
+        (options { greedy = true; } :
             COMMA
             (options { greedy = true; } : variable_identifier)*
 
-            (
+            (options { greedy = true; } :
                 { inLanguage(LANGUAGE_CXX_FAMILY) }?
                 (options { greedy = true; } : derived_list)
             )*
@@ -15386,12 +17691,13 @@ omp_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
-  if_statement_start
+  if_statement_start_kb
 
-  Starts a Python "if" statement (if/elif/else). Wraps the entire "if...else" statement in an if statement tag.
-  Wraps lone "if", "else", or "else if" blocks in an if statement tag to match existing functionality.
+  Starts an "if" statement for keyword-based languages such as Python (if/elif/else) and JavaScript (if/else if/else).
+  Wraps the entire "if...else" statement in an if statement tag.
+  Wraps lone "if", "elif", "else if", or "else" blocks in an if statement tag to match existing functionality.
 */
-if_statement_start[] { ENTRY_DEBUG } :
+if_statement_start_kb[] { ENTRY_DEBUG } :
         {
             // Several Python statements include "else" that should not be marked as an if-statement
             if (
@@ -15662,6 +17968,7 @@ alias_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_
             // - at the start of a block
             // - at RPAREN that is not part of the alias
             // - at IF that is not part of the alias (special case for "case")
+            // - at the end of the file
             {
                 LA(1) == INDENT
                 || (LA(1) == RPAREN && lparen_types_size == lparen_types_py.size())
@@ -15670,6 +17977,7 @@ alias_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_
                     && lparen_types_size == lparen_types_py.size()
                     && inTransparentMode(MODE_CASE_PY)
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -15813,13 +18121,13 @@ from_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 */
 perform_from_import_check[] returns [bool isimport] {
         isimport = false;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
-                if (LA(1) == PY_IMPORT || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == PY_IMPORT || LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -15832,8 +18140,6 @@ perform_from_import_check[] returns [bool isimport] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -15899,6 +18205,7 @@ comprehension_range_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
                     && lparen_types_py.back() == 'c'
                     && lparen_types_py.size() == lparen_types_size
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -15958,7 +18265,10 @@ comprehension_if_py[] { bool multiple_ifs = false; size_t lparen_types_size = 0;
 
         (options { greedy = true; } :
             // do not accidentally consume the call-ending RPAREN that is not part of a list comp.
-            { LA(1) == RPAREN && lparen_types_py.back() == 'c' && lparen_types_py.size() == lparen_types_size }?
+            {
+                (LA(1) == RPAREN && lparen_types_py.back() == 'c' && lparen_types_py.size() == lparen_types_size)
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -16191,7 +18501,10 @@ parameter_annotation_py[] { size_t lparen_types_size = 0; bool found_init = fals
 
         (options { greedy = true; } :
             // do not consume the ending RPAREN for a parameter list or EQUAL for an init
-            { (LA(1) == RPAREN || LA(1) == EQUAL) && lparen_types_py.back() == 'p' }?
+            {
+                ((LA(1) == RPAREN || LA(1) == EQUAL) && lparen_types_py.back() == 'p')
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 if (LA(1) == EQUAL)
                     found_init = true;
@@ -16252,6 +18565,7 @@ parameter_init_py[] { SingleElement element(this); ENTRY_DEBUG } :
             {
                 (LA(1) == RPAREN && lparen_types_py.back() == 'p')
                 || (LA(1) == PY_COLON && inTransparentMode(MODE_LAMBDA_PY))
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -16287,7 +18601,7 @@ function_annotation_py[] { ENTRY_DEBUG } :
         PY_ARROW
 
         (options { greedy = true; } :
-            { LA(1) == INDENT }?
+            { LA(1) == INDENT || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -16340,7 +18654,7 @@ python_super_list[] { CompleteElement element(this); size_t lparen_types_size = 
         LPAREN
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_py.back() == 's' }?
+            { (LA(1) == RPAREN && lparen_types_py.back() == 's') || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -16417,12 +18731,12 @@ check_valid_specifier_py[] returns [int isspecifier] {
 */
 perform_post_specifier_check_py[] returns [int keyword] {
         keyword = -1;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
                 if (!check_valid_specifier_py())
@@ -16440,8 +18754,6 @@ perform_post_specifier_check_py[] returns [int keyword] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -16473,15 +18785,15 @@ specifier_py[] { ENTRY_DEBUG } :
 */
 perform_post_attribute_check_py[] returns [int keyword] {
         keyword = -1;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
-                if (LA(1) == CLASS || LA(1) == PY_FUNCTION || LA(1) == INDENT || LA(1) == 1 /* EOF */)
+                if (LA(1) == CLASS || LA(1) == PY_FUNCTION || LA(1) == INDENT)
                     break;
             }
 
@@ -16495,8 +18807,6 @@ perform_post_attribute_check_py[] returns [int keyword] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -16672,7 +18982,7 @@ lambda_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY
         }
 
         (options { greedy = true; } :
-            { LA(1) == PY_COLON && inTransparentMode(MODE_LAMBDA_PY) }?
+            { (LA(1) == PY_COLON && inTransparentMode(MODE_LAMBDA_PY)) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -16722,6 +19032,7 @@ lambda_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY
                         )
                     )
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 // end the current expression(s)
@@ -16902,12 +19213,12 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
         is_dictionary = false;
         bool is_lambda = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                     ++num_brackets;
 
@@ -16928,7 +19239,6 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
                         (LA(1) == PY_COLON && !is_lambda)
                         || LA(1) == PY_RCURLY
                         || LA(1) == COMMA
-                        || LA(1) == 1 /* EOF */
                     )
                 )
                     break;
@@ -16947,8 +19257,6 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -16976,21 +19284,25 @@ tuple_py[] { CompleteElement element(this); ENTRY_DEBUG } :
             // - next token is COMMA, EQUAL, INDENT, RPAREN, SNOP, or TERMINATE
             // - LPAREN deque has a tuple parenthesis at the back
             // - next token is a comment or non-alias keyword (e.g., "in" for comprehensions)
+            // - at the end of the file
             {
-                LA(1) == RPAREN
-                && lparen_types_py.back() != 'c'
-                && (
-                    last_consumed == LPAREN  // empty tuple "()"
-                    || next_token() == COMMA
-                    || next_token() == EQUAL
-                    || next_token() == INDENT
-                    || next_token() == RPAREN
-                    || next_token() == SNOP
-                    || next_token() == TERMINATE
-                    || lparen_types_py.back() == 't'
-                    || whitespace_token_set.member((unsigned int) next_token())
-                    || (keyword_token_set.member((unsigned int) next_token()) && next_token() != PY_ALIAS)
+                (
+                    LA(1) == RPAREN
+                    && lparen_types_py.back() != 'c'
+                    && (
+                        last_consumed == LPAREN  // empty tuple "()"
+                        || next_token() == COMMA
+                        || next_token() == EQUAL
+                        || next_token() == INDENT
+                        || next_token() == RPAREN
+                        || next_token() == SNOP
+                        || next_token() == TERMINATE
+                        || lparen_types_py.back() == 't'
+                        || whitespace_token_set.member((unsigned int) next_token())
+                        || (keyword_token_set.member((unsigned int) next_token()) && next_token() != PY_ALIAS)
+                    )
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -17040,7 +19352,7 @@ perform_tuple_check_py[] returns [bool is_tuple] {
         bool is_lambda = false;
         bool is_comprehension = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -17049,7 +19361,7 @@ perform_tuple_check_py[] returns [bool is_tuple] {
             if (LA(1) == LPAREN && next_token() == RPAREN)
                 is_tuple = true;
             else {
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                         ++num_brackets;
 
@@ -17074,7 +19386,7 @@ perform_tuple_check_py[] returns [bool is_tuple] {
                         break;
                     }
 
-                    if (LA(1) == TERMINATE || LA(1) == INDENT || LA(1) == 1 /* EOF */)
+                    if (LA(1) == TERMINATE || LA(1) == INDENT)
                         break;
 
                     // end of lambda parameter(s)
@@ -17093,8 +19405,6 @@ perform_tuple_check_py[] returns [bool is_tuple] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17118,6 +19428,7 @@ tuple_no_paren_py[] { CompleteElement element(this); size_t lparen_types_size = 
             // end the no-parenthesis tuple if:
             // - current token is INDENT or TERMINATE
             // - at the top level of the tuple and find EQUAL
+            // - at the end of the file
             {
                 LA(1) == INDENT
                 || LA(1) == TERMINATE
@@ -17126,6 +19437,7 @@ tuple_no_paren_py[] { CompleteElement element(this); size_t lparen_types_size = 
                     && lparen_types_size == lparen_types_py.size()
                     && inTransparentMode(MODE_TUPLE_NO_PAREN_PY)
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -17165,12 +19477,12 @@ tuple_no_paren_py[] { CompleteElement element(this); size_t lparen_types_size = 
 perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
         is_tuple = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                     ++num_brackets;
 
@@ -17191,7 +19503,6 @@ perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
                     (LA(1) == EQUAL && num_brackets == 0)
                     || LA(1) == TERMINATE
                     || LA(1) == INDENT
-                    || LA(1) == 1 /* EOF */
                 )
                     break;
 
@@ -17202,8 +19513,6 @@ perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17229,7 +19538,7 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
 
         (options { greedy = true; } :
             // condition ends if ELSE is found
-            { LA(1) == ELSE }?
+            { LA(1) == ELSE || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -17277,7 +19586,7 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
         }
 
         (options { greedy = true; } :
-            // else clause ends if the current mode has no new parentheses and any one of these four:
+            // else clause ends if the current mode has no new parentheses and any one of these five:
             // 1. at RPAREN and...
             //     - the next token is not PERIOD or...
             //     - latest LPAREN is an operator parentheses or...
@@ -17287,21 +19596,25 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
             // 3. at COMMA and...
             //     - latest LPAREN is for a call
             // 4. at FOR
+            // 5. at the end of the file
             {
-                lparen_types_size == lparen_types_py.size()
-                && (
-                    (
-                        LA(1) == RPAREN
-                        && (
-                            next_token() != PERIOD
-                            || lparen_types_py.back() == 'o'
-                            || lparen_types_py.back() == 'c'
+                (
+                    lparen_types_size == lparen_types_py.size()
+                    && (
+                        (
+                            LA(1) == RPAREN
+                            && (
+                                next_token() != PERIOD
+                                || lparen_types_py.back() == 'o'
+                                || lparen_types_py.back() == 'c'
+                            )
                         )
+                        || (last_consumed == COMMA && inTransparentMode(MODE_TUPLE_PY))
+                        || (LA(1) == COMMA && lparen_types_py.back() == 'c')
+                        || LA(1) == FOR
                     )
-                    || (last_consumed == COMMA && inTransparentMode(MODE_TUPLE_PY))
-                    || (LA(1) == COMMA && lparen_types_py.back() == 'c')
-                    || LA(1) == FOR
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -17414,7 +19727,10 @@ operator_parenthesis_complete_py[] {
 
         (options { greedy = true; } :
             // found an operator rparen to close the starting operator lparen
-            { LA(1) == RPAREN && lparen_types_py.back() == 'o' && lparen_types_py.size() == lparen_types_size }?
+            {
+                (LA(1) == RPAREN && lparen_types_py.back() == 'o' && lparen_types_py.size() == lparen_types_size)
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -17481,7 +19797,7 @@ python_2_except_py[] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == COMMA && inMode(MODE_EXPRESSION) }?
+            { (LA(1) == COMMA && inMode(MODE_EXPRESSION)) || LA(1) == 1 /* EOF */ }?
             {
                 if (inTransparentMode(MODE_EXPRESSION)) {
                     endDownToMode(MODE_EXPRESSION);
@@ -17526,13 +19842,13 @@ python_2_except_py[] { ENTRY_DEBUG } :
 perform_python_2_except_check returns [bool is_python_2] {
         is_python_2 = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         // is there a comma at the top-level?
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                     ++num_brackets;
 
@@ -17550,7 +19866,7 @@ perform_python_2_except_check returns [bool is_python_2] {
                     break;
                 }
 
-                if (LA(1) == INDENT || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                if (LA(1) == INDENT || LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -17561,14 +19877,14 @@ perform_python_2_except_check returns [bool is_python_2] {
         // are there any additional commas, besides the one at the top-level?
         if (is_python_2) {
             try {
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     // should not be a Python 2 "except" clause
                     if (LA(1) == COMMA) {
                         is_python_2 = false;
                         break;
                     }
 
-                    if (LA(1) == INDENT || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    if (LA(1) == INDENT || LA(1) == TERMINATE)
                         break;
 
                     consume();
@@ -17580,8 +19896,6 @@ perform_python_2_except_check returns [bool is_python_2] {
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
-
         ENTRY_DEBUG
 } :;
 
@@ -17592,12 +19906,12 @@ perform_python_2_except_check returns [bool is_python_2] {
 */
 perform_member_access_function_call_check_py returns [bool is_call] {
         is_call = false;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 // consume all content inside the index
                 if (LA(1) == LBRACKET) {
                     while (LA(1) != RBRACKET && LA(1) != INDENT && LA(1) != TERMINATE && LA(1) != 1 /* EOF */)
@@ -17627,8 +19941,6 @@ perform_member_access_function_call_check_py returns [bool is_call] {
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
-
         ENTRY_DEBUG
 } :;
 
@@ -17640,12 +19952,12 @@ perform_member_access_function_call_check_py returns [bool is_call] {
 perform_subscriptable_function_call_check_py returns [bool is_call] {
         is_call = false;
         int num_square_brackets = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LBRACKET)
                     ++num_square_brackets;
 
@@ -17670,7 +19982,7 @@ perform_subscriptable_function_call_check_py returns [bool is_call] {
                         ++num_square_brackets;
                 }
 
-                if ((num_square_brackets == 0 && LA(1) == TERMINATE) || LA(1) == 1 /* EOF */)
+                if (num_square_brackets == 0 && LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -17680,8 +19992,6 @@ perform_subscriptable_function_call_check_py returns [bool is_call] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17704,7 +20014,7 @@ type_alias_annotation_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // the annotation ends before a top-level equal sign ("=")
-            { LA(1) == EQUAL && lparen_types_size == lparen_types_py.size() }?
+            { (LA(1) == EQUAL && lparen_types_size == lparen_types_py.size()) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -17750,7 +20060,7 @@ control_initialization_py[] { const antlr::Token* tuple_start = nullptr; ENTRY_D
         }
 
         (options { greedy = true; } :
-            { LA(1) == PY_IN }?
+            { LA(1) == PY_IN || LA(1) == 1 /* EOF */ }?
             {
                 if (inTransparentMode(MODE_EXPRESSION)) {
                     endDownToMode(MODE_EXPRESSION);
@@ -17808,7 +20118,7 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // the non-parenthesized tuple ends before a top-level 'in' keyword
-            { LA(1) == PY_IN && lparen_types_size == lparen_types_py.size() }?
+            { (LA(1) == PY_IN && lparen_types_size == lparen_types_py.size()) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -17838,3 +20148,9332 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             }
         }
 ;
+
+/*
+  void_as_name
+
+  Handles cases where "void" is the name of a type in TypeScript.
+*/
+void_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_VOID
+;
+
+/*
+  await_as_name
+
+  Handles cases where "await" is a name in JavaScript.
+*/
+await_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_AWAIT
+;
+
+/*
+  default_as_name
+
+  Handles cases where "default" is a name in JavaScript.
+*/
+default_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_DEFAULT
+;
+
+/*
+  type_as_name
+
+  Handles cases where "type" is a name in JavaScript/TypeScript.
+*/
+type_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        TS_TYPE
+;
+
+/*
+  yield_as_name
+
+  Handles cases where "yield" is a name in JavaScript/TypeScript.
+*/
+yield_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_YIELD
+;
+
+/*
+  propery_name_js
+
+  Handles name of get/set property, which could be a name or literal (bracketless_computed_property)
+  Computed property names are handled separately as a duplex keyword
+*/
+property_name_js[] { 
+        ENTRY_DEBUG
+
+        if (LA(1) == NAME)
+            compound_name();
+
+        else if (LA(1) == TEMPOPS) 
+            generic_argument_list_js();
+
+        else if (LA(1) != LCURLY && LA(1) != LPAREN)
+            bracketless_computed_property_js();
+}: ;
+
+/*
+  jump_statement_post_js
+
+  Handles names or TERMINATE tokens after a break or continue in JavaScript/TypeScript.
+*/
+jump_statement_post_js[] {
+        ENTRY_DEBUG
+
+        if (LA(1) == NAME)
+            compound_name();
+
+        if (LA(1) == TERMINATE)
+            terminate();
+} :;
+
+/*
+  perform_accessor_is_name_check_js
+
+  Checks if "get" or "set" are really accessors or if they should be names in JavaScript/TypeScript.
+*/
+perform_accessor_is_name_check_js[] returns [bool isaccessor] {
+        ENTRY_DEBUG
+
+        isaccessor = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == JS_GET || LA(1) == JS_SET) {
+                consume();
+
+                // consume any optional name, computed property, or literal
+                if (LA(1) == NAME)
+                    consume();
+                else if (LA(1) == LBRACKET)
+                    bracket_pair();
+                else if (literal_tokens_set.member((unsigned int) LA(1)))
+                    literals();
+
+                // consume the parameter list
+                paren_pair();
+
+                if (
+                    LA(1) == COLON
+                    || LA(1) == LCURLY
+                    || LA(1) == LBRACKET
+                    || LA(1) == NAME
+                )
+                    isaccessor = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  check_valid_specifier_js
+
+  Checks to see if the current token is a specifier in JavaScript or TypeScript (namespaces).
+*/
+check_valid_specifier_js[] returns [int isspecifier] {
+        ENTRY_DEBUG
+        isspecifier = false;
+
+        if (
+            (
+                specifier_js_token_set.member((unsigned int) LA(1))
+                && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
+                && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
+                && (
+                    LA(1) != JS_STATIC
+                    || (LA(1) == JS_STATIC && perform_keywordless_function_check_js())
+                    || (LA(1) == JS_STATIC && (next_token() == JS_GET || next_token() == JS_SET))
+                    || (LA(1) == JS_STATIC && (next_token() == OPERATORS || next_token() == DESTOP))
+                )
+            )
+            || (inPrevMode(MODE_ENUM) && LA(1) == JS_CONST)
+            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            || LA(1) == TS_ABSTRACT
+        )
+            isspecifier = true;
+} :;
+
+/*
+  perform_post_specifier_check_js
+
+  Returns the next token that occur after a JavaScript specifier.
+  If there are multiple specifiers in a row, returns the next token after the last specifier.
+*/
+perform_post_specifier_check_js[] returns [std::array<int, 3> keywords] {
+        ENTRY_DEBUG
+
+        keywords[0] = -1;
+        keywords[1] = -1;
+        keywords[2] = -1;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                consume();
+
+                // consume optional decorator that can appear after (at least one) specifier
+                while (LA(1) == TS_ATSIGN) {
+                    while (
+                        LA(1) != 1 /* EOF */
+                        && !specifier_js_token_set.member((unsigned int) LA(1))
+                        && !declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        && !function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    ) {
+                        consume();
+                    }
+                }
+
+                if (!check_valid_specifier_js())
+                    break;
+            }
+
+            if (post_specifier_js_token_set.member(LA(1))) {
+                keywords[0] = LA(1);
+                consume();
+
+                keywords[1] = LA(1);
+                consume();
+
+                keywords[2] = LA(1);
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  specifier_js
+
+  Used to mark specifiers in JavaScript/TypeScript.
+*/
+specifier_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // special tag for TypeScript specifiers
+            if (LA(1) == TS_ABSTRACT || LA(1) == TS_DECLARE)
+                startElement(STS_SPECIFIER);
+            else
+                startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (
+            JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC |
+
+            TS_ABSTRACT | TS_DECLARE
+        )
+;
+
+/*
+  declaration_statement_js
+
+  Handles a declaration statement in JavaScript.
+*/
+declaration_statement_js[int post_specifier_token = -1] { CompleteElement element(this); int decl_token = -1; ENTRY_DEBUG } :
+        {
+            // do not nest declaration statements
+            if (!inMode(MODE_DECL_STATEMENT_JS)) {
+                startNewMode(MODE_DECL_STATEMENT_JS);
+                startElement(SDECLARATION_STATEMENT);
+            }
+        }
+
+        (options { greedy = true; } :
+            // declaration should not be of the form "NAME ()" or contain "as"
+            // if the declaration ends prematurely, exit this rule
+            {
+                (LA(1) == LPAREN && last_consumed == NAME)
+                || LA(1) == JS_AS
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            // termination token signifies the end of the declaration statement
+            { LA(1) == TERMINATE }?
+            TERMINATE
+            {
+                break;
+            } |
+
+            // "," followed by a name, "[", or "{" should continue the declaration statement
+            { next_token() == NAME || next_token() == LBRACKET || next_token() == LCURLY }?
+            COMMA
+            declaration_js[true, post_specifier_token] |
+
+            // "," at this point indicates invalid syntax, so break early
+            { LA(1) == COMMA }?
+            {
+                break;
+            } |
+
+            {
+                decl_start_js_token_set.member(LA(1))
+                || decl_start_js_token_set.member(post_specifier_token)
+                || (
+                    (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS))
+                    && (post_specifier_token == NAME || post_specifier_token == LBRACKET)
+                )
+            }?
+            {
+                if (decl_start_js_token_set.member(LA(1)))
+                    decl_token = LA(1);
+                else
+                    decl_token = post_specifier_token;
+            }
+            declaration_js[false, decl_token]
+        )*
+;
+
+/*
+  declaration_js
+
+  Handles a declaration in JavaScript.  These typically begin with "let", "var", "const", "static", or "using".
+  Multiple comma-separated declarations retain the type from the first variable (e.g., let a, b).
+*/
+declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int decl_start_token = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_JS);
+
+            // first declaration in the declaration statement
+            if (!is_comma_decl) {
+                decl_start_token = post_specifier_token;
+                current_decl_type_js = post_specifier_token;
+            }
+            // additional declaration that appears after a comma
+            else
+                decl_start_token = current_decl_type_js;
+
+            switch (decl_start_token) {
+                case JS_LET :
+                    startElement(SDECLARATION_LET);
+                    break;
+
+                case JS_VAR :
+                    startElement(SDECLARATION_VAR);
+                    break;
+
+                case JS_STATIC :
+                    startElement(SDECLARATION_STATIC);
+                    break;
+
+                case JS_CONST :
+                    startElement(SDECLARATION_CONST);
+                    break;
+
+                case JS_USING :
+                    startElement(SDECLARATION_USING);
+                    break;
+
+                default:
+                    startElement(SDECLARATION);
+                    break;
+            }
+        }
+
+        (
+            (options { greedy = true; } :
+                { LA(1) == JS_AWAIT }?
+                situational_specifiers_js |
+
+                { check_valid_specifier_js() }?
+                (
+                    {declaration_specifiers_ts_token_set.member((unsigned int) LA(1))}?
+                    declaration_specifiers_ts |
+
+                    specifier_js
+                ) |
+
+                {
+                    LA(1) == QMARK
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
+                }?
+                declaration_modifiers_ts |
+
+                { (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || LA(1) == DESTOP }?
+                general_operators |
+
+                JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name |
+
+                // do not confuse computed property with array destructuring syntax
+                (
+                    { perform_top_level_class_check_js() }?
+                    computed_property_js |
+
+                    // handle optional array destructuring syntax (e.g., "const [a, b]")
+                    { LA(1) == LBRACKET }?
+                    decl_with_array_destructuring_js |
+
+                    // handle optional object destructuring syntax (e.g., "const {'key': value}")
+                    { LA(1) == LCURLY }?
+                    decl_with_object_destructuring_js
+                )
+            )*
+        )
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a termination token or comma
+            { LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            declaration_init_js | declaration_range_js | colon_type_ts | compound_name | literals |
+
+            /*
+                these rules are only here to handle invalid code and avoid a crash and/or infinite loop
+            */
+            (
+                (
+                    JS_ARROW
+                    (options { greedy = true; } :
+                        { inputState->guessing == 0 }?
+                        expression_block_js |
+
+                        curly_pair
+                    )*
+                ) |
+
+                from_js
+            )
+        )*
+
+        {
+            // if didn't break on a correct break token, consume any garbage after
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == RPAREN) break;
+                consume();
+            }
+
+            if (inTransparentMode(MODE_DECL_JS)) {
+                endDownToMode(MODE_DECL_JS);
+                endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
+  condition_js
+
+  Handles conditions contained in "if"/"while"/"switch" in JavaScript/TypeScript.
+*/
+condition_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            // consume optional "if" for "else...if" construct
+            if (last_consumed == JS_ELSE && LA(1) == IF)
+                consume();
+
+            // if the current token is not "(", do not try to process a condition
+            if (LA(1) != LPAREN)
+                return;
+
+            assertMode(MODE_CONDITION | MODE_EXPECT);
+
+            // start element condition outside of the left parentheses
+            startElement(SCONDITION);
+
+            // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
+            setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            lparen_types_js.emplace_back('n');  // condition LPAREN
+            bracket_types_js.emplace_back("nLPAREN");
+
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        LPAREN
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'n' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        // consume condition-ending parenthesis, if it exists
+        ({ LA(1) == RPAREN }? rparen[false])?
+;
+
+/*
+  empty_for_control_js
+
+  Handles an empty control portion of a for-loop in JavaScript.
+*/
+empty_for_control_js[] { ENTRY_DEBUG } :
+        {
+            assertMode(MODE_FOR_CONTROL_JS | MODE_EXPECT);
+            startElement(SCONTROL);
+        }
+
+        LPAREN
+
+        {
+            // add an empty initialization tag
+            startNewMode(MODE_INIT);
+            startElement(SCONTROL_INITIALIZATION);
+            endMode(MODE_INIT);
+        }
+
+        RPAREN
+
+        {
+            if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                endDownOverMode(MODE_FOR_CONTROL_JS);
+        }
+;
+
+/*
+  for_control_js
+
+  Handles the control portion of a for-loop in JavaScript.
+*/
+for_control_js[] { ENTRY_DEBUG } :
+        {
+            assertMode(MODE_FOR_CONTROL_JS | MODE_EXPECT);
+            startElement(SCONTROL);
+
+            // lparen starts a condition
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('n');  // condition LPAREN
+                bracket_types_js.emplace_back("nLPAREN");
+            }
+        }
+
+        LPAREN
+
+        // Initialization ends after the ";" or at the condition ")".  Can be omitted.
+        (
+            // allow names in "for await...of" and "for each...in" loops
+            {
+                decl_start_js_token_set.member(LA(1))
+                || check_valid_specifier_js()
+                || LA(1) == NAME
+                || LA(1) == LCURLY
+                || LA(1) == TERMINATE
+            }?
+            control_initialization_js
+        )?
+
+        {
+            // "for...in" and "for...of" loops must end after the initialization
+            if (last_consumed != TERMINATE) {
+                // found JavaScript rparen that ends a condition
+                if (LA(1) == RPAREN && lparen_types_js.back() == 'n') {
+                    lparen_types_js.pop_back();
+
+                    if (bracket_types_js.back() == "nLPAREN")
+                        bracket_types_js.pop_back();
+                }
+
+                consume();  // likely ")"
+
+                if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                    endDownOverMode(MODE_FOR_CONTROL_JS);
+
+                return;
+            }
+        }
+
+        // Condition ends after the ";".  Can be omitted.
+        ({ last_consumed == TERMINATE }? control_condition_js)?
+
+        // Increment ends at ")".  Can be omitted.
+        ({ LA(1) != RPAREN }? control_increment_js)?
+
+        {
+            // found JavaScript rparen that ends a condition
+            if (LA(1) == RPAREN && lparen_types_js.back() == 'n') {
+                lparen_types_js.pop_back();
+
+                if (bracket_types_js.back() == "nLPAREN")
+                    bracket_types_js.pop_back();
+            }
+
+            if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                endDownToMode(MODE_FOR_CONTROL_JS);
+        }
+
+        RPAREN
+
+        {
+            if (inMode(MODE_FOR_CONTROL_JS))
+                endMode(MODE_FOR_CONTROL_JS);
+
+            // special case: for-loop that ends immediately after the control
+            if (inMode(MODE_STATEMENT) && LA(1) == TERMINATE && LT(1)->getText() == ";") {
+                consume();
+                endMode(MODE_STATEMENT);
+            }
+        }
+;
+
+/*
+  control_initialization_js
+
+  Handles the first portion of a control in JavaScript.
+*/
+control_initialization_js[] {
+        CompleteElement element(this);
+        std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
+        bool found_decl = false;
+        int decl_token = -1;
+
+        ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_CONTROL_INITIALIZATION);
+            startElement(SCONTROL_INITIALIZATION);
+        }
+
+        (options { greedy = true; } :
+            // termination token or condition right parenthesis signifiy the end of the initialization
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'n')
+                || LA(1) == TERMINATE
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            // allow "," followed by a name as an additional declaration
+            { found_decl && bracket_types_js.back() != "cLPAREN" && next_token() == NAME }?
+            (COMMA declaration_js[true, post_specifier_tokens[0]]) |
+
+            {
+                LA(1) == LCURLY
+                || decl_start_js_token_set.member(LA(1))
+                || decl_start_js_token_set.member(post_specifier_tokens[0])
+                || (
+                    LA(1) == NAME
+                    && (next_token() == JS_RANGE_IN || next_token() == JS_RANGE_OF)
+                )
+            }?
+            {
+                found_decl = true;
+
+                // allow names in "for await...of" and "for each...in" loops
+                if (decl_start_js_token_set.member(LA(1)) || LA(1) == NAME)
+                    decl_token = LA(1);
+                // allow keywords that follow one or more specifiers
+                else if (decl_start_js_token_set.member(post_specifier_tokens[0]))
+                    decl_token = post_specifier_tokens[0];
+            }
+            declaration_js[false, decl_token] |
+
+            /*
+              fallback to consume an initialization that is an expression, not a decl
+            */
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // use this rule for commas in a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma |
+
+            // use this rule for any other unhandled comma instance
+            comma_marked |
+
+            {
+                // ensure ";" is not consumed here
+                if (LA(1) == TERMINATE)
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
+        )*
+
+        {
+            if (inTransparentMode(MODE_CONTROL_INITIALIZATION))
+                endDownToMode(MODE_CONTROL_INITIALIZATION);
+        }
+
+        ({ LA(1) == TERMINATE }? TERMINATE )?
+;
+
+/*
+  control_condition_js
+
+  Handles the second portion of a control in JavaScript.
+*/
+control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_CONTROL_CONDITION);
+            startElement(SCONTROL_CONDITION);
+        }
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // use this rule for commas in a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma |
+
+            // use this rule for any other unhandled comma instance
+            comma_marked |
+
+            {
+                // ensure ";" is not consumed here
+                if (LA(1) == TERMINATE)
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
+        )*
+
+        {
+            if (inTransparentMode(MODE_CONTROL_CONDITION))
+                endDownToMode(MODE_CONTROL_CONDITION);
+        }
+
+        ({ LA(1) == TERMINATE }? TERMINATE )?
+;
+
+/*
+  control_increment_js
+
+  Handles the third portion of a control in JavaScript.
+*/
+control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_CONTROL_INCREMENT | MODE_LIST);
+            startElement(SCONTROL_INCREMENT);
+        }
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // use this rule for commas in a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma |
+
+            // use this rule for any other unhandled comma instance
+            comma_marked |
+
+            {
+                // ensure condition-ending ")" is not consumed here
+                if (LA(1) == RPAREN && lparen_types_js.back() == 'n')
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
+        )*
+;
+
+/*
+  for_control_situational_specifiers_js
+
+  Handles optional "await" or "each" specifiers that can follow a "for" in JavaScript.
+*/
+for_control_situational_specifiers_js[] {
+        ENTRY_DEBUG
+
+        if (LA(1) == JS_AWAIT || LA(1) == JS_EACH)
+            situational_specifiers_js();
+} :;
+
+/*
+  situational_specifiers_js
+
+  Handles instances where "await" and "each" are marked as specifiers in JavaScript/TypeScript.
+  These include for-loops, "using" declarations, and generic function calls.
+*/
+situational_specifiers_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (JS_AWAIT | JS_EACH)
+;
+
+/*
+  perform_with_as_function_decl_check_ts
+
+  Checks if the "with" keyword starts a TypeScript function declaration.
+*/
+perform_with_as_function_decl_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == JS_WITH) {
+                consume();  // "with"
+
+                if (LA(1) == LPAREN) {
+                    paren_pair();
+
+                    // found "with():", indicating a TypeScript function declaration
+                    if (LA(1) == COLON)
+                        isdecl = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_with_statement_check_js
+
+  Determines if "with" is the start of a with statement, or is just a name.
+*/
+perform_with_statement_check_js[] returns [bool isstatement] {
+        ENTRY_DEBUG
+
+        isstatement = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+        
+        try {
+            if (LA(1) == JS_WITH) {
+                consume(); // "with"
+
+                // "with" must be followed by (...) to be a statement
+                paren_pair();
+
+                // with statements can have a pseudoblock
+                // therefore, it is insufficient to check if there is a block
+                // "with" is definitely not a statement if:
+                // - it is a top-level statement in an object
+                // - it is a top-level statement in a class/enum/interface/type
+                // - it is followed by a terminate, comma, or colon
+                if (!(
+                    lcurly_types_js.back() == 'o'
+                    || perform_in_class_block_check_js()
+                    || LA(1) == TERMINATE
+                    || LA(1) == COMMA
+                    || LA(1) == COLON
+                )) {
+                    isstatement = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  with_lparen_js
+
+  Handles a parenthesized expression after a "with" statement in JavaScript.
+*/
+with_lparen_js[] { ENTRY_DEBUG } :
+        {
+            lparen_types_js.emplace_back('w');  // with LPAREN
+            bracket_types_js.emplace_back("wLPAREN");
+        }
+
+        LPAREN
+
+        (options { greedy = true; } :
+            // ensure non-call RPAREN (")") is not consumed here
+            { LA(1) == RPAREN && lparen_types_js.back() != 'c' }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls, but not for parameters
+            // can also have top-level comma operators in with statement "argument"
+            { bracket_types_js.back() == "cLPAREN" || bracket_types_js.back() == "wLPAREN" }?
+            comma
+        )*
+
+        {
+            if (LA(1) == RPAREN) {
+                if (lparen_types_js.back() == 'w')
+                    lparen_types_js.pop_back();
+
+                if (bracket_types_js.back() == "wLPAREN")
+                    bracket_types_js.pop_back();
+            }
+
+            if (inTransparentMode(MODE_WITH_JS))
+                endDownToMode(MODE_WITH_JS);
+        }
+
+        RPAREN
+        
+        {
+            // force a pseudoblock to start
+            if (LA(1) != LCURLY) {
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN | MODE_LCURLY_BLOCK_JS);
+                startNoSkipElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SCONTENT);
+            }
+        }
+;
+
+/*
+  alias_js
+
+  Handles an "as" in JavaScript.
+*/
+alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SALIAS);
+        }
+
+        JS_AS
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                // ensure the "}" (for name lists) is not consumed here
+                if (LA(1) == RCURLY && inTransparentMode(MODE_NAME_LIST_JS) && lcurly_types_js.back() == 'n')
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+;
+
+/*
+  from_js
+
+  Handles a "from" in import/export statements in JavaScript.
+*/
+from_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SFROM);
+        }
+
+        JS_FROM
+        literals
+;
+
+/*
+  label_js
+
+  Handles a label (e.g., "NAME :") in JavaScript.
+  A label can appear before any statement.
+*/
+label_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SLABEL_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+
+            consume();  // NAME
+
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        COLON
+;
+
+/*
+  declaration_init_js
+
+  Handles an initialization expression that can appear after a declaration in JavaScript.
+*/
+declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_INIT_JS);
+            startElement(SINIT);
+        }
+
+        EQUAL
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // consume TypeScript types
+            {
+                !inTransparentMode(MODE_TERNARY)
+                || (inTransparentMode(MODE_TERNARY) && !is_ternary_colon)
+            }?
+            colon_type_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls and operator parentheses, but not for parameters
+            {
+                bracket_types_js.back() == "cLPAREN"
+                || (bracket_types_js.back() == "oLPAREN" && lparen_types_js.back() == 'o')
+            }?
+            comma
+        )*
+;
+
+/*
+  declaration_range_js
+
+  Handles the range portion of a declaration in JavaScript.  Begins with "in" or "of".
+*/
+declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SDECLARATION_RANGE);
+        }
+
+        (JS_RANGE_IN | JS_RANGE_OF)
+
+        (options { greedy = true; } :
+            // ensure condition ")" is not consumed here
+            { (LA(1) == RPAREN && lparen_types_js.back() == 'n') || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+;
+
+/*
+  super_list_js
+
+  Handles a super list in JavaScript differently from other languages (e.g., Java).
+*/
+super_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_SUPER_LIST_JS);
+            startElement(SDERIVATION_LIST);
+
+            super_list_curly_types_size_js = lcurly_types_js.size();
+        }
+
+        (extends_js | implements_ts)
+        (options { greedy = true; } : extends_js | implements_ts)*
+
+        {
+            super_list_curly_types_size_js = -1;
+        }
+;
+
+/*
+  extends_js
+
+  Handles an "extends" derivation list in JavaScript.
+*/
+extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXTENDS_JS);
+            startElement(SEXTENDS);
+        }
+
+        JS_EXTENDS
+        derivation_list_js
+
+        {
+            super_list_curly_types_size_js = lcurly_types_js.size();
+        }
+;
+
+/*
+  implements_ts
+
+  Handles an "implements" derivation list in TypeScript.
+*/
+implements_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXTENDS_JS);
+            startElement(STS_IMPLEMENTS);
+        }
+
+        TS_IMPLEMENTS
+        derivation_list_js
+
+        {
+            super_list_curly_types_size_js = lcurly_types_js.size();
+        }
+;
+
+/*
+  derivation_list_js
+
+  Handles a list of derivations in JavaScript or TypeScript.
+*/
+derivation_list_js[] { size_t bracket_types_size = bracket_types_js.size(); ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            // ensure the super list ends before the start of the class or interface block
+            {
+                (
+                    LA(1) == LCURLY
+                    && last_consumed != REFOPS
+                    && last_consumed != OPERATORS  // e.g., "|"
+                    && super_count_js > 0
+                )
+                || (LA(1) == TERMINATE && bracket_types_size == bracket_types_js.size())
+                || LA(1) == JS_EXTENDS
+                || LA(1) == TS_IMPLEMENTS
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            // allow commas for implementing multiple interfaces in TypeScript
+            { LA(1) == COMMA }?
+            COMMA |
+
+            super_js
+        )*
+;
+
+/*
+  super_js
+
+  Handles the elements of a super list in JavaScript differently from other languages (e.g., Java).
+*/
+super_js[] {
+        CompleteElement element(this);
+        size_t bracket_types_size = bracket_types_js.size();
+        super_count_js = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SDERIVATION);
+        }
+
+        (options { greedy = true; } :
+            (
+                // ensure the super ends before the start of a block or a comma
+                {
+                    (
+                        LA(1) == LCURLY
+                        && last_consumed != REFOPS
+                        && last_consumed != OPERATORS  // e.g., "|"
+                        && super_count_js > 0
+                    )
+                    || (LA(1) == TERMINATE && bracket_types_size == bracket_types_js.size())
+                    || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN" && bracket_types_js.back() != "oLPAREN")
+                    || LA(1) == JS_EXTENDS
+                    || LA(1) == TS_IMPLEMENTS
+                    || LA(1) == 1 /* EOF */
+                }?
+                {
+                    break;
+                } |
+
+                { inMode(MODE_ARGUMENT) }?
+                argument |
+
+                // allow JavaScript ternaries to use existing "else" logic
+                { inTransparentMode(MODE_TERNARY) }?
+                colon_marked_js |
+
+                // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+                { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+                colon_type_ts |
+
+                // handle all other instances of a colon
+                { LA(1) == COLON }?
+                colon_marked |
+
+                {
+                    if (!inMode(MODE_EXPRESSION))
+                        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                }
+                expression |
+
+                // consume commas for calls, but not for parameters
+                { bracket_types_js.back() == "cLPAREN" || bracket_types_js.back() == "oLPAREN" }?
+                comma
+            )
+            set_int[super_count_js, super_count_js + 1]
+        )*
+;
+
+/*
+  javascript_parameter_list
+
+  Handles a parameter list in JavaScript.
+*/
+javascript_parameter_list[] { CompleteElement element(this); size_t bracket_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            startElement(SPARAMETER_LIST);
+
+            lparen_types_js.emplace_back('p');  // parameter list LPAREN
+            bracket_types_js.emplace_back("pLPAREN");
+
+            bracket_types_size = bracket_types_js.size();
+        }
+
+        LPAREN
+
+        (options { greedy = true; } :
+            { (LA(1) == RPAREN && bracket_types_size == bracket_types_js.size()) || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            { LA(1) == COMMA }?
+            {
+                // we are in a parameter list; we must end the current parameter
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
+            }
+            COMMA |
+
+            // parameter that contains an object with a type (e.g., "{}: TYPE")
+            (
+                (declaration_specifiers_ts)*
+                { !perform_lcurly_differentiator_check_js() }?
+                (
+                    (curly_pair)
+                    (declaration_modifiers_ts)*
+                    COLON
+                )
+            ) => complete_javascript_parameter |
+
+            // parameter that contains a name or array with a type (e.g., "NAME: TYPE" or "[]: TYPE")
+            (
+                (declaration_specifiers_ts)*
+                (compound_name | bracket_pair)
+                (declaration_modifiers_ts)*
+                COLON
+            ) => complete_javascript_parameter |
+
+            // parameter that only contains a type (i.e., not ": TYPE")
+            {
+                inTransparentMode(MODE_TYPE_TS)
+                && inTransparentMode(MODE_LAMBDA_JS)
+                && next_token() != EQUAL
+            }?
+            complete_typescript_parameter |
+
+            complete_javascript_parameter |
+
+            // failsafe to catch extraneous, invalid LPAREN
+            paren_pair
+        )*
+
+        rparen[false]
+
+        // consume generated TERMINATE if it separates the parameter list and a block
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" && next_token() == LCURLY }? TERMINATE )?
+;
+
+/*
+  complete_javascript_parameter
+
+  Handles a parameter in JavaScript.
+*/
+complete_javascript_parameter[] { CompleteElement element(this); bool found_attribute = false; ENTRY_DEBUG } :
+        {
+            // start the parameter
+            startNewMode(MODE_PARAMETER);
+            startElement(SPARAMETER);
+
+            // start the declaration
+            startNewMode(MODE_DECL);
+            startElement(SDECLARATION);
+        }
+
+        (
+            // consume optional specifiers
+            (declaration_specifiers_ts)*
+
+            // consume optional TypeScript decorators
+            (attribute_ts set_bool[found_attribute, true])*
+
+            (
+                // array parameter
+                array_js |
+
+                // object parameter
+                object_js |
+
+                // rest parameter
+                (
+                    tripledotop
+                    (compound_name | array_js | object_js)
+                ) |
+
+                // decorator parameter (TypeScript)
+                { found_attribute && next_token() == COLON }?
+                (compound_name colon_type_ts) |
+
+                // typed parameter (TypeScript)
+                colon_type_ts |
+
+                // special case where "yield" is a name
+                yield_as_name |
+
+                // regular parameter
+                compound_name |
+
+                // literal parameter
+                bracketless_computed_property_js
+            )
+        )
+
+        (options { greedy = true; } :
+            // "?", "+?", "-?", and "!" are valid TypeScript modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
+            declaration_modifiers_ts |
+
+            // consume TypeScript types, if applicable
+            { LA(1) == COLON }?
+            colon_type_ts |
+
+            // ignore auto-inserted terminate, if applicable
+            { LA(1) == TERMINATE }?
+            TERMINATE |
+
+            // initialization expression after a parameter is optional
+            // also ignore auto-inserted terminate, if applicable
+            { LA(1) == EQUAL }?
+            (parameter_init_js ({ LA(1) == TERMINATE }? TERMINATE)?)
+        )*
+;
+
+/*
+  complete_typescript_parameter
+
+  Handles a type parameter in TypeScript.
+*/
+complete_typescript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start the parameter
+            startNewMode(MODE_PARAMETER);
+            startElement(SPARAMETER);
+
+            // start the declaration
+            startNewMode(MODE_DECL);
+            startElement(SDECLARATION);
+        }
+
+        (
+            // "...", "?", "+?", "-?", and "!" are valid modifiers before the type
+            {
+                LA(1) == DOTDOTDOT
+                || LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
+            ((declaration_modifiers_ts | tripledotop) type_ts) |
+
+            type_ts
+        )
+
+        // ignore auto-inserted terminate, if applicable
+        ({ LA(1) == TERMINATE }? TERMINATE)?
+;
+
+/*
+  parameter_init_js
+
+  Handles an initialization expression that can appear after a parameter in JavaScript.
+*/
+parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SINIT);
+        }
+
+        EQUAL
+
+        (options { greedy = true; } :
+            // do not consume the ending RPAREN for a parameter list
+            { (LA(1) == RPAREN && lparen_types_js.back() == 'p') || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { bracket_types_js.back() != "pLPAREN" }?
+            comma
+        )*
+;
+
+/*
+  name_list_js
+
+  Handles a list of names in JavaScript.  Begins and ends with a curly brace.
+*/
+name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NAME_LIST_JS);
+            startElement(SNAME_LIST);
+
+            // lcurly starts a name list
+            lcurly_types_js.emplace_back('n');  // name list LCURLY
+            bracket_types_js.emplace_back("nLCURLY");
+        }
+
+        LCURLY
+
+        (options { greedy = true; } :
+            alias_js | literals | type_as_specifier_ts | compound_name | COMMA | TERMINATE
+        )*
+
+        {
+            // rcurly ends a name list
+            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'n') {
+                lcurly_types_js.pop_back();
+
+                if (bracket_types_js.back() == "nLCURLY")
+                    bracket_types_js.pop_back();
+            }
+        }
+
+        RCURLY
+
+        {
+            // ignore auto-inserted terminate if the next token is "from"
+            if (LA(1) == TERMINATE && next_token() == JS_FROM)
+                consume();
+        }
+;
+
+/*
+  decl_with_array_destructuring_js
+
+  Handles array destructuring (e.g., "const [a, b]") in declarations in JavaScript.
+*/
+decl_with_array_destructuring_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_ARRAY_DESTRUCTURE_JS);
+
+            bracket_types_js.emplace_back("dLBRACKET");
+        }
+
+        LBRACKET
+
+        // consume commas that separate empty declarations
+        (options { greedy = true; } :
+            { LA(1) == COMMA }?
+            {
+                startNewMode(MODE_LOCAL);
+                startElement(SDECLARATION);
+                endMode(MODE_LOCAL);
+            }
+            COMMA
+        )*
+
+        (options { greedy = true; } :
+            // end the array destructuring at the correct ']'
+            { (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET") || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            // found "'key': a" case; requires special markup
+            { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
+            declaration_destructure_js[false] |
+
+            declaration_destructure_js[true]
+        )*
+
+        {
+            if (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
+                bracket_types_js.pop_back();
+
+            if (inTransparentMode(MODE_ARRAY_DESTRUCTURE_JS))
+                endDownToMode(MODE_ARRAY_DESTRUCTURE_JS);
+        }
+
+        RBRACKET
+
+        {
+            if (inMode(MODE_ARRAY_DESTRUCTURE_JS))
+                endMode(MODE_ARRAY_DESTRUCTURE_JS);
+        }
+;
+
+/*
+  decl_with_object_destructuring_js
+
+  Handles object destructuring (e.g., "const {'key': value}") in declarations in JavaScript.
+*/
+decl_with_object_destructuring_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_OBJECT_DESTRUCTURE_JS);
+
+            bracket_types_js.emplace_back("dLCURLY");
+        }
+
+        LCURLY
+
+        // consume commas that separate empty declarations
+        (options { greedy = true; } :
+            { LA(1) == COMMA }?
+            {
+                startNewMode(MODE_LOCAL);
+                startElement(SDECLARATION);
+                endMode(MODE_LOCAL);
+            }
+            COMMA
+        )*
+
+        (options { greedy = true; } :
+            // end the object destructuring at the correct '}'
+            { (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY") || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            { bracket_types_js.back() == "dLCURLY" }?
+            TERMINATE |
+
+            // special case: computed property used as key
+            { last_consumed == LCURLY || last_consumed == COMMA }?
+            (computed_property_js COLON) => (
+                {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                }
+
+                computed_property_js
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                }
+
+                COLON
+                declaration_destructure_js[true]
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                }
+            ) |
+
+            // found "'key': a" case; requires special markup
+            { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
+            declaration_destructure_js[false] |
+
+            declaration_destructure_js[true]
+        )*
+
+        {
+            if (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
+                bracket_types_js.pop_back();
+
+            if (inTransparentMode(MODE_OBJECT_DESTRUCTURE_JS))
+                endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+        }
+
+        RCURLY
+
+        {
+            if (inMode(MODE_OBJECT_DESTRUCTURE_JS))
+                endMode(MODE_OBJECT_DESTRUCTURE_JS);
+        }
+;
+
+/*
+  declaration_destructure_js
+
+  Handles a destructured declaration in JavaScript.
+  All declarations here do not have a type, even those that are comma-separated.
+*/
+declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_DESTRUCTURE_JS);
+
+            // do not enclose "'key'" in decl in "'key': a" case
+            if (markup)
+                startElement(SDECLARATION);
+        }
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a termination token or comma
+            {
+                (LA(1) == COMMA && bracket_types_js.back() != "oLPAREN")
+                || (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
+                || (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            // "expression: declaration" syntax in destructuring
+            { LA(1) != LCURLY && LA(1) != LBRACKET && LA(1) != COLON && perform_decl_with_colon_check_js() }?
+            (
+                {
+                    if (!inMode(MODE_EXPRESSION))
+                        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                }
+
+                // consume all elements in an expression until the colon
+                (options { greedy = true; } :
+                    { LA(1) == COLON }?
+                    {
+                        break;
+                    } |
+
+                    expression
+                )*
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                }
+
+                COLON
+                declaration_destructure_js[true]
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                    break;
+                }
+            ) |
+
+            // "[...]: declaration" or "{...}: declaration" syntax in destructuring
+            { perform_decl_with_colon_check_js() }?
+            (
+                COLON
+                declaration_destructure_js[true]
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                    break;
+                }
+            ) |
+
+            // nested array destructuring
+            { LA(1) == LBRACKET }?
+            decl_with_array_destructuring_js |
+
+            // nested object destructuring
+            { LA(1) == LCURLY }?
+            decl_with_object_destructuring_js |
+
+            // initialization with "="
+            { LA(1) == EQUAL }?
+            declaration_init_js |
+
+            // range with "in"
+            { LA(1) == JS_RANGE_IN }?
+            declaration_range_js |
+
+            // process "..." separately
+            { LA(1) == DOTDOTDOT }?
+            tripledotop |
+
+            // process names separately
+            { LA(1) == NAME }?
+            compound_name |
+
+            // special case: "await" is a name, not an operator
+            { LA(1) == JS_AWAIT }?
+            await_as_name |
+
+            // special case: "type" is a name, not the start of a 'type' statement
+            { LA(1) == TS_TYPE }?
+            type_as_name |
+
+            // catch-all for misc. invalid syntax
+            expression |
+
+            // only process commas if enclosed in operator parentheses
+            { bracket_types_js.back() == "oLPAREN" }?
+            comma
+        )*
+
+        (options { greedy = true; } :
+            { inTransparentMode(MODE_DECL_DESTRUCTURE_JS) }?
+            (
+                {
+                    endDownOverMode(MODE_DECL_DESTRUCTURE_JS);
+                }
+
+                // consume the comma that ends the declaration
+                COMMA
+
+                // consume commas that separate empty declarations
+                (options { greedy = true; } :
+                    {
+                        startNewMode(MODE_LOCAL);
+                        startElement(SDECLARATION);
+                        endMode(MODE_LOCAL);
+                    }
+
+                    COMMA
+                )*
+            )
+        )*
+;
+
+/*
+  perform_decl_with_colon_check_js
+
+  Checks for object destructuring with colons (e.g., "const {a: a1} = obj;") in JavaScript.
+*/
+perform_decl_with_colon_check_js[] returns [bool hascolon] {
+        ENTRY_DEBUG
+
+        hascolon = false;
+        int bracket_count = 0;
+        bool internary = false;
+        int ternary_bracket_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY)
+                    ++bracket_count;
+
+                if (LA(1) == RPAREN || LA(1) == RBRACKET || LA(1) == RCURLY)
+                    --bracket_count;
+
+                if (bracket_count < 0)
+                    break;
+
+                if (LA(1) == QMARK) {
+                    internary = true;
+                    ternary_bracket_count = bracket_count;
+                }
+
+                // false positive: colon as part of a ternary
+                if (internary && LA(1) == COLON && ternary_bracket_count == bracket_count) {
+                    internary = false;
+                    ternary_bracket_count = 0;
+                }
+                // found colon for a decl with object syntax
+                else if (LA(1) == COLON && bracket_count == 0) {
+                    hascolon = true;
+                    break;
+                }
+
+                if (
+                    bracket_count == 0
+                    && (
+                        LA(1) == RPAREN
+                        || LA(1) == RBRACKET
+                        || LA(1) == RCURLY
+                        || LA(1) == COMMA
+                    )
+                )
+                    break;
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  array_js
+
+  Handles arrays in JavaScript.  Not used directly, but can be called by expression_part.
+*/
+array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_ARRAY_JS);
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses
+            // (e.g., "(NAME: TYPE)") or in a generic argument list (e.g., "<[NAME: TYPE]>")
+            {
+                !inTransparentMode(MODE_TERNARY)
+                && (
+                    inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                    || bracket_types_js.back() == "oLPAREN"
+                )
+            }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_ARRAY_JS))
+                endDownToMode(MODE_ARRAY_JS);
+        }
+
+        // consume array-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
+;
+
+/*
+  perform_function_expression_check_js
+
+  Checks to see if the current token starts a function in an expression in JavaScript/TypeScript.
+*/
+perform_function_expression_check_js[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers
+            while (
+                LA(1) != TS_DECLARE
+                && (
+                    specifier_js_token_set.member((unsigned int) LA(1))
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+            )
+                consume();
+
+            // consume required "function", "get", or "set" keywords
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                consume();
+
+                // consume optional "*" for generator functions
+                if (LA(1) == MULTOPS)
+                    consume();
+
+                // consume the optional function name (regular, computed, or literal)
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    // found a literal "NAME" token
+                    if (LA(1) == NAME) {
+                        consume();
+                    }
+                    // found a computed property
+                    else if (LA(1) == LBRACKET) {
+                        bracket_pair();
+                    }
+                    // found a literal, which can be a name in this case
+                    else if (literal_tokens_set.member((unsigned int) LA(1))) {
+                        literals();
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                // consume optional generic argument list
+                if (LA(1) == TEMPOPS && generic_argument_list_check())
+                    angle_bracket_pair();
+
+                // consume the function parameter list
+                if (LA(1) == LPAREN) {
+                    paren_pair();
+
+                    // consume optional auto-generated TERMINATE
+                    if (
+                        (LA(1) == TERMINATE && LT(1)->getText() != ";") 
+                        && (next_token() == LCURLY || next_token() == COLON)
+                    )
+                        consume();
+
+                    // found "KEYWORD NAME() {", a function expression
+                    if (LA(1) == LCURLY) {
+                        isfunction = true;
+                    }
+                    // looking for "KEYWORD NAME(): TYPE {", also a function expression
+                    else if (LA(1) == COLON) {
+                        // consume optional TypeScript type, followed by a typical block
+                        if (
+                            LA(1) == COLON
+                            && (
+                                next_token() == LCURLY
+                                || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                            )
+                            && perform_colon_lcurly_differentiator_check_js() == 3
+                        ) {
+                            isfunction = true;
+                        }
+                        // consume optional TypeScript type
+                        else if (LA(1) == COLON && next_token() != LCURLY) {
+                            consume();  // ":"
+
+                            while (LA(1) != antlr::Token::EOF_TYPE) {
+                                // found a statement-level LCURLY, indicating a block
+                                if (bracket_count == 0 && LA(1) == LCURLY)
+                                    break;
+
+                                if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                    ++bracket_count;
+                                if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                    --bracket_count;
+
+                                if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                    break;
+
+                                consume();
+                            }
+
+                            if (LA(1) == LCURLY)
+                                isfunction = true;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  function_expression_js
+
+  Handles functions that appear in expressions in JavaScript.
+  Includes expression-level getters and setters, separate from the keyword table.
+  Not used directly, but can be called by expression_part.
+*/
+function_expression_js[bool markup] { ENTRY_DEBUG } :
+        {
+            if (markup) {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+                int function_keyword = perform_function_keyword_check_js();
+
+                // found a getter
+                if (function_keyword == JS_GET)
+                    startElement(SFUNCTION_GET_STATEMENT);
+                // found a setter
+                else if (function_keyword == JS_SET)
+                    startElement(SFUNCTION_SET_STATEMENT);
+                // found a generator function
+                else if (function_keyword == MULTOPS)
+                    startElement(SFUNCTION_GENERATOR_STATEMENT);
+                // found a function
+                else
+                    startElement(SFUNCTION_DEFINITION);
+            }
+        }
+
+        (
+            // only allow a certain subset of specifiers
+            (options { greedy = true; } :
+                { LA(1) != TS_DECLARE }?
+                specifier_js |
+
+                declaration_specifiers_ts
+            )*
+
+            (JS_FUNCTION | JS_GET | JS_SET)
+        )
+
+        // consume "*" for generator functions
+        ({ LA(1) == MULTOPS }? MULTOPS)*
+
+        // name or argument list is NOT always required
+        (options { greedy = true; } :
+            // consume the generic argument list for TypeScript nameless functions
+            { LA(1) == TEMPOPS }?
+            generic_argument_list_js |
+
+            // consume the name for named expression-level functions
+            compound_name |
+
+            // consume the computed property name
+            computed_property_js |
+
+            // consume literals that could be the "name" of a function
+            bracketless_computed_property_js 
+        )*
+
+        {
+            // if the current token does not start a parameter list, return
+            if (LA(1) != LPAREN)
+                return;
+
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        // consume inserted semicolon in case block is on next line
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" }? TERMINATE)?
+
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
+
+        {
+            if (markup && inPrevMode(MODE_FUNCTION_EXPRESSION_JS)) {
+                endDownOverMode(MODE_FUNCTION_EXPRESSION_JS);
+            }
+        }
+;
+
+/*
+  perform_function_keyword_check_js
+
+  Checks which keyword starts a function (after decorators, specifiers, etc.) in JavaScript/TypeScript.
+*/
+perform_function_keyword_check_js[] returns [int token] {
+        ENTRY_DEBUG
+
+        token = 0;
+        int bracket_count = 0;  // "[]", "{}", and "()"
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LBRACKET || LA(1) == LCURLY || LA(1) == LPAREN)
+                    ++bracket_count;
+                if (LA(1) == RBRACKET || LA(1) == RCURLY || LA(1) == RPAREN)
+                    --bracket_count;
+
+                if (bracket_count < 0)
+                    break;
+
+                if (
+                    bracket_count == 0
+                    && (
+                        LA(1) == JS_FUNCTION
+                        || LA(1) == JS_GET
+                        || LA(1) == JS_SET
+                    )
+                ) {
+                    token = LA(1);
+                    consume();
+
+                    // detect "function*"
+                    if (token == JS_FUNCTION && LA(1) == MULTOPS)
+                        token = LA(1);
+
+                    break;
+                }
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  expression_block_js
+
+  Handles a complete block inside an expression-level class or function in JavaScript.
+*/
+expression_block_js[] {
+        CompleteElement element(this);
+        size_t lcurly_types_size = 0;
+        bool has_content = !inMode(MODE_NO_BLOCK_CONTENT);
+
+        ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_BLOCK | MODE_EXPRESSION_BLOCK);
+            startElement(SBLOCK);
+
+            // lcurly starts a block
+            lcurly_types_js.emplace_back('b');  // block LCURLY
+            bracket_types_js.emplace_back("bLCURLY");
+        }
+
+        LCURLY
+
+        {
+            startNewMode(MODE_BLOCK_CONTENT);
+
+            // do not start block content tag for classes, interfaces, and type blocks
+            if (has_content)
+                startNoSkipElement(SCONTENT);
+
+            startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+        }
+
+        set_bool[skip_ternary, false]
+
+        // in a block, so mimic behavior as if starting a statement for the first time
+        {
+            lcurly_types_size = lcurly_types_js.size();  // should be at least two; '*' and 'b'
+
+            while (
+                (LA(1) != RCURLY || lcurly_types_js.back() != 'b' || lcurly_types_size != lcurly_types_js.size())
+                && LA(1) != 1 /* EOF */
+            ) {
+                // check for potential statement-start tokens before anything else
+                javascript_statements();
+
+                // if javascript_statements explicitly returns, do not run
+                // javascript_rules; applicable for 2+ declaration statements in a row
+                if (processed_statement) {
+                    processed_statement = false;
+                }
+                else {
+                    javascript_rules();
+                }
+            }
+        }
+
+        rcurly
+
+        {
+            // @TODO: these are bugs that must exist for the time being;
+            // eventually, fix MODE_PARAMETER_LIST_JS to end properly
+            if (
+                LA(1) != TERMINATE
+                && inMode(MODE_PARAMETER_LIST_JS)
+                && inTransparentMode(MODE_STATEMENT | MODE_EXPRESSION)
+                && look_back_two_modes(MODE_STATEMENT | MODE_TOP | MODE_NEST)
+                && (
+                    decl_start_js_token_set.member((unsigned int) LA(1))
+                    || table_keywords_js_token_set.member((unsigned int) LA(1))
+                )
+            ) {
+                endDownToMode(MODE_STATEMENT | MODE_TOP | MODE_NEST);
+            }
+            else if (
+                LA(1) != TERMINATE
+                && inMode(MODE_PARAMETER_LIST_JS)
+                && inTransparentMode(MODE_STATEMENT | MODE_EXPRESSION)
+                && (
+                    decl_start_js_token_set.member((unsigned int) LA(1))
+                    || table_keywords_js_token_set.member((unsigned int) LA(1))
+                )
+            ) {
+                endDownOverMode(MODE_STATEMENT | MODE_EXPRESSION);
+            }
+        }
+;
+
+/*
+  keywordless_function_expression_js
+
+  Handles functions without the "function" keyword that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
+        {
+            // tag would be created already if TypeScript attributes precede the function
+            if (markup) {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+                // generator keywordless function
+                if (perform_generator_function_check_js())
+                    startElement(SFUNCTION_GENERATOR_STATEMENT);
+                // regular keywordless function
+                else
+                    startElement(SFUNCTION_DEFINITION);
+            }
+        }
+
+        (
+            // only allow a certain subset of specifiers
+            (options { greedy = true; } :
+                { LA(1) != TS_DECLARE }?
+                specifier_js |
+
+                declaration_specifiers_ts
+            )*
+
+            // optional "*" for generator functions
+            (MULTOPS)*
+
+            (compound_name | bracketless_computed_property_js | computed_property_js)+
+
+            // optional "?" or "!" after a name
+            ({ LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }? declaration_modifiers_ts)*
+        )
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
+;
+
+/*
+  perform_keywordless_function_check_js
+
+  Checks for special keywordless function syntax in JavaScript.
+  Specifically, functions of the form "NAME(){...}".
+*/
+perform_keywordless_function_check_js[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
+        bool found_name = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional decorator before checking
+            while (LA(1) == TS_ATSIGN) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+
+                bracket_count = 0;
+            }
+
+            // consume optional specifiers before checking
+            while (
+                LA(1) != TS_DECLARE
+                && (
+                    specifier_js_token_set.member((unsigned int) LA(1))
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+            )
+                consume();
+
+            // match optional "*" for generator functions
+            if (LA(1) == MULTOPS)
+                consume();
+
+            // match what should be a name
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                // found a literal "NAME" token
+                if (LA(1) == NAME) {
+                    consume();
+                    found_name = true;
+                }
+                // found a computed property
+                else if (LA(1) == LBRACKET) {
+                    bracket_pair();
+                    found_name = true;
+                }
+                // found a literal, which can be a name in this case
+                else if (literal_tokens_set.member((unsigned int) LA(1))) {
+                    literals();
+                    found_name = true;
+                }
+                else {
+                    break;
+                }
+            }
+
+            // match optional "?" or "!" after a name
+            if (
+                last_consumed_guessing_mode == NAME
+                && (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+            )
+                consume();
+
+            // match optional TypeScript generic argument list
+            if (LA(1) == TEMPOPS) {
+                int tempops_count = 0;
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == TEMPOPS)
+                        ++tempops_count;
+
+                    if (LA(1) == TEMPOPE) {
+                        --tempops_count;
+
+                        if (tempops_count == 0) {
+                            consume();
+                            break;
+                        }
+                    }
+
+                    consume();
+
+                    if (tempops_count < 0)
+                        break;
+                }
+            }
+
+            // match "("
+            if (found_name && LA(1) == LPAREN) {
+                paren_pair();
+
+                // consume auto-inserted terminate, if applicable
+                if (
+                    (LA(1) == TERMINATE && LT(1)->getText() != ";") 
+                    && (next_token() == LCURLY || next_token() == COLON)
+                )
+                    consume();
+
+                // found "NAME() {", a keywordless function
+                if (LA(1) == LCURLY) {
+                    isfunction = true;
+                }
+                // looking for "NAME(): TYPE {", also a keywordless function
+                else if (LA(1) == COLON) {
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        isfunction = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (LA(1) == COLON && next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (
+                                bracket_count < 0
+                                || (
+                                    bracket_count == 0
+                                    && (LA(1) == COMMA || LA(1) == TERMINATE)
+                                )
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            isfunction = true;
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_generator_function_check_js
+
+  Checks to see if a keywordless function is a generator (i.e., has "*") or not in JavaScript/TypeScript.
+*/
+perform_generator_function_check_js[] returns [bool isgenerator] {
+        ENTRY_DEBUG
+
+        isgenerator = false;
+        bool in_decorator = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (!in_decorator && LA(1) == MULTOPS) {
+                    consume();  // "*"
+
+                    // found "*NAME"
+                    if (LA(1) == NAME)
+                        isgenerator = true;
+                    // found "[". prior check guarantees that it is closed
+                    else if (LA(1) == LBRACKET)
+                        isgenerator = true;
+
+                    break;
+                }
+
+                // decorators can have parentheses, so ignore them
+                if (LA(1) == TS_ATSIGN)
+                    in_decorator = true;
+
+                if (!in_decorator && (LA(1) == LPAREN || LA(1) == TERMINATE))
+                    break;
+
+                // no longer in a decorator
+                if (LA(1) == TERMINATE && in_decorator)
+                    in_decorator = false;
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  lambda_js
+
+  Handles a lambda in JavaScript.
+  Typically start with a name or parameter list followed by an arrow ("=>").
+*/
+lambda_js[bool is_list = false] {
+        CompleteElement element(this);
+        size_t lparen_types_size = 0;
+        size_t bracket_types_size = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+
+            if (inPrevMode(MODE_TYPE_TS)) {
+                startNewMode(MODE_LAMBDA_AS_TYPE_TS | MODE_LAMBDA_JS);
+            }
+            else {
+                startNewMode(MODE_LAMBDA_JS);
+            }
+
+            startElement(SFUNCTION_LAMBDA);
+
+            ++lambda_depth;
+        }
+
+        (
+            // optional "async" specifier
+            (options { greedy = true; } : specifier_js)*
+
+            (
+                // follows the form "() => ..." or "() => { ... }"
+                { is_list }?
+                javascript_parameter_list |
+
+                // follows the form "name => ..." or "name => { ... }"
+                complete_javascript_parameter
+            )
+
+            {
+                // a lone parameter lambda cannot appear here
+                skip_lone_lambda_js = true;
+            }
+
+            // consume TypeScript types
+            (options { greedy = true; } : colon_type_ts)?
+
+            // shorthand computed property with a string does not use "=>"
+            ({ LA(1) == JS_ARROW }? arrow_operator_js)?
+        )
+
+        {
+            skip_lone_lambda_js = false;
+        }
+
+        (
+            // end the parameter list lambda after the block
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            // special logic for blocks in guessing mode
+            { LA(1) == LCURLY && inputState->guessing != 0 }?
+            curly_pair |
+
+            // anything else continues the lambda
+            (
+                {
+                    lparen_types_size = lparen_types_js.size();
+                    bracket_types_size = bracket_types_js.size();
+                }
+
+                (options { greedy = true; } :
+                    // do not consume tokens that are outside the scope of the lambda
+                    {
+                        (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
+                        || (
+                            LA(1) == LCURLY 
+                            && bracket_types_size == bracket_types_js.size()
+                            && (
+                                !perform_lcurly_differentiator_check_js() 
+                                || perform_in_mode_before_expression_check_js(MODE_LAMBDA_AS_TYPE_TS)
+                            )
+                        )
+                        || (
+                            LA(1) == TERMINATE
+                            && inTransparentMode(MODE_EXTENDS_JS)
+                            && bracket_types_size == bracket_types_js.size()
+                            && next_token() == LCURLY
+                        )
+                        || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
+                        || (
+                            (LA(1) == JS_ARROW || LA(1) == EQUAL)
+                            && lparen_types_size == lparen_types_js.size()
+                            && lambda_depth != 0
+                        )
+                        || LA(1) == 1 /* EOF */
+                    }?
+                    {
+                        break;
+                    } |
+
+                    { inMode(MODE_ARGUMENT) }?
+                    argument |
+
+                    // allow JavaScript ternaries to use existing "else" logic
+                    { inTransparentMode(MODE_TERNARY) }?
+                    colon_marked_js |
+
+                    // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+                    { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+                    colon_type_ts |
+
+                    // handle all other instances of a colon
+                    { LA(1) == COLON }?
+                    colon_marked |
+
+                    {
+                        if (!inMode(MODE_EXPRESSION))
+                            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    }
+                    expression |
+
+                    // consume commas only if directly inside a call or in operator parentheses (lambdas only)
+                    {
+                        bracket_types_js.back() == "cLPAREN"
+                        || (bracket_types_js.back() == "oLPAREN" && inTransparentMode(MODE_LAMBDA_JS))
+                    }?
+                    comma
+                )*
+            )
+        )
+;
+
+/*
+  arrow_operator_js
+
+  Marks "=>" as an operator in JavaScript lambdas.
+*/
+arrow_operator_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        JS_ARROW
+;
+
+/*
+  perform_lone_parameter_lambda_check_js
+
+  Checks to see if an arrow (`=>`) follows a parameter in JavaScript.
+*/
+perform_lone_parameter_lambda_check_js[] returns [bool islambda] {
+        ENTRY_DEBUG
+
+        islambda = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // consume lone name (however, it could be longer than 1 token)
+            if (LA(1) == NAME)
+                consume();
+
+            if (LA(1) == JS_ARROW)
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_parameter_list_lambda_check_js
+
+  Checks to see if an arrow (`=>`) follows a parameter list in JavaScript.
+*/
+perform_parameter_list_lambda_check_js[] returns [bool islambda] {
+        ENTRY_DEBUG
+
+        islambda = false;
+        int bracket_count = 0;  // for TypeScript types
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LPAREN)
+                    ++paren_count;
+
+                if (LA(1) == RPAREN)
+                    --paren_count;
+
+                consume();
+
+                if (paren_count < 1)
+                    break;
+            }
+
+            // consume optional TypeScript type
+            if (LA(1) == COLON) {
+                consume();  // ":"
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (
+                        bracket_count < 0
+                        || (
+                            bracket_count == 0
+                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE)
+                        )
+                    )
+                        break;
+                }
+            }
+
+            // found "=>", but do not accidentally confuse it with a generic lambda "=>"
+            if (
+                paren_count == 0
+                && bracket_count == 0
+                && LA(1) == JS_ARROW
+                && (
+                    !look_back_two_modes(MODE_GENERIC_LAMBDA_TS)
+                    || !skip_lone_lambda_js
+                )
+            )
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  object_js
+
+  Handles objects in JavaScript.  They start and end with curly braces.
+*/
+object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_OBJECT_JS);
+            startElement(SOBJECT_JS);
+
+            // lcurly starts an object
+            lcurly_types_js.emplace_back('o');  // object LCURLY
+            bracket_types_js.emplace_back("oLCURLY");
+
+            lcurly_types_size = lcurly_types_js.size();
+        }
+
+        LCURLY
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size())
+                || (LA(1) == TERMINATE && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            TERMINATE |
+
+            // only consume a comma if it is at the top level of an object
+            { inMode(MODE_OBJECT_JS) || bracket_types_js.back() == "oLCURLY" }?
+            COMMA
+            {
+                // cannot be a statement; ignore the generated TERMINATE token
+                while (LA(1) == TERMINATE && LT(1)->getText() != ";")
+                    consume();
+            } |
+
+            property_js
+            {
+                // cannot be a statement; ignore the generated TERMINATE token
+                while (LA(1) == TERMINATE && LT(1)->getText() != ";")
+                    consume();
+            }
+        )*
+
+        {
+            if (inTransparentMode(MODE_OBJECT_JS))
+                endDownToMode(MODE_OBJECT_JS);
+
+            // rcurly ends an object
+            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'o') {
+                lcurly_types_js.pop_back();
+
+                if (bracket_types_js.back() == "oLCURLY")
+                    bracket_types_js.pop_back();
+            }
+        }
+
+        // consume object-ending curly brace, if it exists
+        ({ LA(1) == RCURLY }? RCURLY)?
+;
+
+/*
+  property_js
+
+  Handles properties in JavaScript.  Not used directly, but called by object_js.
+*/
+property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_PROPERTY_JS);
+            startElement(SPROPERTY);
+
+            // non-class/function keywords at the top-level of a property should be a name
+            if (
+                table_keywords_js_token_set.member((unsigned int) LA(1))
+                && LA(1) != CLASS
+                && LA(1) != JS_FUNCTION
+                && LA(1) != JS_GET
+                && LA(1) != JS_SET
+            ) {
+                LT(1)->setType(NAME);
+            }
+
+            lcurly_types_size = lcurly_types_js.size();
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (
+            /*
+              special case: property is a TypeScript function declaration
+            */
+            {
+                (
+                    LA(1) == NAME
+                    || LA(1) == LBRACKET
+                    || LA(1) == TS_DATSIGN
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+                && perform_function_declaration_check_ts()
+            }?
+            (function_declaration_ts ({ LA(1) == TERMINATE && LT(1)->getText() == ";" }? TERMINATE)?) |
+
+            {
+                (
+                    LA(1) == LPAREN
+                    || LA(1) == TEMPOPS
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+                && perform_nameless_function_declaration_check_ts()
+            }?
+            (nameless_function_declaration_ts ({ LA(1) == TERMINATE && LT(1)->getText() == ";" }? TERMINATE)?) |
+
+            /*
+              special case: property is a class
+            */
+
+            { !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+            class_expression_js |
+
+            /*
+              special case: property is a function
+            */
+
+            // looking for "[...](){}" to start a computed property function
+            {
+                (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+                && perform_computed_property_as_function_check_js()
+            }?
+            computed_property_as_function_js |
+
+            // looking for "function" to start a function in an expression in JavaScript
+            // Note that "function:" is a property name in an object
+            { 
+                !inTransparentMode(MODE_NAME_LIST_JS)
+                && next_token() != COLON
+                && (
+                    (LA(1) != JS_GET && LA(1) != JS_SET)
+                    || (
+                        (LA(1) == JS_GET || LA(1) == JS_SET)
+                        && perform_accessor_is_name_check_js()
+                    )
+                )
+                && perform_function_expression_check_js()
+            }?
+            function_expression_js[true] |
+
+            /*
+              special case: property is a keywordless function
+            */
+
+            // looking for "*(){...}" to start a nameless, keywordless generator function in JavaScript
+            { perform_nameless_keywordless_generator_function_check_js() }?
+            nameless_keywordless_generator_function_expression_js |
+
+            // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+            { last_consumed != QMARK && perform_keywordless_function_check_js() }?
+            {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+                // generator keywordless function
+                if (perform_generator_function_check_js())
+                    startElement(SFUNCTION_GENERATOR_STATEMENT);
+                // regular keywordless function
+                else
+                    startElement(SFUNCTION_DEFINITION);
+            }
+            ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+            // looking for "NAME(){...}" to start a keywordless function in JavaScript
+            // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+            {
+                (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+                && last_consumed != JS_ARROW
+                && last_consumed != QMARK
+                && perform_keywordless_function_check_js()
+            }?
+            keywordless_function_expression_js[true] |
+
+            /*
+              special case: property is a TypeScript index signature
+            */
+            { last_consumed != COLON && perform_constraint_check_ts() }?
+            constraint_ts |
+
+            /*
+              special case: property is an expression starting with "..."
+            */
+            { LA(1) == DOTDOTDOT }?
+            property_expression_js |
+
+            /*
+              property is a declaration
+            */
+            property_declaration_js |
+
+            /*
+              property has no name (e.g., ": EXPR")
+            */
+            {
+                startNewMode(MODE_DECL_JS);
+                startElement(SDECLARATION);
+
+                // empty name tag
+                startNewMode(MODE_LOCAL);
+                startElement(SNAME);
+                endMode(MODE_LOCAL);
+            }
+            property_declaration_init_js
+        )
+;
+
+/*
+  property_expression_js
+
+  Handles an expression in an object property that starts with "..." in JavaScript/TypeScript.
+*/
+property_expression_js[] { size_t bracket_types_size = bracket_types_js.size(); ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            {
+                (LA(1) == COMMA && bracket_types_size == bracket_types_js.size())
+                || (
+                    LA(1) == RCURLY
+                    && bracket_types_size == bracket_types_js.size()
+                    && bracket_types_js.back() == "oLCURLY"
+                )
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // consume TypeScript types
+            { !inTransparentMode(MODE_TERNARY | MODE_THEN) }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // the starting "..." will be consumed here
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+;
+
+/*
+  property_declaration_js
+
+  Handles a declaration in an object property JavaScript/TypeScript.
+*/
+property_declaration_js[] { ENTRY_DEBUG } :
+        {
+            // invalid code handler: generator function with no parameter list nor block
+            if (LA(1) == MULTOPS && next_token() == TERMINATE && next_token_two() == RCURLY) {
+                consume();
+                return;                
+            }
+
+            // invalid code handler: generator function without parameter list
+            if (LA(1) == MULTOPS && next_token() == LCURLY) {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+                consume();
+                expression_block_js();
+                return;
+            }
+
+            // invalid code handler: keywordless functions
+            if (LA(1) == NAME && next_token() == LPAREN) {
+                keywordless_function_expression_js(true);
+                return;
+            }
+
+            // invalid code handler: get/set before keywordless functions
+            if (
+                LA(1) == NAME
+                && (LT(1)->getText() == "get" || LT(1)->getText() == "set")
+                && next_token() == MULTOPS
+            ) {
+                compound_name();
+                keywordless_function_expression_js(true);
+                return;
+            }
+
+            // invalid code handler: keyword function expressions
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                function_expression_js(true);
+                return;
+            }
+
+            startNewMode(MODE_DECL_JS);
+            startElement(SDECLARATION);
+        }
+
+        (
+            (options { greedy = true; } :
+                { LA(1) == JS_AWAIT }?
+                situational_specifiers_js |
+
+                { check_valid_specifier_js() }?
+                (
+                    {declaration_specifiers_ts_token_set.member((unsigned int) LA(1))}?
+                    declaration_specifiers_ts |
+
+                    specifier_js
+                ) |
+
+                {
+                    LA(1) == QMARK
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
+                }?
+                declaration_modifiers_ts |
+
+                {
+                    (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    || LA(1) == DESTOP
+                    || LA(1) == JS_TYPEOF
+                    || LA(1) == JS_VOID
+                }?
+                general_operators |
+
+                // special case: "default:" and "enum:" are property names, not a statements
+                keyword_as_property_name_js |
+
+                compound_name | bracketless_computed_property_js | computed_property_js |
+
+                JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING
+            )+
+        )
+
+        // consume optional declaration initialization (using ":"), if it exists
+        ({ LA(1) == COLON }? property_declaration_init_js)?
+
+        // consume optional declaration initialization (using "="), if it exists
+        ({ LA(1) == EQUAL }? declaration_init_js)?
+
+        {
+            // if didn't break on a correct break token, consume any garbage after
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == RPAREN) break;
+                consume();
+            }
+
+            if (inTransparentMode(MODE_DECL_JS)) {
+                endDownToMode(MODE_DECL_JS);
+                endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
+  property_declaration_init_js
+
+  Handles an initialization expression that can appear after a property declaration in JavaScript/TypeScript.
+*/
+property_declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_INIT_JS);
+            startElement(SINIT);
+        }
+
+        COLON
+
+        (options { greedy = true; } :
+            // allow calls on separate lines that start with "."
+            { LA(1) == TERMINATE && next_token() == PERIOD }?
+            TERMINATE |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // consume TypeScript types
+            {
+                !inTransparentMode(MODE_TERNARY)
+                || (inTransparentMode(MODE_TERNARY) && !is_ternary_colon)
+            }?
+            colon_type_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls and operator parentheses, but not for parameters
+            {
+                bracket_types_js.back() == "cLPAREN"
+                || (bracket_types_js.back() == "oLPAREN" && lparen_types_js.back() == 'o')
+            }?
+            comma
+        )*
+;
+
+/*
+  keyword_as_property_name_js
+
+  Handles the special case "default:" and "enum:" in a JavaScript/TypeScript property.
+*/
+keyword_as_property_name_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+        }
+
+        (JS_DEFAULT | TS_ENUM)
+;
+
+/*
+  colon_property_js
+
+  Handles colons in properties that are meant to be separators in JavaScript.
+*/
+colon_property_js[] { ENTRY_DEBUG } :
+        {
+            if (inTransparentMode(MODE_PROPERTY_JS))
+                endDownToMode(MODE_PROPERTY_JS);
+        }
+
+        COLON
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+;
+
+/*
+  bracketless_computed_property_js
+
+  Handles computed properties without brackets in JavaScript.  Used for keywordless function names.
+*/
+bracketless_computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+            startElement(SCOMPUTED_PROPERTY);
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            startElement(SEXPRESSION);
+        }
+
+        literals
+;
+
+/*
+  computed_property_js
+
+  Handles computed properties in JavaScript.  Not used directly, but can be called by expression_part.
+*/
+computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+            startElement(SCOMPUTED_PROPERTY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // consume TypeScript types
+            { !inTransparentMode(MODE_TERNARY | MODE_THEN) }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_TOP | MODE_LIST | MODE_LOCAL))
+                endDownToMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+        }
+        // consume property-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
+;
+
+/*
+  perform_computed_property_check_js
+
+  Checks to see if a colon (`:`) follows square brackets in an object in JavaScript.
+*/
+perform_computed_property_check_js[] returns [bool iscomputed] {
+        ENTRY_DEBUG
+
+        iscomputed = false;
+        int square_bracket_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LBRACKET)
+                    ++square_bracket_count;
+
+                if (LA(1) == RBRACKET)
+                    --square_bracket_count;
+
+                if (square_bracket_count < 0)
+                    break;
+
+                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE)
+                    break;
+
+                consume();
+            }
+
+            if (LA(1) == RBRACKET && next_token() == COLON)
+                iscomputed = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_generator_function_computed_property_check_js
+
+  Checks for special generator function syntax in JavaScript.
+  Specifically, generator functions of the form "*[...](){}".
+*/
+perform_generator_function_computed_property_check_js[] returns [bool iscomputed] {
+        ENTRY_DEBUG
+
+        iscomputed = false;
+        int square_bracket_count = 0;
+        int bracket_count = 0;  // for TypeScript types
+        bool found_multops = false;
+        bool found_type = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // consume "*"; if not found, exit
+            if (LA(1) == MULTOPS) {
+                consume();
+                found_multops = true;
+            }
+
+            // match "[...]"
+            if (LA(1) == LBRACKET) {
+                while (found_multops) {
+                    if (LA(1) == LBRACKET)
+                        ++square_bracket_count;
+
+                    if (LA(1) == RBRACKET)
+                        --square_bracket_count;
+
+                    if (square_bracket_count < 0)
+                        break;
+
+                    if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
+
+                    consume();
+                }
+            }
+
+            // match "()"
+            if (found_multops && LA(1) == RBRACKET && next_token() == LPAREN) {
+                consume();  // "]"
+                int paren_count = 0;
+
+                while (found_multops) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count < 0)
+                        break;
+
+                    if ((LA(1) == RPAREN && paren_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
+
+                    consume();
+                }
+
+                // match optional TypeScript type, consuming RPAREN first
+                if (LA(1) == RPAREN && next_token() == COLON) {
+                    consume();  // ")"
+
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        found_type = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (LA(1) == COLON && next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            found_type = true;
+                    }
+                }
+
+                // found "*[...](){" or "*[...](): TYPE {"
+                if (
+                    (LA(1) == RPAREN && next_token() == LCURLY)
+                    || (found_type && LA(1) == LCURLY)
+                )
+                    iscomputed = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  computed_property_as_function_js
+
+  Handles a computed property that starts a function in JavaScript.
+  Specifically, these appear in the form "[...](){}".
+*/
+computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement-level
+            if (inMode(MODE_STATEMENT))
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_COMPUTED_FUNCTION_JS);
+            // expression-level
+            else
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        (specifier_js)*
+        computed_property_js
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
+;
+
+/*
+  perform_computed_property_as_function_check_js
+
+  Checks for special computed property function syntax in JavaScript.
+  Specifically, functions of the form "[...](){}".
+*/
+perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
+        ENTRY_DEBUG
+
+        iscomputed = false;
+        int bracket_count = 0;  // for TypeScript types
+        int square_bracket_count = 0;
+        bool found_start = false;
+        bool found_type = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
+                consume();
+
+            // identify that the first token is "["; if not found, exit
+            if (LA(1) == LBRACKET)
+                found_start = true;
+
+            // match "[...]"
+            while (found_start) {
+                if (LA(1) == LBRACKET)
+                    ++square_bracket_count;
+
+                if (LA(1) == RBRACKET)
+                    --square_bracket_count;
+
+                if (square_bracket_count < 0)
+                    break;
+
+                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+
+            // match "()"
+            if (found_start && LA(1) == RBRACKET && next_token() == LPAREN) {
+                consume();  // "]"
+                int paren_count = 0;
+
+                while (found_start) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count < 0)
+                        break;
+
+                    if ((LA(1) == RPAREN && paren_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
+
+                    consume();
+                }
+
+                // match optional TypeScript type, consuming RPAREN first
+                if (LA(1) == RPAREN && next_token() == COLON) {
+                    consume();  // ")"
+
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        iscomputed = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (LA(1) == COLON && next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            iscomputed = true;
+                    }
+                }
+
+                // found "*[...](){" or "*[...](): TYPE {"
+                if (
+                    (LA(1) == RPAREN && next_token() == LCURLY)
+                    || (found_type && LA(1) == LCURLY)
+                )
+                    iscomputed = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  class_expression_js
+
+  Handles classes that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+class_expression_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS);
+            startElement(SCLASS);
+        }
+
+        CLASS
+
+        {
+            startNewMode(MODE_LCURLY_BLOCK_JS | MODE_NO_BLOCK_CONTENT | MODE_VARIABLE_NAME);
+        }
+        // name or argument list is NOT always required
+        (options { greedy = true; } :
+            // consume the generic argument list for TypeScript nameless generic class expressions
+            { LA(1) == TEMPOPS }?
+            generic_argument_list_js |
+
+            // consume the name for named expression-level classes
+            compound_name
+        )*
+
+        // consume the "extends" or "implements" portion of an expression-level class, if applicable
+        (options { greedy = true; } : { LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS }? super_list_js)?
+
+        // consume inserted terminate after the extends/implements and the block, if it exists
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" }? TERMINATE)?
+
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
+
+        // consume inserted terminate after the class, if it exists and we are in a super list
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
+
+        {
+            if (inPrevMode(MODE_CLASS_EXPRESSION_JS)) {
+                endDownOverMode(MODE_CLASS_EXPRESSION_JS);
+            }
+        }
+;
+
+/*
+  yield_expression_js
+
+  Handles "yield" and "yield*" that appear in expressions in JavaScript.
+*/
+yield_expression_js[] {
+        CompleteElement element(this);
+        bool consume_multops = false;
+        size_t lparen_types_size = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_LOCAL);
+
+            // found a yield generator
+            if (next_token() == MULTOPS) {
+                startElement(SYIELD_GENERATOR_STATEMENT);
+                consume_multops = true;
+            }
+            // found a yield
+            else
+                startElement(SYIELD_STATEMENT);
+        }
+
+        JS_YIELD
+
+        // leave a yield generator MULTOPS unmarked
+        (options { greedy = true; } : { consume_multops && LA(1) == MULTOPS }? MULTOPS)?
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            // do not consume top-level parameter list for a function
+            // do not conume ")" if it is an operator for an already opened "(" eg. "(yield)"
+            {
+                (
+                    LA(1) == RPAREN 
+                    && (lparen_types_js.back() == 'p' || lparen_types_js.back() == 'o') 
+                    && lparen_types_size == lparen_types_js.size()
+                )
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+;
+
+/*
+  perform_tagged_template_check_js
+
+  Checks to see if a name or function call preceeds a tagged template in JavaScript (e.g., a`b`).
+  Also checks for any JavaScript tagged template variations (e.g., a`b`(c) or a`b``c`).
+*/
+perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
+        ENTRY_DEBUG
+
+        istagged = false;
+        call_count = 0;
+
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                // case 1: compound names
+                if (LA(1) == NAME || LA(1) == PERIOD) {
+                    consume();
+                }
+                // case 2: generic argument list on a compound name
+                else if (LA(1) == TEMPOPS && generic_argument_list_check()) {
+                    angle_bracket_pair();
+                }
+                // case 3: backtick literals
+                else if (LA(1) == BACKTICK_START) {
+                    if (last_consumed_guessing_mode == NAME || last_consumed_guessing_mode == RPAREN)
+                        istagged = true;
+
+                    backtick_literal_js();
+                    ++call_count;
+                }
+                // case 4: call argument lists
+                else if (LA(1) == LPAREN) {
+                    paren_pair();
+                    ++call_count;
+                }
+                // case 5: array indexing on names
+                else if (last_consumed_guessing_mode == NAME && LA(1) == LBRACKET) {
+                    bracket_pair();
+                }
+                // otherwise, break
+                else {
+                    break;
+                }
+            }
+
+            if (!istagged)
+                call_count = 0;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  tagged_template_js
+
+  Handles tagged templates in JavaScript (e.g., a`b`, a`b`(c), a`b``c`, etc.).
+*/
+tagged_template_js[int call_count = 1] { ENTRY_DEBUG } :
+        {
+            do {
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL | MODE_INTERNAL_END_PAREN);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+            } while (--call_count > 0);
+        }
+
+        compound_name
+
+        (
+            { LA(1) == BACKTICK_START }?
+            argument |
+
+            call_argument_list
+        )
+
+        {
+            // end the call in preparation for the next call (e.g., a`b`(c) or a`b``c`)
+            if (LA(1) == LPAREN || LA(1) == BACKTICK_START) {
+                endDownToMode(MODE_FUNCTION_CALL);
+                endMode(MODE_FUNCTION_CALL);
+            }
+        }
+;
+
+/*
+  perform_keyword_iife_check_js
+
+  Checks to see if a function expression should really be an IIFE in JavaScript.
+  For example, "(function (){})()".
+*/
+perform_keyword_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
+        isiife = false;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keyword IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume the "function" keyword
+                if (LA(1) == JS_FUNCTION) {
+                    consume();
+
+                    // consume optional name
+                    if (LA(1) == NAME) 
+                        consume();
+
+                    // consume parameter list
+                    paren_pair();
+
+                    // determine the type of block that "{" starts
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
+                        lcurly_type = perform_colon_lcurly_differentiator_check_js();
+                    }
+
+                    // match optional TypeScript type
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() != LCURLY
+                            || (
+                                (
+                                    next_token() == LCURLY
+                                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                                )
+                                && lcurly_type == 3
+                            )
+                        )
+                    ) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY
+                            if (bracket_count == 0 && LA(1) == LCURLY) {
+                                // LCURLY indicates a type block, so keep going
+                                if (lcurly_type == 3)
+                                    lcurly_type = 0;
+                                // LCURLY indicates a block, so break
+                                else
+                                    break;
+                            }
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                break;
+
+                            consume();
+                        }
+
+                        // consume optional TypeScript array after type block
+                        if (LA(1) == LBRACKET)
+                            bracket_pair();
+                    }
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        curly_pair();
+
+                        // looking for "})" after the function expression
+                        if (LA(1) == RPAREN) {
+                            consume();
+
+                            if (LA(1) == LPAREN)
+                                isiife = true;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  keyword_iife_js
+
+  Handles Immediately Invoked Function Expressions (IIFEs) in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        ((specifier_js)* JS_FUNCTION)
+
+        // consume optional name
+        (compound_name)*
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
+
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownToMode(MODE_IIFE_CALL_JS);
+            endMode(MODE_IIFE_CALL_JS);
+        }
+
+        call_argument_list
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+;
+
+/*
+  perform_keyword_dc_iife_check_js
+
+  Checks to see if a function expression should be a Douglas Crockford IIFE in JavaScript.
+  For example, "(function (){}())".
+*/
+perform_keyword_dc_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
+        isiife = false;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keyword IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume the "function" keyword
+                if (LA(1) == JS_FUNCTION) {
+                    consume();
+
+                    // consume optional name
+                    if (LA(1) == NAME) 
+                        consume();
+
+                    // consume parameter list
+                    paren_pair();
+
+                    // determine the type of block that "{" starts
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
+                        lcurly_type = perform_colon_lcurly_differentiator_check_js();
+                    }
+
+                    // match optional TypeScript type
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() != LCURLY
+                            || (
+                                (
+                                    next_token() == LCURLY
+                                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                                )
+                                && lcurly_type == 3
+                            )
+                        )
+                    ) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY
+                            if (bracket_count == 0 && LA(1) == LCURLY) {
+                                // LCURLY indicates a type block, so keep going
+                                if (lcurly_type == 3)
+                                    lcurly_type = 0;
+                                // LCURLY indicates a block, so break
+                                else
+                                    break;
+                            }
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                break;
+
+                            consume();
+                        }
+
+                        // consume optional TypeScript array after type block
+                        if (LA(1) == LBRACKET)
+                            bracket_pair();
+                    }
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        curly_pair();
+                        paren_pair();
+
+                        // looking for ")" after the function expression
+                        if (LA(1) == RPAREN)
+                            isiife = true;
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  keyword_dc_iife_js
+
+  Handles Douglas Crockford Immediately Invoked Function Expressions (IIFEs) in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keyword_dc_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        ((specifier_js)* JS_FUNCTION)
+
+        // consume optional name
+        (compound_name)*
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
+
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            endDownToMode(MODE_IIFE_CALL_JS);
+
+            startNewMode(MODE_IIFE_INNER_JS);
+        }
+
+        call_argument_list
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+
+        {
+            endDownOverMode(MODE_IIFE_INNER_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownOverMode(MODE_IIFE_CALL_JS);
+        }
+;
+
+/*
+  perform_keywordless_iife_check_js
+
+  Checks to see if a lambda should really be an IIFE in JavaScript.
+  For example, "(() => {})()".
+*/
+perform_keywordless_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
+        isiife = false;
+        int curly_count = 0;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keywordless IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume parameter list
+                paren_pair();
+
+                // determine the type of block that "{" starts
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() == LCURLY
+                        || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                    )
+                )
+                    lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
+                // match optional TypeScript type
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() != LCURLY
+                        || (
+                            (
+                                next_token() == LCURLY
+                                || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                            )
+                            && lcurly_type == 3
+                        )
+                    )
+                ) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
+                        // found arrow ("=>") before IIFE lambda block
+                        if (LA(1) == JS_ARROW && bracket_count == 0 && lcurly_type != 3)
+                            break;
+
+                        // found a statement-level LCURLY
+                        if (bracket_count == 0 && LA(1) == LCURLY) {
+                            // LCURLY indicates a type block, so keep going
+                            if (lcurly_type == 3)
+                                lcurly_type = 0;
+                            // LCURLY indicates a block, so break
+                            else
+                                break;
+                        }
+
+                        if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                            ++bracket_count;
+                        if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                            --bracket_count;
+
+                        if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                            break;
+
+                        consume();
+                    }
+                }
+
+                // consume "=>"
+                if (LA(1) == JS_ARROW) {
+                    consume();
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            if (LA(1) == LCURLY)
+                                ++curly_count;
+                            else if (LA(1) == RCURLY && curly_count > 1)
+                                --curly_count;
+                            else if ((LA(1) == RCURLY && curly_count == 1) || curly_count < 0)
+                                break;
+
+                            consume();
+                        }
+
+                        // end the block
+                        if (LA(1) == RCURLY) {
+                            --curly_count;
+                            consume();
+                        }
+
+                        // looking for ")(" after the function expression
+                        if (LA(1) == RPAREN) {
+                            consume();
+
+                            if (LA(1) == LPAREN)
+                                isiife = true;
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  keywordless_iife_js
+
+  Handles Immediately Invoked Function Expressions (IIFEs) with arrows ("=>") in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        ((specifier_js)*)
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        {
+            // a lone parameter lambda cannot appear here
+            skip_lone_lambda_js = true;
+        }
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        arrow_operator_js
+
+        {
+            skip_lone_lambda_js = false;
+        }
+
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
+
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownToMode(MODE_IIFE_CALL_JS);
+            endMode(MODE_IIFE_CALL_JS);
+        }
+
+        call_argument_list
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+;
+
+/*
+  perform_keywordless_dc_iife_check_js
+
+  Checks to see if a lambda is a Douglas Crockford IIFE in JavaScript.
+  For example, "(() => {}())".
+*/
+perform_keywordless_dc_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
+        isiife = false;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keywordless IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume parameter list
+                paren_pair();
+
+                // determine the type of block that "{" starts
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() == LCURLY
+                        || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                    )
+                )
+                    lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
+                // match optional TypeScript type
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() != LCURLY
+                        || (
+                            (
+                                next_token() == LCURLY
+                                || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                            )
+                            && lcurly_type == 3
+                        )
+                    )
+                ) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
+                        // found arrow ("=>") before IIFE lambda block
+                        if (LA(1) == JS_ARROW && bracket_count == 0 && lcurly_type != 3)
+                            break;
+
+                        // found a statement-level LCURLY
+                        if (bracket_count == 0 && LA(1) == LCURLY) {
+                            // LCURLY indicates a type block, so keep going
+                            if (lcurly_type == 3)
+                                lcurly_type = 0;
+                            // LCURLY indicates a block, so break
+                            else
+                                break;
+                        }
+
+                        if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                            ++bracket_count;
+                        if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                            --bracket_count;
+
+                        if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                            break;
+
+                        consume();
+                    }
+                }
+
+                // consume "=>"
+                if (LA(1) == JS_ARROW) {
+                    consume();
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        curly_pair();
+                        paren_pair();
+
+                        // looking for ")" after the function expression
+                        if (LA(1) == RPAREN)
+                            isiife = true;
+                    }
+                }
+
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  keywordless_dc_iife_js
+
+  Handles Douglas Crockford Immediately Invoked Function Expressions (IIFEs) with arrows ("=>") in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keywordless_dc_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        ((specifier_js)*)
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        {
+            // a lone parameter lambda cannot appear here
+            skip_lone_lambda_js = true;
+        }
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        arrow_operator_js
+
+        {
+            skip_lone_lambda_js = false;
+        }
+
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            endDownToMode(MODE_IIFE_CALL_JS);
+
+            startNewMode(MODE_IIFE_INNER_JS);
+        }
+
+        call_argument_list
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+
+        {
+            endDownOverMode(MODE_IIFE_INNER_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownOverMode(MODE_IIFE_CALL_JS);
+        }
+;
+
+/*
+  perform_optional_call_chaining_check_js
+
+  Checks to see if a call is an optional chaining call in JavaScript.
+  For example, "a?.b?.(c)".
+*/
+perform_optional_call_chaining_check_js[] returns [bool iscall] {
+        ENTRY_DEBUG
+
+        iscall = false;
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
+
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // do not mark a regular function call as an optional chained function call
+            if (perform_call_check(type, isempty, call_count, -1) && type == CALL)
+                throw antlr::RecognitionException();
+
+            int optional_call_chain_count = perform_chained_call_count_js();
+
+            if (optional_call_chain_count > 0)
+                iscall = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  optional_call_chain_js
+
+  Handles optional chaining with function calls in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+optional_call_chain_js[] {
+        CompleteElement element(this);
+
+        bool is_compound = (next_token() != QMARK_PERIOD || next_token_two() != LPAREN);
+        int chained_call_count = perform_chained_call_count_js();
+
+        ENTRY_DEBUG
+} :
+        {
+            do {
+                startNewMode(MODE_LOCAL);
+                startElement(SFUNCTION_CALL);
+            } while (--chained_call_count > 0);
+
+            if (is_compound) {
+                // start outer name
+                startNewMode(MODE_OUTER_NAME_JS);
+                startElement(SNAME);
+
+                // start inner name
+                startNewMode(MODE_INNER_NAME_JS);
+                startElement(SNAME);
+            }
+            else {
+                startNewMode(MODE_VARIABLE_NAME);
+                startElement(SNAME);
+            }
+        }
+
+        NAME
+
+        {
+            if (is_compound)
+                endMode(MODE_INNER_NAME_JS);
+            else
+                endMode(MODE_VARIABLE_NAME);
+        }
+
+        (
+            // compound name required (e.g., "a?.b?.(c)")
+            { is_compound }?
+            (options { greedy = true; } :
+                // special syntax for "?.("
+                { next_token() == LPAREN }?
+                (
+                    {
+                        if (inTransparentMode(MODE_OUTER_NAME_JS)) {
+                            endDownToMode(MODE_OUTER_NAME_JS);
+                            endMode(MODE_OUTER_NAME_JS);
+                        }
+                    }
+                    qmark_period
+                    complete_argument_list
+                ) |
+
+                qmark_period | period |
+
+                // regular function call (e.g., "a(b)")
+                complete_argument_list |
+
+                // found an inner name
+                {
+                    startNewMode(MODE_INNER_NAME_JS);
+                    startElement(SNAME);
+                }
+                NAME
+                {
+                    endMode(MODE_INNER_NAME_JS);
+                } |
+
+                // found an index on a name
+                {
+                    startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+                    startElement(SINDEX);
+                }
+                (
+                    LBRACKET
+                    variable_identifier_array_grammar_sub_contents
+                    RBRACKET
+                )
+                {
+                    endDownToMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+                    endMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+                }
+            )* |
+
+            // no compound name required (e.g., "a?.(b)")
+            (qmark_period complete_argument_list)
+        )
+;
+
+/*
+  perform_chained_call_count_js
+
+  Counts the number of calls and chained calls in a JavaScript function call.
+  For example, "a?.b?.(c)?.(d)" has two chained calls.
+*/
+perform_chained_call_count_js[] returns [int numcalls] {
+        numcalls = 0;
+        bool is_optional_call = false;
+        int bracket_count = 0;  // "()" and "{}"
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                // immediately exit if the bracket count is negative
+                if (bracket_count < 0) {
+                    break;
+                }
+                // looking for "?.(" or "NAME("
+                else if (
+                    (
+                        last_consumed_guessing_mode == QMARK_PERIOD
+                        || last_consumed_guessing_mode == NAME
+                    )
+                    && LA(1) == LPAREN
+                ) {
+                    ++numcalls;
+                    paren_pair();
+                }
+                // looking for "[]" as an index
+                else if (LA(1) == LBRACKET) {
+                    bracket_pair();
+                }
+                // looking for the start of a bracket (e.g., "(" and "{")
+                else if (LA(1) == LPAREN || LA(1) == LCURLY) {
+                    ++bracket_count;
+                    consume();
+                }
+                // looking for the end of a bracket (e.g., ")" and "}")
+                else if (LA(1) == RPAREN || LA(1) == RCURLY) {
+                    --bracket_count;
+                    consume();
+                }
+                // only consume the following tokens
+                else if (
+                    LA(1) == NAME
+                    || LA(1) == PERIOD
+                    || LA(1) == QMARK_PERIOD
+                    || LT(1)->getText() == "!"
+                ) {
+                    if (LA(1) == QMARK_PERIOD && bracket_count == 0)
+                        is_optional_call = true;
+
+                    consume();
+                }
+                // if not one of the expected tokens, break
+                else {
+                    break;
+                }
+            }
+
+            // only record call count if the call is an optional chained call
+            if (!is_optional_call)
+                numcalls = 0;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  simple_name_optional_template_keyword
+
+  Handles a name (including a template argument list) in keyword-based languages (e.g., Python, JavaScript/TypeScript).
+*/
+simple_name_optional_template_keyword[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            // start outer name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
+        }
+
+        push_namestack[push]
+        identifier_keyword
+
+        {
+            // consume a JavaScript/TypeScript generic argument list, if applicable
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TEMPOPS && generic_argument_list_check())
+                generic_argument_list_js();
+            // set the token to NOP since we did not find a template argument list
+            else
+                tp.setType(SNOP);
+
+            // consume TypeScript declaration modifiers now that the name is finished
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && (LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
+        }
+;
+
+/*
+  identifier_keyword
+
+  Handles an identifier in keyword-based languages (e.g., Python, JavaScript/TypeScript).
+*/
+identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            // do not combine TypeScript declaration modifiers with the name
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && LT(1)->getText() == "!")
+                return;
+
+            startElement(SNAME);
+        }
+
+        (
+            NAME | VOID |
+
+            // Python
+            PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
+
+            // JavaScript
+            JS_GET | JS_SET | JS_WITH
+        )
+;
+
+/*
+  generic_argument_list_js
+
+  Handles a generic argument list (e.g., "<...>") in JavaScript/TypeScript differently from other languages.
+*/
+generic_argument_list_js[] { CompleteElement element(this); decltype(namestack) namestack_save; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TEMPLATE_ARGUMENT_TS);
+            startElement(SGENERIC_ARGUMENT_LIST);
+        }
+
+        savenamestack[namestack_save]
+
+        tempops
+        (options { generateAmbigWarnings = false; } :
+            { LA(1) == TEMPOPE || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            COMMA | template_argument_js
+        )*
+        tempope
+
+        restorenamestack[namestack_save]
+;
+
+/*
+  template_argument_js
+
+  Handles an argument in a generic argument list in JavaScript/TypeScript differently from other languages.
+*/
+template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SGENERIC_ARGUMENT);
+        }
+
+        (options { greedy = true; } :
+            // comma separating arguments in call within generic argument list
+            { LA(1) == COMMA && inPrevMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT) }?
+            comma argument|
+
+            { LA(1) == TEMPOPE || LA(1) == COMMA || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // consume TypeScript types if not in an object
+            { lcurly_types_js.back() != 'o' && bracket_types_js.back() != "oLCURLY" }?
+            colon_type_ts |
+
+            // do not confuse LCURLY with the start of a block
+            { last_consumed == TEMPOPS || last_consumed == COMMA }?
+            {
+                startNewMode(MODE_LOCAL);
+                startElement(SEXPRESSION);
+            }
+
+            (
+                { LA(1) == LCURLY && inputState->guessing == 0 }?
+                expression_block_js |
+
+                curly_pair
+            )
+
+            {
+                if (inTransparentMode(MODE_LOCAL)) {
+                    endDownToMode(MODE_LOCAL);
+                    endMode(MODE_LOCAL);
+                }
+            } |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { LA(1) == JS_EXTENDS }?
+            mixins_ts |
+
+            // allow "const" to support constant type parameters
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            (const_as_specifier_ts | expression)
+        )+
+;
+
+/*
+  const_as_specifier_ts
+
+  Marks "const" as a specifier in TypeScript generic argument lists.
+*/
+const_as_specifier_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_SPECIFIER);
+        }
+
+        JS_CONST
+;
+
+/*
+  colon_marked_js
+
+  Used to mark a colon (":") in JavaScript/TypeScript.
+*/
+colon_marked_js[] {
+        bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN);
+        bool markup_colon = true;
+        size_t lcurly_type = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            if (in_ternary && is_ternary_colon) {
+                endDownToMode(MODE_THEN);
+
+                flushSkip();
+
+                endMode(MODE_THEN);
+
+                startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
+
+                startElement(SELSE);
+
+                markup_colon = false;
+            }
+
+            if (!is_ternary_colon) {
+                startNewMode(MODE_EXPRESSION_COLON_TS);
+                is_ternary_colon = true;
+            }
+
+            if (markup_colon)
+                startElement(SOPERATOR);
+
+            // determine if "{" starts an object or a kind of block
+            if (
+                LA(1) == COLON
+                && (
+                    next_token() == LCURLY
+                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                )
+            )
+                lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
+            // consume the entire type (with the colon)
+            if (lcurly_type == 2 || lcurly_type == 3) {
+                // found TypeScript "type" block
+                colon_type_ts();
+
+                // found TypeScript "type" block followed by a traditional block
+                if (lcurly_type == 3)
+                    expression_block_js();
+
+                return;
+            }
+        }
+
+        COLON
+
+        {
+            if (inMode(MODE_EXPRESSION_COLON_TS))
+                endMode(MODE_EXPRESSION_COLON_TS);
+        }
+;
+
+/*
+  type_ts
+
+  Handles a type in TypeScript.
+*/
+type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            if (markup) {
+                startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
+                startElement(STS_TYPE);
+            }
+
+            is_pseudo_terminate = false;
+            is_ternary_colon = true;
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            // do not include the following as part of a type:
+            // - do not consume the closing RPAREN for certain constructs
+            // - a unary operator that should start a new declaration statement
+            // - after an argument list closing ">" with no generated TERMINATE
+            // - a "?" that ends the type in a TypeScript mixin
+            // - an argument list closing ">" in mixins or template arguments
+            // - "as" or "=" (start of next type/expression)
+            // - at the end of the file
+            {
+                (
+                    LA(1) == RPAREN
+                    && (
+                        (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
+                        || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
+                        || (inTransparentMode(MODE_LAMBDA_JS) && next_token() == JS_ARROW)
+                    )
+                    && (!look_back_three_modes(MODE_GENERIC_LAMBDA_TS) || bracket_types_js.back() != "oLPAREN")
+                )
+                || (
+                    last_consumed == NAME
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+                || (
+                    last_consumed == TEMPOPE
+                    && tempops_count_ts == 0
+                    && LA(1) != REFOPS
+                    && LA(1) != JS_EXTENDS
+                    && LA(1) != COLON
+                    && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
+                    && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
+                    && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
+                )
+                || (
+                    LA(1) == QMARK
+                    && perform_in_mode_before_expression_check_js(MODE_MIXINS_TS)
+                    && lparen_types_size == lparen_types_js.size()
+                )
+                || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
+                || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
+                || (LA(1) == JS_AS && bracket_types_js.back() != "cLPAREN")
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                // special case: "NAME + unary operator" denotes the end of a TypeScript declaration
+                if (
+                    last_consumed == NAME
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+                    is_pseudo_terminate = true;
+
+                break;
+            } |
+
+            // "?", "+?", "-?", and "!" are valid TypeScript modifiers
+            {
+                !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+                && (
+                    LA(1) == QMARK
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
+                )
+            }?
+            declaration_modifiers_ts |
+
+            // looking for "NAME()<>" to start a dynamic module import
+            {
+                (LA(1) == NAME || (LA(1) == JS_AWAIT && next_token() == NAME))
+                && perform_dynamic_module_import_check_ts()
+            }?
+            dynamic_module_import_ts |
+
+            // looking for arrays with a sibling index (e.g., "[NAME: TYPE][]")
+            { perform_named_array_with_index_check_ts() && !perform_ternary_check() }?
+            named_array_with_index_ts |
+
+            // looking for an array that contains types (different from an expression array)
+            {
+                last_consumed != NAME
+                && last_consumed != RBRACKET
+                && last_consumed != RCURLY
+                && last_consumed != RPAREN
+                && !perform_ternary_check()
+            }?
+            type_array_js |
+
+            // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
+            {
+                LT(1)->getText() == "typeof"
+                && (
+                    last_consumed == JS_ARROW
+                    || (last_consumed == COLON && inMode(MODE_ELSE))
+                )
+            }?
+            typeof_expression_ts |
+
+            // only allow a subset of all operators
+            {
+                LA(1) == REFOPS
+                || LT(1)->getText() == "-"
+                || LT(1)->getText() == "|"
+                || LT(1)->getText() == "keyof"
+                || LT(1)->getText() == "typeof"
+            }?
+            general_operators |
+
+            // allow arguments in a call
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // do not confuse LCURLY with the start of a block
+            {
+                last_consumed == COLON
+                || last_consumed == COMMA
+                || last_consumed == DOTDOTDOT
+                || last_consumed == REFOPS
+                || last_consumed == QMARK
+                || last_consumed == OPERATORS
+                || last_consumed == LPAREN
+                || last_consumed == LBRACKET
+                || last_consumed == TS_IS
+                || last_consumed == TS_KEYOF
+                || last_consumed == TS_READONLY
+                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                || inTransparentMode(MODE_MIXINS_TS)
+                || inTransparentMode(MODE_TYPEDEF)
+            }?
+            expression_block_js |
+
+            // "void" is a valid TypeScript type name
+            { inTransparentMode(MODE_TYPE_TS) }?
+            void_as_name |
+
+            // marks "asserts" and "is" as operators (not expression-level)
+            assertion_function_operator_ts | { true }? type_predicate_operator_ts |
+
+            // allow nested types (e.g., in lambda parameter lists)
+            { bracket_types_js.back() == "pLPAREN" || inTransparentMode(MODE_TYPE_ARRAY_TS) }?
+            colon_type_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { !inTransparentMode(MODE_TYPE_ARRAY_TS) }?
+            colon_marked_js |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            mixins_ts |
+
+            // allow certain expression, but do not consume LCURLY (could be a block)
+            { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
+            {
+                // no expression tag
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION);
+            }
+            expression |
+
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+
+        // consume TERMINATE that separates a TypeScript type block and a typical block
+        (
+            {
+                last_consumed == RCURLY
+                && LA(1) == TERMINATE
+                && next_token() == LCURLY
+                && inPrevMode(MODE_LCURLY_BLOCK_JS)
+            }?
+            TERMINATE
+        )?
+;
+
+/*
+  colon_type_ts
+
+  Handles a type preceded by a colon (":") in TypeScript.
+  Differs from type_ts[] so the entire snippet gets wrapped in a type tag.
+*/
+colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
+            startElement(STS_TYPE);
+
+            is_pseudo_terminate = false;
+            is_ternary_colon = true;
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        COLON
+
+        {
+            // ": =>" is invalid syntax, so end the type after the arrow
+            if (LA(1) == JS_ARROW) {
+                consume();  // "=>"
+                return;
+            }
+        }
+
+        type_ts[false]
+;
+
+/*
+  type_array_js
+
+  Handles array that contain types in JavaScript.  Not used directly, but can be called by type_ts.
+*/
+type_array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_TYPE_ARRAY_TS);
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            // end if "]" (normal) or if encountered something that does not belong
+            {
+                LA(1) == RBRACKET
+                || LA(1) == TERMINATE
+                || table_keywords_js_token_set.member((unsigned int) LA(1))
+                || decl_start_js_token_set.member((unsigned int) LA(1))
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            // do not consume call commas
+            { bracket_types_js.back() != "cLPAREN" }?
+            comma |
+
+            type_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_TYPE_ARRAY_TS))
+                endDownToMode(MODE_TYPE_ARRAY_TS);
+        }
+
+        // consume array-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
+;
+
+/*
+  typeof_expression_ts
+
+  Handles TypeScript cases where "typeof" is part of a larger expression, not just an operator.
+  For instance, starting the content after an arrow ("=>") or a ternary else (":").
+*/
+typeof_expression_ts[] { ENTRY_DEBUG } :
+        {
+            // start ternary "else" expression tag before consuming "typeof"
+            if (inMode(MODE_EXPRESSION | MODE_EXPECT))
+                startElement(SEXPRESSION);
+        }
+
+        general_operators  // "typeof"
+
+        (options { greedy = true; } :
+            { LA(1) == EQUAL }? declaration_init_js | expression_part
+        )*
+;
+
+/*
+  mixins_ts
+
+  Handles generic types (also called mixins) in TypeScript (e.g., "<A extends B>").
+*/
+mixins_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_MIXINS_TS);
+            startElement(STS_EXTENDS);
+        }
+
+        JS_EXTENDS
+        type_ts
+;
+
+/*
+  type_predicate_operator_ts
+
+  Handles the "is" portion of a type predicate in TypeScript.
+  The entire type predicate looks something like "NAME is NAME".
+*/
+type_predicate_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_OPERATOR);
+        }
+
+        TS_IS
+;
+
+/*
+  assertion_function_operator_ts
+
+  Handles the "asserts" portion of an assertion function in TypeScript.
+  The entire assertion looks something like "asserts NAME".
+*/
+assertion_function_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_OPERATOR);
+        }
+
+        TS_ASSERTS
+;
+
+/*
+  type_as_specifier_ts
+
+  Marks "type" as a specifier in TypeScript "import" statements.
+*/
+type_as_specifier_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_SPECIFIER);
+        }
+
+        TS_TYPE
+;
+
+/*
+  perform_function_declaration_check_ts
+
+  Checks if an expression statement should be a TypeScript function declaration.
+*/
+perform_function_declaration_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        bool found_colon_assert = false;
+        bool found_specifier = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    function_declaration_specifiers_ts();
+                    found_specifier = true;
+                }
+                else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    declaration_specifiers_ts();
+                    found_specifier = true;
+                }
+                else {
+                    break;
+                }
+            }
+
+            // special case: consume "function" keyword
+            if (LA(1) == JS_FUNCTION)
+                consume();  // "function"
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            if (LA(1) == TS_DATSIGN)
+                consume();
+
+            // consume a computed property or a NAME
+            if (LA(1) == LBRACKET)
+                bracket_pair();
+            else if (LA(1) == NAME)
+                consume();
+
+            // handle optional argument list since compound_name will not in guessing mode
+            if (LA(1) == TEMPOPS && generic_argument_list_check())
+                angle_bracket_pair();
+
+            paren_pair();
+
+            // consume optional modifiers
+            while (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+                declaration_modifiers_ts();
+
+            // found "NAME() :"
+            if (LA(1) == COLON) {
+                int tempops_count = 0;
+                isdecl = true;
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == TEMPOPS)
+                        ++tempops_count;
+
+                    if (LA(1) == TEMPOPE) {
+                        --tempops_count;
+
+                        if (tempops_count == 0) {
+                            consume();  // ">"
+
+                            // "NAME() : TYPE<TYPE> {}" cannot be a function declaration
+                            if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js()) {
+                                isdecl = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (LA(1) == LPAREN)
+                        paren_pair();
+
+                    if (
+                        tempops_count < 0
+                        || (LA(1) == TERMINATE && next_token() != RCURLY)
+                    )
+                        break;
+
+                    // determine if "{" starts an object or a kind of block
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
+                        if (perform_colon_lcurly_differentiator_check_js() == 2)
+                            isdecl = true;
+                        else
+                            isdecl = false;
+
+                        break;
+                    }
+
+                    // "NAME() : {TYPE} \n {}" is a function, not a function declaration
+                    if (
+                        last_consumed_guessing_mode == RCURLY
+                        && LA(1) == TERMINATE
+                        && LT(1)->getText().empty()
+                        && next_token() == LCURLY
+                        && perform_lcurly_differentiator_check_js()
+                    ) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    // the first part of "NAME() : {TYPE} \n NAME : {}" is a function declaration
+                    if (
+                        last_consumed_guessing_mode == RCURLY
+                        && LA(1) == NAME
+                        && next_token() == COLON
+                        && next_token_two() == LCURLY
+                    ) {
+                        isdecl = true;
+                        break;
+                    }
+
+                    // "NAME() : TYPE {}" is a function expression, not a function declaration
+                    if (
+                        LA(1) == LCURLY
+                        && last_consumed_guessing_mode != COLON
+                        && last_consumed_guessing_mode != RCURLY
+                    ) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    // found ": asserts"
+                    if (LA(1) == COLON && next_token() == TS_ASSERTS)
+                        found_colon_assert = true;
+
+                    // "NAME() : asserts TYPE {}" is a function expression, not a function declaration
+                    if (found_colon_assert && LA(1) == LCURLY && perform_lcurly_differentiator_check_js()) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    consume();
+                }
+            }
+            // found "SPECIFIER NAME();", a function declaration without an ending type
+            else if (found_specifier && LA(1) == TERMINATE && next_token() != LCURLY) {
+                isdecl = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  function_declaration_ts
+
+  Handles a TypeScript function declaration.
+*/
+function_declaration_ts[] { ENTRY_DEBUG } :
+        {
+            // do not nest function declarations
+            if (!inMode(MODE_FUNCTION_DECL_TS)) {
+                startNewMode(MODE_FUNCTION_DECL_TS);
+                startElement(STS_FUNCTION_DECLARATION);
+            }
+        }
+
+        (
+            (function_declaration_specifiers_ts | declaration_specifiers_ts)*
+
+            // special case for TypeScript function declarations with the "function" keyword
+            (JS_FUNCTION)*
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            (datsign_ts)*
+
+            (compound_name | computed_property_js)
+
+            (generic_argument_list_js)*
+
+            javascript_parameter_list
+        )
+
+        (options { greedy = true; } :
+            // special syntax: function declarations end at a terminate token or a comma
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || LA(1) == 1 /* EOF */
+                || (last_consumed == TEMPOPE && tempops_count_ts == 0)
+            }?
+            {
+                // do not consume the comma if the function declaration is in a property
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
+                    consume();
+
+                break;
+            } |
+
+            // consume optional declaration modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
+            declaration_modifiers_ts |
+
+            declaration_init_js | colon_type_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_FUNCTION_DECL_TS)) {
+                endDownToMode(MODE_FUNCTION_DECL_TS);
+
+                // manually consume statement-ending token (except if in a property)
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
+                    consume();
+
+                endMode(MODE_FUNCTION_DECL_TS);
+            }
+        }
+;
+
+/*
+  function_declaration_specifiers_ts
+
+  Handles specifiers that can only appear in a TypeScript function declaration.
+*/
+function_declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_SPECIFIER);
+        }
+
+        (JS_STATIC | TS_ABSTRACT)
+;
+
+/*
+  perform_nameless_function_declaration_check_ts
+
+  Checks if an expression statement should be a TypeScript function declaration without a name.
+*/
+perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    function_declaration_specifiers_ts();
+                }
+                else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    declaration_specifiers_ts();
+                }
+                else {
+                    break;
+                }
+            }
+
+            // consume optional generic argument list
+            if (LA(1) == TEMPOPS && generic_argument_list_check())
+                angle_bracket_pair();
+
+            paren_pair();
+
+            // consume optional declaration modifiers
+            while (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+                declaration_modifiers_ts();
+
+            // found "() :"
+            if (LA(1) == COLON) {
+                int tempops_count = 0;
+                isdecl = true;
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == TEMPOPS)
+                        ++tempops_count;
+
+                    if (LA(1) == TEMPOPE) {
+                        --tempops_count;
+
+                        if (tempops_count == 0) {
+                            break;
+                        }
+                    }
+
+                    if (LA(1) == TERMINATE && next_token() != RCURLY)
+                        break;
+
+                    // "(): TYPE => {}" is not a function declaration
+                    if (LA(1) == JS_ARROW) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    // consume optional TypeScript type
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
+                        int curly_type = perform_colon_lcurly_differentiator_check_js();
+
+                        // "() : TYPE {}" is not a function declaration
+                        if (curly_type != 2)
+                            isdecl = false;
+
+                        break;
+                    }
+
+                    consume();
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  nameless_function_declaration_ts
+
+  Handles a TypeScript function declaration without a name.
+*/
+nameless_function_declaration_ts[] { ENTRY_DEBUG } :
+        {
+            // do not nest function declarations
+            if (!inMode(MODE_FUNCTION_DECL_TS)) {
+                startNewMode(MODE_FUNCTION_DECL_TS);
+                startElement(STS_FUNCTION_DECLARATION);
+            }
+        }
+
+        (
+            (function_declaration_specifiers_ts | declaration_specifiers_ts)*
+            (generic_argument_list_js)*
+            javascript_parameter_list
+        )
+
+        (options { greedy = true; } :
+            // special syntax: function declarations end at a terminate token or a comma
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || (last_consumed == TEMPOPE && tempops_count_ts == 0)
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                // do not consume the comma if the function declaration is in a property
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
+                    consume();
+
+                break;
+            } |
+
+            // consume optional declaration modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
+            declaration_modifiers_ts |
+
+            declaration_init_js | colon_type_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_FUNCTION_DECL_TS)) {
+                endDownToMode(MODE_FUNCTION_DECL_TS);
+
+                // manually consume statement-ending token (except if in a property)
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
+                    consume();
+
+                endMode(MODE_FUNCTION_DECL_TS);
+            }
+        }
+;
+
+/*
+  perform_declaration_statement_check_ts
+
+  Checks if an expression statement should be a TypeScript declaration statement marked with bare declarations.
+*/
+perform_declaration_statement_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int bracket_count = 0;  // for TypeScript types
+        bool continue_guessing = false;
+        bool found_specifier = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional decorator before checking
+            while (LA(1) == TS_ATSIGN) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+
+                bracket_count = 0;
+            }
+
+            // consume optional specifiers (required if looking for "=" case)
+            while (
+                declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            ) {
+                consume();
+                found_specifier = true;
+            }
+
+            // consume optional unary operators
+            if ((LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || (LA(1) == DESTOP))
+                consume();
+
+            // consume a name
+            if (LA(1) == NAME) {
+                consume();
+                continue_guessing = true;
+            }
+            // or, consume a constraint (or computed property)
+            else if (LA(1) == LBRACKET) {
+                int bracket_count = 0;
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == LBRACKET)
+                        ++bracket_count;
+
+                    if (LA(1) == RBRACKET) {
+                        --bracket_count;
+
+                        if (bracket_count == 0 && LA(1) == RBRACKET) {
+                            consume();
+                            continue_guessing = true;
+                            break;
+                        }
+                    }
+
+                    if (bracket_count < 0)
+                        break;
+
+                    consume();
+                }
+            }
+            // or, consume a string-like literal
+            else if (LA(1) == STRING_START || LA(1) == CHAR_START) {
+                literals();
+                continue_guessing = true;
+            }
+
+            // consume optional modifiers
+            while (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+                declaration_modifiers_ts();
+
+            // found "NAME:" or "[NAME]:" or "NAME =" or "[NAME] =" or "NAME;" or "[NAME];"
+            if (
+                continue_guessing
+                && (
+                    LA(1) == COLON
+                    || ((LA(1) == EQUAL || LA(1) == TERMINATE) && found_specifier)
+                )
+            )
+                isdecl = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  declaration_statement_ts
+
+  Handles a TypeScript declaration statement marked with bare declarations.
+*/
+declaration_statement_ts[] { ENTRY_DEBUG } :
+        {
+            // do not nest declaration statements
+            if (!inMode(MODE_DECL_STATEMENT_TS)) {
+                startNewMode(MODE_DECL_STATEMENT_TS);
+                startElement(SDECLARATION_STATEMENT);
+            }
+        }
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a specified token
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || LA(1) == 1 /* EOF */
+                || (
+                    is_pseudo_terminate
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+            }?
+            {
+                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                    consume();
+
+                if (is_pseudo_terminate)
+                    is_pseudo_terminate = false;
+
+                break;
+            } |
+
+            // consume optional decorators (do not process "@@" here)
+            { next_token() != TS_ATSIGN }?
+            attribute_ts |
+
+            declaration_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_STATEMENT_TS)) {
+                endDownToMode(MODE_DECL_STATEMENT_TS);
+
+                // manually consume statement-ending token
+                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                    consume();
+
+                endMode(MODE_DECL_STATEMENT_TS);
+            }
+        }
+;
+
+/*
+  declaration_ts
+
+  Handles a declaration in TypeScript.  These do not begin with a keyword (only a name or a specifier).
+*/
+declaration_ts[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_JS);
+            startElement(SDECLARATION);
+        }
+
+        (
+            (declaration_specifiers_ts | function_declaration_specifiers_ts)*
+
+            // optional declaration unary operators
+            (options { greedy = true; } :
+                { LT(1)->getText() == "+" || LT(1)->getText() == "-" || LT(1)->getText() == "~" }?
+                general_operators
+            )*
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            (datsign_ts)*
+
+            ({ perform_constraint_check_ts() }? constraint_ts | computed_property_js | compound_name | literals)
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            (javascript_parameter_list)*
+        )
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a specified token
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || (
+                    is_pseudo_terminate
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            // consume optional declaration modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
+            declaration_modifiers_ts |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            mixins_ts |
+
+            declaration_init_js | colon_type_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_JS)) {
+                endDownToMode(MODE_DECL_JS);
+                endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
+  constraint_ts
+
+  Handles index signatures (e.g., "[NAME : TYPE]: TYPE") in TypeScript.
+*/
+constraint_ts[] { CompleteElement element(this); size_t bracket_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_CONSTRAINT_TS);
+            startElement(STS_CONSTRAINT);
+
+            startNewMode(MODE_INDEX_TS);
+            startElement(SINDEX);
+
+            bracket_types_size = bracket_types_js.size();
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            // constraint ends at the appropriate "]" or at the end of the file
+            { (LA(1) == RBRACKET && bracket_types_size == bracket_types_js.size()) || LA(1) == 1 /* EOF */}?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            { !inTransparentMode(MODE_TERNARY) }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_INDEX_TS))
+                endDownToMode(MODE_INDEX_TS);
+        }
+
+        RBRACKET
+
+        {
+            if (inMode(MODE_INDEX_TS))
+                endMode(MODE_INDEX_TS);
+
+            // consume optional declaration modifiers
+            if (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+                declaration_modifiers_ts();
+        }
+
+        // ": type" is technically optional
+        ({ LA(1) == COLON }? colon_type_ts)?
+;
+
+/*
+  perform_constraint_check_ts
+
+  Checks if an index is a constraint (TypeScript) or a computed property (JavaScript/TypeScript).
+*/
+perform_constraint_check_ts[] returns [bool isconstraint] {
+        ENTRY_DEBUG
+
+        isconstraint = false;
+        last_consumed_guessing_mode = -1;
+        int bracket_count = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == LBRACKET) {
+                consume();
+                ++bracket_count;
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (bracket_count < 1)
+                        break;
+
+                    if (LA(1) == LBRACKET) {
+                        ++bracket_count;
+                        consume();
+                    } else if (LA(1) == RBRACKET) {
+                        --bracket_count;
+                        consume();
+                    } else if (
+                        (LA(1) == COLON || LA(1) == JS_RANGE_IN || LA(1) == TS_KEYOF)
+                        && bracket_count == 1
+                    ) {
+                        isconstraint = true;
+                        break;
+                    } else if (LA(1) == RBRACKET && bracket_count == 1) {
+                        break;
+                    } else {
+                        consume();
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  declaration_modifiers_ts
+
+  Handles modifiers (e.g., "?" and "!") that can occur on a name in a TypeScript declaration.
+*/
+declaration_modifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_MODIFIER);
+        }
+
+        (
+            { LT(1)->getText() == "!" || LT(1)->getText() == "+?" || LT(1)->getText() == "-?" }?
+            OPERATORS |
+
+            QMARK
+        )
+;
+
+/*
+  declaration_specifiers_ts
+
+  Handles specifiers that can appear in a TypeScript declaration.
+*/
+declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_SPECIFIER);
+        }
+
+        (TS_ACCESSOR | TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
+;
+
+/*
+  datsign_ts
+
+  Handles "@@" in JavaScript/TypeScript.  Invalid syntax, but must be handled to avoid crashes.
+*/
+datsign_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_OPERATOR);
+        }
+
+        TS_DATSIGN
+;
+
+/*
+  perform_post_attribute_check_ts
+
+  Returns the next token that occur after a TypeScript decorator.
+  If there are multiple decorators in a row, returns the next token after the last decorator.
+*/
+perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
+        ENTRY_DEBUG
+
+        keywords[0] = -1;
+        keywords[1] = -1;
+        int bracket_count = 0;  // "[]", "{}", and "()"
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                    ++bracket_count;
+                if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                    --bracket_count;
+
+                consume();
+
+                if (
+                    bracket_count < 0
+                    || LA(1) == CLASS
+                    || LA(1) == JS_CONSTRUCTOR
+                    || LA(1) == JS_FUNCTION
+                    || LA(1) == JS_GET
+                    || LA(1) == JS_SET
+                    || LA(1) == TS_ENUM
+                    || (LA(1) == NAME && perform_keywordless_function_check_js())
+                )
+                    break;
+            }
+
+            if (
+                LA(1) == CLASS
+                || LA(1) == JS_CONSTRUCTOR
+                || LA(1) == JS_FUNCTION
+                || LA(1) == JS_GET
+                || LA(1) == JS_SET
+                || LA(1) == TS_ENUM
+            ) {
+                keywords[0] = LA(1);
+                keywords[1] = next_token();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  attribute_ts
+
+  Used to mark decorators (e.g., "@decorator") as attributes in TypeScript.
+*/
+attribute_ts[] { size_t bracket_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECORATOR_TS);
+            startElement(STS_ATTRIBUTE);
+
+            bracket_types_size = bracket_types_js.size();
+        }
+
+        TS_ATSIGN
+
+        (options { greedy = true; } :
+            // decorator ends at another "@", a corresponding class/function, or a type in a parameter
+            {
+                (
+                    last_consumed != TS_ATSIGN
+                    && bracket_types_size == bracket_types_js.size()
+                    && (
+                        LA(1) == TS_ATSIGN
+                        || LA(1) == CLASS
+                        || LA(1) == JS_CONSTRUCTOR
+                        || LA(1) == JS_FUNCTION
+                        || LA(1) == JS_GET
+                        || LA(1) == JS_SET
+                        || LA(1) == LBRACKET
+                        || LA(1) == MULTOPS
+                        || LA(1) == NAME
+                        || LA(1) == TS_ENUM
+                        || LA(1) == TERMINATE
+                        || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        || specifier_js_token_set.member((unsigned int) LA(1))
+                        || literal_tokens_set.member((unsigned int) LA(1))
+                    )
+                )
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // do not envoke compound_name logic for decorators
+            {
+                LA(1) == NAME
+                && (
+                    (next_token() == NAME && next_token_two() != LPAREN)          // call
+                    || (next_token() == MULTOPS && next_token_two() == LBRACKET)  // generator computed property function
+                    || next_token() == LBRACKET                                   // computed property function
+                )
+            }?
+            {
+                if (!inMode(MODE_EXPRESSION)) {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                }
+            }
+            identifier |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECORATOR_TS)) {
+                endDownToMode(MODE_DECORATOR_TS);
+                endMode(MODE_DECORATOR_TS);
+            }
+
+            // TERMINATE after a decorator does not indicate the end of a statement
+            // decorators occur before a function/class, so ignore the TERMINATE
+            if (LA(1) == TERMINATE)
+                consume();
+        }
+;
+
+/*
+  perform_decorator_function_expression_check_ts
+
+  Checks for decorators that can appear before expression-level functions with keywords in TypeScript.
+  These include "function", "function*", "get", and "set" keywords.
+*/
+perform_decorator_function_expression_check_ts[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional decorator before checking
+            while (LA(1) == TS_ATSIGN) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+
+                bracket_count = 0;
+            }
+
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
+                consume();
+
+            // found a keyword-based function after the decorators/specifiers
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET)
+                isfunction = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_post_decorator_check_ts
+
+  Returns the next token that occurs after a series of TypeScript decorators/specifiers.
+*/
+perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
+        ENTRY_DEBUG
+
+        keywords[0] = -1;
+        keywords[1] = -1;
+        int bracket_count = 0;  // for TypeScript types
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional decorator before checking
+            while (LA(1) == TS_ATSIGN) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+
+                bracket_count = 0;
+            }
+
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
+                consume();
+
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                keywords[0] = LA(1);
+                keywords[1] = next_token();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_lcurly_differentiator_check_js
+
+  Checks if "{" denotes the start of a block or an object in JavaScript/TypeScript.
+  Assumes that "{" starts a block until proven otherwise.
+*/
+perform_lcurly_differentiator_check_js[] returns [bool isblock] {
+        ENTRY_DEBUG
+        isblock = true;
+        last_consumed_guessing_mode = -1;
+        int token_before_lcurly = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume any TERMINATE tokens that may appear before the first "{"
+            while (LA(1) == TERMINATE)
+                consume();
+
+            // only process "{" that could start objects; everything else starts a block
+            if (
+                LA(1) == LCURLY
+                && (
+                    !perform_statement_has_block_check_js()
+                    || bracket_types_js.back() == "nLPAREN"
+                    || token_before_lcurly == TERMINATE
+                    || token_before_lcurly == LCURLY
+                )
+            ) {
+                consume();  // "{"
+
+                // case 1: "{" is being assigned to something, so it must be an object
+                if (token_before_lcurly == EQUAL) {
+                    isblock = false;
+                }
+                // case 2: the first token in the block or object is a name
+                else if (LA(1) == NAME) {
+                    consume();
+
+                    // match properties (not labels)
+                    if (
+                        LA(1) == COLON
+                        && !table_keywords_js_token_set.member(next_token())
+                        && !decl_start_js_token_set.member(next_token())
+                    )
+                        isblock = false;
+                }
+                // case 3: the first token in the block or object is a square bracket
+                else if (LA(1) == LBRACKET) {
+                    bracket_pair();
+
+                    // match computed properties (not arrays)
+                    if (LA(1) == COLON)
+                        isblock = false;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_in_mode_before_expression_check_js
+
+  Checks if "m" is the mode started before MODE_EXPRESSION | MODE_EXPECT.
+*/
+perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+
+        if (!inTransparentMode(m))
+            return false;
+
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end down to the most recent MODE_EXPRESSION | MODE_EXPECT
+            if (inTransparentMode(MODE_EXPRESSION | MODE_EXPECT))
+                endDownOverMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // check if we are in the given mode
+            if (inMode(m))
+                inmode = true;
+
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+
+/*
+  perform_in_class_block_check_js
+
+  Checks if the current block is for a class/class expression/enum/interface/type.
+*/
+perform_in_class_block_check_js[] returns [bool inclass] {
+        inclass = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end down to first block
+            if (inTransparentMode(MODE_BLOCK)) {
+                endDownOverMode(MODE_BLOCK);
+            }
+
+            // check if the prior mode was a class (or similar)
+            if (
+                inMode(MODE_CLASS) 
+                || inMode(MODE_CLASS_EXPRESSION_JS)
+                || inMode(MODE_ENUM)
+                || inMode(MODE_INTERFACE_TS)
+            ) {
+                inclass = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  perform_statement_has_block_check_js
+
+  Checks if the current statement should have a block in JavaScript/TypeScript.
+  Note that "MODE_NEST" is used to denote this.
+*/
+perform_statement_has_block_check_js[] returns [bool hasblock] {
+        ENTRY_DEBUG
+
+        hasblock = false;
+        last_consumed_guessing_mode = -1;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end the current statement down to its original mode
+            if (inTransparentMode(MODE_STATEMENT))
+                endDownToMode(MODE_STATEMENT);
+
+            // record if the statement is supposed to contain a block
+            if (inMode(MODE_NEST))
+                hasblock = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  perform_lookahead_lcurly_differentiator_check_js
+
+  Checks if the current statement should really end at a terminate token in JavaScript/TypeScript.
+  If a statement requires a block, ignore the terminate so the pseudo-block persists.
+*/
+perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] {
+        ENTRY_DEBUG
+
+        skipterminate = false;
+        last_consumed_guessing_mode = -1;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end the current statement down to its original mode
+            if (inTransparentMode(MODE_STATEMENT))
+                endDownToMode(MODE_STATEMENT);
+
+            // if the statement is supposed to have a block, skip TERMINATE
+            if (inMode(MODE_LCURLY_BLOCK_JS))
+                skipterminate = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  declare_statement_ts
+
+  Used to handle any tokens that appear after a "declare" statement keyword in TypeScript.
+*/
+declare_statement_ts[] { ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            // "{" will always denote the start of a block in a "declare" statement
+            { LA(1) == LCURLY || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            compound_name | literals | TERMINATE
+        )*
+
+        {
+            // ensures that the parser is in MODE_STATEMENT before processing the block
+            if (inTransparentMode(MODE_DECLARE_TS)) {
+                endDownToMode(MODE_DECLARE_TS);
+                endMode(MODE_DECLARE_TS);
+            }
+        }
+;
+
+/*
+  perform_label_with_block_check_js
+
+  Checks if a labeled block (e.g., "NAME: {}") is a labeled block or a TypeScript type.
+*/
+perform_label_with_block_check_js[] returns [bool islabel] {
+        ENTRY_DEBUG
+
+        islabel = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume a name
+            compound_name();
+
+            if (LA(1) == COLON)
+                consume();
+
+            // found "NAME: {}", where "{}" is a block
+            if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                islabel = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_consecutive_label_check_js
+
+  Checks if a label is followed by one or more labels in JavaScript (e.g., "NAME: NAME: NAME:").
+*/
+perform_consecutive_label_check_js[] returns [bool islabel] {
+        ENTRY_DEBUG
+
+        islabel = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume a name and a ":"
+            if (LA(1) == NAME && next_token() == COLON) {
+                consume();
+                consume();
+            }
+
+            // consume an additional "NAME:" pair
+            if (LA(1) == NAME && next_token() == COLON) {
+                consume();
+                consume();
+
+                islabel = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_generic_lambda_check_ts
+
+  Checks to see if an arrow (`=>`) follows a generic argument list and a parameter list in JavaScript/TypeScript.
+*/
+perform_generic_lambda_check_ts[] returns [bool islambda] {
+        ENTRY_DEBUG
+
+        islambda = false;
+        int bracket_count = 0;  // for TypeScript types
+        int tempops_count = 0;  // for generic argument list
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // match generic argument list
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == TEMPOPS)
+                    ++tempops_count;
+
+                if (LA(1) == TEMPOPE) {
+                    --tempops_count;
+
+                    if (tempops_count == 0) {
+                        consume();
+                        break;
+                    }
+                }
+
+                consume();
+
+                if (tempops_count < 0)
+                    break;
+            }
+
+            // match parameter list
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LPAREN)
+                    ++paren_count;
+
+                if (LA(1) == RPAREN)
+                    --paren_count;
+
+                consume();
+
+                if (paren_count < 1)
+                    break;
+            }
+
+            // consume optional TypeScript type
+            if (LA(1) == COLON) {
+                consume();  // ":"
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (
+                        bracket_count < 0
+                        || (
+                            bracket_count == 0
+                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE)
+                        )
+                    )
+                        break;
+                }
+            }
+
+            if (paren_count == 0 && bracket_count == 0 && LA(1) == JS_ARROW)
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  generic_lambda_ts
+
+  Handles a generic lambda in JavaScript/TypeScript (e.g., "<TYPE>() => ...").
+*/
+generic_lambda_ts[] {
+        CompleteElement element(this);
+        size_t lparen_types_size = 0;
+        bool was_colon_type = (last_consumed == COLON);
+        bool was_tempops = (last_consumed == TEMPOPS);
+
+        ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_LAMBDA_JS | MODE_GENERIC_LAMBDA_TS);
+            startElement(SFUNCTION_LAMBDA);
+
+            ++lambda_depth;
+        }
+
+        (
+            // optional "async" specifier
+            (options { greedy = true; } : specifier_js)*
+
+            (
+                generic_argument_list_js
+                javascript_parameter_list
+            )
+
+            {
+                // a lone parameter lambda cannot appear here
+                skip_lone_lambda_js = true;
+            }
+
+            // consume TypeScript types
+            (options { greedy = true; } : colon_type_ts)?
+
+            arrow_operator_js
+        )
+
+        {
+            skip_lone_lambda_js = false;
+        }
+
+        (
+            // end the parameter list lambda after the block
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            // special logic for blocks in guessing mode
+            { LA(1) == LCURLY && inputState->guessing != 0 }?
+            curly_pair |
+
+            // if the generic lambda started with a ":", what follows the arrow is a type
+            { was_colon_type }?
+            type_ts |
+
+            // anything else continues the lambda
+            (
+                {
+                    lparen_types_size = lparen_types_js.size();
+                }
+
+                (options { greedy = true; } :
+                    // do not consume right parentheses or ">" outside the scope of the lambda
+                    {
+                        (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
+                        || (
+                            LA(1) == TEMPOPE
+                            && (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) || was_tempops)
+                        )
+                        || (
+                            LA(1) == EQUAL
+                            && !inTransparentMode(MODE_MIXINS_TS)
+                            && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                        )
+                        || LA(1) == 1 /* EOF */
+                    }?
+                    {
+                        break;
+                    } |
+
+                    { inMode(MODE_ARGUMENT) }?
+                    argument |
+
+                    // allow JavaScript ternaries to use existing "else" logic
+                    { inTransparentMode(MODE_TERNARY) }?
+                    colon_marked_js |
+
+                    // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+                    { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+                    colon_type_ts |
+
+                    // handle all other instances of a colon
+                    { LA(1) == COLON }?
+                    colon_marked |
+
+                    {
+                        if (!inMode(MODE_EXPRESSION))
+                            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    }
+                    expression |
+
+                    // consume commas only if directly inside a call
+                    { bracket_types_js.back() == "cLPAREN" }?
+                    comma
+                )*
+            )
+        )
+;
+
+/*
+  perform_generic_function_call_check_ts
+
+  Checks to see if a call contains a generic argument list in JavaScript/TypeScript.
+  Typically of the form "NAME<...>(...)".
+*/
+perform_generic_function_call_check_ts[] returns [bool iscall] {
+        ENTRY_DEBUG
+
+        iscall = false;
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "await" before checking
+            if (LA(1) == JS_AWAIT)
+                consume();
+
+            // consume "NAME"
+            if (LA(1) == NAME) {
+                consume();  // "NAME"
+
+                // match generic argument list
+                if (LA(1) == TEMPOPS && generic_argument_list_check()) {
+
+                    // try to consume generic arugment list
+                    angle_bracket_pair();
+
+                    // match parameter list
+                    if (LA(1) == LPAREN) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            if (LA(1) == LPAREN)
+                                ++paren_count;
+
+                            if (LA(1) == RPAREN) {
+                                --paren_count;
+
+                                if (paren_count == 0) {
+                                    consume();  // ")"
+
+                                    // function call does not have a block or type
+                                    if (LA(1) != COLON && LA(1) != LCURLY)
+                                        iscall = true;
+
+                                    break;
+                                }
+                            }
+
+                            consume();
+
+                            if (paren_count < 1)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  generic_function_call_ts
+
+  Handles a generic function call in JavaScript/TypeScript (e.g., "NAME<...>(...)").
+*/
+generic_function_call_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_FUNCTION_CALL);
+            startElement(SFUNCTION_CALL);
+        }
+
+        // generic argument list is paired with the name
+        ((situational_specifiers_js)* compound_name)
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+;
+
+/*
+  perform_colon_differentiator_check_ts
+
+  Checks to see if a ":" belongs to a ternary or a TypeScript type.
+*/
+perform_colon_differentiator_check_ts[] returns [bool isternary] {
+        ENTRY_DEBUG
+
+        isternary = true;
+        int paren_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == QMARK) {
+                consume();  // "?"
+
+                // "?" must be followed by "(" to warrant checking
+                if (LA(1) == LPAREN) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
+                        if (LA(1) == LPAREN)
+                            ++paren_count;
+
+                        if (LA(1) == RPAREN)
+                            --paren_count;
+
+                        // found instance where ":" belongs to a ternary
+                        if (paren_count == 1 && LA(1) == QMARK)
+                            break;
+
+                        // found instance where ":" belongs to a type
+                        if (paren_count == 1 && LA(1) == COLON) {
+                            isternary = false;
+                            break;
+                        }
+
+                        if (paren_count < 1)
+                            break;
+
+                        consume();
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_colon_lcurly_differentiator_check_js
+
+  Checks to see if a ": {" begins an object or a kind of block in JavaScript/TypeScript.
+*/
+perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
+        ENTRY_DEBUG
+
+        curlytype = 0;  // unknown
+        int curly_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (
+                LA(1) == COLON
+                && (
+                    next_token() == LCURLY
+                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                )
+            ) {
+                consume();  // ":"
+
+                if (LA(1) == TS_READONLY)
+                    consume();  // "readonly"
+
+                /*
+                    CASE 1: "{" in a ternary
+                */
+                if (inTransparentMode(MODE_TERNARY)) {
+                    curlytype = 1;  // object
+                }
+                else {
+                    // consume the first pair of curly braces
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
+                        if (LA(1) == LCURLY)
+                            ++curly_count;
+
+                        if (LA(1) == RCURLY) {
+                            --curly_count;
+
+                            if (curly_count == 0)
+                                break;
+                        }
+
+                        if (curly_count < 1)
+                            break;
+
+                        consume();
+                    }
+
+                    /*
+                        CASE 2: "{}" followed by certain TERMINATEs or "," indicates a function declaration
+                    */
+                    if (
+                        LA(1) == RCURLY
+                        && (
+                            (next_token() == TERMINATE && next_token_text() == ";")
+                            || (next_token() == TERMINATE && next_token_two() != LCURLY)
+                            || next_token() == COMMA
+                        )
+                    ) {
+                        curlytype = 2;  // TypeScript "type" block
+                    }
+                    // could be "{} | TYPE {}", "{} & TYPE {}", "{}[] {}", or "{} {}"
+                    else if (
+                        LA(1) == RCURLY
+                        && (
+                            next_token() == LCURLY
+                            || next_token() == LBRACKET
+                            || next_token() == REFOPS
+                            || next_token() == OPERATORS
+                        )
+                    ) {
+                        consume();  // "}"
+                        curly_count = 0;
+
+                        // consume additional TypeScript types, if applicable
+                        if (LA(1) != LCURLY) {
+                            while (LA(1) != antlr::Token::EOF_TYPE) {
+                                if (LA(1) == LCURLY || LA(1) == TERMINATE)
+                                    break;
+
+                                consume();
+                            }
+                        }
+
+                        // consume the second pair of curly braces
+                        if (LA(1) == LCURLY) {
+                            while (LA(1) != antlr::Token::EOF_TYPE) {
+                                if (LA(1) == LCURLY)
+                                    ++curly_count;
+
+                                if (LA(1) == RCURLY) {
+                                    --curly_count;
+
+                                    /*
+                                        CASE 3: "{}" followed by "{}" indicates a function expression
+                                    */
+                                    if (curly_count == 0) {
+                                        curlytype = 3;  // TypeScript "type" block + traditional block
+                                        break;
+                                    }
+                                }
+
+                                if (curly_count < 1)
+                                    break;
+
+                                consume();
+                            }
+                        }
+                        /*
+                            CASE 2: "{} TYPE" with no "{" at the end indicates a function declaration
+                        */
+                        else {
+                            curlytype = 2;  // TypeScript "type" block
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_global_context_call_check_js
+
+  Checks to see if pairs of consecutive parentheses are a call in JavaScript/TypeScript.
+  Typically of the form "(,)()".
+*/
+perform_global_context_call_check_js[] returns [bool iscall] {
+        ENTRY_DEBUG
+
+        iscall = false;
+        int paren_count = 0;
+        bool found_comma = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // match the first set of parentheses
+            if (LA(1) == LPAREN) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count == 1 && LA(1) == COMMA)
+                        found_comma = true;
+
+                    consume();
+
+                    if (paren_count < 1)
+                        break;
+                }
+            }
+
+            // match optional call chaining syntax (e.g., "?.")
+            if (LA(1) == QMARK_PERIOD)
+                qmark_period();
+
+            // match the second set of parentheses
+            if (found_comma && LA(1) == LPAREN) {
+                paren_count = 0;
+
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN) {
+                        --paren_count;
+
+                        if (paren_count == 0) {
+                            iscall = true;
+                            break;
+                        }
+                    }
+
+                    consume();
+
+                    if (paren_count < 1)
+                        break;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  global_context_call_js
+
+  Handles a global context call in JavaScript/TypeScript (e.g., "(,)()").
+*/
+global_context_call_js[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_GLOBAL_CONTEXT_CALL_JS);
+            startElement(SFUNCTION_CALL);
+
+            startNewMode(MODE_EXPRESSION);
+            startElement(SEXPRESSION);
+        }
+
+        lparen_marked
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            // ensure the first set of parentheses ends correctly
+            { (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size()) || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume operator comma
+            { bracket_types_js.back() == "oLPAREN" && lparen_types_size == lparen_types_js.size() }?
+            comma_marked |
+
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+
+        rparen[false]
+
+        {
+            if (inTransparentMode(MODE_GLOBAL_CONTEXT_CALL_JS))
+                endDownToMode(MODE_GLOBAL_CONTEXT_CALL_JS);
+        }
+
+        // match optional call chaining syntax (e.g., "?.")
+        ({ LA(1) == QMARK_PERIOD }? qmark_period)?
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+;
+
+/*
+  perform_mode_before_mode_statement_check
+
+  Pops modes until MODE_STATEMENT and checks if the mode before that is the same as "m".
+*/
+perform_mode_before_mode_statement_check[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+
+        if (!inTransparentMode(MODE_STATEMENT))
+            return false;
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            const auto real_state = std::find_if(st.crbegin(), st.crend(), [](const auto& temp_state){
+                if (temp_state.inPrevMode(MODE_STATEMENT))
+                    return true;
+                return false;
+            });
+
+            if (real_state->inMode(m))
+                inmode = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_top_level_class_check_js
+
+  Checks if currently at the top-level of a class (i.e., looking for statements) in JavaScript/TypeScript.
+*/
+perform_top_level_class_check_js[] returns [bool istop] {
+        ENTRY_DEBUG
+
+        // must be in a class, otherwise the check is pointless
+        if (
+            !inLanguage(LANGUAGE_JAVASCRIPT)
+            || (
+                !inTransparentMode(MODE_CLASS)
+                && !inTransparentMode(MODE_CLASS_EXPRESSION_JS)
+                && !inTransparentMode(MODE_BLOCK)
+            )
+        ) {
+            return false;
+        }
+
+        istop = false;
+        last_consumed_guessing_mode = -1;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end the current block down to its associated statement
+            if (inTransparentMode(MODE_BLOCK)) {
+                endDownOverMode(MODE_BLOCK);
+
+                if (inMode(MODE_LCURLY_BLOCK_JS))
+                    endMode(MODE_LCURLY_BLOCK_JS);
+            }
+
+            // found the class
+            if (inMode(MODE_CLASS) || inMode(MODE_CLASS_EXPRESSION_JS))
+                istop = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  perform_declaration_in_class_check_js
+
+  Checks to see if an expression statement is really a declaration statement in JavaScript/TypeScript.
+  Looking for "NAME =" or "[...] =" at the top-level of a class block.
+*/
+perform_declaration_in_class_check_js[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // must be in a class, otherwise the check is pointless
+            if (perform_top_level_class_check_js()) {
+                // case 1: first token is a name
+                if (LA(1) == NAME)
+                    consume();
+                // case 2: first token is a computed property
+                else if (LA(1) == LBRACKET)
+                    bracket_pair();
+                // otherwise, the parser should not be here
+                else
+                    throw antlr::RecognitionException();
+
+                // consume optional "?" or "!" modifiers after the name
+                while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                    consume();
+
+                if (LA(1) == EQUAL)
+                    isdecl = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_dynamic_module_import_check_ts
+
+  Checks to see if a generic argument list follows a call in JavaScript/TypeScript.
+  Typically of the form "NAME(...)<...>".
+*/
+perform_dynamic_module_import_check_ts[] returns [bool isimport] {
+        ENTRY_DEBUG
+
+        isimport = false;
+        int tempops_count = 0;  // for generic argument list
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "await" before checking
+            if (LA(1) == JS_AWAIT)
+                consume();
+
+            // consume "NAME"
+            if (LA(1) == NAME) {
+                consume();  // "NAME"
+
+                // match parameter list
+                if (LA(1) == LPAREN) {
+                    paren_pair();
+
+                    // match generic argument list
+                    if (LA(1) == TEMPOPS) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            if (LA(1) == TEMPOPS)
+                                ++tempops_count;
+
+                            if (LA(1) == TEMPOPE) {
+                                --tempops_count;
+
+                                if (tempops_count == 0) {
+                                    consume();
+
+                                    // dynamic import does not have a block
+                                    if (LA(1) != LCURLY)
+                                        isimport = true;
+
+                                    break;
+                                }
+                            }
+
+                            consume();
+
+                            if (tempops_count < 0)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  dynamic_module_import_ts
+
+  Handles a dynamic module import in JavaScript/TypeScript (e.g., "NAME(...)<...>").
+*/
+dynamic_module_import_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_FUNCTION_CALL);
+            startElement(SFUNCTION_CALL);
+        }
+
+        ((situational_specifiers_js)* compound_name)
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+
+        // either "<...>" or "NAME<...>" after the call argument list
+        ({ LA(1) == TEMPOPS }? generic_argument_list_js | compound_name)
+;
+
+/*
+  perform_pseudo_generic_argument_list_check_ts
+
+  Checks to see if "<<", "<<<", etc. are supposed to start a generic argument list in JavaScript/TypeScript.
+  That code will be invalid, but must be handled to avoid crashes and/or infinite loops.
+*/
+perform_pseudo_generic_argument_list_check_ts[] returns [bool islist] {
+        ENTRY_DEBUG
+
+        islist = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            angle_bracket_pair();
+            islist = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  pseudo_generic_argument_list
+
+  Handles a special case where a generic argument list starts with many "<" in JavaScript/TypeScript.
+  That code will be invalid, but must be handled to avoid crashes and/or infinite loops.
+*/
+pseudo_generic_argument_list[] { CompleteElement element(this); int tempops_count = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_ARGUMENT_LIST);
+            startElement(SGENERIC_ARGUMENT_LIST);
+
+            // suppose each "<" was separate; handle a generic argument list as if this were true
+            std::string token_text = LT(1)->getText();
+            tempops_count = std::count(token_text.begin(), token_text.end(), '<');
+        }
+
+        OPERATORS  // "<<" or "<<<" or ... etc.
+
+        {
+            while (tempops_count > 0) {
+                if (LA(1) == TEMPOPS)
+                    ++tempops_count;
+
+                if (LA(1) == TEMPOPE)
+                    --tempops_count;
+
+                if (LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+        }
+;
+
+/*
+  perform_named_array_with_index_check_ts
+
+  Checks for the "[NAME: TYPE][]" syntax which represents a named array with an index in JavaScript/TypeScript.
+*/
+perform_named_array_with_index_check_ts[] returns [bool isarray] {
+        ENTRY_DEBUG
+
+        isarray = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == LBRACKET) {
+                bracket_pair();
+
+                // found "[...]["
+                if (LA(1) == LBRACKET)
+                    isarray = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  named_array_with_index_ts
+
+  Handles the "[NAME: TYPE][]" syntax which represents a named array with an index in JavaScript/TypeScript.
+*/
+named_array_with_index_ts[] { bool iscomplex = false; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_ARRAY_JS);
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            // ":" indicates a TypeScript type (no ternaries allowed here)
+            { LA(1) == COLON }?
+            colon_type_ts |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_ARRAY_JS))
+                endDownToMode(MODE_ARRAY_JS);
+        }
+
+        // consume array-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
+
+        {
+            if (inMode(MODE_ARRAY_JS))
+                endMode(MODE_ARRAY_JS);
+        }
+
+        variable_identifier_array_grammar_sub[iscomplex]
+;
+
+/*
+  perform_nameless_keywordless_generator_function_check_js
+
+  Checks for special nameless, keywordless generator function syntax in JavaScript.
+  Specifically, functions of the form "*(){...}".
+*/
+perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers before checking
+            while (
+                LA(1) != TS_DECLARE
+                && (
+                    specifier_js_token_set.member((unsigned int) LA(1))
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+            )
+                consume();
+
+            if (LA(1) == MULTOPS) {
+                consume();  // "*"
+
+                // handle optional TypeScript generic argument list
+                if (LA(1) == TEMPOPS && generic_argument_list_check())
+                    angle_bracket_pair();
+
+                // handle required parameter list
+                paren_pair();
+
+                // handle optional TypeScript type
+                if (LA(1) == COLON) {
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        isfunction = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            isfunction = true;
+                    }
+                }
+                // handle required block
+                else {
+                    curly_pair();
+                    isfunction = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  nameless_keywordless_generator_function_expression_js
+
+  Handles generator functions with no "function" keyword nor name that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+nameless_keywordless_generator_function_expression_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_GENERATOR_STATEMENT);
+        }
+
+        (
+            // only allow a certain subset of specifiers
+            (options { greedy = true; } :
+                { LA(1) != TS_DECLARE }?
+                specifier_js |
+
+                declaration_specifiers_ts
+            )*
+
+            MULTOPS
+
+            // optional TypeScript generic argument list
+            (generic_argument_list_js)*
+        )
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
+;
+
+/*
+  trailing_html_comment_js
+
+  Handles a trailing HTML comment (starts with "-->") in JavaScript.
+  Relic of "Annex B" of the old EcmaScript standard. Some modern JS
+  interpreters still allow this.
+*/
+trailing_html_comment_js[] { ENTRY_DEBUG }:
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SHTML_COMMENT);
+        }
+
+        TRAILING_HTML_COMMENT_START
+
+        ( options { greedy = true; } :
+            ~(EOL)
+        )*
+
+        {
+            endMode(MODE_LOCAL);
+        }
+;
+
+/*
+  cmake_end_statement
+
+  Consumes the parentheses that follows a simple CMake statement (break, include, continue, return, etc)
+*/
+cmake_end_statement[] { ENTRY_DEBUG
+    if (LA(1) == LPAREN) consume();
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        if (LA(1) == CMAKE_PROPAGATE && inMode(MODE_PROPAGATE_STATEMENT_CMAKE))
+            cmake_propagate();
+        else
+            cmake_expression();
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    if (inMode(MODE_STATEMENT))
+        endMode(MODE_STATEMENT);
+}:;
+
+cmake_function[] { ENTRY_DEBUG
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        startNewMode(MODE_PARAMETER);
+        startElement(SPARAMETER);
+
+        cmake_expression();
+
+        endMode(MODE_PARAMETER);
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDFUNCTION) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+}:;
+
+cmake_macro[] { ENTRY_DEBUG
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        startNewMode(MODE_PARAMETER);
+        startElement(SPARAMETER);
+
+        cmake_expression();
+
+        endMode(MODE_PARAMETER);
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDMACRO) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+}:;
+
+cmake_while[] { ENTRY_DEBUG
+    
+    startNewMode(MODE_CONDITION);
+    startElement(SCONDITION);
+
+    if (LA(1) == LPAREN) consume();
+
+    cmake_condition_expression();
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_CONDITION);
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDWHILE) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+}:;
+
+cmake_if_stmt_start[] {
+    startNewMode(MODE_STATEMENT);
+    startElement(SIF_STATEMENT);
+}:;
+
+cmake_if_stmt[] { ENTRY_DEBUG
+
+    startNewMode(MODE_CONDITION);
+    startElement(SCONDITION);
+
+    if (LA(1) == LPAREN) consume();
+
+    cmake_condition_expression();
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_CONDITION);
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    endMode(MODE_IF);
+
+    while (LA(1) == CMAKE_ELSEIF) {
+        startNewMode(MODE_IF);
+        startElement(SELSEIF);
+
+        consume(); // consume elseif
+
+        startNewMode(MODE_CONDITION);
+
+        startElement(SCONDITION);
+
+        if (LA(1) == LPAREN) consume();
+
+        cmake_condition_expression();
+
+        if (LA(1) == RPAREN) consume();
+
+        endMode(MODE_CONDITION);
+
+        startNewMode(MODE_BLOCK);
+        startNoSkipElement(SBLOCK);
+
+        cmake_statement_level();
+
+        flushSkip();
+        endMode(MODE_BLOCK);
+
+        endMode(MODE_IF);
+    }
+
+    if (LA(1) == ELSE) {
+        startNewMode(MODE_ELSE);
+        startElement(SELSE);
+
+        consume(); // consume else
+
+        startNewMode(MODE_CONDITION);
+
+        startElement(SCONDITION);
+
+        if (LA(1) == LPAREN) consume();
+
+        if (LA(1) != RPAREN) cmake_condition_expression();
+
+        if (LA(1) == RPAREN) consume();
+
+        endMode(MODE_CONDITION);
+
+        startNewMode(MODE_BLOCK);
+        startNoSkipElement(SBLOCK);
+
+        cmake_statement_level();
+
+        flushSkip();
+        endMode(MODE_BLOCK);
+
+        endMode(MODE_ELSE);
+    }
+
+    if (LA(1) == CMAKE_ENDIF) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+}:;
+
+
+cmake_condition_expression[] { ENTRY_DEBUG
+
+    startNewMode(MODE_EXPRESSION);
+    startElement(SEXPRESSION);
+
+    int paren_count = 0;
+
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+        if (LA(1) == RPAREN && paren_count == 0) {
+            break;
+        }
+        bool mark_as_plaintext_string = false;
+        bool only_name_tokens = true;
+        int token_count = 0;
+        int starting_token = LA(1);
+
+        int start = mark();
+        inputState->guessing++;
+
+        // Need to look ahead and count how many tokens appear without a delimiter
+        try {
+            while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN && LA(1) != LPAREN) {
+                ++token_count;
+                if (starting_token != LA(1)) {
+                    mark_as_plaintext_string = true;
+                }
+                if (LA(1) != NAME && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                    only_name_tokens = false;
+                }
+                consume();
+            }
+            if (LA(1) != RPAREN) {
+                ++token_count;
+                if (starting_token != LA(1)) {
+                    mark_as_plaintext_string = true;
+                }
+                if (LA(1) != NAME && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                    only_name_tokens = false;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        // if this is a marked string of some kind, ignore
+        if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT_START ) {
+            mark_as_plaintext_string = false;
+        }
+
+
+        if (mark_as_plaintext_string && !only_name_tokens) {
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_LOCAL);
+        }
+
+        else if (LA(1) == NAME || cmake_expansion_expr_tokens.member(LA(1))) {
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        else if (LA(1) == LPAREN) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+            ++paren_count;
+        }
+        else if (LA(1) == RPAREN) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+            --paren_count;
+        }
+
+        else if (LA(1) == CMAKE_OPERATORS) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == LITERAL_TRUE) {
+            startNewMode(MODE_LOCAL);
+            startElement(SBOOLEAN_VALUE_TRUE);
+            consume();
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == LITERAL_FALSE) {
+            startNewMode(MODE_LOCAL);
+            startElement(SBOOLEAN_VALUE_FALSE);
+            consume();
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == CMAKE_QUOTE) {
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            consume(); // consume "
+
+            while (LA(1) != CMAKE_QUOTE && LA(1) != antlr::Token::EOF_TYPE) {
+                cmake_process_one_token_argument_text();
+            }
+
+            if (LA(1) == CMAKE_QUOTE) consume();
+
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == BRACKET_ARGUMENT_START) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        std::string bracket_start = LT(1)->getText();
+        int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
+
+        consume();
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == BRACKET_ARGUMENT_END) {
+                std::string bracket_end = LT(1)->getText();
+                if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
+                    break;
+                }
+            }
+            consume();
+        }
+
+        if (LA(1) == BRACKET_ARGUMENT_END) consume();
+
+        endMode(MODE_LOCAL);
+    }
+        else if (LA(1) == CONSTANTS) {
+            startNewMode(MODE_LOCAL);
+            startElement(SLITERAL);
+
+            consume();
+
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == CMAKE_COMPILER_FLAG) {
+            startNewMode(MODE_LOCAL);
+            startElement(SCOMPILER_FLAG_CMAKE);
+
+            consume();
+
+            endMode(MODE_LOCAL);
+        }
+        else {
+            // Other, make it a string!
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_LOCAL);
+        }
+    }
+
+    endMode(MODE_EXPRESSION);
+
+}:;
+
+
+/*
+  cmake_propagate
+
+  Handles support for CMake propogates.
+*/
+cmake_propagate[] { ENTRY_DEBUG 
+
+    startNewMode(MODE_LOCAL);
+    startElement(SPROPAGATE);
+
+    consume(); // consume "PROPAGATE"
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    endMode(MODE_LOCAL);
+
+}:;
+
+/*
+  generic_command_cmake
+
+  Handles a command in CMake, which follow a similar syntax to calls.
+  Not used directly, but called by init_command_cmake.
+*/
+generic_command_cmake[] { ENTRY_DEBUG 
+    startNewMode(MODE_COMMAND_CMAKE);
+    startElement(SCOMMAND);
+
+    startNewMode(MODE_VARIABLE_NAME);
+    startElement(SNAME);
+
+    if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) consume();
+
+    endMode(MODE_VARIABLE_NAME);
+
+    if (LA(1) != LPAREN) {
+        endDownOverMode(MODE_COMMAND_CMAKE);
+        return;
+    }
+
+    startNewMode(MODE_ARGUMENT_LIST);
+    startElement(SARGUMENT_LIST);
+
+    if (LA(1) == LPAREN) consume();
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_argument();
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_ARGUMENT_LIST);
+    
+    endMode(MODE_COMMAND_CMAKE);
+} :;
+
+cmake_argument[] { ENTRY_DEBUG
+    startNewMode(MODE_ARGUMENT);
+    startElement(SARGUMENT);
+
+    cmake_expression();
+
+    endMode(MODE_ARGUMENT);
+}:;
+
+
+/*
+  cmake_option
+
+  Handles a CMake option.
+*/
+cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_OPTION_CMAKE);
+            startElement(SOPTION);
+
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+        }
+
+        CMAKE_OPTIONS
+
+        {
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the argument
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            // ensure the current option does not include a new option
+            { inTransparentMode(MODE_COMMAND_CMAKE) }?
+            {
+                break;
+            }
+            CMAKE_OPTIONS |
+
+            {
+                if (!inMode(MODE_OPTION_CMAKE))
+                    endDownToMode(MODE_OPTION_CMAKE);
+            }
+            cmake_argument
+        )*
+;
+
+/*
+  cmake_option_as_name
+
+  Treats a CMake option as a name.  Not used directly, but called by cmake_expression.
+*/
+cmake_option_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+            {
+                startNewMode(MODE_VARIABLE_NAME);
+
+                startElement(SNAME);
+            }
+
+            CMAKE_OPTIONS
+;
+
+cmake_foreach[] { ENTRY_DEBUG
+
+    startNewMode(MODE_CONTROL);
+    startElement(SCONTROL);
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) != RPAREN) {
+        cmake_expression();
+    }
+
+    if (LA(1) != RPAREN) {
+
+        int start = mark();
+        inputState->guessing++;
+
+        // Need to look ahead and count how many tokens appear without a delimiter
+        bool is_special_range = false;
+        try {
+            while(LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                if (cmake_foreach_ranges.member(LA(1))) {
+                    is_special_range = true;
+                    break;
+                }
+                consume();
+            }
+        }
+        catch(...) {}
+      
+        inputState->guessing--;
+        rewind(start);
+
+        if (is_special_range) {
+            while(!cmake_foreach_ranges.member(LA(1)) && LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                cmake_expression();
+            }
+
+            startNewMode(MODE_RANGED_FOR);
+
+            if (LA(1) == CMAKE_RANGE) {
+                startElement(SRANGE_RANGE_CMAKE);
+                consume(); // consume "RANGE"
+
+                while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                    cmake_expression();
+                }
+
+            }
+
+            else if (LA(1) == CMAKE_IN) {
+                startElement(SRANGE_IN_CMAKE);
+                consume(); // consume "IN"
+
+                while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                    if (cmake_foreach_lists.member(LA(1))) {
+                        startNewMode(MODE_LIST);
+                        if (LA(1) == CMAKE_ITEMS) startElement(SLIST_ITEMS);
+                        else if (LA(1) == CMAKE_LISTS) startElement(SLIST_LISTS);
+                        if (LA(1) == CMAKE_ZIP_LISTS) startElement(SLIST_ZIP);
+                        consume();
+
+                        while (LA(1) != RPAREN && !cmake_foreach_lists.member(LA(1)) && LA(1) != antlr::Token::EOF_TYPE) {
+                            cmake_expression();
+                        }
+                        endMode(MODE_LIST);
+                    }
+                    else {
+                        cmake_expression();
+                    }
+                }
+            }
+        }
+
+        else { // Normal range
+            startNewMode(MODE_RANGED_FOR);
+            startElement(SDECLARATION_RANGE);
+            while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                cmake_expression();
+            }
+        }
+
+        endMode(MODE_RANGED_FOR);
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_CONTROL);
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDFOREACH) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+} :;
+
+/*
+  cmake_block_statement
+
+  Handles the parenthesis contents in a "block()" statement in CMake.
+*/
+cmake_block_statement[] { ENTRY_DEBUG 
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) == CMAKE_SCOPE_FOR) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSCOPE);
+
+        consume(); // consume "SCOPE_FOR"
+
+        while (LA(1) != RPAREN && LA(1) != CMAKE_PROPAGATE && LA(1) != antlr::Token::EOF_TYPE) {
+            cmake_expression();
+        }
+
+        endMode(MODE_LOCAL);
+    }
+
+    if (LA(1) == CMAKE_PROPAGATE) {
+        cmake_propagate();
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDBLOCK) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+} :;
+
+
+/*
+  cmake_compiler_flag
+
+  Handles a compiler flag in CMake.  Supports "-", "--", and "/W*".
+*/
+cmake_compiler_flag[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCOMPILER_FLAG_CMAKE);
+        }
+
+        CMAKE_COMPILER_FLAG
+;
+
+
+/*
+  cmake_expression
+
+  Matches an expression in CMake.
+*/
+cmake_expression[] { ENTRY_DEBUG
+    
+    bool mark_as_plaintext_string = false;
+    bool only_name_tokens = true;
+    int expansion_expr_depth = 0;
+    int token_count = 0;
+    int starting_token = LA(1);
+
+    int start = mark();
+    inputState->guessing++;
+
+    // Need to look ahead and count how many tokens appear without a delimiter
+    try {
+        while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN) {
+            if (LA(1) == antlr::Token::EOF_TYPE) {
+                break;
+            }
+            ++token_count;
+            if (starting_token != LA(1)) {
+                mark_as_plaintext_string = true;
+            }
+            if (cmake_expansion_expr_tokens.member(LA(1))) {
+                ++expansion_expr_depth;
+            }
+            else if (LA(1) == CMAKE_RCURLY) {
+                --expansion_expr_depth;
+            }
+            if (expansion_expr_depth == 0 && LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                only_name_tokens = false;
+            }
+            consume();
+        }
+        if (LA(1) != RPAREN) {
+            ++token_count;
+            if (starting_token != LA(1)) {
+                mark_as_plaintext_string = true;
+            }
+            if (expansion_expr_depth == 0 && LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                only_name_tokens = false;
+            }
+        }
+    }
+    catch (...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+    // if this is a marked string of some kind, ignore
+    if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT_START ) {
+        mark_as_plaintext_string = false;
+    }
+
+    startNewMode(MODE_EXPRESSION);
+    startElement(SEXPRESSION);
+
+    if (mark_as_plaintext_string && !only_name_tokens) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        for (int i = 0; i < token_count; ++i) {
+            cmake_process_one_token_argument_text();
+        }
+
+        endMode(MODE_LOCAL);
+    }
+
+    else if (LA(1) == NAME || cmake_keywords.member(LA(1)) || cmake_expansion_expr_tokens.member(LA(1))) {
+        startNewMode(MODE_VARIABLE_NAME);
+        startElement(SNAME);
+
+        for (int i = 0; i < token_count; ++i) {
+            cmake_process_one_token_argument_text();
+        }
+
+        endMode(MODE_VARIABLE_NAME);
+    }
+    else if (LA(1) == CMAKE_QUOTE) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        consume(); // consume "
+
+        while (LA(1) != CMAKE_QUOTE && LA(1) != antlr::Token::EOF_TYPE) {
+            cmake_process_one_token_argument_text();
+        }
+
+        if (LA(1) == CMAKE_QUOTE) consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else if (LA(1) == BRACKET_ARGUMENT_START) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        std::string bracket_start = LT(1)->getText();
+        int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
+
+        consume();
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == BRACKET_ARGUMENT_END) {
+                std::string bracket_end = LT(1)->getText();
+                if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
+                    break;
+                }
+            }
+            consume();
+        }
+
+        if (LA(1) == BRACKET_ARGUMENT_END) consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else if (LA(1) == CONSTANTS) {
+        startNewMode(MODE_LOCAL);
+        startElement(SLITERAL);
+
+        consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else if (LA(1) == CMAKE_COMPILER_FLAG) {
+        startNewMode(MODE_LOCAL);
+        startElement(SCOMPILER_FLAG_CMAKE);
+
+        consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else {
+        // Other, make it a string!
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        for (int i = 0; i < token_count; ++i) {
+            cmake_process_one_token_argument_text();
+        }
+
+        endMode(MODE_LOCAL);
+    }
+
+
+    endMode(MODE_EXPRESSION);
+
+
+}:;
+
+cmake_process_one_token_argument_text[] { ENTRY_DEBUG
+    if (LA(1) == CMAKE_NAME_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_NAME);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_NAME_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_ENV_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_ENV);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_ENV_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_CACHE_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_CACHE);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_CACHE_CMAKE);
+        startElement(SNAME);
+
+    }
+    else if (LA(1) == CMAKE_GENERATOR_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_GENERATOR);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == COLON && inMode(MODE_EXPRESSION_GENERATOR_CMAKE)) {
+        endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_RCURLY && (inMode(MODE_EXPRESSION_NAME_CMAKE) || inMode(MODE_EXPRESSION_ENV_CMAKE) || inMode(MODE_EXPRESSION_CACHE_CMAKE))) {
+        if (inMode(MODE_EXPRESSION_NAME_CMAKE))
+            endMode(MODE_EXPRESSION_NAME_CMAKE);
+        else if (inMode(MODE_EXPRESSION_ENV_CMAKE))
+            endMode(MODE_EXPRESSION_ENV_CMAKE);
+        else if (inMode(MODE_EXPRESSION_CACHE_CMAKE))
+            endMode(MODE_EXPRESSION_CACHE_CMAKE);
+
+        consume();
+
+        endMode(MODE_EXPRESSION);
+    }
+    else if (LA(1) == TEMPOPE && inMode(MODE_EXPRESSION_GENERATOR_CMAKE)) {
+        endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+
+        consume();
+
+        endMode(MODE_EXPRESSION);
+    }
+    else {
+        consume();
+    }
+}:;
+
+/*
+  init_command_cmake
+
+  Differentiates a built-in CMake command from a "generic" CMake command.
+  Built-in commands have special markup (including options).
+*/
+init_command_cmake[] { ENTRY_DEBUG 
+
+    CMakeOptionsSet& data = CMakeOptionsSet::getInstance();
+    if (data.checkCommand(LT(1)->getText())) {
+        builtin_command_cmake();
+    }
+    else {
+        generic_command_cmake();
+    }
+
+}:;
+
+/*
+  builtin_command_cmake
+
+  Handles a built-in command in CMake.
+*/
+builtin_command_cmake[] { ENTRY_DEBUG
+        CMakeOptionsSet& data = CMakeOptionsSet::getInstance(); 
+        std::string command_name = "";
+
+        // start the command
+        startNewMode(MODE_COMMAND_CMAKE);
+        startElement(SCOMMAND);
+
+        // save the name of the current command
+        command_name = LT(1)->getText();
+
+        startNewMode(MODE_VARIABLE_NAME);
+        startElement(SNAME);
+
+        if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) consume();
+
+        endMode(MODE_VARIABLE_NAME);
+
+        // start the argument list
+        startNewMode(MODE_ARGUMENT_LIST);
+
+        startElement(SARGUMENT_LIST);
+
+        if (LA(1) == LPAREN) consume();
+
+        // identify which command-structure this is
+        std::string command_type = LT(1)->getText();
+
+        // get the vector of command structure
+        std::vector<std::string> values = data.getCommandVector(command_name, command_type);
+
+        size_t value_position = 0;
+
+        while (LA(1) != RPAREN && LA(1) != 1) {
+            // first, gather all possible options in the current target set
+            std::vector<std::string> possible_options;
+
+            if (value_position < values.size())
+                possible_options = split(values[value_position],':');
+
+            std::string current_token = LT(1)->getText();
+
+            // check if current token is an option or not
+            bool isOption = false;
+            std::string option;
+            for (size_t i = 0; i < possible_options.size(); ++i) {
+                option = possible_options[i];
+                if (split(option,'|')[0] == current_token) {
+                    isOption = true;
+                    break;
+                }
+            }
+
+            if (!isOption)
+                cmake_argument();
+            else {
+                int num_of_values = std::stoi(split(option,'|')[1]);
+
+                // start the option
+                startNewMode(MODE_OPTION_CMAKE);
+                startElement(SOPTION);
+
+                // start the option name
+                startNewMode(MODE_VARIABLE_NAME);
+                startElement(SNAME);
+
+                consume();
+
+                endMode(MODE_VARIABLE_NAME);
+
+                if (num_of_values >= 0) {
+                    for (int i = 0; i < num_of_values; ++i) {
+                        cmake_argument();
+                    }
+                }
+                else {
+                    while(true) {
+                        std::string next_value = LT(1)->getText();
+
+                        if (next_value == ")")
+                            break;
+
+                        bool isAnOption = false;
+
+                        // first, check if value is an option in current set
+                        for (auto next_option : possible_options) {
+                            if (split(next_option,'|')[0] == next_value) {
+                                isAnOption = true;
+                                break;
+                            }
+                        }
+
+                        // then, check if there is a next set
+                        if (value_position < values.size() - 1) {
+                            // If there is, get that set and then check if value is an option in it
+                            std::vector<std::string> next_possible_options = split(values[value_position+1],':');
+                            for (auto next_option : next_possible_options) {
+                                if (split(next_option,'|')[0] == next_value) {
+                                    isAnOption = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // finally, if it's an option, leave
+                        if (isAnOption)
+                            break;
+                        cmake_argument();
+                    }
+                }
+                endDownToMode(MODE_OPTION_CMAKE);
+                endMode(MODE_OPTION_CMAKE);
+                std::string next_value = LT(1)->getText();
+                bool done_with_option_set = true;
+                for (auto next_option : possible_options) {
+                    if (split(next_option,'|')[0] == next_value) {
+                        done_with_option_set = false;
+                        break;
+                    }
+                }
+                if (done_with_option_set)
+                    ++value_position;
+            }
+        }
+        endDownToMode(MODE_ARGUMENT_LIST);
+
+        if (LA(1) == RPAREN) consume();
+
+        endDownToMode(MODE_COMMAND_CMAKE);
+        endMode(MODE_COMMAND_CMAKE);
+}:;

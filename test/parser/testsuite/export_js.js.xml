@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="export">
+
+<!-- Name list -->
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>name1</name>, <comment type="block">/* ..., */</comment> <name>nameN</name> }</name_list></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>variable1</name> <alias>as <expr><name>name1</name></expr></alias>, <name>variable2</name> <alias>as <expr><name>name2</name></expr></alias>, <comment type="block">/* ..., */</comment> <name>nameN</name> }</name_list></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>variable1</name> <alias>as <expr><literal type="string">"string name"</literal></expr></alias> }</name_list></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>name1</name> <alias>as <expr><name>default</name></expr></alias> <comment type="block">/*, ... */</comment> }</name_list></export>
+</unit>
+
+<!-- Default export -->
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <specifier>default</specifier> <expr><name>expression</name></expr></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <specifier>default</specifier> <expr><call><name>cube</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></export>
+</unit>
+
+<!-- Aggregating modules -->
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name>*</name> <from>from <literal type="string">"module-name"</literal></from></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name>*</name> <alias>as <expr><name>name1</name></expr></alias> <from>from <literal type="string">"module-name"</literal></from></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>name1</name>, <comment type="block">/* ..., */</comment> <name>nameN</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>import1</name> <alias>as <expr><name>name1</name></expr></alias>, <name>import2</name> <alias>as <expr><name>name2</name></expr></alias>, <comment type="block">/* ..., */</comment> <name>nameN</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>default</name>, <comment type="block">/* ..., */</comment> }</name_list> <from>from <literal type="string">"module-name"</literal></from></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>default</name> <alias>as <expr><name>name1</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></export>
+</unit>
+
+</unit>

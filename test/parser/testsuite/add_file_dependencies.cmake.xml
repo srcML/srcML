@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="add_file_dependencies">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_file_dependencies</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_file_dependencies</name><argument_list>(<argument><expr><name>src</name></expr></argument> <argument><expr><name>file</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_file_dependencies</name><argument_list>(<argument><expr><name>src</name></expr></argument> <argument><expr><name>file</name></expr></argument> <argument><expr><name>file2</name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

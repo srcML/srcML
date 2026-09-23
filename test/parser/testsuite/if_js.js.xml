@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="if">
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <else>else <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"NOT positive"</literal></expr></expr_stmt>
+</block_content>}</block></else></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>a</name> <operator>===</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"zero"</literal></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>a</name> <operator>===</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"zero"</literal></expr></expr_stmt>
+</block_content>}</block></if> <else>else <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"negative"</literal></expr></expr_stmt>
+</block_content>}</block></else></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>nodeWithLocals</name><argument_list>(<argument><expr><lambda><parameter><decl><name>local</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><ternary><condition><expr><name>foo</name></expr> ?</condition><then> <expr><name>bar</name></expr> </then><else>: <expr><name>baz</name></expr></else></ternary></expr>)</condition> <block>{<block_content>
+        <return>return</return>
+    </block_content>}</block></if></if_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>notFunctionName</name> <operator>&lt;</operator> <name>notGenericArgument</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>foo</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content>}</block></if>
+<if type="elseif">else if <condition>(<expr><name>notGenericArgument</name> <operator>&gt;</operator> <operator>(</operator><name>notAParameter</name><operator>)</operator></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><call><name>foo</name><argument_list>(<argument><expr><name>bar</name> <operator>||</operator> <object>{}</object></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <return>return <expr><literal type="boolean">true</literal></expr></return>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>x</name> <operator>==</operator> <operator>(</operator><operator>(</operator><name>y</name> <operator>&lt;&lt;</operator> <literal type="number">2</literal><operator>)</operator> <operator>&gt;&gt;</operator> <name>z</name><operator>)</operator></expr>)</condition> <block>{<block_content/>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><object>{}</object></expr>)</condition> <block>{<block_content/>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><object>{ <property><decl><name>a</name><init>: <expr><literal type="number">1</literal></expr></init></decl></property> }</object> <operator>!=</operator> <name>a</name></expr>)</condition> <block>{<block_content>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(
+    <expr><call><name>some</name><argument_list>(<argument><expr><lambda><parameter><decl><name>m</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>idText</name></expr>)</condition> <block>{<block_content>
+            <return>return <expr><literal type="boolean">true</literal></expr></return>
+        </block_content>}</block></if></if_stmt>
+    </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr>
+)</condition> <block>{<block_content>
+    <return>return</return>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><object>{<property><decl><name>valueOf</name><init>: <expr><function>function<parameter_list>()</parameter_list> <block>{<block_content><return>return <expr><literal type="number">1</literal></expr></return></block_content>}</block></function></expr></init></decl></property>}</object> <operator>+</operator> <literal type="number">1</literal> <operator>!==</operator> <literal type="number">2</literal></expr>)</condition> <block>{<block_content>
+    <return>return <expr><literal type="number">0</literal></expr></return>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+</unit>

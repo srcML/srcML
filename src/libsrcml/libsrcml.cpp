@@ -798,7 +798,7 @@ const char* srcml_get_processing_instruction_data() {
  *                                                                            *
  ******************************************************************************/
 
-static std::string_view langs[] = { "C", "C++", "C#", "Java", "Python", "Objective-C" };
+static std::string_view langs[] = { "C", "C++", "C#", "Java", "Python", "JavaScript", "CMake", "Objective-C" };
 
 /**
  * srcml_check_language

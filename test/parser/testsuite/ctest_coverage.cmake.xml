@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="ctest_coverage">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>BUILD</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>APPEND</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>LABELS</name> <argument><expr><name>CoreLib</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>LABELS</name> <argument><expr><name>CoreLib</name></expr></argument> <argument><expr><name>Network</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>RESULT_VARIABLE</name> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>CAPTURE_CMAKE_ERROR</name> <argument><expr><name>error</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>QUIET</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_coverage</name><argument_list>(<option><name>BUILD</name> <argument><expr><name>src</name></expr></argument></option> <option><name>APPEND</name></option> <option><name>LABELS</name> <argument><expr><name>CoreLib</name></expr></argument></option> <option><name>RESULT_VARIABLE</name> <argument><expr><name>result</name></expr></argument></option> <option><name>CAPTURE_CMAKE_ERROR</name> <argument><expr><name>error</name></expr></argument></option> <option><name>QUIET</name></option>)</argument_list></command>
+</unit>
+
+</unit>

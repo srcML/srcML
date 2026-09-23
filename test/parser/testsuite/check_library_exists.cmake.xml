@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="check_library_exists">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_library_exists</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_library_exists</name><argument_list>(<argument><expr><name>curl</name></expr></argument> <argument><expr><name>curl_easy_perform</name></expr></argument> <argument><expr><literal type="string">""</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

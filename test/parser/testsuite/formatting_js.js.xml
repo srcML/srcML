@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="formatting">
+
+<!-- Multi-line Expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name>
+<operator>=</operator>
+<name>b</name>
+<operator>+</operator>
+<name>c</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name>
+<operator>+</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>+</operator> 
+<name>b</name> <operator>*</operator> <name>c</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name>
+<operator>+</operator>
+<name>b</name> <operator>*</operator> <name>c</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name>
+<operator>+</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <operator>+</operator><name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+<expr_stmt><expr><operator>++</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <operator>+</operator><name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name>
+<operator>-</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <operator>-</operator><name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+<expr_stmt><expr><operator>--</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <operator>-</operator><name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+<comment type="block">/* comment A */</comment>
+    
+
+<comment type="line">// comment B</comment>
+  <expr_stmt><expr><operator>++</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+<comment type="block">/* comment A */</comment>
+    
+
+<comment type="line">// comment B</comment>
+  <expr_stmt><expr><operator>--</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/* 1 */</comment> <expr_stmt><expr><name>a</name> <comment type="block">/* 2 */</comment> <operator>=</operator> <comment type="block">/* 3 */</comment> <name>b</name><operator>++</operator></expr></expr_stmt> <comment type="block">/* 4 */</comment>
+<comment type="block">/* 5 */</comment> <expr_stmt><expr><name>c</name></expr></expr_stmt> <comment type="block">/* 6 */</comment>
+<comment type="block">/* 7 */</comment> <expr_stmt><expr><name>d</name> <comment type="block">/* 8 */</comment> <operator>=</operator> <comment type="block">/* 9 */</comment> <name>e</name></expr></expr_stmt> <comment type="block">/* 10 */</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/* 1 */</comment> <expr_stmt><expr><name>a</name> <comment type="block">/* 2 */</comment> <operator>=</operator> <comment type="block">/* 3 */</comment> <name>b</name></expr></expr_stmt> <comment type="block">/* 4 */</comment>
+<comment type="block">/* 5 */</comment> <expr_stmt><expr><operator>++</operator> <comment type="block">/* 6 */</comment>
+<comment type="block">/* 7 */</comment> <name>c</name></expr></expr_stmt> <comment type="block">/* 8 */</comment>
+<comment type="block">/* 9 */</comment> <expr_stmt><expr><name>d</name> <comment type="block">/* 10 */</comment> <operator>=</operator> <comment type="block">/* 11 */</comment> <name>e</name></expr></expr_stmt> <comment type="block">/* 12 */</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><operator>(</operator><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal><operator>)</operator>
+<operator>+</operator> <literal type="number">2</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><name>IgnoreRulesSpecific</name><operator>.</operator></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>y</name> <init>= <expr><name><name>Position</name><operator>.</operator><name>IgnoreRulesSpecific</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>createClient</name> = <ts:type><operator>(</operator><name>a</name><operator>)</operator>
+<operator>|</operator> <name>b</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>createClient</name> <init>= <expr><lambda><argument_list type="generic">&lt;<argument><expr><name>D</name> <ts:extends>extends
+    <ts:type><operator>|</operator> <operator>(</operator><name>Client</name><operator>)</operator>
+    <operator>|</operator> <name><name>Record</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr></argument>
+&gt;</argument_list><parameter_list>(<parameter><decl><name>clientDef</name><ts:type>: <name>D</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>D</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><literal type="null">null</literal> <operator>as</operator> <name>any</name></expr></return>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Multi-line Statements (with blocks) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+<block>{<block_content/>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+<block>{<block_content>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+<block>{<block_content>
+  <block>{<block_content>
+    <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt>
+  </block_content>}</block>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+<block>{<block_content>
+  <decl_stmt><decl type="const">const <name>status</name> <init>= <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+<block>{<block_content>
+  <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></init></decl></property>}</object></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
+<expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
+<expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
+  <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+    <block>{<block_content/>}</block></if></if_stmt></block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
+  <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
+    <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt></block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
+<block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
+  <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{
+  <property><function><name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Car</name> <block>{
+  <function><name>c</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+<block>{<block_content>
+    <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><call><name><name>foo</name><operator>.</operator><name>bar</name></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+<block>{<block_content>
+    <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><object>{ <property><decl><name>a</name><init>: <expr><name>b</name></expr></init></decl></property> }</object></expr></init></decl></decl_stmt>
+<block>{<block_content>
+    <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>A</name>
+<block>{
+    <constructor>constructor <parameter_list>()</parameter_list>
+    <block>{<block_content>
+
+    </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>A</name>
+<block>{
+    <function><ts:specifier>public</ts:specifier> <name>B</name><parameter_list>()</parameter_list>
+    <block>{<block_content>
+        <return>return <expr><literal type="number">42</literal></expr></return>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <super_list><extends>extends <super><expr><lambda><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><array>[<expr><name><name>bar</name><operator>.</operator><name>#baz</name></name></expr>]</array></expr></lambda></expr></super></extends></super_list>
+<block>{
+  <name>#baz</name>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Statements separated by Terminate(s) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>f</name><parameter_list>(<parameter><decl><name>g</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>as</name><ts:type>: <name><name>string</name><index>[]</index></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><array>[<expr><name>_1</name></expr>, <expr><name>_2</name> <operator>=</operator> <literal type="undefined">undefined</literal></expr>]</array></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="undefined">undefined</literal></expr></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>B</name> <init>= <expr><class>class <block>{
+    <static>static <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>_metadata</name> <init>= <expr><operator>void</operator></expr></init></decl></decl_stmt>
+    </block_content>}</block></static>
+
+    <decl_stmt><decl><name type="computed">[<expr><call><name>f</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>]</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for<control>(<init><decl type="var">var <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>x</name> <operator>&lt;</operator> <name>y</name></expr>;</condition> <incr><expr><name>x</name><operator>++</operator></expr></incr>)</control>;</for>
+<expr_stmt><expr><name>z</name> <operator>&amp;&amp;</operator> <call><name>foo</name><argument_list>(<argument><expr><name>z</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- Multiple Statements on the Same Line -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <block>{
+    <function type="generator">*<name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>baz</name></expr></return> </block_content>}</block></function> <decl_stmt><decl type="static">static <name>#$</name></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <block>{
+    <function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function> <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>baz</name> <operator>=</operator> <literal type="boolean">true</literal></expr></expr_stmt> </block_content>}</block></constructor>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Statement with Blocks followed by Bare Blocks -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+
+<block>{<block_content>
+    <decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>()</parameter_list><ts:type>: <block>{
+    <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:type>
+<block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></function>
+</unit>
+
+<!-- TypeScript Multi-line Generic Argument Lists -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name><name>StyledComponentInnerComponent</name><argument_list type="generic">&lt;<argument><expr><name>C</name> <ts:extends>extends <ts:type><name><name>React</name><operator>.</operator><name><name>ComponentType</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name>C</name> <ts:extends>extends <ts:type><name><name>StyledComponent</name><argument_list type="generic">&lt;
+    <argument><expr><ts:operator>infer</ts:operator> <name>I</name></expr></argument>,
+    <argument><expr><name>any</name></expr></argument>
+&gt;</argument_list></name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>I</name></expr>
+    </then><else>: <expr><ternary><condition><expr><name>C</name> <ts:extends>extends <ts:type><name><name>StyledComponent</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>I</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>I</name></expr>
+    </then><else>: <expr><name>C</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<!-- TypeScript Generic Lambdas with no Terminates -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><ts:specifier>declare</ts:specifier> const <name>filter</name><ts:type>: <block>{
+    <ts:function_decl><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>, <argument><expr><name>B</name> <ts:extends>extends <ts:type><name>A</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>refinement</name><ts:type>: <name><name>Refinement</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>, <argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><parameter_list>(<parameter><decl><name>as</name><ts:type>: <name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></expr></lambda></ts:type></ts:function_decl>
+    <ts:function_decl><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>predicate</name><ts:type>: <name><name>Predicate</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>B</name> <ts:extends>extends <ts:type><name>A</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>bs</name><ts:type>: <name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></ts:type></lambda></ts:type></ts:function_decl>
+}</block></ts:type></decl></decl_stmt>
+</unit>
+
+<!-- TypeScript Ambiguity with Generic Argument Lists and Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>&lt;</operator> <name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <name>bar</name> <operator>+</operator> <literal type="number">1</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>bar</name> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <name>bar</name> <operator>+</operator> <literal type="number">1</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>&lt;</operator> <name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <literal type="number">1</literal> <operator>+</operator> <name>bar</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <literal type="number">1</literal> <operator>+</operator> <name>bar</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- TypeScript "enum" LCURLY Detection -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ScriptInfoData</name> <block>{
+    <decl_stmt><decl><name>open</name><ts:type>: <name><name>ReturnType</name><argument_list type="generic">&lt;<argument><expr><name><name>ScriptInfo</name><index>[<expr><literal type="string">"isScriptOpen"</literal></expr>]</index></name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+    <decl_stmt><decl><name>version</name><ts:type>: <name><name>ReturnType</name><argument_list type="generic">&lt;<argument><expr><name><name>TextStorage</name><index>[<expr><literal type="string">"getVersion"</literal></expr>]</index></name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+}</block></ts:interface>
+
+<ts:enum>enum <name>Diff</name> <block>{
+    <decl_stmt><decl><name>None</name> <init>= <expr><literal type="string">""</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>New</name> <init>= <expr><literal type="string">" *new*"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>Change</name> <init>= <expr><literal type="string">" *changed*"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>Deleted</name> <init>= <expr><literal type="string">" *deleted*"</literal></expr></init></decl>,</decl_stmt>
+}</block></ts:enum>
+</unit>
+
+<!-- Unicode as Names -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>\u0061</name> <init>= <expr><name>\u0061</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>#\u0061</name> <init>= <expr><name>#\u0061</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>#\u{6F}</name> <init>= <expr><name>#\u{6F}</name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Statements that can be confused for Statements with Blocks (need real semicolon) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name>bar</name><argument_list>(
+  <argument><expr><name>arg</name></expr></argument>
+)</argument_list></call></expr></init></decl>;</decl_stmt>
+<block>{<block_content>
+  <expr_stmt><expr><name>blockStatement</name></expr>;</expr_stmt>
+</block_content>}</block>
+</unit>
+
+</unit>

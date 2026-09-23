@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="continue">
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if <condition>(<expr><name>COUNT</name> <operator>LESS</operator> <literal type="number">5</literal></expr>)</condition><block>
+    <continue>continue()</continue>
+</block></if>endif()</if_stmt>
+</unit>
+
+</unit>

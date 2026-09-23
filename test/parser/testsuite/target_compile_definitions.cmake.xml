@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="target_compile_definitions">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument> <argument><expr><flag>-DQUIET</flag></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PRIVATE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PRIVATE</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PRIVATE</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument> <argument><expr><flag>-DQUIET</flag></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>INTERFACE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>INTERFACE</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>INTERFACE</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument> <argument><expr><flag>-DQUIET</flag></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_compile_definitions</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name></option> <option><name>PRIVATE</name></option> <option><name>INTERFACE</name></option>)</argument_list></command>
+</unit>
+
+</unit>

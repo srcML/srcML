@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="modifier">
+
+<!-- "?" and "!" Modifiers -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>obj</name> <init>= <expr><object>{
+  <property><decl><name>optional</name><ts:modifier>?</ts:modifier><init>: <expr><literal type="string">"optional"</literal></expr></init></decl></property>,
+  <property><decl><name>definite</name><ts:modifier>!</ts:modifier><init>: <expr><literal type="string">"definite"</literal></expr></init></decl></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><name>preloadOne</name><ts:modifier>?</ts:modifier><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><ts:modifier>?</ts:modifier><name>Response</name></expr></argument>, <argument><expr><ts:modifier>?</ts:modifier><name>Response</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><name>preloadTwo</name><ts:modifier>!</ts:modifier><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><ts:modifier>!</ts:modifier><name>Response</name></expr></argument>, <argument><expr><ts:modifier>!</ts:modifier><name>Response</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl><name>getNotifications</name><ts:modifier>?</ts:modifier><ts:type>: <lambda><parameter_list>(
+  <parameter><decl><name>filter</name><ts:modifier>?</ts:modifier><ts:type>: <name>GetNotificationOptions</name></ts:type></decl></parameter>
+)</parameter_list> <operator>=&gt;</operator> <expr><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name><name>$ReadOnlyArray</name><argument_list type="generic">&lt;<argument><expr><name>Notification</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></lambda></ts:type></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>createScanner</name><parameter_list>()</parameter_list><ts:type>: <name>Scanner</name></ts:type> <block>{<block_content>
+  <decl_stmt><decl type="let">let <name>operand</name><ts:modifier>!</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>createScanner</name><parameter_list>()</parameter_list><ts:type>: <name>Scanner</name></ts:type> <block>{<block_content>
+  <decl_stmt><decl type="let">let <name>operand</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>createScanner</name><parameter_list>()</parameter_list><ts:type>: <name>Scanner</name></ts:type> <block>{<block_content>
+  <decl_stmt><decl type="let">let <name>operand</name><ts:modifier>!</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl type="let">let <name>operand</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>CCC</name> <block>{
+    <function><ts:specifier>public</ts:specifier> <name>foo</name><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>y</name><ts:modifier>?</ts:modifier><ts:type>:<name>boolean</name></ts:type><init>=<expr><literal type="boolean">false</literal></expr></init></decl></parameter>, <parameter><decl><name>z</name><ts:modifier>?</ts:modifier><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<!-- "+?" and "-?" Modifiers -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>O</name>]</index><ts:modifier>+?</ts:modifier><ts:type>: <name><name>Expand__</name><argument_list type="generic">&lt;<argument><expr><name><name>O</name><index>[<expr><name>K</name></expr>]</index></name></expr></argument>, <argument><expr><name>Keys</name></expr></argument>, <argument><expr><name><name>PrefixWith</name><argument_list type="generic">&lt;<argument><expr><name>P</name></expr></argument>, <argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><array>[<expr><literal type="number">1</literal></expr>, <expr><operator>...</operator><name>Depth</name></expr>]</array></expr></argument>&gt;</argument_list></name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>O</name>]</index><ts:modifier>-?</ts:modifier><ts:type>: <name><name>Expand__</name><argument_list type="generic">&lt;<argument><expr><name><name>O</name><index>[<expr><name>K</name></expr>]</index></name></expr></argument>, <argument><expr><name>Keys</name></expr></argument>, <argument><expr><name><name>PrefixWith</name><argument_list type="generic">&lt;<argument><expr><name>P</name></expr></argument>, <argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><array>[<expr><literal type="number">1</literal></expr>, <expr><operator>...</operator><name>Depth</name></expr>]</array></expr></argument>&gt;</argument_list></name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- "..." Modifier -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>Generator</name> <block>{
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><array>[<expr><name>value</name></expr>]</array><ts:type>: <array>[]</array> <operator>|</operator> <array>[<ts:type><name>TNext</name></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>Generator</name> <block>{
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><decl><name>value</name><init>: <expr><literal type="number">10</literal></expr></init></decl></property>}</object><ts:type>: <array>[]</array> <operator>|</operator> <array>[<ts:type><name>TNext</name></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
+}</block></ts:interface>
+</unit>
+
+</unit>

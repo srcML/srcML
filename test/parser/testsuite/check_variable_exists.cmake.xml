@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="check_variables_exists">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_variables_exists</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_variable_exists</name><argument_list>(<argument><expr><name>tzname</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_variable_exists</name><argument_list>(<argument><expr><name>tzname</name></expr></argument> <argument><expr><name>HAVE_TZNAME</name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

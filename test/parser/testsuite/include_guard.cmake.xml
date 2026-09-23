@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="include_guard">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>include_guard</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>include_guard</name><argument_list>(<option><name>DIRECTORY</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>include_guard</name><argument_list>(<option><name>GLOBAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>include_guard</name><argument_list>(<option><name>DIRECTORY</name></option> <option><name>GLOBAL</name></option>)</argument_list></command>
+</unit>
+
+</unit>

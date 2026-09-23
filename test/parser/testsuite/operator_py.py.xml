@@ -81,6 +81,11 @@
 <expr_stmt><expr><name>x</name> <operator>&gt;</operator> <name>y</name></expr></expr_stmt>
 </unit>
 
+<!-- This should be an operator, NOT a generic argument list -->
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>foo</name><index>[<expr><name>a</name></expr>, <expr><name>b</name></expr>]</index></name> <operator>=</operator> <name>bar</name> <operator>&lt;</operator> <name><name>baz</name><index>[<expr><name>a</name></expr>, <expr><name>b</name></expr>]</index></name></expr></expr_stmt>
+</unit>
+
 <unit revision="1.0.0" language="Python">
 <expr_stmt><expr><name>x</name> <operator>&lt;</operator> <name>y</name></expr></expr_stmt>
 </unit>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="return">
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return</return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><literal type="number">0</literal></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><name>x</name> <operator>*</operator> <literal type="number">42</literal></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><object>{
+  <property><decl><name>run</name><init>: <expr><lambda><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><ternary><condition><expr><name>bar</name></expr>
+      ?</condition><then> <expr><name>baz</name></expr>
+      </then><else>: <expr><name>x</name></expr></else></ternary></expr><operator>,</operator> <expr><name>y</name></expr></return>
+  </block_content>}</block></lambda></expr></init></decl></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Spacing for this test is intentional -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><object>{
+    <property><decl><name>bar</name><init>: <expr><function>function<parameter_list>(<parameter><decl><name>baz</name></decl></parameter>)</parameter_list> <block>{<block_content><return>return<expr><operator>!</operator><operator>!</operator><operator>(</operator><name>baz</name><operator>)</operator></expr></return></block_content>}</block></function></expr></init></decl></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

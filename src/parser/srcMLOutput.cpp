@@ -176,81 +176,89 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     Position currentPosition;
 
     while (1) {
-        const antlr::RefToken& token = input->nextToken();
+        try {
+            const antlr::RefToken& token = input->nextToken();
 
-        if (!isoption(options, SRCML_PARSER_OPTION_POSITION)) {
+            if (!isoption(options, SRCML_PARSER_OPTION_POSITION)) {
 
-            if (token->getType() == antlr::Token::EOF_TYPE)
-                break;
+                if (token->getType() == antlr::Token::EOF_TYPE)
+                    break;
 
-            outputToken(token);
+                outputToken(token);
 
-        } else {
+            } else {
 
-            if (token->getType() == antlr::Token::EOF_TYPE) {
-
-                while (!tokenQueue.empty()) {
-                    outputToken(tokenQueue.front());
-                    tokenQueue.pop_front();
-                }
-
-                break;
-            }
-
-            // text token
-            auto search = process.find(token->getType());
-            if (!(search != process.end() && search->second.name)) {
-
-                // update the text position
-                currentPosition.append(token->getText(), tabsize);
-
-                // save the text
-                tokenQueue.push_back(token);
-
-            // start token but not empty
-            } else if (isstart(token) && !isempty(token)) {
-
-                // set the start line/column
-                token->setLine(currentPosition.line);
-                token->setColumn(currentPosition.column + 1);
-
-                // save open start elements
-                startElementStack.push(token);
-
-                // save the start element
-                tokenQueue.push_back(token);
-
-            // start token but empty
-            } else if (isstart(token) && isempty(token)) {
-
-                // save the empty element
-                tokenQueue.push_back(token);
-
-            // end token
-            } else if (isend(token)) {
-
-                // most recent start token that will match the current end token
-                auto matchingStartElement = startElementStack.top();
-                startElementStack.pop();
-
-                // set the end line/column
-                srcMLToken* qetoken = static_cast<srcMLToken*>(&(*matchingStartElement));
-                qetoken->endline = currentPosition.line;
-                qetoken->endcolumn = currentPosition.column;
-
-                // save the end token
-                tokenQueue.push_back(token);
-
-                // if there are no open elements, then we are at the root
-                // and can output all elements in the queue
-                if (startElementStack.empty()) {
+                if (token->getType() == antlr::Token::EOF_TYPE) {
 
                     while (!tokenQueue.empty()) {
                         outputToken(tokenQueue.front());
                         tokenQueue.pop_front();
                     }
+
+                    break;
+                }
+
+                // text token
+                auto search = process.find(token->getType());
+                if (!(search != process.end() && search->second.name)) {
+
+                    // update the text position
+                    currentPosition.append(token->getText(), tabsize);
+
+                    // save the text
+                    tokenQueue.push_back(token);
+
+                // start token but not empty
+                } else if (isstart(token) && !isempty(token)) {
+
+                    // set the start line/column
+                    token->setLine(currentPosition.line);
+                    token->setColumn(currentPosition.column + 1);
+
+                    // save open start elements
+                    startElementStack.push(token);
+
+                    // save the start element
+                    tokenQueue.push_back(token);
+
+                // start token but empty
+                } else if (isstart(token) && isempty(token)) {
+
+                    // save the empty element
+                    tokenQueue.push_back(token);
+
+                // end token
+                } else if (isend(token)) {
+
+                    // most recent start token that will match the current end token
+                    auto matchingStartElement = startElementStack.top();
+                    startElementStack.pop();
+
+                    // set the end line/column
+                    srcMLToken* qetoken = static_cast<srcMLToken*>(&(*matchingStartElement));
+                    qetoken->endline = currentPosition.line;
+                    qetoken->endcolumn = currentPosition.column;
+
+                    // save the end token
+                    tokenQueue.push_back(token);
+
+                    // if there are no open elements, then we are at the root
+                    // and can output all elements in the queue
+                    if (startElementStack.empty()) {
+
+                        while (!tokenQueue.empty()) {
+                            outputToken(tokenQueue.front());
+                            tokenQueue.pop_front();
+                        }
+                    }
                 }
             }
+        } catch (...) {
+            const auto& buffer = input->getOutputBuffer();
+            for (const auto& token: *buffer) {
+                outputToken(token);
+            }
+            throw;
         }
     }
 }

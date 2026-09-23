@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="while">
+
+<unit revision="1.0.0" language="JavaScript">
+<do>do <block>{<block_content>
+    <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">1</literal></expr></expr_stmt>
+    <expr_stmt><expr><name>result</name> <operator>+=</operator> <name>i</name></expr></expr_stmt>
+</block_content>}</block> while <condition>(<expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>)</condition></do>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<do>do <block>{<block_content>
+    <while>while <condition>(<expr><name>n</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>)</condition> <block>{<block_content>
+        <expr_stmt><expr><operator>++</operator><name>n</name></expr></expr_stmt>
+        <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr></expr_stmt>
+    </block_content>}</block></while>
+
+    <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">1</literal></expr></expr_stmt>
+    <expr_stmt><expr><name>result</name> <operator>+=</operator> <name>i</name></expr></expr_stmt>
+</block_content>}</block> while <condition>(<expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>)</condition></do>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><name>n</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><operator>++</operator><name>n</name></expr></expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr></expr_stmt>
+</block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><name>n</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>)</condition> <block>{<block_content>
+    <do>do <block>{<block_content>
+        <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">1</literal></expr></expr_stmt>
+        <expr_stmt><expr><name>result</name> <operator>+=</operator> <name>i</name></expr></expr_stmt>
+    </block_content>}</block> while <condition>(<expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>)</condition></do>
+
+    <expr_stmt><expr><operator>++</operator><name>n</name></expr></expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr></expr_stmt>
+</block_content>}</block></while>
+</unit>
+
+</unit>
+

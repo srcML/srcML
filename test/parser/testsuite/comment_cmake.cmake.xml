@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="comment">
+
+<unit revision="1.0.0" language="CMake">
+<comment type="line"># This is a line comment.</comment>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<comment type="line"># [This is also a line comment.]</comment>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<comment type="block">#[[
+    This is a block comment.
+]]</comment>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<comment type="block">#[=[
+    This is also a block comment.
+]=]</comment>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<comment type="block">#[==[
+    This can also be a block comment.
+]==]</comment>
+</unit>
+
+</unit>

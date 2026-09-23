@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="cmake_pop_check_state">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_pop_check_state</name><argument_list>()</argument_list></command>
+</unit>
+
+</unit>

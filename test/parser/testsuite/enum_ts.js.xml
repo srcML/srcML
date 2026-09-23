@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="enum">
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:enum>enum <name>ScriptTarget</name> <block>{
+    <decl_stmt><decl><name>ES2025</name> <init>= <expr><literal type="string">"es2025"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>LatestStandard</name> <init>= <expr><name>ES2025</name></expr></init></decl>,</decl_stmt>
+}</block></ts:enum>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:enum><specifier>export</specifier> enum <name>ScriptTarget</name> <block>{
+    <decl_stmt><decl><name>ES2025</name> <init>= <expr><literal type="string">"es2025"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>LatestStandard</name> <init>= <expr><name>ES2025</name></expr></init></decl>,</decl_stmt>
+}</block></ts:enum>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:enum><ts:specifier>const</ts:specifier> enum <name>ScriptTarget</name> <block>{
+    <decl_stmt><decl><name>ES2025</name> <init>= <expr><literal type="string">"es2025"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>LatestStandard</name> <init>= <expr><name>ES2025</name></expr></init></decl>,</decl_stmt>
+}</block></ts:enum>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:enum><specifier>export</specifier> <ts:specifier>const</ts:specifier> enum <name>ScriptTarget</name> <block>{
+    <decl_stmt><decl><name>ES2025</name> <init>= <expr><literal type="string">"es2025"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>LatestStandard</name> <init>= <expr><name>ES2025</name></expr></init></decl>,</decl_stmt>
+}</block></ts:enum>
+</unit>
+
+</unit>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="ctest_sleep">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_sleep</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_sleep</name><argument_list>(<argument><expr><literal type="number">30</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>ctest_sleep</name><argument_list>(<argument><expr><literal type="number">100</literal></expr></argument> <argument><expr><literal type="number">300</literal></expr></argument> <argument><expr><literal type="number">250</literal></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

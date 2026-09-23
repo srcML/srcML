@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="macro">
+
+<unit revision="1.0.0" language="CMake">
+<macro_defn>macro(<expr><name>BUILD_PLATFORM</name></expr>)<block>
+    <command><name>set</name><argument_list>(<argument><expr><name>Example_VERSION_MAJOR</name></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></command>
+    <command><name>set</name><argument_list>(<argument><expr><name>Example_VERSION_MINOR</name></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></command>
+
+    <command><name>configure_file</name><argument_list>(
+        <argument><expr><literal type="string">"<expr type="name">${<name>CMAKE_SOURCE_DIR</name>}</expr>/cmake.in/Example.h.in"</literal></expr></argument>
+        <argument><expr><literal type="string">"<expr type="name">${<name>EXAMPLE_SOURCE_DIRECTORY</name>}</expr>/generated/Example.h"</literal></expr></argument>
+    )</argument_list></command>
+</block>endmacro()</macro_defn>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<macro_defn>macro(<expr><name>_GLOB_SOURCES</name></expr> <parameter><expr><name>LIBRARY_NAME</name></expr></parameter>)<block>
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CUDA_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/*.cu</literal></expr></argument>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CUDA_HEADERS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/*.cuh</literal></expr></argument>)</argument_list></command>
+
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CPP_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/*.cpp</literal></expr></argument>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CPP_HEADERS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/*.h</literal></expr></argument> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/*.hpp</literal></expr></argument>)</argument_list></command>
+
+    <command><name>file</name><argument_list>(<option><name>GLOB</name> <argument><expr><name>UIS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/*.ui</literal></expr></argument>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB</name> <argument><expr><name>QT_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/qt/*.cpp</literal></expr></argument>  <argument><expr><literal type="string"><expr type="name">${<name>EXECUTABLE_NAME</name>}</expr>/qt/*.cu</literal></expr></argument>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB</name> <argument><expr><name>QT_HEADERS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name><expr type="name">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</expr></name></expr></argument></option> <argument><expr><literal type="string"><expr type="name">${<name>LIBRARY_NAME</name>}</expr>/qt/*.h</literal></expr></argument>  <argument><expr><literal type="string"><expr type="name">${<name>EXECUTABLE_NAME</name>}</expr>/qt/*.cuh</literal></expr></argument>)</argument_list></command>
+</block>endmacro()</macro_defn>
+</unit>
+
+</unit>

@@ -146,6 +146,15 @@ public:
         srcMLParser::currentState().push(id);
     }
 
+    /**
+     * getOutputBuffer
+     *
+     * Returns the current token buffer for elements.
+     */
+    std::deque<antlr::RefToken>* getOutputBuffer() {
+        return pouttb;
+    }
+
 private:
 
     /**
@@ -197,6 +206,14 @@ private:
                 srcMLParser::start_python();
                 break;
 
+            case LANGUAGE_JAVASCRIPT:
+                srcMLParser::start_javascript();
+                break;
+
+            case LANGUAGE_CMAKE:
+                srcMLParser::start_cmake();
+                break;
+
             default:
                 srcMLParser::start();
             }
@@ -205,6 +222,9 @@ private:
 
             // when an error occurs just insert an error element
             emptyElement(srcMLParser::SERROR_PARSE);
+        } catch (...) {
+            srcMLParser::endAllModes();
+            throw;
         }
     }
 
@@ -485,6 +505,46 @@ private:
 
                 break;
 
+            case srcMLParser::HTML_COMMENT_START:
+
+                pushSSkipToken(srcMLParser::SHTML_COMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SHTML_COMMENT);
+
+                break;
+
+            case srcMLParser::HTML_COMMENT_END:
+
+                open_comments.pop();
+
+                pushSkipToken();
+                srcMLParser::consume();
+                pushESkipToken(srcMLParser::SHTML_COMMENT);
+
+                break;
+
+            case srcMLParser::CMAKE_BLOCK_COMMENT_START:
+
+                pushSSkipToken(srcMLParser::SCOMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SCOMMENT);
+
+                break;
+
+            case srcMLParser::CMAKE_BLOCK_COMMENT_END:
+
+                open_comments.pop();
+
+                pushSkipToken();
+                srcMLParser::consume();
+                pushESkipToken(srcMLParser::SCOMMENT);
+
+                break;
+
             default:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
@@ -616,6 +676,37 @@ private:
                 srcMLParser::visual_cxx_asm_declaration();
 
             } catch(...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            // stop preprocessor handling
+            inskip = false;
+
+            return true;
+        }
+
+        if (srcMLParser::LA(1) == srcMLParser::TRAILING_HTML_COMMENT_START) {
+            // start "trailing HTML comment" handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse the trailing HTML comment stopping at EOL
+            try {
+                srcMLParser::trailing_html_comment_js();
+            } catch (...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
             pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));

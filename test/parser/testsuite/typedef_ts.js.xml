@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="typedef">
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Example</name> = <ts:type><name>number</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Union</name> = <ts:type><name>number</name> <operator>|</operator> <name>string</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Language</name> = <ts:type><block>{
+  <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl>,</decl_stmt>
+  <decl_stmt><decl><name>release</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Printable</name> = <ts:type><block>{ <decl_stmt><decl><name>print</name><ts:type>: <lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt> }</block></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>ColorfulCircle</name> = <ts:type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
+  <ts:type><ternary><condition><expr><name>foo</name></expr>
+    ?</condition><then> <expr><name>bar</name></expr>
+    </then><else>: <expr><name>baz</name></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
+  <ts:type><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>U</name></expr>
+    </then><else>: <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Set</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>U</name></expr> </then><else>: <expr><name>never</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name>LocalInterface</name> = <ts:type><call><name>import</name><argument_list>(<argument><expr><literal type="string">"pkg"</literal></expr></argument>, <argument><expr><object>{ <property><decl><name>with</name><init>: <expr><object>{ <property><decl><name type="computed"><expr><literal type="string">"resolution-mode"</literal></expr></name><init>: <expr><literal type="string">"require"</literal></expr></init></decl></property> }</object></expr></init></decl></property> }</object></expr></argument>)</argument_list></call><operator>.</operator><name>RequireInterface</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>LibraryManagedAttributes</name><argument_list type="generic">&lt;<argument><expr><name>C</name></expr></argument>, <argument><expr><name>P</name></expr></argument>&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name>C</name> <ts:extends>extends <ts:type><block>{ <decl_stmt><decl><name>propTypes</name><ts:type>: <ts:operator>infer</ts:operator> <name>T</name></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>defaultProps</name><ts:type>: <ts:operator>infer</ts:operator> <name>D</name></ts:type></decl>;</decl_stmt> }</block></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name><name>Defaultize</name><argument_list type="generic">&lt;<argument><expr><name>P</name></expr></argument>, <argument><expr><name>D</name></expr></argument>&gt;</argument_list></name></expr>
+    </then><else>: <expr><name>P</name></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>_ConcatLargestUntilDone</name><argument_list type="generic">&lt;
+    <argument><expr><name>Length</name> <ts:extends>extends <ts:type><name>number</name></ts:type></ts:extends></expr></argument>,
+    <argument><expr><name>AccumulatedArray</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index><index>[]</index></name></ts:type></ts:extends></expr></argument>,
+    <argument><expr><name>NextArray</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index></name></ts:type></ts:extends></expr></argument>,
+&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name><name>NextArray</name><index>[<expr><literal type="string">'length'</literal></expr>]</index></name> <ts:extends>extends <ts:type><name>Length</name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>NextArray</name></expr>
+    </then><else>: <expr><ternary><condition><expr><array>[<expr><operator>...</operator><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><name>NextArray</name></expr>]</array><array>[<expr><name>Length</name></expr>]</array> <ts:extends>extends <ts:type><name>never</name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name><name>_ConcatLargestUntilDone</name><argument_list type="generic">&lt;
+        <argument><expr><name>Length</name></expr></argument>,
+        <argument><expr><ternary><condition><expr><name>AccumulatedArray</name> <ts:extends>extends <ts:type><array>[<expr><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><ts:operator>infer</ts:operator> <name>U</name></expr>]</array></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><ternary><condition><expr><name>U</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index><index>[]</index></name></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><name>U</name></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr></argument>,
+        <argument><expr><name>NextArray</name></expr></argument>
+    &gt;</argument_list></name></expr>
+    </then><else>: <expr><name><name>_ConcatLargestUntilDone</name><argument_list type="generic">&lt;
+        <argument><expr><name>Length</name></expr></argument>,
+        <argument><expr><ternary><condition><expr><name>AccumulatedArray</name> <ts:extends>extends <ts:type><array>[<expr><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><ts:operator>infer</ts:operator> <name>U</name></expr>]</array></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><ternary><condition><expr><name>U</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index><index>[]</index></name></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><name>U</name></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr></argument>,
+        <argument><expr><array>[<expr><operator>...</operator><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><name>NextArray</name></expr>]</array></expr></argument>
+    &gt;</argument_list></name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name><name>Equals</name><argument_list type="generic">&lt;<argument><expr><name>A1</name> <ts:extends>extends <ts:type><name>any</name></ts:type></ts:extends></expr></argument>, <argument><expr><name>A2</name> <ts:extends>extends <ts:type><name>any</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name> =
+    <ts:type><ternary><condition><expr><operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>A</name> <ts:extends>extends <ts:type><name>A1</name></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></lambda><operator>)</operator></expr>
+    ?</condition><then> <expr><literal type="number">1</literal></expr>
+    </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>ConditionalTuple</name> = <ts:type><array>[
+  <ts:type><name>first</name><ts:type>: <name>boolean</name></ts:type></ts:type>,
+  <ts:type><operator>...</operator><operator>(</operator><ternary><condition><expr><literal type="number">0</literal> <ts:extends>extends <ts:type><literal type="number">0</literal></ts:type></ts:extends></expr> ?</condition><then> <array>[<ts:type><name>second</name><ts:type>: <name>string</name></ts:type></ts:type>]</array> <ts:type>: <array>[]</array></ts:type></then></ternary><operator>)</operator></ts:type>
+]</array></ts:type></ts:typedef>
+</unit>
+
+</unit>

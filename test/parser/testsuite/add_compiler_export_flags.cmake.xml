@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="add_compiler_export_flags">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compiler_export_flags</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compiler_export_flags</name><argument_list>(<argument><expr><name>CMAKE_C_FLAGS</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compiler_export_flags</name><argument_list>(<argument><expr><name>CMAKE_C_FLAGS</name></expr></argument> <argument><expr><name>CMAKE_CXX_FLAGS</name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

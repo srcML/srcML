@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="link_directories">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<option><name>BEFORE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<option><name>AFTER</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<argument><expr><name>src</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<option><name>BEFORE</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<option><name>AFTER</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<option><name>BEFORE</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>link_directories</name><argument_list>(<option><name>AFTER</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>
