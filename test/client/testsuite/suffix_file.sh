@@ -135,11 +135,17 @@ check "$empty"
 srcml n.cpp:9:1 --output-src
 check ""
 
-# a zero line or column is part of the filename
-srcml n.cpp:2:0 --output-src
+# lines and columns start at one, so a zero position is an error
+srcml n.cpp:0 --output-src
 check_exit 1
 
 srcml n.cpp:0:2 --output-src
+check_exit 1
+
+srcml n.cpp:2:0 --output-src
+check_exit 1
+
+srcml n.cpp:0:0 --output-src
 check_exit 1
 
 # a non-numeric suffix is part of the filename

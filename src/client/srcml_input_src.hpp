@@ -82,6 +82,7 @@ public:
     bool skip = false;
     int unit = 0;
     // optional source line, and column, from a "filename:LINE" or "filename:LINE:COLUMN" suffix (0 = none)
+    static const int INVALID_POSITION = -1;
     int line = 0;
     int column = 0;
 

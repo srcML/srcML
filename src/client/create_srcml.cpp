@@ -39,6 +39,17 @@ int srcml_handler_dispatch(ParseQueue& queue,
                           const srcml_input_src& input,
                           const srcml_output_dest& destination) {
 
+    // lines and columns in a "filename:LINE:COLUMN" suffix start at one
+    if (input.line == srcml_input_src::INVALID_POSITION) {
+        SRCMLstatus(ERROR_MSG, "srcml: Invalid line number 0 in %s", src_prefix_resource(input.filename));
+        return -1;
+    }
+
+    if (input.column == srcml_input_src::INVALID_POSITION) {
+        SRCMLstatus(ERROR_MSG, "srcml: Invalid column number 0 in %s", src_prefix_resource(input.filename));
+        return -1;
+    }
+
     // call appropriate handler
     if (input.state == SRCML) {
 
