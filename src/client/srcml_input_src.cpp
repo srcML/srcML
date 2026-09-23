@@ -8,6 +8,7 @@
  */
 
 #include <srcml_input_src.hpp>
+#include <input_curl.hpp>
 #include <string_view>
 
 using namespace ::std::literals::string_view_literals;
@@ -56,8 +57,8 @@ srcml_input_src::srcml_input_src(std::string_view other) {
         }
     }
 
-    // local files may carry a trailing range suffix, e.g. "main.cpp:191", "main.cpp:191:5", or "main.cpp:191:5-222:12"
-    if (protocol == "file"sv) {
+    // local files, and urls, may carry a trailing range suffix, e.g. "main.cpp:191", "main.cpp:191:5", or "main.cpp:191:5-222:12"
+    if (protocol == "file"sv || curl_supported(protocol)) {
 
         // a number at position i of s, advancing i, where a position of zero is invalid,
         // and a number too large for a position is not part of a suffix at all
@@ -163,7 +164,7 @@ srcml_input_src::srcml_input_src(std::string_view other) {
 
             // a file of that exact name, suffix and all, is a filename, not a suffix
             struct stat s;
-            if (stat(resource.data(), &s) != 0) {
+            if (protocol != "file"sv || stat(resource.data(), &s) != 0) {
 
                 line = suffix_line;
                 column = suffix_column;
