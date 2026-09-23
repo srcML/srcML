@@ -39,17 +39,6 @@ int srcml_handler_dispatch(ParseQueue& queue,
                           const srcml_input_src& input,
                           const srcml_output_dest& destination) {
 
-    // lines and columns in a "filename:LINE:COLUMN" suffix start at one
-    if (input.line == srcml_input_src::INVALID_POSITION) {
-        SRCMLstatus(ERROR_MSG, "srcml: Invalid line number 0 in %s", src_prefix_resource(input.filename));
-        return -1;
-    }
-
-    if (input.column == srcml_input_src::INVALID_POSITION) {
-        SRCMLstatus(ERROR_MSG, "srcml: Invalid column number 0 in %s", src_prefix_resource(input.filename));
-        return -1;
-    }
-
     // call appropriate handler
     if (input.state == SRCML) {
 
@@ -91,12 +80,6 @@ int srcml_handler_dispatch(ParseQueue& queue,
     }
 
     if (input.protocol == "file"sv && input.isdirectory) {
-
-        // a line and column is a position in a file, not in a directory
-        if (input.line != 0) {
-            SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the directory %s", src_prefix_resource(input.filename));
-            return -1;
-        }
 
         return src_input_filesystem(queue, srcml_arch, srcml_request, input);
     }

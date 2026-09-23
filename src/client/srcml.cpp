@@ -151,6 +151,28 @@ See `srcml --help` for more information.
         input.state = input.issrcML ? SRCML : SRC;
     }
 
+    // a line and column suffix is a position in a source file, and they start at one
+    for (const auto& input : srcml_request.input_sources) {
+
+        if (input.line == srcml_input_src::INVALID_POSITION) {
+            SRCMLstatus(ERROR_MSG, "srcml: Invalid line number 0 in %s", src_prefix_resource(input.filename));
+            exit(1);
+        }
+
+        if (input.column == srcml_input_src::INVALID_POSITION) {
+            SRCMLstatus(ERROR_MSG, "srcml: Invalid column number 0 in %s", src_prefix_resource(input.filename));
+            exit(1);
+        }
+
+        if (input.line == 0)
+            continue;
+
+        if (input.isdirectory) {
+            SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the directory %s", src_prefix_resource(input.filename));
+            exit(1);
+        }
+    }
+
     /*
         Setup the internal pipeline of possible steps:
         * creating srcml from src files and input srcml files, and transforming srcml
