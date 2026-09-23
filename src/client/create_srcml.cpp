@@ -92,6 +92,12 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     if (input.protocol == "file"sv && input.isdirectory) {
 
+        // a line and column is a position in a file, not in a directory
+        if (input.line != 0) {
+            SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the directory %s", src_prefix_resource(input.filename));
+            return -1;
+        }
+
         return src_input_filesystem(queue, srcml_arch, srcml_request, input);
     }
 

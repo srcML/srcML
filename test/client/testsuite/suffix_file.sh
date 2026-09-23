@@ -163,6 +163,15 @@ if [[ "$OSTYPE" != 'msys' ]]; then
 	check "z1;\nz2;\n"
 fi
 
+# a line and column is a position in a file, not in a directory
+createfile sub/n.cpp "$src"
+
+srcml sub:2 --output-src
+check_exit 1
+
+srcml sub --output-src
+check "$src"
+
 # a non-numeric suffix is part of the filename
 srcml n.cpp:abc --output-src
 check_exit 1
