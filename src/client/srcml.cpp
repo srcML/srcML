@@ -184,6 +184,12 @@ See `srcml --help` for more information.
             SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the directory %s", src_prefix_resource(input.filename));
             exit(1);
         }
+
+        // an archive holds more than one file, so a position in it is ambiguous, while a compression is a single file
+        if (!input.archives.empty()) {
+            SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the archive %s", src_prefix_resource(input.filename));
+            exit(1);
+        }
     }
 
     /*

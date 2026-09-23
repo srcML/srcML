@@ -155,6 +155,22 @@ check "n2;\n"
 srcml g.cpp.gz:2-3 --output-src
 check "n2;\nn3;\n"
 
+# an archive holds more than one file, so a position in it is ambiguous
+createfile t1.cpp "$src"
+createfile t2.cpp "$src"
+tar cf t.tar t1.cpp t2.cpp
+
+srcml t.tar:2 --output-src
+check_exit 1
+
+srcml t.tar:2-3 --output-src
+check_exit 1
+
+tar czf t.tar.gz t1.cpp t2.cpp
+
+srcml t.tar.gz:2 --output-src
+check_exit 1
+
 # a suffix on each input file of an archive
 defineXML archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
