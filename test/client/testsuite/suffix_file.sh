@@ -139,6 +139,17 @@ check "$src"
 srcml n.cpp:9- --output-src
 check ""
 
+# positions are relative to the slice, not to the original file
+defineXML positions <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" revision="REVISION" language="C++" filename="n.cpp" pos:tabs="8"><expr_stmt pos:start="1:1" pos:end="1:3"><expr pos:start="1:1" pos:end="1:2"><name pos:start="1:1" pos:end="1:2">n2</name></expr>;</expr_stmt>
+	<expr_stmt pos:start="2:1" pos:end="2:3"><expr pos:start="2:1" pos:end="2:2"><name pos:start="2:1" pos:end="2:2">n3</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+srcml --position n.cpp:2-3
+check "$positions"
+
 # the last line of a file with no line terminator
 createfile m.cpp "a1;\na2;"
 
