@@ -35,7 +35,7 @@ RUN out="$(srcml --text='int n;' -l C++)" \
 # (the manager persists the selection after srcml exits so --to-clipboard output
 # can be read back)
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y xvfb parcellite \
+    && apt-get install --no-install-recommends -y xvfb xfce4-clipman dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
 
 # clipboard round-trip through srcml itself: --to-clipboard writes srcML, then
@@ -44,7 +44,8 @@ RUN apt-get update \
 RUN Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & \
     export DISPLAY=:99; \
     sleep 3; \
-    parcellite >/dev/null 2>&1 & \
+    eval "$(dbus-launch --sh-syntax)"; \
+    xfce4-clipman >/dev/null 2>&1 & \
     sleep 2; \
     out=''; \
     end=$(( $(date +%s) + 15 )); \

@@ -33,7 +33,7 @@ RUN out="$(srcml --text='int n;' -l C++)" \
 # a virtual X server and clipboard manager to exercise the clipboard feature
 # (the manager persists the selection after srcml exits so --to-clipboard output
 # can be read back)
-RUN dnf install -y xorg-x11-server-Xvfb parcellite \
+RUN dnf install -y xorg-x11-server-Xvfb /usr/bin/xfce4-clipman /usr/bin/dbus-launch \
     && dnf clean all
 
 # clipboard round-trip through srcml itself: --to-clipboard writes srcML, then
@@ -42,7 +42,8 @@ RUN dnf install -y xorg-x11-server-Xvfb parcellite \
 RUN Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & \
     export DISPLAY=:99; \
     sleep 3; \
-    parcellite >/dev/null 2>&1 & \
+    eval "$(dbus-launch --sh-syntax)"; \
+    xfce4-clipman >/dev/null 2>&1 & \
     sleep 2; \
     out=''; \
     end=$(( $(date +%s) + 15 )); \
