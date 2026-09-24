@@ -23,3 +23,6 @@ set(CONFIG_FILE_DESTINATION "cmake")
 
 # MSVC stopped automatically defining this
 add_definitions(-DWIN32)
+
+# Keep windows.h from defining min/max macros that break std::min/std::max
+add_definitions(-DNOMINMAX)
