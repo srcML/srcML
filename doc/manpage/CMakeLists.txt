@@ -42,7 +42,7 @@ list(JOIN LANGS ", " LANGUAGE_LIST)
 set(LANGUAGE_LIST "${LANGUAGE_LIST}, and ${LAST_LANG}")
 
 # Configure file properties used to configure the file srcml.cfg
-set(CLIENT_VERSION "1.1.0")
+set(CLIENT_VERSION "1.2.0")
 set(HELP_FLAG_LONG "help")
 set(HELP_FLAG_SHORT "h")
 set(VERSION_FLAG_LONG "version")

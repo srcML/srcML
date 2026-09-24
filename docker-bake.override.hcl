@@ -56,10 +56,10 @@ variable "SRCML_BAKE_CMAKE_VERSION" {
 }
 
 # Override using the environment variable SRCML_BAKE_SRCML_VERSION
-# E.g., SRCML_BAKE_SRCML_VERSION="1.1.0"
+# E.g., SRCML_BAKE_SRCML_VERSION="1.2.0"
 variable "SRCML_BAKE_SRCML_VERSION" {
   description = "srcML version to embed in image data"
-  default = "1.1.0"
+  default = "1.2.0"
 }
 
 # Ubuntu build images
