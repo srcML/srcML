@@ -125,6 +125,14 @@ services:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
+  opensuse_16_0:
+    image: srcml/opensuse:16.0
+    platform: ${PLATFORM}
+    profiles: [opensuse, package, latest]
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
   opensuse_15_6:
     image: srcml/opensuse:15.6
     platform: ${PLATFORM}
