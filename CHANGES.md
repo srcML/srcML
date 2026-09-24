@@ -1,5 +1,28 @@
 # CHANGES
 
+## v1.2.0
+
+This release of srcml is a drop-in replacement for the v1.1.0 srcml client and libsrcml library, except for the removal of srcDiff support. It adds new programming languages, new client options, and fixes markup bugs in existing supported languages.
+
+The markup for existing languages (C, C++, Java, C#, Python) remains at v1.0.0, although markup fixes add `init` for C# property initializers, `type="generic"` for Java class generic parameters, and `type ref="prev"` for multiple function declarators.
+
+* New language: JavaScript, including TypeScript and JSX (.js, .cjs, .mjs, .ts, .tsx, .mts, .cts)
+* New language: CMake (CMakeLists.txt and .cmake files)
+* Markup fixes for C, C++, C#, Java, and Python
+* New packages for Ubuntu 25.10 and 26.04, Fedora 44, and openSUSE Leap 16.0
+* Source encoding detection of UTF-8, ISO-8859-1, and UTF-16/UTF-32 without a BOM
+* srcml client: Position suffix on an input filename to convert only part of a file, e.g., `main.cpp:191`, `main.cpp:191:5-222:12`
+* srcml client: Clipboard input and output with `--from-clipboard` (`-p`), `--to-clipboard` (`-c`), or the filename `clipboard://`
+* srcml client: `--register-ext EXT=NONE` disables a file extension, e.g., `--register-ext "py=NONE"`
+* srcml client: Removed the `--revision` option (srcDiff)
+* libsrcml: Added `srcml_unit_get_archive()`
+* libsrcml: Removed srcDiff revision calls: `srcml_set_srcdiff_revision()`, `srcml_get_srcdiff_revision()`, `srcml_archive_get_srcdiff_revision()`, and `srcml_archive_set_srcdiff_revision()`. srcDiff support is no longer part of libsrcml. See libsrcdiff for support.
+* libsrcml: `srcml_write_attribute()` with the name `revision` or `hash` sets the unit's revision or hash instead of adding an attribute
+* libsrcml: WebAssembly (Emscripten) build of libsrcml
+* Multiple bug fixes
+
+## v1.1.0
+
 This release of srcml is a drop-in replacement for the previous srcml client and libsrcml library. Except for Python, v1.1.0 does not make any changes to the markup for C, C++, Java, and C#. It does fix many markup bugs.
 
 Major additions are:
@@ -11,7 +34,7 @@ Major additions are:
 * Multiple bug fixes, including more accurate line/column position
 * Many build and packaging improvements
 
-## libsrcml
+### libsrcml
 
 The v1.1.0 libsrcml API supports all v1.0.0 libsrcml functions with no changes. The following are additional functions in the v1.1.0 libsrcml API. See the include file _srcml.h_ for more details.
 
