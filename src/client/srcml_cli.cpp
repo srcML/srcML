@@ -35,7 +35,7 @@ static std::string languageList() {
 
 static std::string srcmlHeader() {
 
-    return R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
+    return R"(Usage: srcml [options] <src_infile>[:<position>]... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
 
 Translates )" + languageList() + R"( source code to and from the XML source-code representation srcML. Also supports querying and transformation of srcML.
@@ -43,6 +43,9 @@ Translates )" + languageList() + R"( source code to and from the XML source-code
 Source-code input can be from text, the system clipboard, standard input,
 a file, a directory, or an archive file, i.e., tar, cpio, and zip. Multiple
 files are stored in a srcML archive.
+
+A source-code filename may end with a position, e.g., main.cpp:191 or
+main.cpp:191-222, to convert only those lines of the file.
 )";
 }
 

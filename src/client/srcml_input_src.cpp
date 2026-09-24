@@ -8,6 +8,7 @@
  */
 
 #include <srcml_input_src.hpp>
+#include <input_curl.hpp>
 #include <string_view>
 
 using namespace ::std::literals::string_view_literals;
@@ -55,6 +56,129 @@ srcml_input_src::srcml_input_src(std::string_view other) {
             resource = resource.substr(0, query_pos);
         }
     }
+
+    // local files, and urls, may carry a trailing range suffix, e.g. "main.cpp:191", "main.cpp:191:5", or "main.cpp:191:5-222:12"
+    if (protocol == "file"sv || curl_supported(protocol)) {
+
+        // a number at position i of s, advancing i, where a position of zero is invalid,
+        // and a number too large for a position is not part of a suffix at all
+        auto number = [](std::string_view s, size_t& i) -> std::optional<int> {
+
+            size_t digits = i;
+            while (digits < s.size() && s[digits] >= '0' && s[digits] <= '9')
+                ++digits;
+
+            if (digits == i)
+                return std::nullopt;
+
+            int position = 0;
+            try {
+                position = std::stoi(std::string(s.substr(i, digits - i)));
+            } catch (const std::out_of_range&) {
+                return std::nullopt;
+            }
+
+            i = digits;
+
+            return position != 0 ? position : INVALID_POSITION;
+        };
+
+        // "LINE[:COLUMN][-[LINE[:COLUMN]]]" or "-LINE[:COLUMN]", the part of a suffix after the colon
+        auto parse_suffix = [&number](std::string_view s, int& line, int& column, int& end_line, int& end_column) {
+
+            line = 1;
+            column = 0;
+            end_line = 0;
+            end_column = 0;
+
+            size_t i = 0;
+            bool isstart = !s.empty() && s[0] != '-';
+
+            if (isstart) {
+
+                auto n = number(s, i);
+                if (!n)
+                    return false;
+
+                line = *n;
+
+                if (i < s.size() && s[i] == ':') {
+
+                    auto c = number(s, ++i);
+                    if (!c)
+                        return false;
+
+                    column = *c;
+                }
+            }
+
+            // without a range, the end is the end of the start line
+            if (i == s.size()) {
+
+                end_line = line;
+
+                return isstart;
+            }
+
+            if (s[i] != '-')
+                return false;
+
+            // an open range ends at the end of the file
+            if (++i == s.size()) {
+
+                end_line = END_OF_FILE;
+
+                return isstart;
+            }
+
+            auto n = number(s, i);
+            if (!n)
+                return false;
+
+            end_line = *n;
+
+            if (i < s.size() && s[i] == ':') {
+
+                auto c = number(s, ++i);
+                if (!c)
+                    return false;
+
+                end_column = *c;
+            }
+
+            return i == s.size();
+        };
+
+        // the suffix starts at the first colon of the filename whose remainder is an entire suffix
+        size_t base = resource.find_last_of("/\\");
+        for (size_t colon_pos = resource.find(':', base == std::string::npos ? 0 : base + 1);
+             colon_pos != std::string::npos; colon_pos = resource.find(':', colon_pos + 1)) {
+
+            int suffix_line = 0;
+            int suffix_column = 0;
+            int suffix_end_line = 0;
+            int suffix_end_column = 0;
+
+            if (!parse_suffix(std::string_view(resource).substr(colon_pos + 1), suffix_line, suffix_column, suffix_end_line, suffix_end_column))
+                continue;
+
+            // a file of that exact name, suffix and all, is a filename, not a suffix
+            struct stat s;
+            if (protocol != "file"sv || stat(resource.data(), &s) != 0) {
+
+                line = suffix_line;
+                column = suffix_column;
+                end_line = suffix_end_line;
+                end_column = suffix_end_column;
+
+                resource = resource.substr(0, colon_pos);
+                filename = src_prefix_add_uri(protocol, resource);
+            }
+
+            break;
+        }
+    }
+
     exists = false;
 
     if (protocol == "file"sv) {
