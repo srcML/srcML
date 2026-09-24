@@ -495,6 +495,62 @@ schedule:
 
             prequest->status = !prequest->language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
+            // a range suffix, e.g. "filename:191:5-222:12", keeps only that part of the read buffer
+            if (input_file.line != 0) {
+                auto& buf = prequest->buffer;
+
+                // offset of the start of a line, or the end of the buffer when the line is past the end of the file
+                auto line_start = [&buf](int line) {
+
+                    size_t offset = 0;
+                    for (int cur = 1; cur < line && offset < buf.size(); ++cur) {
+
+                        auto nl = std::find(buf.begin() + (std::ptrdiff_t) offset, buf.end(), '\n');
+                        if (nl == buf.end())
+                            return buf.size();
+
+                        offset = (size_t) (nl - buf.begin()) + 1;
+                    }
+
+                    return offset;
+                };
+
+                // offset of the end of the line at an offset, not including the line terminator
+                auto line_end = [&buf](size_t offset) {
+                    return (size_t) (std::find(buf.begin() + (std::ptrdiff_t) offset, buf.end(), '\n') - buf.begin());
+                };
+
+                size_t start = line_start(input_file.line);
+
+                // a line past the end of the file has no source
+                if (start >= buf.size()) {
+                    buf.clear();
+
+                } else {
+
+                    // a column starts the line at that position, clamped to the end of the line
+                    if (input_file.column != 0)
+                        start = std::min(start + (size_t) input_file.column - 1, line_end(start));
+
+                    // an open range ends at the end of the file
+                    size_t stop = buf.size();
+                    if (input_file.end_line != srcml_input_src::END_OF_FILE) {
+
+                        size_t end_start = line_start(input_file.end_line);
+                        size_t eol = line_end(end_start);
+
+                        // an end column ends the range at that position, otherwise it is the entire line and its terminator
+                        stop = input_file.end_column != 0 ? std::min(end_start + (size_t) input_file.end_column, eol)
+                                                          : std::min(eol + 1, buf.size());
+                    }
+
+                    std::vector<char> slice(buf.begin() + (std::ptrdiff_t) start, buf.begin() + (std::ptrdiff_t) std::max(start, stop));
+                    if (slice.empty() || slice.back() != '\n')
+                        slice.push_back('\n');
+                    buf.swap(slice);
+                }
+            }
+
             queue.schedule(prequest);
 
             ++count;

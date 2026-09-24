@@ -23,6 +23,7 @@
 #include <archive.h>
 #include <sys/stat.h>
 #include <numeric>
+#include <climits>
 #include <libarchive_utilities.hpp>
 #include <memory>
 
@@ -81,6 +82,13 @@ public:
     bool isdirectoryform = false;
     bool skip = false;
     int unit = 0;
+    // optional source range from a "filename:LINE:COLUMN-LINE:COLUMN" suffix, where a position of 0 is not given
+    static const int INVALID_POSITION = -1;
+    static const int END_OF_FILE = INT_MAX;
+    int line = 0;
+    int column = 0;
+    int end_line = 0;
+    int end_column = 0;
 
     // pre-read of stdin
     bool preReadLibarchive = false;
