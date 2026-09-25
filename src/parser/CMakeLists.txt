@@ -79,7 +79,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv ${CMAKE_GENERATED_S
 
 # Ensure the srcML CMake options list can also be installed to a shared data directory
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OptionsConfig.h.in ${CMAKE_GENERATED_SOURCE_DIR}/OptionsConfig.h @ONLY)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv DESTINATION ${CMAKE_INSTALL_DATADIR}/srcml)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv DESTINATION ${CMAKE_INSTALL_DATADIR}/srcml COMPONENT SRCML)
 
 # Find antlr runtime
 set(ANTLR_EXE ${Java_JAVA_EXECUTABLE} -classpath "${antlrsrc_SOURCE_DIR}/antlr.jar" antlr.Tool)
