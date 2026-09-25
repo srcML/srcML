@@ -74,12 +74,17 @@ endif()
 # Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
 
-# Ensure the srcML CMake options list is added to the generated source directory
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv ${CMAKE_GENERATED_SOURCE_DIR}/cmake_options.csv COPYONLY)
-
-# Ensure the srcML CMake options list can also be installed to a shared data directory
+# Embed the srcML CMake options list into the parser as one string literal per line
+# Reconfigure when the list changes
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv)
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv CMAKE_OPTIONS_LINES)
+string(REPLACE "\r" "" CMAKE_OPTIONS_LINES "${CMAKE_OPTIONS_LINES}")
+string(STRIP "${CMAKE_OPTIONS_LINES}" CMAKE_OPTIONS_LINES)
+string(REPLACE "\\" "\\\\" CMAKE_OPTIONS_LINES "${CMAKE_OPTIONS_LINES}")
+string(REPLACE "\"" "\\\"" CMAKE_OPTIONS_LINES "${CMAKE_OPTIONS_LINES}")
+string(REPLACE "\n" "\",\n    \"" CMAKE_OPTIONS_LINES "${CMAKE_OPTIONS_LINES}")
+set(CMAKE_OPTIONS_LINES "    \"${CMAKE_OPTIONS_LINES}\",")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OptionsConfig.h.in ${CMAKE_GENERATED_SOURCE_DIR}/OptionsConfig.h @ONLY)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake_options.csv DESTINATION ${CMAKE_INSTALL_DATADIR}/srcml COMPONENT SRCML)
 
 # Find antlr runtime
 set(ANTLR_EXE ${Java_JAVA_EXECUTABLE} -classpath "${antlrsrc_SOURCE_DIR}/antlr.jar" antlr.Tool)
