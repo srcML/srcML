@@ -186,6 +186,18 @@
 </unit>
 
 <unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>array</name><index>[<expr><name>x</name><operator>:</operator><operator>:</operator><name>z</name></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>array</name><index>[<expr><operator>:</operator><operator>:</operator><name>z</name></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>array</name><index>[<expr><operator>:</operator><operator>:</operator></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
 <expr_stmt><expr><name>x</name> <operator>and</operator> <name>y</name></expr></expr_stmt>
 </unit>
 
