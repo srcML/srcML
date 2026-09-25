@@ -132,8 +132,8 @@ OPERATORS options { testLiterals = true; } {
     // !, !=
     '!' ('=')? |
 
-    // :, := (Python), ::
-    ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=')? (':')? |
+    // :, := (Python), :: (not Python)
+    ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=' | { !inLanguage(LANGUAGE_PYTHON) }? ':')? |
 
     // =, ==, =>
     '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
