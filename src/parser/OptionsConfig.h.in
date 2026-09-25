@@ -1,7 +1,10 @@
 #ifndef OPTIONS_CONFIG_H
 #define OPTIONS_CONFIG_H
 
-#define CMAKE_OPTIONS_FILE_BUILD "@CMAKE_GENERATED_SOURCE_DIR@/cmake_options.csv"
-#define CMAKE_OPTIONS_FILE_INSTALL "@CMAKE_INSTALL_FULL_DATADIR@/srcml/cmake_options.csv"
+// CMake command options embedded from cmake_options.csv, one line per command
+// Separate string literals, one per line, keep within the MSVC string-literal limit
+inline constexpr const char* CMAKE_OPTIONS[] = {
+@CMAKE_OPTIONS_LINES@
+};
 
 #endif

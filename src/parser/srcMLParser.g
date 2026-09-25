@@ -126,14 +126,6 @@ header "post_include_hpp" {
 #include <ModeStack.hpp>
 #include <srcml_options.hpp>
 #include <cstdlib>
-#include <fstream>
-#if defined(__GNUC__) && (__GNUC__ == 7) && (__GNUC_MINOR__ == 5) && (__GNUC_PATCHLEVEL__ == 0)
-    #include <experimental/filesystem>
-    namespace fs = std::experimental::filesystem;
-#else
-    #include <filesystem>
-    namespace fs = std::filesystem;
-#endif
 #include <unordered_map>
 #undef CONST
 #undef VOID
@@ -267,18 +259,7 @@ public:
 
 private:
     CMakeOptionsSet() {
-        std::ifstream in;
-
-        if (fs::exists(CMAKE_OPTIONS_FILE_INSTALL))
-            in.open(CMAKE_OPTIONS_FILE_INSTALL);
-        else
-            in.open(CMAKE_OPTIONS_FILE_BUILD);
-
-        if (!in.is_open())
-            std::cerr << "Could not locate the CMake Options file" << std::endl;
-
-        std::string line;
-        while (std::getline(in, line)) {
+        for (const char* line : CMAKE_OPTIONS) {
             std::vector<std::string> values = split(line,',');
             std::string command_name = values[0];
             if (data.find(command_name) != data.end()) {
@@ -295,8 +276,6 @@ private:
                 }
             }
         }
-
-        in.close();
     }
 
     std::unordered_map<std::string, std::unordered_map<std::string,std::vector<std::string>>> data;
