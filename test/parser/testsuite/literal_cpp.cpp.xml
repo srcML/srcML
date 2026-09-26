@@ -22,6 +22,22 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">L'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">u'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">U'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">u8'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
 <expr_stmt><expr><literal type="string">R"()"</literal></expr>;</expr_stmt>
 </unit>
 
