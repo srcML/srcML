@@ -231,6 +231,14 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && nextToken->getType() == srcMLParser::EQUAL
         )
 
+        // the current token is "let" and the next token is an operator (e.g., "let = 1", "let += 1")
+        // that is not a keyword (e.g., "let infer: number")
+        || (
+            token->getType() == srcMLParser::JS_LET
+            && srcMLParser::general_operator_tokens_set.member(nextToken->getType())
+            && !srcMLParser::name_differentiator_js_token_set.member(nextToken->getType())
+        )
+
         // the current token is a subset of all keywords, surrounded by "{}" or "[]"
         || (
             srcMLParser::name_differentiator_js_token_set.member(token->getType())
