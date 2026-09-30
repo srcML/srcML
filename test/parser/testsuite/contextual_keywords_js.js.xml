@@ -1412,6 +1412,26 @@
 <decl_stmt><decl type="const">const <name>let</name> <init>= <expr><name>let</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>let</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>let</name> <operator>=</operator> <name>result</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>let</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>let</name> <comment type="block">/* c */</comment> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><expr><name>let</name> <operator>=</operator> <literal type="number">0</literal></expr>;</init> <condition><expr><name>let</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>;</condition> <incr><expr><name>let</name><operator>++</operator></expr></incr>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <ts:function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
