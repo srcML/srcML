@@ -10373,7 +10373,7 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             (
-                period
+                ({ inLanguage(LANGUAGE_DART) }? qmark_period | period)
 
                 {
                     iscompound = true;
@@ -14451,7 +14451,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             dot_dereference |
             /* Commented-out code: newop | */
 
-            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            { inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_DART) }?
             qmark_period |
 
             // left parentheses

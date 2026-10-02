@@ -128,7 +128,7 @@ OPERATORS options { testLiterals = true; } {
         { inLanguage(LANGUAGE_CMAKE) && LA(1) == '[' && (LA(2) == '[' || LA(2) == '=') }?
             { $setType(CMAKE_BLOCK_COMMENT_START); changetotextlexer(CMAKE_BLOCK_COMMENT_END); } |
 
-        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_CMAKE)) && LA(1) == '!' }?
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_CMAKE) || inLanguage(LANGUAGE_DART)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 
         { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_CMAKE)) && LA(1) != '!' }?
@@ -165,6 +165,11 @@ OPERATORS options { testLiterals = true; } {
 
         // mark "#" as a name for JavaScript specifically
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        { $setType(NAME); } |
+
+        // symbol literal (Dart), e.g., #name
+        { inLanguage(LANGUAGE_DART) }?
+        (NAME ('.' NAME)*)?
         { $setType(NAME); } |
 
         { startline }?
@@ -217,13 +222,13 @@ OPERATORS options { testLiterals = true; } {
     ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=')? (':')? |
 
     // =, ==, => (C#/JavaScript), === (JavaScript)
-    '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT) }? '>')? |
+    '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_DART) }? '>')? |
 
     // &, &&, &&=, &=
     '&' ('&')? ('=')? |
 
     // >, >>=, >=, >>> (JavaScript), >>>= (JavaScript), not >>
-    '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
+    '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_DART) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
 
     // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript), JSX (JavaScript)
     '<' (
@@ -528,11 +533,11 @@ OPERATORS options { testLiterals = true; } {
         STRING_START )? |
 
     // ?, ??, etc. (part of ternary); ?. (JavaScript), ??= (JavaScript)
-    '?' ('?' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')?)* ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '.')? |
+    '?' ('?' ({ inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_DART) }? '=')?)* ({ inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_DART) }? '.' ({ inLanguage(LANGUAGE_DART) }? '.')? | { inLanguage(LANGUAGE_DART) }? '[')? |
 
-    '~' | // has to be separate if part of name
+    '~' ({ inLanguage(LANGUAGE_DART) }? '/' ('=')?)? | // has to be separate if part of name; ~/ and ~/= (Dart)
 
-    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
+    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.' ({ inLanguage(LANGUAGE_DART) }? '?')?)? | { $setType(CONSTANTS); } CONSTANTS )? |
     
 
     '\\' (

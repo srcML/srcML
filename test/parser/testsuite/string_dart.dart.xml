@@ -84,4 +84,8 @@
 <decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'\$notinterpolated {'</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><name>#symbol</name></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>

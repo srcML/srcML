@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="operator">
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name><name>a</name><operator>?.</operator><name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name><name>a</name><operator>?.</operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name><operator>!</operator><operator>.</operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>??</operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>??=</operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>~/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>~/=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>is</operator> <name>String</name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>is</operator><operator>!</operator> <name>String</name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name> <operator>as</operator> <name>String</name></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>paint</name>
+  <operator>..</operator><name>color</name> <operator>=</operator> <name>red</name>
+  <operator>..</operator><name>width</name> <operator>=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><name>a</name><operator>?..</operator><name>b</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><operator>await</operator> <call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<throw>throw <expr><call><name>Exception</name><argument_list>(<argument><expr><literal type="string">'error'</literal></expr></argument>)</argument_list></call></expr>;</throw>
+</unit>
+
+</unit>

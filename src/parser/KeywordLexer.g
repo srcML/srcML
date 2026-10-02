@@ -1176,6 +1176,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "transient"    , NAME              , LANGUAGE_DART },
         { "volatile"     , NAME              , LANGUAGE_DART },
 
+        // Dart
+        { "?."           , QMARK_PERIOD      , LANGUAGE_DART },
+        { "?["           , LBRACKET          , LANGUAGE_DART },
+        { "as"           , AS                , LANGUAGE_DART },
+        { "await"        , AWAIT             , LANGUAGE_DART },
+        { "is"           , IS                , LANGUAGE_DART },
    };
 
     // fill up the literals for the language that we are parsing

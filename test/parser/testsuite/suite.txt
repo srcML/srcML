@@ -357,6 +357,7 @@ LANGUAGE_JAVASCRIPT typedef_ts
 # Dart
 LANGUAGE_DART decl_dart
 LANGUAGE_DART function_dart
+LANGUAGE_DART operator_dart
 LANGUAGE_DART string_dart
 
 # class -> struct
