@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="extension">
+
+<unit revision="1.0.0" language="Dart">
+<class type="extension">extension <name>A</name> <super_list><on>on <super><name>String</name></super></on></super_list> <block>{
+  <function type="get"><type><name>int</name></type> get <name>len</name> =&gt;<block type="pseudo"><block_content> <expr><name>length</name></expr></block_content></block>;</function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="extension">extension <super_list><on>on <super><name>String</name></super></on></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="extension">extension <name><name>A</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <super_list><on>on <super><name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></super></on></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="extension"><annotation>@<name>patch</name></annotation>
+extension <name>A</name> <super_list><on>on <super><name>B</name><modifier>?</modifier></super></on></super_list> <block>{
+  <function><annotation>@<name>patch</name></annotation>
+  <type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>x</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>x</name></expr></block_content></block>;</function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="extension type">extension type <name>A</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>value</name></decl></parameter>)</parameter_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="extension type">extension type <name>A</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>value</name></decl></parameter>)</parameter_list> <super_list><implements>implements <super><name>int</name></super></implements></super_list> <block>{}</block></class>
+</unit>
+
+</unit>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="mixin">
+
+<unit revision="1.0.0" language="Dart">
+<class type="mixin">mixin <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="mixin">mixin <name>A</name> <super_list><on>on <super><name>B</name></super></on></super_list> <block>{
+  <function><type><name>void</name></type> <name>log</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="mixin">mixin <name>A</name> <super_list><on>on <super><name>B</name></super>, <super><name>C</name></super></on> <implements>implements <super><name>D</name></super></implements></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class type="mixin"><specifier>base</specifier> mixin <name>A</name> <super_list><on>on <super><name>B</name></super></on></super_list> <block>{}</block></class>
+</unit>
+
+</unit>

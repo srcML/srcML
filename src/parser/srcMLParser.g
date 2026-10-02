@@ -852,6 +852,13 @@ tokens {
     SRANGE_IN_CMAKE;
     SRANGE_RANGE_CMAKE;
     SSCOPE;
+
+    // Dart
+    SEXTENSION_DART;
+    SEXTENSION_TYPE_DART;
+    SMIXIN_DART;
+    SON_DART;
+    SWITH_DART;
 }
 
 /*
@@ -880,6 +887,9 @@ public:
 
     // element of a getter or setter detected by pattern_check (Dart)
     int accessor_token_dart = 0;
+
+    // element of a class, mixin, extension, or extension type detected by pattern_check (Dart)
+    int class_token_dart = 0;
 
     bool skip_ternary = false;
 
@@ -6153,13 +6163,32 @@ class_preamble[] { ENTRY_DEBUG } :
   Handles a "class" definition.
 */
 class_definition[] { ENTRY_DEBUG } :
-        class_preprocessing[SCLASS]
-        class_preamble
+        class_preprocessing[inLanguage(LANGUAGE_DART) ? class_token_dart : SCLASS]
 
-        (CLASS | CXX_CLASS | RECORD)
+        // leading class modifiers (Dart), e.g., base in "base mixin class A {}"
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_DART) && is_class_modifier_dart() }?
+            specifier_dart
+        )*
+
+        class_preamble
+        class_modifiers_dart
+
+        (
+            CLASS | CXX_CLASS | RECORD |
+
+            // mixin, extension, or extension type (Dart)
+            DART_MIXIN |
+
+            DART_EXTENSION
+            (options { greedy = true; } :
+                { LT(1)->getText() == "type"sv && next_token() != DART_ON }?
+                NAME
+            )*
+        )
 
         class_post
-        (class_header lcurly[false] | lcurly[false])
+        (class_header lcurly[false] | super_list_dart lcurly[false] | lcurly[false])
 
         {
             if (inLanguage(LANGUAGE_CXX))
@@ -6652,8 +6681,8 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
                     insuper = true;
                 }
 
-                (extends_list | implements_list)
-                (options { greedy = true; } : extends_list | implements_list)*
+                (extends_list | implements_list | with_list_dart | on_list_dart)
+                (options { greedy = true; } : extends_list | implements_list | with_list_dart | on_list_dart)*
             )
         )*
 
@@ -6661,6 +6690,55 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
             if (insuper)
                 endMode();
         }
+;
+
+/*
+  super_list_dart
+
+  Handles a super list without a name before it (Dart), e.g., "on String" in "extension on String {}"
+*/
+super_list_dart[] { ENTRY_DEBUG } :
+        super_list_java
+        on_list_dart
+        (options { greedy = true; } : implements_list)*
+
+        {
+            endMode();
+        }
+;
+
+/*
+  with_list_dart
+
+  Handles the mixins of a class (Dart), e.g., "with A, B"
+*/
+with_list_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // end all elements at the end of the rule automatically
+            startNewMode(MODE_LOCAL);
+
+            startElement(SWITH_DART);
+        }
+
+        DART_WITH
+        super_list
+;
+
+/*
+  on_list_dart
+
+  Handles the superclass constraints of a mixin, or the type of an extension (Dart), e.g., "on A"
+*/
+on_list_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // end all elements at the end of the rule automatically
+            startNewMode(MODE_LOCAL);
+
+            startElement(SON_DART);
+        }
+
+        DART_ON
+        super_list
 ;
 
 /*
@@ -8371,6 +8449,11 @@ pattern_check_core[
                     property_method_name
                     set_type[type, PROPERTY_ACCESSOR, true] |
 
+                    // class modifier (Dart), e.g., base, interface, or mixin
+                    { inLanguage(LANGUAGE_DART) && is_class_modifier_dart() }?
+                    (NAME | DART_MIXIN)
+                    set_int[specifier_count, specifier_count + 1] |
+
                     {
                         type_count == attribute_count + specifier_count + template_count
                         && (
@@ -8399,7 +8482,24 @@ pattern_check_core[
                     }?
                     (
                         CLASS
-                        set_type[type, CLASS_DECL] |
+                        set_type[type, CLASS_DECL]
+                        set_int[class_token_dart, SCLASS] |
+
+                        // mixin declaration (Dart), but not a mixin class
+                        { next_token() != CLASS }?
+                        DART_MIXIN
+                        set_type[type, CLASS_DECL]
+                        set_int[class_token_dart, SMIXIN_DART] |
+
+                        // extension or extension type declaration (Dart)
+                        DART_EXTENSION
+                        set_type[type, CLASS_DECL]
+                        set_int[class_token_dart, SEXTENSION_DART]
+                        (options { greedy = true; } :
+                            { LT(1)->getText() == "type"sv && next_token() != DART_ON }?
+                            NAME
+                            set_int[class_token_dart, SEXTENSION_TYPE_DART]
+                        )* |
 
                         CXX_CLASS
                         set_type[type, CLASS_DECL] |
@@ -8435,7 +8535,7 @@ pattern_check_core[
                     )*
 
                     class_post
-                    (class_header | LCURLY)
+                    (class_header | super_list_dart | LCURLY)
 
                     set_type[
                         type,
@@ -8963,6 +9063,48 @@ pattern_check_core[
             // record a getter or setter (Dart) after any nested pattern checks of the parameters
             set_int[accessor_token_dart, accessor_token]
         )
+;
+
+/*
+  is_class_modifier_dart
+
+  Checks for a class modifier that is not a specifier (Dart), e.g., "base", "interface", or "mixin" in "base mixin class A {}"
+*/
+is_class_modifier_dart[] returns [bool is_modifier] {
+        is_modifier = (
+                (LA(1) == NAME && (LT(1)->getText() == "base"sv || LT(1)->getText() == "interface"sv))
+                && (next_token() == CLASS || next_token() == DART_MIXIN)
+            )
+            || (LA(1) == DART_MIXIN && next_token() == CLASS);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  class_modifiers_dart
+
+  Handles the class modifiers that are not specifiers (Dart), e.g., "base" in "abstract base class A {}"
+  Processed in the action so that the grammar analysis of the class preamble is not altered.
+*/
+class_modifiers_dart[] {
+        ENTRY_DEBUG
+
+        while (inLanguage(LANGUAGE_DART) && is_class_modifier_dart())
+            specifier_dart();
+} :;
+
+/*
+  specifier_dart
+
+  Handles a specifier that is not a specifier token (Dart), e.g., "base", "interface", and "mixin" for a class,
+  or "deferred" for an import
+*/
+specifier_dart[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (NAME | DART_MIXIN)
 ;
 
 /*
@@ -15744,6 +15886,12 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             { !inLanguage(LANGUAGE_OBJECTIVE_C) }?
             generic_argument_list
+        )*
+
+        // nullable type (Dart), e.g., "on A?" in an extension
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_DART) && LA(1) == QMARK }?
+            multops
         )*
 ;
 

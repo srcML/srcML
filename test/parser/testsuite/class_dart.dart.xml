@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="class">
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name><name>A</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <super_list><extends>extends <super><name>B</name></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <super_list><extends>extends <super><name>B</name></super></extends> <with>with <super><name>C</name></super>, <super><name>D</name></super></with> <implements>implements <super><name><name>E</name><argument_list type="generic">&lt;<argument><name>A</name></argument>&gt;</argument_list></name></super></implements></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>abstract</specifier> class <name>A</name> <block>{
+  <function_decl><type><name>double</name></type> get <name>area</name>;</function_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>sealed</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>final</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>base</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>interface</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>abstract</specifier> <specifier>interface</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>abstract</specifier> <specifier>base</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>mixin</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class><specifier>base</specifier> <specifier>mixin</specifier> class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <super_list><extends>extends <super><name>StatelessWidget</name></super></extends></super_list> <block>{
+  <constructor_decl><specifier>const</specifier> <name>A</name><parameter_list>({<parameter><decl><name><name>super</name><operator>.</operator><name>key</name></name></decl></parameter>, <parameter><decl><type><specifier>required</specifier></type> <name><name>this</name><operator>.</operator><name>title</name></name></decl></parameter>})</parameter_list>;</constructor_decl>
+  <decl_stmt><decl><type><specifier>final</specifier> <name>String</name></type> <name>title</name></decl>;</decl_stmt>
+  <function><annotation>@<name>override</name></annotation>
+  <type><name>Widget</name></type> <name>build</name><parameter_list>(<parameter><decl><type><name>BuildContext</name></type> <name>context</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><call><name>Text</name><argument_list>(<argument><expr><name>title</name></expr></argument>)</argument_list></call></expr></block_content></block>;</function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <decl_stmt><decl><type><name>int</name></type> <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><type><specifier>static</specifier> <name>int</name></type> <name>y</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+  <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+  <function><name>toString</name><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><literal type="string">'A'</literal></expr></block_content></block>;</function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <function type="operator"><type><name>bool</name></type> <name>operator <name>==</name></name><parameter_list>(<parameter><decl><type><name>Object</name></type> <name>other</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><literal type="boolean">true</literal></expr></block_content></block>;</function>
+  <function type="operator"><type><name>int</name></type> <name>operator <name>[]</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>i</name></expr></block_content></block>;</function>
+  <function type="operator"><type><name>void</name></type> <name>operator <name>[]=</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+</unit>

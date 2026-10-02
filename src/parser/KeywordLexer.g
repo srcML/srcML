@@ -440,10 +440,13 @@ tokens {
 
     // Dart
     DART_COVARIANT;
+    DART_EXTENSION;
     DART_FACTORY;
     DART_LATE;
+    DART_MIXIN;
     DART_ON;
     DART_REQUIRED;
+    DART_WITH;
 }
 
 {
@@ -1191,15 +1194,19 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "async"        , ASYNC             , LANGUAGE_DART },
         { "await"        , AWAIT             , LANGUAGE_DART },
         { "covariant"    , DART_COVARIANT    , LANGUAGE_DART },
+        { "extension"    , DART_EXTENSION    , LANGUAGE_DART },
         { "external"     , EXTERN            , LANGUAGE_DART },
         { "factory"      , DART_FACTORY      , LANGUAGE_DART },
         { "in"           , IN                , LANGUAGE_DART },
         { "is"           , IS                , LANGUAGE_DART },
         { "late"         , DART_LATE         , LANGUAGE_DART },
+        { "mixin"        , DART_MIXIN        , LANGUAGE_DART },
         { "on"           , DART_ON           , LANGUAGE_DART },
         { "operator"     , OPERATOR          , LANGUAGE_DART },
         { "required"     , DART_REQUIRED     , LANGUAGE_DART },
         { "rethrow"      , THROW             , LANGUAGE_DART },
+        { "sealed"       , SEALED            , LANGUAGE_DART },
+        { "with"         , DART_WITH         , LANGUAGE_DART },
         { "yield"        , YIELD             , LANGUAGE_DART },
    };
 
