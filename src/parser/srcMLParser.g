@@ -1490,6 +1490,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
                 LA(1) != EMIT
                 || emit_statement_check()
             )
+            && (
+                LA(1) != DART_ON
+                || inMode(MODE_TRY)
+            )
         }?
         keyword_statements |
 
@@ -2392,6 +2396,10 @@ keyword_statements[] { ENTRY_DEBUG } :
 
         try_statement | catch_statement | finally_statement | throw_statement |
 
+        // Dart
+        { inMode(MODE_TRY) }?
+        catch_on_statement |
+
         // namespace statements
         namespace_definition |
 
@@ -2401,8 +2409,12 @@ keyword_statements[] { ENTRY_DEBUG } :
         // C
         static_assert_statement |
 
+        // Dart
+        { inLanguage(LANGUAGE_DART) }?
+        assert_statement_dart |
+
         // Java - keyword only detected for Java
-        import_statement | package_statement | assert_statement | static_block | 
+        import_statement | package_statement | assert_statement | static_block |
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -2435,6 +2447,13 @@ pattern_statements[] {
         int call_count = 1;
         STMT_TYPE stmt_type = NONE;
         CALL_TYPE type = NOCALL;
+
+        // asynchronous for statement (Dart), which starts with await
+        // Handled here since a statement with await is not a keyword statement in the grammar
+        if (inLanguage(LANGUAGE_DART) && LA(1) == AWAIT && next_token() == FOR) {
+            await_for_statement_dart();
+            return;
+        }
 
         // detect the declaration/definition type for non-declarative languages
         if (!inLanguage(LANGUAGE_PYTHON))
@@ -5147,7 +5166,51 @@ yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
         yield_return_statement |
 
         { t == BREAK }?
-        yield_break_statement
+        yield_break_statement |
+
+        { inLanguage(LANGUAGE_DART) }?
+        yield_statement_dart
+;
+
+/*
+  yield_statement_dart
+
+  Handles a yield statement (Dart), e.g., "yield a;" or "yield* a;"
+*/
+yield_statement_dart[] { ENTRY_DEBUG } :
+        {
+            // statement with an expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            if (next_token() == MULTOPS)
+                startElement(SYIELD_GENERATOR_STATEMENT);
+            else
+                startElement(SYIELD_STATEMENT);
+        }
+
+        YIELD
+        (options { greedy = true; } : { LA(1) == MULTOPS }? MULTOPS)*
+;
+
+/*
+  await_for_statement_dart
+
+  Handles the start of an asynchronous for statement (Dart), e.g., "await for (var a in b)"
+*/
+await_for_statement_dart[] { ENTRY_DEBUG } :
+        {
+            // statement with nested statement after the control group
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start the for statement
+            startElement(SFOR_STATEMENT);
+
+            // statement with nested statement after the control group
+            startNewMode(MODE_EXPECT | MODE_CONTROL);
+        }
+
+        AWAIT
+        FOR
 ;
 
 /*
@@ -6771,7 +6834,7 @@ else_handling[] { ENTRY_DEBUG } :
             // catch and finally statements are nested inside of a try, if at that level; if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
             bool in_for_like_list = inMode(MODE_FOR_LIKE_LIST);
-            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == JS_CATCH || LA(1) == FINALLY;
+            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == JS_CATCH || LA(1) == FINALLY || LA(1) == DART_ON;
 
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
@@ -7036,6 +7099,10 @@ statement_part[] {
         // colons were not in the expression rule, but that changed with TypeScript
         { inMode(MODE_EXPRESSION) && LA(1) != COLON }?
         expression_part_plus_linq |
+
+        // assert in member initialization list (Dart), e.g., assert(a > 0)
+        { inLanguage(LANGUAGE_DART) && inMode(MODE_CALL | MODE_LIST) && LA(1) == ASSERT }?
+        assert_initialization_dart |
 
         // initializer in member initialization list (Dart)
         { inLanguage(LANGUAGE_DART) && inMode(MODE_CALL | MODE_LIST) }?
@@ -11082,6 +11149,42 @@ member_init_dart[] { ENTRY_DEBUG } :
 ;
 
 /*
+  assert_statement_dart
+
+  Handles an assert statement (Dart), e.g., "assert(a > 0, 'message');"
+*/
+assert_statement_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SASSERT_STATEMENT);
+
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+        }
+
+        ASSERT
+        call_argument_list
+;
+
+/*
+  assert_initialization_dart
+
+  Handles an assert in a constructor initialization list (Dart), e.g., "assert(a > 0)"
+*/
+assert_initialization_dart[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+            startElement(SASSERT_STATEMENT);
+        }
+
+        ASSERT
+        call_argument_list
+;
+
+/*
   member_init
 
   Handles a call, function call, macro, etc.
@@ -12833,6 +12936,29 @@ catch_statement[] { ENTRY_DEBUG } :
 
         (CATCH | CXX_CATCH)
         (options { greedy = true; } : parameter_list)*
+;
+
+/*
+  catch_on_statement
+
+  Handles the start of a catch statement with a type (Dart), e.g., "on Exception catch (e)".
+*/
+catch_on_statement[] { int type_count = 1; ENTRY_DEBUG } :
+        {
+            // treat catch block as a nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the catch statement
+            startElement(SCATCH_BLOCK);
+        }
+
+        DART_ON
+        parameter_type_count[type_count]
+
+        (options { greedy = true; } :
+            CATCH
+            (options { greedy = true; } : parameter_list)*
+        )*
 ;
 
 /*

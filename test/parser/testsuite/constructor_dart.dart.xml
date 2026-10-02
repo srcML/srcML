@@ -41,6 +41,12 @@
 
 <unit revision="1.0.0" language="Dart">
 <class>class <name>A</name> <block>{
+  <constructor><name>A</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>x</name></decl></parameter>)</parameter_list> <member_init_list>: <assert>assert<argument_list>(<argument><expr><name>x</name> <operator>&gt;</operator> <literal type="number">0</literal></expr></argument>)</argument_list></assert>, <expr><name>y</name> <operator>=</operator> <name>x</name></expr></member_init_list>;</constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
   <constructor><name>A</name><parameter_list>()</parameter_list> <member_init_list>: <expr><call><name><name>this</name><operator>.</operator><name>named</name></name><argument_list>()</argument_list></call></expr></member_init_list>;</constructor>
 }</block></class>
 </unit>

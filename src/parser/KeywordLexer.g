@@ -442,6 +442,7 @@ tokens {
     DART_COVARIANT;
     DART_FACTORY;
     DART_LATE;
+    DART_ON;
     DART_REQUIRED;
 }
 
@@ -1192,10 +1193,14 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "covariant"    , DART_COVARIANT    , LANGUAGE_DART },
         { "external"     , EXTERN            , LANGUAGE_DART },
         { "factory"      , DART_FACTORY      , LANGUAGE_DART },
+        { "in"           , IN                , LANGUAGE_DART },
         { "is"           , IS                , LANGUAGE_DART },
         { "late"         , DART_LATE         , LANGUAGE_DART },
+        { "on"           , DART_ON           , LANGUAGE_DART },
         { "operator"     , OPERATOR          , LANGUAGE_DART },
         { "required"     , DART_REQUIRED     , LANGUAGE_DART },
+        { "rethrow"      , THROW             , LANGUAGE_DART },
+        { "yield"        , YIELD             , LANGUAGE_DART },
    };
 
     // fill up the literals for the language that we are parsing

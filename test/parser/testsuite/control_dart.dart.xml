@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="control">
+
+<unit revision="1.0.0" language="Dart">
+<for>for <control>(<init><decl><type><name>var</name></type> <name>x</name> <range>in <expr><name>xs</name></expr></range></decl></init>)</control><block type="pseudo"><block_content> <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<for>for <control>(<init><decl><type><specifier>final</specifier></type> <name>x</name> <range>in <expr><name>xs</name></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<for>await for <control>(<init><decl><type><specifier>final</specifier></type> <name>x</name> <range>in <expr><name>stream</name></expr></range></decl></init>)</control> <block>{<block_content>
+  <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<do>do<block type="pseudo"><block_content> <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<while>while <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content/>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<if_stmt><if>if <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>c</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>d</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if> <else>else <block>{<block_content>
+  <expr_stmt><expr><call><name>e</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></else></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<label><name>outer</name>:</label> <for>for <control>(<init><decl><type><name>var</name></type> <name>x</name> <range>in <expr><name>xs</name></expr></range></decl></init>)</control> <block>{<block_content>
+  <break>break <name>outer</name>;</break>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<assert>assert<argument_list>(<argument><expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><literal type="string">'message'</literal></expr></argument>)</argument_list>;</assert>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<yield>yield <expr><literal type="number">1</literal></expr>;</yield>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<yield type="generator">yield* <expr><call><name>other</name><argument_list>()</argument_list></call></expr>;</yield>
+</unit>
+
+</unit>
