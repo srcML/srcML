@@ -1371,7 +1371,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         {
             (
                 (
-                    inTransparentMode(MODE_CONDITION)
+                    (
+                        inTransparentMode(MODE_CONDITION)
+                        && !(inLanguage(LANGUAGE_DART) && inMode(MODE_EXPRESSION))
+                    )
                     || (
                         !inMode(MODE_EXPRESSION)
                         && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
@@ -1384,7 +1387,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
                     || !inTransparentMode(MODE_INIT | MODE_EXPECT)
                 )
             )
-            || inTransparentMode(MODE_ANONYMOUS)
+            || (inTransparentMode(MODE_ANONYMOUS) && !(inLanguage(LANGUAGE_DART) && inMode(MODE_EXPRESSION)))
         }?
         lcurly |
 
@@ -3626,6 +3629,49 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
             complete_expression
             set_bool[first, false]
         )*
+;
+
+/*
+  lambda_expression_dart
+
+  Handles a Dart anonymous function, e.g., "(a) => a", "(a) { ... }", and "() async { ... }".
+*/
+lambda_expression_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        parameter_list
+        (options { greedy = true; } : function_body_specifier_dart)*
+
+        (options { greedy = true; } :
+            lambda_java
+
+            {
+                // the expression body ends with the enclosing expression, e.g., at a comma or a right bracket
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+        )*
+;
+
+/*
+  lambda_expression_full_dart
+
+  Used to match a Dart anonymous function up to the start of its body.
+*/
+lambda_expression_full_dart[] { ENTRY_DEBUG } :
+        paren_pair
+
+        (options { greedy = true; } :
+            ASYNC (options { greedy = true; } : MULTOPS)? |
+
+            { LT(1)->getText() == "sync"sv }?
+            NAME MULTOPS
+        )?
+
+        (LCURLY | TRETURN)
 ;
 
 /*
@@ -11609,6 +11655,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
+        { inLanguage(LANGUAGE_DART) && LA(1) == LPAREN }?
+        (lambda_expression_full_dart) => lambda_expression_dart |
+
         { inLanguage(LANGUAGE_JAVA) }?
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
@@ -14539,6 +14588,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
         (block_lambda_expression_full) => block_lambda_expression |
+
+        { inLanguage(LANGUAGE_DART) && LA(1) == LPAREN }?
+        (lambda_expression_full_dart) => lambda_expression_dart |
 
         { inLanguage(LANGUAGE_JAVA) }?
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |

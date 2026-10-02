@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="lambda">
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>f</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>a</name> <operator>*</operator> <name>b</name></expr></block_content></block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>f</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">1</literal></expr>;</return> </block_content>}</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>setState</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>count</name><operator>++</operator></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

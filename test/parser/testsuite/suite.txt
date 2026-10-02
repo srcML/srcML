@@ -358,6 +358,7 @@ LANGUAGE_JAVASCRIPT typedef_ts
 LANGUAGE_DART decl_dart
 LANGUAGE_DART function_dart
 LANGUAGE_DART getter_dart
+LANGUAGE_DART lambda_dart
 LANGUAGE_DART operator_dart
 LANGUAGE_DART string_dart
 
