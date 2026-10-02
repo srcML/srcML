@@ -355,6 +355,7 @@ LANGUAGE_JAVASCRIPT type_ts
 LANGUAGE_JAVASCRIPT typedef_ts
 
 # Dart
+LANGUAGE_DART collection_dart
 LANGUAGE_DART constructor_dart
 LANGUAGE_DART control_dart
 LANGUAGE_DART decl_dart

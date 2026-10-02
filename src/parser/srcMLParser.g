@@ -1401,6 +1401,11 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
                     !inLanguage(LANGUAGE_CXX)
                     || !inTransparentMode(MODE_INIT | MODE_EXPECT)
                 )
+                // map or set literal argument (Dart)
+                && (
+                    !inLanguage(LANGUAGE_DART)
+                    || !inMode(MODE_ARGUMENT | MODE_LIST)
+                )
             )
             || (inTransparentMode(MODE_ANONYMOUS) && !(inLanguage(LANGUAGE_DART) && inMode(MODE_EXPRESSION)))
         }?
@@ -3706,6 +3711,341 @@ lambda_expression_full_dart[] { ENTRY_DEBUG } :
         )?
 
         (LCURLY | TRETURN)
+;
+
+/*
+  collection_literal_dart
+
+  Handles a list, set, or map literal (Dart), e.g., "[1, 2]", "<int>{1, 2}", and "{'a': 1}".
+  Elements may be if and for elements, e.g., "[if (a) b else c, for (var d in e) d]".
+*/
+collection_literal_dart[] { CompleteElement element(this); bool is_map = false; ENTRY_DEBUG } :
+        {
+            // when guessing, only match the balanced literal
+            if (inputState->guessing) {
+                skip_collection_dart();
+                return;
+            }
+
+            startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_COLLECTION_DART);
+
+            if (perform_collection_check_dart(is_map) == LBRACKET)
+                startElement(SARRAY);
+            else if (is_map)
+                startElement(SDICTIONARY);
+            else
+                startElement(SSET);
+        }
+
+        (generic_argument_list)?
+        (LBRACKET | LCURLY)
+
+        {
+            collection_elements_dart();
+
+            endDownToMode(MODE_LIST | MODE_COLLECTION_DART);
+        }
+
+        (RBRACKET | RCURLY)
+;
+
+/*
+  collection_elements_dart
+
+  Handles the elements of a collection literal (Dart) up to the end of the literal.
+  The elements are processed in the action so that the general processing (start) does not alter the grammar analysis.
+*/
+collection_elements_dart[] {
+        int no_progress = 0;
+
+        ENTRY_DEBUG
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+
+            // end of the literal, unless it ends a block inside an element
+            if (
+                (LA(1) == RBRACKET || LA(1) == RCURLY)
+                && (getFirstMode(MODE_BLOCK | MODE_COLLECTION_DART) & MODE_COLLECTION_DART) != 0
+            )
+                break;
+
+            auto before = LT(1).get();
+
+            // if and for elements start an element, i.e., not inside of a block in an element
+            if (LA(1) == IF && inMode(MODE_COLLECTION_DART)) {
+                collection_if_dart();
+
+            } else if ((LA(1) == FOR || (LA(1) == AWAIT && next_token() == FOR)) && inMode(MODE_COLLECTION_DART)) {
+                collection_for_dart();
+
+            } else if (LA(1) == ELSE && (getFirstMode(MODE_BLOCK | MODE_COLLECTION_DART) & MODE_COLLECTION_IF_DART) != 0) {
+                collection_else_dart();
+
+            // colon between the key and the value of a map entry
+            } else if (LA(1) == COLON && (getFirstMode(MODE_TERNARY | MODE_ARGUMENT | MODE_INTERNAL_END_PAREN | MODE_BLOCK | MODE_COLLECTION_DART) & MODE_COLLECTION_DART) != 0) {
+                endDownToMode(MODE_COLLECTION_DART);
+                match(COLON);
+
+            // start of an element
+            } else if (inMode(MODE_COLLECTION_DART) && LA(1) != COMMA) {
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                expression();
+
+            } else {
+                start();
+            }
+
+            // failsafe for no progress
+            no_progress = LT(1).get() == before ? no_progress + 1 : 0;
+            if (no_progress > 10) {
+                consume();
+                no_progress = 0;
+            }
+        }
+} :;
+
+/*
+  skip_collection_dart
+
+  Matches a balanced collection literal (Dart), including the type arguments.  Used when guessing.
+*/
+skip_collection_dart[] {
+        int depth = 0;
+
+        ENTRY_DEBUG
+
+        if (LA(1) == TEMPOPS) {
+            do {
+                if (LA(1) == TEMPOPS)
+                    ++depth;
+                else if (LA(1) == TEMPOPE)
+                    --depth;
+
+                consume();
+            } while (depth > 0 && LA(1) != antlr::Token::EOF_TYPE);
+        }
+
+        do {
+            if (LA(1) == LBRACKET || LA(1) == LCURLY || LA(1) == LPAREN)
+                ++depth;
+            else if (LA(1) == RBRACKET || LA(1) == RCURLY || LA(1) == RPAREN)
+                --depth;
+
+            consume();
+        } while (depth > 0 && LA(1) != antlr::Token::EOF_TYPE);
+} :;
+
+/*
+  perform_collection_check_dart
+
+  Returns the token that starts the elements of a collection literal (Dart), and whether the literal is a map.
+  A map has two type arguments, or its first element contains a colon (outside of a ternary).  An empty "{}" is a map.
+*/
+perform_collection_check_dart[bool& is_map] returns [int start_token] {
+        start_token = 0;
+        is_map = false;
+        int type_argument_count = 0;
+        int depth = 0;
+        int qmark_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // type arguments
+            if (LA(1) == TEMPOPS) {
+                type_argument_count = 1;
+                consume();
+
+                while (LA(1) != antlr::Token::EOF_TYPE && (depth > 0 || LA(1) != TEMPOPE)) {
+                    if (LA(1) == TEMPOPS)
+                        ++depth;
+                    else if (LA(1) == TEMPOPE)
+                        --depth;
+                    else if (LA(1) == COMMA && depth == 0)
+                        ++type_argument_count;
+
+                    consume();
+                }
+
+                consume();
+            }
+
+            start_token = LA(1);
+            consume();
+
+            if (start_token == LCURLY && type_argument_count > 0) {
+                is_map = type_argument_count == 2;
+            } else if (start_token == LCURLY) {
+                is_map = LA(1) == RCURLY;
+
+                // first element only
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY)
+                        ++depth;
+                    else if (LA(1) == RPAREN || LA(1) == RBRACKET || LA(1) == RCURLY)
+                        --depth;
+
+                    if (depth < 0 || (depth == 0 && LA(1) == COMMA))
+                        break;
+
+                    if (depth == 0 && LA(1) == QMARK)
+                        ++qmark_count;
+
+                    if (depth == 0 && LA(1) == COLON) {
+                        if (qmark_count == 0) {
+                            is_map = true;
+                            break;
+                        }
+
+                        --qmark_count;
+                    }
+
+                    consume();
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  collection_if_dart
+
+  Handles the start of an if element in a collection literal (Dart).  The element ends at the end of the collection element.
+*/
+collection_if_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_COLLECTION_DART);
+
+            startElement(SIF_STATEMENT);
+
+            startNewMode(MODE_COLLECTION_DART | MODE_COLLECTION_IF_DART);
+
+            startElement(SIF);
+        }
+
+        IF
+        collection_paren_dart[SCONDITION]
+;
+
+/*
+  collection_else_dart
+
+  Handles the start of the else of an if element in a collection literal (Dart).
+*/
+collection_else_dart[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_COLLECTION_IF_DART);
+            endMode(MODE_COLLECTION_IF_DART);
+
+            startNewMode(MODE_COLLECTION_DART);
+
+            startElement(SELSE);
+        }
+
+        ELSE
+;
+
+/*
+  collection_for_dart
+
+  Handles the start of a for element in a collection literal (Dart).  The element ends at the end of the collection element.
+*/
+collection_for_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_COLLECTION_DART);
+
+            startElement(SFOR_STATEMENT);
+        }
+
+        (AWAIT)?
+        FOR
+        collection_paren_dart[SCONTROL]
+;
+
+/*
+  collection_paren_dart
+
+  Handles the parenthesized condition of an if element, or the control of a for element, in a collection literal (Dart).
+*/
+collection_paren_dart[int element] {
+        int type_count = 0;
+        int secondtoken = 0;
+        int after_token = 0;
+        STMT_TYPE stmt_type = NONE;
+
+        ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_LIST | MODE_EXPECT | MODE_COLLECTION_PAREN_DART);
+
+            startElement(element);
+        }
+
+        LPAREN
+
+        {
+            if (element == SCONTROL && LA(1) != TERMINATE) {
+                startNewMode(MODE_LIST | MODE_COLLECTION_DART);
+                startElement(SCONTROL_INITIALIZATION);
+            }
+
+            // processed in the action so that the general processing (start) does not alter the grammar analysis
+            int no_progress = 0;
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+
+                // end of the parentheses, unless it ends an inner pair of parentheses
+                if (
+                    LA(1) == RPAREN
+                    && (getFirstMode(MODE_INTERNAL_END_PAREN | MODE_COLLECTION_PAREN_DART) & MODE_COLLECTION_PAREN_DART) != 0
+                )
+                    break;
+
+                auto before = LT(1).get();
+
+                // separates the parts of a for control
+                if (LA(1) == TERMINATE) {
+                    endDownToMode(MODE_COLLECTION_PAREN_DART);
+                    match(TERMINATE);
+
+                // declaration in a for control, e.g., var a in b
+                } else if (
+                    inMode(MODE_LIST | MODE_COLLECTION_DART)
+                    && pattern_check(stmt_type, secondtoken, type_count, after_token)
+                    && stmt_type == VARIABLE
+                ) {
+                    control_initialization_variable_declaration(type_count);
+
+                // start of an expression
+                } else if (inMode(MODE_COLLECTION_PAREN_DART) || inMode(MODE_LIST | MODE_COLLECTION_DART)) {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    expression();
+
+                } else {
+                    start();
+                }
+
+                // failsafe for no progress
+                no_progress = LT(1).get() == before ? no_progress + 1 : 0;
+                if (no_progress > 10) {
+                    consume();
+                    no_progress = 0;
+                }
+            }
+
+            endDownToMode(MODE_COLLECTION_PAREN_DART);
+        }
+
+        RPAREN
+
+        {
+            endMode(MODE_COLLECTION_PAREN_DART);
+        }
 ;
 
 /*
@@ -7302,6 +7642,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 || inTransparentMode(MODE_EXPORT_JS)
                 || inTransparentMode(MODE_ARRAY_JS)
                 || inTransparentMode(MODE_TYPE_ARRAY_TS)
+                || (getFirstMode(MODE_LIST) & MODE_COLLECTION_DART) != 0
                 || (
                     inLanguage(LANGUAGE_JAVASCRIPT)
                     && (
@@ -14592,6 +14933,30 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // special case: JavaScript optional chaining with function calls
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
         optional_call_chain_js |
+
+        // list, set, or map literal (Dart); note that "NAME[", ")[", and "][" start an index
+        {
+            inLanguage(LANGUAGE_DART)
+            && (
+                (
+                    LA(1) == LBRACKET
+                    && last_consumed != NAME
+                    && last_consumed != RPAREN
+                    && last_consumed != RBRACKET
+                )
+                || LA(1) == LCURLY
+            )
+        }?
+        collection_literal_dart |
+
+        // list, set, or map literal with type arguments (Dart)
+        {
+            inLanguage(LANGUAGE_DART)
+            && LA(1) == TEMPOPS
+            && last_consumed != NAME
+            && last_consumed != RPAREN
+        }?
+        (generic_argument_list (LBRACKET | LCURLY)) => collection_literal_dart |
 
         // looking for "EXPR ? EXPR : EXPR" to start a ternary
         {

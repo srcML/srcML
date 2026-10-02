@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="collection">
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><specifier>const</specifier> <array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><dictionary>{<expr><literal type="string">'a'</literal></expr>: <expr><literal type="number">1</literal></expr>, <expr><literal type="string">'b'</literal></expr>: <expr><literal type="number">2</literal></expr>}</dictionary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><dictionary><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><name>int</name></argument>&gt;</argument_list>{}</dictionary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><set>{<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>}</set></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><set><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list>{}</set></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><dictionary>{}</dictionary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<expr><operator>...</operator><name>b</name></expr>, <expr><operator>...?</operator><name>c</name></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<for>for <control>(<init><decl><type><name>var</name></type> <name>x</name> <range>in <expr><name>xs</name></expr></range></decl></init>)</control> <expr><name>x</name> <operator>*</operator> <literal type="number">2</literal></expr></for>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<if_stmt><if>if <condition>(<expr><name>c</name></expr>)</condition> <expr><name>b</name></expr></if> <else>else <expr><name>d</name></expr></else></if_stmt>, <expr><name>e</name></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<if_stmt><if>if <condition>(<expr><name>c</name></expr>)</condition> <for>for <control>(<init><decl><type><name>var</name></type> <name>x</name> <range>in <expr><name>xs</name></expr></range></decl></init>)</control> <expr><name>x</name></expr></for></if></if_stmt>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><dictionary>{<for>for <control>(<init><decl><type><name>var</name></type> <name>e</name> <range>in <expr><name>es</name></expr></range></decl></init>)</control> <expr><name><name>e</name><operator>.</operator><name>key</name></name></expr>: <expr><name><name>e</name><operator>.</operator><name>value</name></name></expr></for>}</dictionary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<expr><array>[<expr><literal type="number">1</literal></expr>]</array></expr>, <expr><dictionary>{<expr><literal type="string">'k'</literal></expr>: <expr><array>[<expr><literal type="number">2</literal></expr>]</array></expr>}</dictionary></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><ternary><condition><expr><name>cond</name></expr> ?</condition><then> <expr><array>[<expr><literal type="number">1</literal></expr>]</array></expr> </then><else>: <expr><array>[<expr><literal type="number">2</literal></expr>]</array></expr></else></ternary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><name><name>b</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><call><name>f</name><argument_list>()</argument_list></call><index>[<expr><literal type="number">1</literal></expr>]</index></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>,]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><dictionary>{<expr><literal type="string">'k'</literal></expr>: <expr><literal type="number">1</literal></expr>,}</dictionary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><set>{<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>}</set></expr></argument>, <argument><name>b</name>: <expr><dictionary>{}</dictionary></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><name><name>b</name><index>?[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>Column</name><argument_list>(
+  <argument><name>children</name>: <expr><array>[
+    <if_stmt><if>if <condition>(<expr><name>show</name></expr>)</condition> <expr><call><name>Text</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument>)</argument_list></call></expr></if></if_stmt>,
+    <for>for <control>(<init><decl><type><specifier>final</specifier></type> <name>item</name> <range>in <expr><name>items</name></expr></range></decl></init>)</control> <expr><call><name>Text</name><argument_list>(<argument><expr><name><name>item</name><operator>.</operator><name>name</name></name></expr></argument>)</argument_list></call></expr></for>,
+    <expr><call><name>ElevatedButton</name><argument_list>(<argument><name>onPressed</name>: <expr><lambda><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><call><name>tap</name><argument_list>()</argument_list></call></expr>;</expr_stmt> </block_content>}</block></lambda></expr></argument>, <argument><name>child</name>: <expr><call><name>Text</name><argument_list>(<argument><expr><literal type="string">'b'</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>,
+  ]</array></expr></argument>,
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

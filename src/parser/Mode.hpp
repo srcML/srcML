@@ -456,6 +456,15 @@ const static srcMLState::MODE_TYPE MODE_EXPRESSION_GENERATOR_CMAKE;
 
 // Dart modes
 
+/** list, set, or map literal, and the if, for, and else elements in it */
+const static srcMLState::MODE_TYPE MODE_COLLECTION_DART;
+
+/** if element in a collection literal */
+const static srcMLState::MODE_TYPE MODE_COLLECTION_IF_DART;
+
+/** parentheses of an if or for element in a collection literal */
+const static srcMLState::MODE_TYPE MODE_COLLECTION_PAREN_DART;
+
 /** parameters of a record type or function type, where a single name is a type, e.g., (int, String) */
 const static srcMLState::MODE_TYPE MODE_TYPE_PARAMETERS_DART;
 
