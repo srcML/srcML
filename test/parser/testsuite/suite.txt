@@ -360,6 +360,7 @@ LANGUAGE_DART collection_dart
 LANGUAGE_DART constructor_dart
 LANGUAGE_DART control_dart
 LANGUAGE_DART decl_dart
+LANGUAGE_DART directive_dart
 LANGUAGE_DART enum_dart
 LANGUAGE_DART extension_dart
 LANGUAGE_DART function_dart
@@ -370,6 +371,7 @@ LANGUAGE_DART operator_dart
 LANGUAGE_DART parameter_dart
 LANGUAGE_DART string_dart
 LANGUAGE_DART try_dart
+LANGUAGE_DART typedef_dart
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

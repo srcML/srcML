@@ -856,8 +856,10 @@ tokens {
     // Dart
     SEXTENSION_DART;
     SEXTENSION_TYPE_DART;
+    SLIBRARY_DART;
     SMIXIN_DART;
     SON_DART;
+    SPART_DART;
     SWITH_DART;
 }
 
@@ -1508,6 +1510,11 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
             && (
                 LA(1) != DART_ON
                 || inMode(MODE_TRY)
+            )
+            // directive keywords that are also names (Dart), e.g., library
+            && (
+                (LA(1) != DART_LIBRARY && LA(1) != DART_PART && LA(1) != DART_EXPORT)
+                || is_directive_dart()
             )
         }?
         keyword_statements |
@@ -2414,6 +2421,12 @@ keyword_statements[] { ENTRY_DEBUG } :
         // Dart
         { inMode(MODE_TRY) }?
         catch_on_statement |
+
+        { inLanguage(LANGUAGE_DART) && is_directive_dart() }?
+        directive_dart |
+
+        { inLanguage(LANGUAGE_DART) && is_typedef_alias_dart() }?
+        typedef_alias_dart |
 
         // namespace statements
         namespace_definition |
@@ -7508,6 +7521,15 @@ statement_part[] {
                 LA(1) != EMIT
                 || emit_statement_check()
             )
+            // directive keywords that are also names (Dart)
+            && (
+                !inLanguage(LANGUAGE_DART)
+                || (
+                    LA(1) != DART_LIBRARY
+                    && LA(1) != DART_PART
+                    && LA(1) != DART_EXPORT
+                )
+            )
         }?
         terminate_pre
         terminate_post
@@ -10718,7 +10740,10 @@ identifier_list[] { ENTRY_DEBUG } :
         CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
 
         // Java
-        RECORD | 
+        RECORD |
+
+        // Dart
+        DART_EXPORT | DART_LIBRARY | DART_PART |
 
         // Commented-out code; Not sure why these are commented out
         /*
@@ -13419,6 +13444,194 @@ catch_statement[] { ENTRY_DEBUG } :
 
         (CATCH | CXX_CATCH)
         (options { greedy = true; } : parameter_list)*
+;
+
+/*
+  is_directive_dart
+
+  Checks for a library, import, export, or part directive (Dart).
+  Except for import, the keywords are also names, e.g., "library.add(a);"
+*/
+is_directive_dart[] returns [bool is_directive] {
+        int next = next_token();
+        bool is_uri = next == STRING_START || next == CHAR_START;
+
+        // part of
+        bool is_part_of = false;
+        if (LA(1) == DART_PART && next == NAME) {
+            int place = mark();
+            inputState->guessing++;
+
+            consume();
+            is_part_of = LT(1)->getText() == "of"sv;
+
+            inputState->guessing--;
+            rewind(place);
+        }
+
+        is_directive = LA(1) == IMPORT
+            || (LA(1) == DART_LIBRARY && (next == TERMINATE || next == NAME))
+            || (LA(1) == DART_EXPORT && is_uri)
+            || (LA(1) == DART_PART && (is_uri || is_part_of));
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  directive_dart
+
+  Handles a library, import, export, or part directive (Dart), e.g., "import 'a.dart' as b show C hide D;"
+*/
+directive_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT);
+
+            if (LA(1) == IMPORT)
+                startElement(SIMPORT);
+            else if (LA(1) == DART_EXPORT)
+                startElement(SEXPORT_STATEMENT);
+            else if (LA(1) == DART_LIBRARY)
+                startElement(SLIBRARY_DART);
+            else
+                startElement(SPART_DART);
+        }
+
+        (IMPORT | DART_EXPORT | DART_LIBRARY | DART_PART)
+
+        (options { greedy = true; } :
+            // keywords of a directive, e.g., "part of", "show", and "hide"
+            {
+                LT(1)->getText() == "of"sv
+                || LT(1)->getText() == "show"sv
+                || LT(1)->getText() == "hide"sv
+            }?
+            NAME |
+
+            { LT(1)->getText() == "deferred"sv }?
+            specifier_dart |
+
+            alias_dart |
+
+            literals |
+
+            compound_name |
+
+            COMMA |
+
+            // condition of a conditional import, e.g., if (dart.library.io) 'a.dart'
+            IF
+            {
+                int depth = 0;
+                do {
+                    if (LA(1) == LPAREN)
+                        ++depth;
+                    else if (LA(1) == RPAREN)
+                        --depth;
+
+                    consume();
+                } while (depth > 0 && LA(1) != antlr::Token::EOF_TYPE);
+            }
+        )*
+;
+
+/*
+  alias_dart
+
+  Handles an alias in an import (Dart), e.g., "as b"
+*/
+alias_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SALIAS);
+        }
+
+        AS
+        compound_name
+;
+
+/*
+  is_typedef_alias_dart
+
+  Checks for a type alias (Dart), e.g., "typedef A<T> = List<T>;"
+*/
+is_typedef_alias_dart[] returns [bool is_alias] {
+        is_alias = false;
+        int depth = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            consume();
+
+            if (LA(1) == NAME)
+                consume();
+
+            while (LA(1) != antlr::Token::EOF_TYPE && (depth > 0 || LA(1) == TEMPOPS)) {
+                if (LA(1) == TEMPOPS)
+                    ++depth;
+                else if (LA(1) == TEMPOPE)
+                    --depth;
+
+                consume();
+            }
+
+            is_alias = LA(1) == EQUAL;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  typedef_alias_dart
+
+  Handles a type alias (Dart), e.g., "typedef A<T> = List<T>;"
+*/
+typedef_alias_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT);
+
+            startElement(STYPEDEF);
+        }
+
+        TYPEDEF
+        compound_name
+        typedef_type_dart
+;
+
+/*
+  typedef_type_dart
+
+  Handles the type of a type alias (Dart), e.g., "= List<T>"
+*/
+typedef_type_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SDECLARATION_INITIALIZATION);
+        }
+
+        EQUAL
+        type_dart
+;
+
+/*
+  type_dart
+
+  Handles a complete type (Dart), e.g., "int Function(int)?"
+*/
+type_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPE);
+        }
+
+        (options { greedy = true; } : type_identifier)+
 ;
 
 /*

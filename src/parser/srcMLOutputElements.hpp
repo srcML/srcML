@@ -401,8 +401,10 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     // Dart
     { TOKEN::SEXTENSION_DART,               { "class",             SRC, "type",          "extension",        0,             0 }},
     { TOKEN::SEXTENSION_TYPE_DART,          { "class",             SRC, "type",     "extension type",        0,             0 }},
+    { TOKEN::SLIBRARY_DART,                 { "library",           SRC,      0,                    0,        0,             0 }},
     { TOKEN::SMIXIN_DART,                   { "class",             SRC, "type",              "mixin",        0,             0 }},
     { TOKEN::SON_DART,                      { "on",                SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SPART_DART,                    { "part",              SRC,      0,                    0,        0,             0 }},
     { TOKEN::SWITH_DART,                    { "with",              SRC,      0,                    0,        0,             0 }},
 
 };

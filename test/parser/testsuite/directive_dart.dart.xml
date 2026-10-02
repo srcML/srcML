@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="directive">
+
+<unit revision="1.0.0" language="Dart">
+<library>library;</library>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<library>library <name><name>my</name><operator>.</operator><name>lib</name></name>;</library>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<import>import <literal type="string">'dart:async'</literal>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<import>import <literal type="string">'package:flutter/material.dart'</literal> <alias>as <name>m</name></alias> show <name>Widget</name>, <name>State</name> hide <name>Key</name>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<import>import <literal type="string">'a.dart'</literal> <specifier>deferred</specifier> <alias>as <name>a</name></alias>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<import>import <literal type="string">'a.dart'</literal> if (dart.library.io) <literal type="string">'b.dart'</literal>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<export>export <literal type="string">'src/a.dart'</literal> show <name>A</name>;</export>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<part>part <literal type="string">'part.dart'</literal>;</part>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<part>part of <name><name>my</name><operator>.</operator><name>lib</name></name>;</part>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<part>part of <literal type="string">'a.dart'</literal>;</part>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<part>part of <name>a</name>;</part>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name><name>library</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>part</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>export</name> <init>= <expr><name><name>part</name><operator>.</operator><name>of</name></name></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>

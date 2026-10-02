@@ -177,6 +177,9 @@ token_set(srcMLParser, identifier_list_tokens_set,
     // Java
     srcMLParser::RECORD,
 
+    // Dart
+    srcMLParser::DART_EXPORT, srcMLParser::DART_LIBRARY, srcMLParser::DART_PART,
+
     // Qt
     srcMLParser::EMIT, srcMLParser::FOREACH, srcMLParser::SIGNAL, srcMLParser::FOREVER,
 
