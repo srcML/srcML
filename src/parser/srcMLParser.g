@@ -7409,6 +7409,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
             type == 0
             && type_count == 0
             && keyword_token_set.member(LA(1))
+            && !inLanguage(LANGUAGE_DART)
         )
             type = SINGLE_MACRO;
 

@@ -52,6 +52,7 @@ language_extension_registry::language_extension_registry() : registered_language
     { "mts",  Language::LANGUAGE_JAVASCRIPT },
     { "cts",  Language::LANGUAGE_JAVASCRIPT },
     { "cmake", Language::LANGUAGE_CMAKE },
+    { "dart", Language::LANGUAGE_DART | Language::LANGUAGE_JAVA },
     /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C } */ }), use_cpp_for_c(false)
     {}
 
@@ -208,6 +209,8 @@ void language_extension_registry::register_standard_file_extensions() {
     register_user_ext("cts",  Language::LANGUAGE_JAVASCRIPT);
 
     register_user_ext("cmake", Language::LANGUAGE_CMAKE);
+
+    register_user_ext("dart", Language::LANGUAGE_DART | Language::LANGUAGE_JAVA);
 }
 
 /**

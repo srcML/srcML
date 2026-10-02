@@ -1159,6 +1159,23 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
         { "SCOPE_FOR"    , CMAKE_SCOPE_FOR   , LANGUAGE_CMAKE },
         { "ZIP_LISTS"    , CMAKE_ZIP_LISTS   , LANGUAGE_CMAKE },
+
+        // Dart (parsed as Java) Java keywords that are names in Dart
+        { "goto"         , NAME              , LANGUAGE_DART },
+        { "instanceof"   , NAME              , LANGUAGE_DART },
+        { "interface"    , NAME              , LANGUAGE_DART },
+        { "native"       , NAME              , LANGUAGE_DART },
+        { "package"      , NAME              , LANGUAGE_DART },
+        { "private"      , NAME              , LANGUAGE_DART },
+        { "protected"    , NAME              , LANGUAGE_DART },
+        { "public"       , NAME              , LANGUAGE_DART },
+        { "record"       , NAME              , LANGUAGE_DART },
+        { "strictfp"     , NAME              , LANGUAGE_DART },
+        { "synchronized" , NAME              , LANGUAGE_DART },
+        { "throws"       , NAME              , LANGUAGE_DART },
+        { "transient"    , NAME              , LANGUAGE_DART },
+        { "volatile"     , NAME              , LANGUAGE_DART },
+
    };
 
     // fill up the literals for the language that we are parsing

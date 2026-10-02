@@ -55,6 +55,9 @@ namespace LanguageName {
 
     /** String constant for CMake language */
     const char* const LANGUAGE_CMAKE = "CMake";
+
+    /** String constant for Dart language */
+    const char* const LANGUAGE_DART = "Dart";
 }
 
 /**
@@ -101,6 +104,9 @@ public:
 
         /** CMake language */
         LANGUAGE_CMAKE = 128,
+
+        /** Dart language */
+        LANGUAGE_DART = 256,
 
         /** C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,

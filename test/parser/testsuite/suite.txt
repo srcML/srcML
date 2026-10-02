@@ -354,6 +354,10 @@ LANGUAGE_JAVASCRIPT namespace_ts
 LANGUAGE_JAVASCRIPT type_ts
 LANGUAGE_JAVASCRIPT typedef_ts
 
+# Dart
+LANGUAGE_DART decl_dart
+LANGUAGE_DART function_dart
+
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl
 LANGUAGE_TRANSFORM struct_cpp.cpp.xml class_cpp.cpp.xml struct class2struct.xsl
