@@ -2,6 +2,10 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="lambda">
 
 <unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>f</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>a</name> <operator>+</operator> <literal type="number">1</literal></expr></block_content></block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
 <decl_stmt><decl><type><name>var</name></type> <name>f</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>a</name> <operator>*</operator> <name>b</name></expr></block_content></block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
@@ -10,7 +14,37 @@
 </unit>
 
 <unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>f</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <specifier>async</specifier> <block>{<block_content> <expr_stmt><expr><operator>await</operator> <name>a</name></expr>;</expr_stmt> </block_content>}</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>f</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <specifier>async</specifier> =&gt;<block type="pseudo"><block_content> <expr><name>a</name></expr></block_content></block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name><name>list</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>e</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>e</name><operator>.</operator><name>name</name></name></expr></block_content></block></lambda></expr></argument>)</argument_list></call><operator>.</operator><call><name>toList</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name><name>list</name><operator>.</operator><name>forEach</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>e</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
 <expr_stmt><expr><call><name>setState</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>count</name><operator>++</operator></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><name>a</name>: <expr><lambda><parameter_list>(<parameter><decl><name>c</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><call><name>g</name><argument_list>()</argument_list></call></expr></block_content></block></lambda></expr></argument>, <argument><name>b</name>: <expr><lambda><parameter_list>(<parameter><decl><name>d</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><name>x</name></expr>)</condition> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></lambda></expr></argument>, <argument><name>e</name>: <expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>g</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><lambda><parameter_list>(<parameter><decl><name>b</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>a</name> <operator>+</operator> <name>b</name></expr></block_content></block></lambda></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 </unit>

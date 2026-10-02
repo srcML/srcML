@@ -454,4 +454,9 @@ const static srcMLState::MODE_TYPE MODE_EXPRESSION_CACHE_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_EXPRESSION_GENERATOR_CMAKE;
 
+// Dart modes
+
+/** parameters of a record type or function type, where a single name is a type, e.g., (int, String) */
+const static srcMLState::MODE_TYPE MODE_TYPE_PARAMETERS_DART;
+
 #endif

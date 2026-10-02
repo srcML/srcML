@@ -8130,6 +8130,11 @@ pattern_check_core[
                     annotation
                     set_int[attribute_count, attribute_count + 1] |
 
+                    // function type (Dart), e.g., int Function(String)
+                    { inLanguage(LANGUAGE_DART) && is_function_type_dart() }?
+                    function_type_dart
+                    set_bool[foundpure] |
+
                     // getter or setter (Dart)
                     { inLanguage(LANGUAGE_DART) && is_accessor_dart() }?
                     set_int[accessor_token, LT(1)->getText() == "get"sv ? SFUNCTION_GET_STATEMENT : SFUNCTION_SET_STATEMENT]
@@ -8325,6 +8330,12 @@ pattern_check_core[
                                 inLanguage(LANGUAGE_CSHARP)
                                 && LA(1) == RBRACKET
                             )
+
+                            // end of named or optional parameters (Dart)
+                            || (
+                                inLanguage(LANGUAGE_DART)
+                                && (LA(1) == RBRACKET || LA(1) == RCURLY)
+                            )
                         )
                     )
 
@@ -8497,6 +8508,46 @@ pattern_check_core[
             // record a getter or setter (Dart) after any nested pattern checks of the parameters
             set_int[accessor_token_dart, accessor_token]
         )
+;
+
+/*
+  type_parameter_list_dart
+
+  Handles the parameters of a record type or function type (Dart), where a single name is a type, e.g., "(int, String)"
+*/
+type_parameter_list_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL | MODE_TYPE_PARAMETERS_DART);
+        }
+
+        parameter_list
+
+        {
+            endMode(MODE_TYPE_PARAMETERS_DART);
+        }
+;
+
+/*
+  is_function_type_dart
+
+  Checks for a function type (Dart), e.g., "Function(int)" in "void Function(int) f;"
+*/
+is_function_type_dart[] returns [bool is_function_type] {
+        is_function_type = LA(1) == NAME
+            && LT(1)->getText() == "Function"sv
+            && (next_token() == LPAREN || next_token() == TEMPOPS);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  function_type_dart
+
+  Handles the function part of a function type (Dart), e.g., "Function(int)" or "Function<T>(T)"
+*/
+function_type_dart[] { ENTRY_DEBUG } :
+        compound_name
+        type_parameter_list_dart
 ;
 
 /*
@@ -8769,6 +8820,10 @@ lead_type_identifier[] { ENTRY_DEBUG } :
         // macros in types
         (macro_type_detector)=>
         macro_call |
+
+        // function type (Dart), e.g., int Function(String)
+        { inLanguage(LANGUAGE_DART) && is_function_type_dart() }?
+        function_type_dart |
 
         // typical type name
         {
@@ -9610,6 +9665,11 @@ complete_default_parameter[] {
                 (
                     LA(1) != RPAREN
                     && LA(1) != COMMA
+                    // end of named or optional parameters (Dart)
+                    && (
+                        !inLanguage(LANGUAGE_DART)
+                        || (LA(1) != RCURLY && LA(1) != RBRACKET)
+                    )
                 )
                 || count_paren > 0
             }?
@@ -15246,6 +15306,20 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             { inLanguage(LANGUAGE_JAVA) }?
             bar |
 
+            // named or optional positional parameters (Dart), e.g., {int a, required int b} and [int c = 0]
+            {
+                inLanguage(LANGUAGE_DART)
+                && (LA(1) == LCURLY || LA(1) == RCURLY || LA(1) == LBRACKET || LA(1) == RBRACKET)
+            }?
+            {
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
+
+                // a trailing comma does not indicate an empty parameter
+                lastwasparam = true;
+            }
+            (LCURLY | RCURLY | LBRACKET | RBRACKET) |
+
             complete_parameter
 
             {
@@ -15253,7 +15327,8 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             }
         )*
 
-        empty_element[SPARAMETER, !lastwasparam && foundparam]
+        // a trailing comma does not indicate an empty parameter (Dart)
+        empty_element[SPARAMETER, !lastwasparam && foundparam && !inLanguage(LANGUAGE_DART)]
         rparen[false]
 ;
 
@@ -15407,7 +15482,7 @@ argument[] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { inLanguage(LANGUAGE_CSHARP) && look_past_rule(&srcMLParser::identifier) == COLON }?
+            { (inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_DART)) && look_past_rule(&srcMLParser::identifier) == COLON }?
             argument_named_csharp
         )*
 
@@ -15476,6 +15551,12 @@ annotation_argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
+
+        // named argument (Dart)
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_DART) && look_past_rule(&srcMLParser::identifier) == COLON }?
+            argument_named_csharp
+        )*
 
         // suppress warning of ()*
         (options { greedy = true; } :
@@ -15569,21 +15650,36 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                 || stmt_type == ENUM_DECL
                 || LA(1) == DOTDOTDOT
             }?
-            (parameter_type_count[type_count, output_type])
+            (
+                // parameter with no type (Dart), e.g., catch (e) or this.a, except in a record type or function type
+                {
+                    inLanguage(LANGUAGE_DART)
+                    && stmt_type == VARIABLE
+                    && type_count == 0
+                    && !inTransparentMode(MODE_TYPE_PARAMETERS_DART)
+                }?
+                {
+                    // expect a name initialization
+                    setMode(MODE_VARIABLE_NAME | MODE_INIT);
+                }
+                variable_declaration_nameinit |
 
-            // suppress warning caused by ()*
-            (options { greedy = true; } :
-                bar
-                set_int[type_count, type_count > 1 ? type_count - 1 : 1]
-                parameter_type_count[type_count]
-            )*
+                (parameter_type_count[type_count, output_type])
 
-            {
-                // expect a name initialization
-                setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            }
+                // suppress warning caused by ()*
+                (options { greedy = true; } :
+                    bar
+                    set_int[type_count, type_count > 1 ? type_count - 1 : 1]
+                    parameter_type_count[type_count]
+                )*
 
-            (options { greedy = true; } : variable_declaration_nameinit)*
+                {
+                    // expect a name initialization
+                    setMode(MODE_VARIABLE_NAME | MODE_INIT);
+                }
+
+                (options { greedy = true; } : variable_declaration_nameinit)*
+            )
         )
 ;
 
