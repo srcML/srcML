@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="pattern">
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><array>[<expr><decl><type><name>int</name></type> <name>a</name></decl></expr>, <expr><decl><type><name>var</name></type> <name>b</name></decl></expr>]</array></expr> when <condition><expr><name>a</name> <operator>&gt;</operator> <name>b</name></expr></condition>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><call><name>Point</name><argument_list>(<argument><name>x</name>: <expr><literal type="number">0</literal></expr></argument>, <argument>:<expr><decl><type><name>var</name></type> <name>y</name></decl></expr></argument>)</argument_list></call></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><dictionary>{<expr><literal type="string">'k'</literal></expr>: <expr><decl><type><name>String</name></type> <name>v</name></decl></expr>}</dictionary></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><operator>&gt;</operator> <literal type="number">10</literal> <operator>&amp;&amp;</operator> <operator>&lt;</operator> <literal type="number">20</literal></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><decl><type><name>int</name></type> <name>n</name></decl> <operator>||</operator> <decl><type><name>double</name></type> <name>n</name></decl></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><tuple>(<expr><decl><type><name>int</name></type> <name>x</name></decl></expr>, <expr><decl><type><name>int</name></type> <name>y</name></decl></expr>)</tuple></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><decl><type><specifier>final</specifier></type> <name>x</name></decl></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>o</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><name>_</name></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<if_stmt><if>if <condition>(<expr><name>o</name></expr> <case>case <expr><array>[<expr><decl><type><name>int</name></type> <name>a</name></decl></expr>, <expr><decl><type><name>int</name></type> <name>b</name></decl></expr>]</array></expr></case>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<if_stmt><if>if <condition>(<expr><name>o</name></expr> <case>case <expr><dictionary>{<expr><literal type="string">'name'</literal></expr>: <expr><decl><type><name>String</name></type> <name>name</name></decl></expr>}</dictionary></expr> when <condition><expr><name><name>name</name><operator>.</operator><name>isNotEmpty</name></name></expr></condition></case>)</condition> <block>{<block_content/>}</block></if></if_stmt>
+</unit>
+
+</unit>

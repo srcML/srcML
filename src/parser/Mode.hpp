@@ -465,8 +465,23 @@ const static srcMLState::MODE_TYPE MODE_COLLECTION_IF_DART;
 /** parentheses of an if or for element in a collection literal */
 const static srcMLState::MODE_TYPE MODE_COLLECTION_PAREN_DART;
 
+/** pattern, e.g., in a case, a switch expression, an if-case, or a destructuring declaration */
+const static srcMLState::MODE_TYPE MODE_PATTERN_DART;
+
+/** guard of a pattern, i.e., "when ..." */
+const static srcMLState::MODE_TYPE MODE_GUARD_DART;
+
+/** cases of a switch expression */
+const static srcMLState::MODE_TYPE MODE_SWITCH_EXPRESSION_DART;
+
+/** one case of a switch expression */
+const static srcMLState::MODE_TYPE MODE_SWITCH_ARM_DART;
+
 /** record literal or pattern */
 const static srcMLState::MODE_TYPE MODE_RECORD_DART;
+
+/** destructuring declaration, e.g., var (a, b) = c; */
+const static srcMLState::MODE_TYPE MODE_DESTRUCTURE_DART;
 
 /** parameters of a record type or function type, where a single name is a type, e.g., (int, String) */
 const static srcMLState::MODE_TYPE MODE_TYPE_PARAMETERS_DART;

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="switch">
+
+<unit revision="1.0.0" language="Dart">
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><literal type="number">1</literal></expr>:</case>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  <case>case <expr><literal type="number">2</literal></expr>:</case>
+  <case>case <expr><literal type="number">3</literal></expr>:</case>
+    <break>break;</break>
+  <default>default:</default>
+    <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><switch>switch <condition>(<expr><name>b</name></expr>)</condition> <block>{
+  <case><expr><literal type="number">1</literal></expr> =&gt; <expr><literal type="string">'one'</literal></expr></case>,
+  <case><expr><name>_</name></expr> =&gt; <expr><literal type="string">'other'</literal></expr></case>,
+}</block></switch></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><switch>switch <condition>(<expr><name>b</name></expr>)</condition> <block>{
+  <case><expr><decl><type><name>int</name></type> <name>n</name></decl></expr> when <condition><expr><name>n</name> <operator>&gt;</operator> <literal type="number">1</literal></expr></condition> =&gt; <expr><literal type="string">'many'</literal></expr></case>,
+  <case><expr><tuple>(<expr><name>x</name></expr>, <expr><name>y</name></expr>)</tuple></expr> =&gt; <expr><literal type="string">'pair'</literal></expr></case>,
+  <case><expr><name>_</name></expr> =&gt; <expr><literal type="string">'other'</literal></expr></case>,
+}</block></switch></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{ <case><expr><name>_</name></expr> =&gt; <expr><literal type="number">1</literal></expr></case> }</block></switch></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

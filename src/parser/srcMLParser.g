@@ -1426,6 +1426,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_ARGUMENT_LIST) }?
         call_argument_list |
 
+        // shorthand field in an object pattern (Dart), e.g., ":a" in "Point(:a)"
+        { inLanguage(LANGUAGE_DART) && LA(1) == COLON && inMode(MODE_ARGUMENT | MODE_LIST) }?
+        argument_shorthand_dart |
+
         // switch cases @test switch
         {
             !inMode(MODE_INIT)
@@ -2508,6 +2512,10 @@ pattern_statements[] {
 
         ENTRY_DEBUG
 } :
+        // destructuring declaration (Dart), e.g., var (a, b) = c;
+        { inLanguage(LANGUAGE_DART) && is_destructuring_dart() }?
+        destructuring_dart |
+
         // variable declaration
         { stmt_type == VARIABLE }?
         variable_declaration_statement[type_count] |
@@ -4120,6 +4128,273 @@ collection_paren_dart[int element] {
 ;
 
 /*
+  argument_shorthand_dart
+
+  Handles the start of a shorthand field in an object pattern (Dart), e.g., ":a" in "Point(:a)"
+*/
+argument_shorthand_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SARGUMENT);
+        }
+
+        COLON
+;
+
+/*
+  is_guard_dart
+
+  Checks for the guard of a pattern (Dart), e.g., "when" in "case int a when a > 0:"
+*/
+is_guard_dart[] returns [bool is_guard] {
+        is_guard = LA(1) == NAME
+            && LT(1)->getText() == "when"sv
+            && last_consumed != CASE
+            && (getFirstMode(MODE_PATTERN_DART | MODE_GUARD_DART | MODE_BLOCK) & MODE_PATTERN_DART) != 0;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  guard_dart
+
+  Handles the start of the guard of a pattern (Dart), e.g., "when a > 0"
+*/
+guard_dart[] { ENTRY_DEBUG } :
+        {
+            // end the pattern
+            endDownToMode(MODE_PATTERN_DART);
+            endMode(MODE_PATTERN_DART);
+        }
+
+        NAME
+
+        {
+            startNewMode(MODE_GUARD_DART);
+
+            startElement(SCONDITION);
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+;
+
+/*
+  is_pattern_declaration_dart
+
+  Checks for a variable declaration in a pattern (Dart), e.g., "int a", "var a", "final a", or "List<int>? a"
+*/
+is_pattern_declaration_dart[] returns [bool is_declaration] {
+        is_declaration = false;
+        bool has_specifier = false;
+        int depth = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == FINAL) {
+                consume();
+                has_specifier = true;
+            }
+
+            if (LA(1) == NAME) {
+                consume();
+
+                // type name with optional prefix, type arguments, and nullable modifier
+                while (LA(1) == PERIOD && next_token() == NAME) {
+                    consume();
+                    consume();
+                }
+
+                if (LA(1) == TEMPOPS) {
+                    do {
+                        if (LA(1) == TEMPOPS)
+                            ++depth;
+                        else if (LA(1) == TEMPOPE)
+                            --depth;
+
+                        consume();
+                    } while (depth > 0 && LA(1) != antlr::Token::EOF_TYPE);
+                }
+
+                if (LA(1) == QMARK)
+                    consume();
+
+                // variable name, or just a variable name with a specifier
+                is_declaration = (LA(1) == NAME && LT(1)->getText() != "when"sv) || has_specifier;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  pattern_declaration_dart
+
+  Handles a variable declaration in a pattern (Dart), e.g., "int a", "var a", or "final a"
+*/
+pattern_declaration_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SDECLARATION);
+
+            // type is in the action so that the type does not alter the grammar analysis of expressions
+            pattern_type_dart();
+        }
+
+        compound_name
+;
+
+/*
+  pattern_type_dart
+
+  Handles the type of a variable declaration in a pattern (Dart)
+*/
+pattern_type_dart[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPE);
+        }
+
+        (options { greedy = true; } : specifier)*
+
+        // a single type name, which is not the variable name
+        (options { greedy = true; } :
+            {
+                first
+                && (
+                    next_token() == NAME
+                    || next_token() == TEMPOPS
+                    || next_token() == QMARK
+                    || next_token() == PERIOD
+                )
+            }?
+            lead_type_identifier
+            set_bool[first, false]
+            (options { greedy = true; } : { LA(1) == QMARK }? multops)*
+        )*
+;
+
+/*
+  switch_expression_dart
+
+  Handles a switch expression (Dart), e.g., "switch (a) { 1 => 'one', _ => 'other' }"
+*/
+switch_expression_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // when guessing, only match the balanced switch expression
+            if (inputState->guessing) {
+                consume();
+                skip_collection_dart();
+                skip_collection_dart();
+                return;
+            }
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SSWITCH);
+        }
+
+        SWITCH
+        collection_paren_dart[SCONDITION]
+
+        {
+            startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_SWITCH_EXPRESSION_DART);
+
+            startElement(SBLOCK);
+        }
+
+        LCURLY
+
+        {
+            switch_expression_cases_dart();
+
+            endDownToMode(MODE_SWITCH_EXPRESSION_DART);
+        }
+
+        RCURLY
+;
+
+/*
+  switch_expression_cases_dart
+
+  Handles the cases of a switch expression (Dart) up to the end of the block.
+  The cases are processed in the action so that the general processing (start) does not alter the grammar analysis.
+*/
+switch_expression_cases_dart[] {
+        int no_progress = 0;
+
+        ENTRY_DEBUG
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+
+            // end of the cases, unless it ends a block inside of a case
+            if (LA(1) == RCURLY && (getFirstMode(MODE_BLOCK | MODE_SWITCH_EXPRESSION_DART) & MODE_SWITCH_EXPRESSION_DART) != 0)
+                break;
+
+            auto before = LT(1).get();
+
+            // start of a case with its pattern
+            if (inMode(MODE_SWITCH_EXPRESSION_DART) && LA(1) != COMMA) {
+                startNewMode(MODE_SWITCH_ARM_DART);
+                startElement(SCASE);
+
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_PATTERN_DART);
+                expression();
+
+            // "=>" after the pattern (or guard) starts the value
+            } else if (
+                LA(1) == TRETURN
+                && (getFirstMode(MODE_BLOCK | MODE_INTERNAL_END_PAREN | MODE_ARGUMENT | MODE_PATTERN_DART | MODE_GUARD_DART | MODE_SWITCH_ARM_DART)
+                    & (MODE_PATTERN_DART | MODE_GUARD_DART)) != 0
+            ) {
+                endDownToMode(MODE_SWITCH_ARM_DART);
+                match(TRETURN);
+
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            } else {
+                start();
+            }
+
+            // failsafe for no progress
+            no_progress = LT(1).get() == before ? no_progress + 1 : 0;
+            if (no_progress > 10) {
+                consume();
+                no_progress = 0;
+            }
+        }
+} :;
+
+/*
+  if_case_dart
+
+  Handles the pattern in an if-case condition (Dart), e.g., "case [a, b]" in "if (c case [a, b])"
+*/
+if_case_dart[] { ENTRY_DEBUG } :
+        {
+            // end the expression before the case
+            endDownToMode(MODE_CONDITION);
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCASE);
+        }
+
+        CASE
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_PATTERN_DART);
+        }
+;
+
+/*
   is_record_dart
 
   Checks for a record literal or pattern (Dart), e.g., "(1, 2)", "(a: 1)", or "(:a, :b)".
@@ -4153,9 +4428,9 @@ is_record_dart[] returns [bool is_record] {
                 consume();
             }
 
-            // lambda
+            // lambda, except for "=>" after a pattern in a switch expression
             consume();
-            if (LA(1) == LCURLY || LA(1) == TRETURN || LA(1) == ASYNC)
+            if (!inTransparentMode(MODE_PATTERN_DART) && (LA(1) == LCURLY || LA(1) == TRETURN || LA(1) == ASYNC))
                 is_record = false;
         }
         catch (...) {}
@@ -4242,6 +4517,122 @@ record_fields_dart[] {
             }
         }
 } :;
+
+/*
+  is_destructuring_dart
+
+  Checks for a destructuring declaration (Dart), e.g., "var (a, b) = c;", "final [a, b] = c;", or "var Point(:x) = p;"
+*/
+is_destructuring_dart[] returns [bool is_destructuring] {
+        is_destructuring = false;
+        int depth = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == FINAL || (LA(1) == NAME && LT(1)->getText() == "var"sv)) {
+                consume();
+
+                // object pattern, e.g., Point(:x)
+                if (LA(1) == NAME && (next_token() == LPAREN || next_token() == TEMPOPS)) {
+                    consume();
+
+                    if (LA(1) == TEMPOPS) {
+                        do {
+                            if (LA(1) == TEMPOPS)
+                                ++depth;
+                            else if (LA(1) == TEMPOPE)
+                                --depth;
+
+                            consume();
+                        } while (depth > 0 && LA(1) != antlr::Token::EOF_TYPE);
+                    }
+                }
+
+                if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY) {
+                    do {
+                        if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY)
+                            ++depth;
+                        else if (LA(1) == RPAREN || LA(1) == RBRACKET || LA(1) == RCURLY)
+                            --depth;
+
+                        consume();
+                    } while (depth > 0 && LA(1) != antlr::Token::EOF_TYPE);
+
+                    is_destructuring = LA(1) == EQUAL;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  destructuring_dart
+
+  Handles the start of a destructuring declaration (Dart), e.g., "var (a, b)" in "var (a, b) = c;"
+  The pattern is in place of the name of the declaration.
+*/
+destructuring_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SDECLARATION_STATEMENT);
+
+            startNewMode(MODE_DESTRUCTURE_DART);
+
+            startElement(SDECLARATION);
+        }
+
+        destructuring_type_dart
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_PATTERN_DART);
+
+            // record pattern, which otherwise looks like a call after the type
+            if (LA(1) == LPAREN) {
+                startElement(SEXPRESSION);
+                record_dart();
+            }
+        }
+;
+
+/*
+  destructuring_type_dart
+
+  Handles the type of a destructuring declaration (Dart), i.e., "var" or "final"
+*/
+destructuring_type_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPE);
+        }
+
+        ({ LA(1) == FINAL }? specifier | compound_name)
+;
+
+/*
+  destructuring_initialization_dart
+
+  Handles the initialization of a destructuring declaration (Dart), e.g., "= c"
+*/
+destructuring_initialization_dart[] { ENTRY_DEBUG } :
+        {
+            // end the pattern
+            endDownToMode(MODE_DESTRUCTURE_DART);
+
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SDECLARATION_INITIALIZATION);
+        }
+
+        EQUAL
+;
 
 /*
   lambda_single_parameter
@@ -5552,6 +5943,10 @@ switch_case[] { ENTRY_DEBUG } :
 
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // the expression is a pattern (Dart)
+            if (inLanguage(LANGUAGE_DART))
+                setMode(MODE_PATTERN_DART);
         }
 
         (CASE | macro_case_call)
@@ -7617,6 +8012,18 @@ statement_part[] {
         { inLanguage(LANGUAGE_DART) && inMode(MODE_FUNCTION_TAIL) }?
         function_arrow_body_dart |
 
+        // guard of a pattern (Dart), e.g., when a > 0
+        { inLanguage(LANGUAGE_DART) && is_guard_dart() }?
+        guard_dart |
+
+        // initialization of a destructuring declaration (Dart)
+        {
+            inLanguage(LANGUAGE_DART)
+            && LA(1) == EQUAL
+            && (getFirstMode(MODE_INTERNAL_END_PAREN | MODE_ARGUMENT | MODE_IN_INIT | MODE_DESTRUCTURE_DART) & MODE_DESTRUCTURE_DART) != 0
+        }?
+        destructuring_initialization_dart |
+
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
         (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
 
@@ -7693,11 +8100,13 @@ statement_part[] {
                 LA(1) != EMIT
                 || emit_statement_check()
             )
-            // directive keywords that are also names (Dart)
+            // switch expression, if-case, and directive keywords that are also names (Dart)
             && (
                 !inLanguage(LANGUAGE_DART)
                 || (
-                    LA(1) != DART_LIBRARY
+                    LA(1) != SWITCH
+                    && LA(1) != CASE
+                    && LA(1) != DART_LIBRARY
                     && LA(1) != DART_PART
                     && LA(1) != DART_EXPORT
                 )
@@ -7914,7 +8323,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 || inTransparentMode(MODE_EXPORT_JS)
                 || inTransparentMode(MODE_ARRAY_JS)
                 || inTransparentMode(MODE_TYPE_ARRAY_TS)
-                || (getFirstMode(MODE_LIST) & (MODE_COLLECTION_DART | MODE_RECORD_DART)) != 0
+                || (getFirstMode(MODE_LIST) & (MODE_COLLECTION_DART | MODE_RECORD_DART | MODE_SWITCH_EXPRESSION_DART)) != 0
                 || (
                     inLanguage(LANGUAGE_JAVASCRIPT)
                     && (
@@ -12631,10 +13040,10 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
-        { inLanguage(LANGUAGE_DART) && LA(1) == LPAREN }?
+        { inLanguage(LANGUAGE_DART) && LA(1) == LPAREN && !inTransparentMode(MODE_PATTERN_DART) }?
         (lambda_expression_full_dart) => lambda_expression_dart |
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA) && !inTransparentMode(MODE_PATTERN_DART) }?
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -15540,6 +15949,23 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
         optional_call_chain_js |
 
+        // variable declaration in a pattern (Dart), e.g., "int a" in "case [int a, _]:"
+        {
+            inLanguage(LANGUAGE_DART)
+            && (LA(1) == NAME || LA(1) == FINAL)
+            && (getFirstMode(MODE_PATTERN_DART | MODE_GUARD_DART | MODE_BLOCK) & MODE_PATTERN_DART) != 0
+            && is_pattern_declaration_dart()
+        }?
+        pattern_declaration_dart |
+
+        // switch expression (Dart)
+        { inLanguage(LANGUAGE_DART) && LA(1) == SWITCH }?
+        switch_expression_dart |
+
+        // pattern in an if-case condition (Dart), e.g., if (a case [b, c])
+        { inLanguage(LANGUAGE_DART) && LA(1) == CASE && inTransparentMode(MODE_CONDITION) }?
+        if_case_dart |
+
         // record literal or pattern (Dart), e.g., (1, 2); note that "NAME(" starts a call
         {
             inLanguage(LANGUAGE_DART)
@@ -15819,10 +16245,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
-        { inLanguage(LANGUAGE_DART) && LA(1) == LPAREN }?
+        { inLanguage(LANGUAGE_DART) && LA(1) == LPAREN && !inTransparentMode(MODE_PATTERN_DART) }?
         (lambda_expression_full_dart) => lambda_expression_dart |
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA) && !inTransparentMode(MODE_PATTERN_DART) }?
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -16645,6 +17071,10 @@ argument[] { ENTRY_DEBUG } :
 
             // start the argument
             startElement(SARGUMENT);
+
+            // shorthand field in an object pattern (Dart), e.g., ":a" in "Point(:a)"
+            if (inLanguage(LANGUAGE_DART) && LA(1) == COLON)
+                match(COLON);
 
             // Python has named arguments
             if (inLanguage(LANGUAGE_PYTHON) && LA(1) == NAME && next_token() == EQUAL) {
