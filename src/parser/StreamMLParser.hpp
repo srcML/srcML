@@ -945,7 +945,7 @@ private:
 
     /** abstract method for pausing the output of tokens */
     void pauseStream() final {
-        pausetoken = *CurrentToken();
+        pausetoken = !output().empty() ? *CurrentToken() : nullptr;
         paused = true;
     }
 
@@ -963,7 +963,7 @@ private:
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() final {
 
-        if (!paused)
+        if (!paused || !pausetoken || output().empty())
             return;
 
         if (pausetoken->getType() != output().back()->getType())

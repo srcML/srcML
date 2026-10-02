@@ -99,4 +99,8 @@
 }</block></enum>
 </unit>
 
+<unit revision="1.0.0" language="Java">
+<enum>enum <name>E</name> <block>{ <decl><name>A</name></decl>; <decl_stmt><decl><type><specifier>final</specifier> <name>int</name></type> <name>x</name></decl>;</decl_stmt> <expr><operator>new</operator><operator>(</operator><name>int</name> <name>x</name><operator>)</operator></expr>; }</block></enum>
+</unit>
+
 </unit>
