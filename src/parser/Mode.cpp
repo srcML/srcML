@@ -199,5 +199,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_GENERATOR_CMAKE (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_COLLECTION_DART            (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_COLLECTION_IF_DART         (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_COLLECTION_PAREN_DART      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_RECORD_DART                (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_TYPE_PARAMETERS_DART       (bit(__COUNTER__));
 

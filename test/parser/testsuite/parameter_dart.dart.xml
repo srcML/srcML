@@ -26,6 +26,10 @@
 </unit>
 
 <unit revision="1.0.0" language="Dart">
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list></type> <name>a</name></decl></parameter>, [<parameter><decl><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>String</name></type></decl></parameter>)</parameter_list><modifier>?</modifier></type> <name>b</name></decl></parameter>])</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>covariant</specifier> <name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 

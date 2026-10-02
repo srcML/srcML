@@ -2487,6 +2487,25 @@ pattern_statements[] {
         if (!inLanguage(LANGUAGE_PYTHON))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
 
+        // declaration with a record type (Dart), e.g., (int, String) a;
+        // Handled here since a declaration does not start with a parenthesis in the grammar
+        if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN) {
+            if (stmt_type == VARIABLE) {
+                variable_declaration_statement(type_count);
+                return;
+            }
+
+            if (stmt_type == FUNCTION) {
+                function_definition(type_count, accessor_token_dart ? accessor_token_dart : SFUNCTION_DEFINITION);
+                return;
+            }
+
+            if (stmt_type == FUNCTION_DECL) {
+                function_declaration(type_count);
+                return;
+            }
+        }
+
         ENTRY_DEBUG
 } :
         // variable declaration
@@ -2936,7 +2955,30 @@ decl_pre_type_annotation[int& type_count] { ENTRY_DEBUG } :
 
   The header of a function.
 */
-function_header[int type_count] { ENTRY_DEBUG } :
+function_header[int type_count] {
+        // record type (Dart), which is not in the grammar of the type since a type does not start with a parenthesis
+        if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN && type_count > 0) {
+
+            // getter or setter (Dart), where the keyword is between the type and the name
+            if (accessor_token_dart != 0) {
+                accessor_token_dart = 0;
+
+                function_type(type_count - 1);
+                match(NAME);
+                function_identifier();
+
+                if (!inputState->guessing)
+                    replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL);
+
+            } else {
+                function_type(type_count);
+            }
+
+            return;
+        }
+
+        ENTRY_DEBUG
+} :
         // getter or setter (Dart), where the keyword is between the type and the name
         { accessor_token_dart != 0 }?
         set_int[accessor_token_dart, 0]
@@ -3303,6 +3345,12 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         )*
 
         {
+            // record type (Dart)
+            if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN) {
+                record_type_dart();
+                --type_count;
+            }
+
             if (type_count == 0) {
                 endMode(MODE_EAT_TYPE);
                 setMode(MODE_FUNCTION_NAME);
@@ -4070,6 +4118,130 @@ collection_paren_dart[int element] {
             endMode(MODE_COLLECTION_PAREN_DART);
         }
 ;
+
+/*
+  is_record_dart
+
+  Checks for a record literal or pattern (Dart), e.g., "(1, 2)", "(a: 1)", or "(:a, :b)".
+  A parenthesized expression has no top-level comma, and a lambda has a block or "=>" after the parentheses.
+*/
+is_record_dart[] returns [bool is_record] {
+        is_record = false;
+        int depth = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            consume();
+
+            // named field or shorthand field in a pattern
+            if ((LA(1) == NAME && next_token() == COLON) || LA(1) == COLON)
+                is_record = true;
+
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY)
+                    ++depth;
+                else if (LA(1) == RPAREN || LA(1) == RBRACKET || LA(1) == RCURLY)
+                    --depth;
+
+                if (depth < 0)
+                    break;
+
+                if (depth == 0 && LA(1) == COMMA)
+                    is_record = true;
+
+                consume();
+            }
+
+            // lambda
+            consume();
+            if (LA(1) == LCURLY || LA(1) == TRETURN || LA(1) == ASYNC)
+                is_record = false;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  record_dart
+
+  Handles a record literal or pattern (Dart), e.g., "(1, 2)", "(a: 1, b: 2)", or "(:a, :b)"
+*/
+record_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // when guessing, only match the balanced record
+            if (inputState->guessing) {
+                skip_collection_dart();
+                return;
+            }
+
+            startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_RECORD_DART);
+
+            startElement(STUPLE);
+        }
+
+        LPAREN
+
+        {
+            record_fields_dart();
+
+            endDownToMode(MODE_LIST | MODE_RECORD_DART);
+        }
+
+        RPAREN
+;
+
+/*
+  record_fields_dart
+
+  Handles the fields of a record (Dart) up to the end of the record.
+  The fields are processed in the action so that the general processing (start) does not alter the grammar analysis.
+*/
+record_fields_dart[] {
+        int no_progress = 0;
+
+        ENTRY_DEBUG
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+
+            // end of the record, unless it ends inner parentheses
+            if (
+                LA(1) == RPAREN
+                && (getFirstMode(MODE_BLOCK | MODE_INTERNAL_END_PAREN | MODE_ARGUMENT | MODE_RECORD_DART) & MODE_RECORD_DART) != 0
+            )
+                break;
+
+            auto before = LT(1).get();
+
+            // named field, e.g., a: 1
+            if (inMode(MODE_RECORD_DART) && LA(1) == NAME && next_token() == COLON) {
+                argument_named_csharp();
+
+            // shorthand field in a pattern, e.g., :a
+            } else if (inMode(MODE_RECORD_DART) && LA(1) == COLON) {
+                match(COLON);
+
+            // start of a field
+            } else if (inMode(MODE_RECORD_DART) && LA(1) != COMMA) {
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                expression();
+
+            } else {
+                start();
+            }
+
+            // failsafe for no progress
+            no_progress = LT(1).get() == before ? no_progress + 1 : 0;
+            if (no_progress > 10) {
+                consume();
+                no_progress = 0;
+            }
+        }
+} :;
 
 /*
   lambda_single_parameter
@@ -7742,7 +7914,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 || inTransparentMode(MODE_EXPORT_JS)
                 || inTransparentMode(MODE_ARRAY_JS)
                 || inTransparentMode(MODE_TYPE_ARRAY_TS)
-                || (getFirstMode(MODE_LIST) & MODE_COLLECTION_DART) != 0
+                || (getFirstMode(MODE_LIST) & (MODE_COLLECTION_DART | MODE_RECORD_DART)) != 0
                 || (
                     inLanguage(LANGUAGE_JAVASCRIPT)
                     && (
@@ -8279,6 +8451,18 @@ pattern_check_core[
         accessor_token_dart = 0;
         int accessor_token = 0;
 
+        // record type (Dart), e.g., "(int, String)" in "(int, String) a;", is a single part of the type
+        // Skipped here so that the parentheses do not alter the grammar analysis of the types
+        if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN && is_record_type_dart()) {
+            skip_collection_dart();
+
+            if (LA(1) == QMARK)
+                consume();
+
+            type_count = 1;
+            foundpure = true;
+        }
+
         ENTRY_DEBUG
 } :
         // main pattern for variable declarations, and most function declaration/definitions
@@ -8756,6 +8940,9 @@ pattern_check_core[
 
                 // record second (before we parse it) for label detection
                 set_int[token, LA(1), type_count == 1]
+
+                // record type (Dart) after specifiers, e.g., "(int, int)" in "final (int, int) a;"
+                skip_record_type_dart[type_count, foundpure, type_count == specifier_count + attribute_count + template_count]
             )*
 
             // special case for property attributes as names, e.g., get, set, etc.
@@ -9127,6 +9314,64 @@ specifier_dart[] { SingleElement element(this); ENTRY_DEBUG } :
         }
 
         (NAME | DART_MIXIN)
+;
+
+/*
+  is_record_type_dart
+
+  Checks for a record type (Dart), e.g., "(int, String)" in "(int, String) a;"
+  The record type is followed by a name, e.g., a variable or a function name
+*/
+is_record_type_dart[] returns [bool is_record_type] {
+        is_record_type = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            skip_collection_dart();
+
+            if (LA(1) == QMARK)
+                consume();
+
+            is_record_type = LA(1) == NAME;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  skip_record_type_dart
+
+  Skips a record type (Dart) after the specifiers of a type, counting it as a part of the type.  Used when guessing.
+  Processed in the action so that the parentheses do not alter the grammar analysis of the types
+*/
+skip_record_type_dart[int& type_count, bool& foundpure, bool only_specifiers] {
+        if (inLanguage(LANGUAGE_DART) && only_specifiers && LA(1) == LPAREN && is_record_type_dart()) {
+            skip_collection_dart();
+
+            if (LA(1) == QMARK)
+                consume();
+
+            ++type_count;
+            foundpure = true;
+        }
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  record_type_dart
+
+  Handles a record type (Dart), e.g., "(int, String)" or "({int a, int b})?"
+  Called from actions so that the parentheses do not alter the grammar analysis of the types
+*/
+record_type_dart[] { ENTRY_DEBUG } :
+        type_parameter_list_dart
+        (options { greedy = true; } : { LA(1) == QMARK }? multops)*
 ;
 
 /*
@@ -14121,6 +14366,12 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         )*
 
         {
+            // record type (Dart)
+            if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN) {
+                record_type_dart();
+                --type_count;
+            }
+
             if (type_count == 0) {
                 endMode(MODE_EAT_TYPE);
                 return;
@@ -15288,6 +15539,19 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // special case: JavaScript optional chaining with function calls
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
         optional_call_chain_js |
+
+        // record literal or pattern (Dart), e.g., (1, 2); note that "NAME(" starts a call
+        {
+            inLanguage(LANGUAGE_DART)
+            && LA(1) == LPAREN
+            && last_consumed != NAME
+            && last_consumed != RPAREN
+            && last_consumed != RBRACKET
+            && last_consumed != TEMPOPE
+            && last_consumed != SUPER
+            && is_record_dart()
+        }?
+        record_dart |
 
         // list, set, or map literal (Dart); note that "NAME[", ")[", and "][" start an index
         {
@@ -16491,6 +16755,35 @@ parameter[] {
         int after_token = 0;
         STMT_TYPE stmt_type = NONE;
 
+        // parameter with a record type (Dart), e.g., (int, int) a
+        // Handled here since a parameter does not start with a parenthesis in the grammar
+        if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN && is_record_type_dart()) {
+
+            if (inputState->guessing) {
+                skip_collection_dart();
+
+                if (LA(1) == QMARK)
+                    consume();
+
+                match(NAME);
+                return;
+            }
+
+            startNewMode(MODE_PARAMETER | MODE_INCLUDE_ATTRIBUTE);
+
+            startElement(SPARAMETER);
+
+            startElement(SDECLARATION);
+
+            type_count = 1;
+            parameter_type_count(type_count);
+
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+
+            variable_declaration_nameinit();
+            return;
+        }
+
         ENTRY_DEBUG
 } :
         {
@@ -16616,6 +16909,14 @@ parameter_type_count[int& type_count, bool output_type = true] {
             // start of type
             if (output_type)
                 startElement(STYPE);
+
+            // record type (Dart)
+            if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN) {
+                record_type_dart();
+
+                if (--type_count == 0)
+                    return;
+            }
         }
 
         // match auto keyword first as a special case; do not warn about ambiguity
@@ -17349,7 +17650,32 @@ clearnamestack[] {
 /*
   template_argument
 */
-template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
+template_argument[bool in_function_type = false] {
+        CompleteElement element(this);
+
+        // record type (Dart), e.g., "(int, String)" in "List<(int, String)>"
+        // Handled here since a type does not start with a parenthesis in the grammar
+        if (inLanguage(LANGUAGE_DART) && LA(1) == LPAREN) {
+
+            if (inputState->guessing) {
+                skip_collection_dart();
+
+                if (LA(1) == QMARK)
+                    consume();
+
+                return;
+            }
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SGENERIC_ARGUMENT);
+
+            record_type_dart();
+            return;
+        }
+
+        ENTRY_DEBUG
+} :
         {
             // local mode
             startNewMode(MODE_LOCAL);

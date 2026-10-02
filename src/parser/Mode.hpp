@@ -465,6 +465,9 @@ const static srcMLState::MODE_TYPE MODE_COLLECTION_IF_DART;
 /** parentheses of an if or for element in a collection literal */
 const static srcMLState::MODE_TYPE MODE_COLLECTION_PAREN_DART;
 
+/** record literal or pattern */
+const static srcMLState::MODE_TYPE MODE_RECORD_DART;
+
 /** parameters of a record type or function type, where a single name is a type, e.g., (int, String) */
 const static srcMLState::MODE_TYPE MODE_TYPE_PARAMETERS_DART;
 

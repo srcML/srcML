@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="record">
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><tuple>(<name>b</name>: <expr><literal type="number">1</literal></expr>, <name>c</name>: <expr><literal type="number">2</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><tuple>(<expr><literal type="number">1</literal></expr>, <name>b</name>: <expr><literal type="number">2</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><tuple>(<expr><literal type="number">1</literal></expr>,)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>String</name></type></decl></parameter>)</parameter_list></type> <name>a</name> <init>= <expr><tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="string">'a'</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><parameter_list>({<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>b</name></decl></parameter>})</parameter_list></type> <name>a</name> <init>= <expr><tuple>(<name>a</name>: <expr><literal type="number">1</literal></expr>, <name>b</name>: <expr><literal type="string">'b'</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>String</name></type></decl></parameter>)</parameter_list><modifier>?</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><parameter_list>(<parameter><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name></type></decl></parameter>, <parameter><decl><type><name>String</name><modifier>?</modifier></type></decl></parameter>)</parameter_list></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>String</name></type></decl></parameter>)</parameter_list></type> <name>f</name><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="string">'a'</literal></expr>)</tuple></expr></block_content></block>;</function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name><name>List</name><argument_list type="generic">&lt;<argument><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list></argument>&gt;</argument_list></name></type> <name>a</name> <init>= <expr><array>[]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name><name>Map</name><argument_list type="generic">&lt;<argument><name>String</name></argument>, <argument><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list><modifier>?</modifier></argument>&gt;</argument_list></name></type> <name>a</name> <init>= <expr><dictionary>{}</dictionary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><array><argument_list type="generic">&lt;<argument><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list></argument>&gt;</argument_list>[<expr><tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>)</tuple></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><call><name><name>Route</name><argument_list type="generic">&lt;<argument><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>String</name></type></decl></parameter>)</parameter_list><modifier>?</modifier></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>String</name></type></decl></parameter>)</parameter_list><modifier>?</modifier></type> <name>a</name></decl></parameter>)</parameter_list> <block>{<block_content> <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr>;</expr_stmt> </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><call><name>print</name><argument_list>(<argument><expr><name><name>a</name><operator>.</operator><name>$1</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<expr_stmt><expr><tuple>(<expr><name>a</name></expr>, <expr><name>b</name></expr>)</tuple> <operator>=</operator> <tuple>(<expr><name>b</name></expr>, <expr><name>a</name></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+</unit>

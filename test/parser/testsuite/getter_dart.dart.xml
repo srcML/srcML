@@ -31,4 +31,10 @@
 <function type="get"><type><name>int</name></type> get <name>a</name> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <function type="get"><type><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list></type> get <name>a</name> =&gt;<block type="pseudo"><block_content> <expr><tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>)</tuple></expr></block_content></block>;</function>
+}</block></class>
+</unit>
+
 </unit>
