@@ -94,6 +94,11 @@ STRING_START :
                 in_cmake_string = !in_cmake_string;
             }
         }
+        // handle a potential triple-quoted string in Dart
+        else if (inLanguage(LANGUAGE_DART) && LA(1) == '"' && LA(2) == '"') {
+            match("\"\"");
+            changetotextlexer(STRING_END, "\"\"\"");
+        }
         else
             changetotextlexer(STRING_END);
 
@@ -138,9 +143,16 @@ CHAR_START :
             changetotextlexer(PY_SIMPLE_SQUOTE_STRING_END);
         else if (inLanguage(LANGUAGE_CMAKE))
             $setType(OPERATORS);
+        // handle a potential triple-quoted string in Dart
+        else if (inLanguage(LANGUAGE_DART) && LA(1) == '\'' && LA(2) == '\'') {
+            match("''");
+            $setType(CHAR_START); changetotextlexer(CHAR_END, "'''");
+        }
         else {
             $setType(CHAR_START); changetotextlexer(CHAR_END);
         }
+
+        atstring = false;
     }
 ;
 
@@ -314,6 +326,16 @@ NAME options { testLiterals = true; } :
 
             { inLanguage(LANGUAGE_CXX) && (text == "R"sv || text == "u8R"sv || text == "LR"sv || text == "UR"sv || text == "uR"sv) }?
             { $setType(STRING_START); } RAW_STRING_START |
+
+            // raw string in Dart
+            { inLanguage(LANGUAGE_DART) && text == "r"sv && (LA(1) == '"' || LA(1) == '\'') }?
+            { atstring = true; }
+            (
+                { LA(1) == '"' }?
+                { $setType(STRING_START); } STRING_START |
+
+                { $setType(CHAR_START); } CHAR_START
+            ) |
 
             {
                 inLanguage(LANGUAGE_PYTHON)

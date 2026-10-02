@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="string">
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'single'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">"double"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'it\'s'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">"say \"hi\""</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'a "quoted" word'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">"it's"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'$name and ${obj.field}'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">"${m["key"]} and ${m['k']}"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'${f('}')} x'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'${x ?? ''}'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">"${"${x}"}"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">r'raw \ $x'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">r"raw \"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'''triple
+'single' "double"
+'''</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">"""triple "" '
+"""</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">''</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">""</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'a'</literal> <literal type="string">'b'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'\\'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><literal type="string">'\$notinterpolated {'</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>

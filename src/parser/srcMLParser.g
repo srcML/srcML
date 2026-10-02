@@ -14731,7 +14731,7 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup) {
-                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                if (inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_DART))
                     startElement(SSTRING);
                 else
                     startElement(SCHAR);

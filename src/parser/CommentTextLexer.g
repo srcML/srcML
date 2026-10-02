@@ -108,6 +108,21 @@ public:
     bool is_multiple_squotes = false;     // two or more consecutive single-quotes
     bool in_squotes = false;              // current token appears in a single-quote string
 
+    int interpolation_count = 0;          // depth of Dart string interpolation (e.g., "${...}")
+    int interpolation_quote = 0;          // quote of a Dart string nested in an interpolation (e.g., "${f('a')}")
+
+    // Dart string interpolation contents, including nested strings, do not end the string
+    bool interpolationQuote(int quote, int count, bool escaped) {
+
+        if (!inLanguage(LANGUAGE_DART) || interpolation_count == 0)
+            return false;
+
+        if (!escaped && count % 2 == 1 && (interpolation_quote == 0 || interpolation_quote == quote))
+            interpolation_quote = interpolation_quote ? 0 : quote;
+
+        return true;
+    }
+
     // reset all quotation mark logic variables to their initial state
     void resetQuoteState() {
         dquote_count = 0, dquote_count_py = 0, squote_count = 0, squote_count_py = 0;
@@ -137,6 +152,8 @@ public:
         noescape = nescape;
         delimiter1 = dstring;
         options = op;
+        interpolation_count = 0;
+        interpolation_quote = 0;
     }
 }
 
@@ -265,10 +282,19 @@ COMMENT_TEXT {
         )*
     {
         // ignore Python double-quotes in single-quotes (e.g., '''"""a"""''')
-        if (in_squotes)
+        if (interpolationQuote('\042', dquote_count, lookaheadMinusTwo == '\\'))
+            ;
+        else if (in_squotes)
             in_squotes = (LA(1) != '\047');  // keep ignoring if LA(1) is not a single quote
         else if (skip_dquote_processing)
             skip_dquote_processing = false;
+        else if (inLanguage(LANGUAGE_DART)) {
+            if (mode == STRING_END && (delimiter1.empty() ? (noescape || lookaheadMinusTwo != '\\') : dquote_count >= 3)) {
+                resetQuoteState();
+                $setType(mode);
+                selector->pop();
+            }
+        }
         else {
             switch (mode) {
                 case PY_DQUOTE_STRING_START: {
@@ -332,7 +358,7 @@ COMMENT_TEXT {
                 in_dquotes = true;
         }
         (options { greedy = true; } :
-            { !skip_squote_processing && (mode == PY_SQUOTE_STRING_START || is_multiple_squotes) && (lookaheadMinusTwo != '\\' || noescape) }?
+            { !skip_squote_processing && (mode == PY_SQUOTE_STRING_START || is_multiple_squotes || inLanguage(LANGUAGE_DART)) && (lookaheadMinusTwo != '\\' || noescape) }?
             '\047'
             {
                 ++squote_count;
@@ -357,10 +383,19 @@ COMMENT_TEXT {
         )*
     {
         // ignore Python single-quotes in double-quotes (e.g., """'''a'''""")
-        if (in_dquotes)
+        if (interpolationQuote('\047', squote_count, lookaheadMinusTwo == '\\'))
+            ;
+        else if (in_dquotes)
             in_dquotes = (LA(1) != '\042');  // keep ignoring if LA(1) is not a double quote
         else if (skip_squote_processing)
             skip_squote_processing = false;
+        else if (inLanguage(LANGUAGE_DART)) {
+            if (mode == CHAR_END && (delimiter1.empty() ? (noescape || lookaheadMinusTwo != '\\') : squote_count >= 3)) {
+                resetQuoteState();
+                $setType(mode);
+                selector->pop();
+            }
+        }
         else {
             switch (mode) {
                 case PY_SQUOTE_STRING_START: {
@@ -468,6 +503,11 @@ COMMENT_TEXT {
     '{' {
         if (lookaheadMinusTwo == '$' && mode == BACKTICK_END)
             ++scopeCount;
+
+        // Dart string interpolation, e.g., "${...}"
+        if (inLanguage(LANGUAGE_DART) && (mode == STRING_END || mode == CHAR_END) && !noescape && interpolation_quote == 0
+            && (interpolation_count > 0 || (lookaheadMinusTwo == '$' && lookaheadMinusThree != '\\')))
+            ++interpolation_count;
     } |
 
     '|' |
@@ -475,6 +515,9 @@ COMMENT_TEXT {
     '}' {
         if (scopeCount > 0 && mode == BACKTICK_END)
             --scopeCount;
+
+        if (interpolation_count > 0 && interpolation_quote == 0)
+            --interpolation_count;
     } |
 
     '~'..'\377') {
