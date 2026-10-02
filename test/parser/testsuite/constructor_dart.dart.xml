@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="constructor">
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor_decl><name>A</name><parameter_list>()</parameter_list>;</constructor_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor_decl><name>A</name><parameter_list>(<parameter><decl><name><name>this</name><operator>.</operator><name>x</name></name></decl></parameter>)</parameter_list>;</constructor_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor_decl><name>A</name><parameter_list>(<parameter><decl><name><name>this</name><operator>.</operator><name>x</name></name></decl></parameter>, {<parameter><decl><type><specifier>required</specifier></type> <name><name>this</name><operator>.</operator><name>y</name></name></decl></parameter>})</parameter_list>;</constructor_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor_decl><specifier>const</specifier> <name>A</name><parameter_list>({<parameter><decl><name><name>super</name><operator>.</operator><name>key</name></name></decl></parameter>})</parameter_list>;</constructor_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor><name><name>A</name><operator>.</operator><name>named</name></name><parameter_list>()</parameter_list> <member_init_list>: <expr><name>x</name> <operator>=</operator> <literal type="number">0</literal></expr></member_init_list>;</constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor><name><name>A</name><operator>.</operator><name>named</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <member_init_list>: <expr><name>x</name> <operator>=</operator> <name>a</name></expr>, <expr><call><name><name>super</name><operator>.</operator><name>other</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr> </member_init_list><block>{<block_content>
+    <expr_stmt><expr><call><name>init</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor><name>A</name><parameter_list>()</parameter_list> <member_init_list>: <expr><call><name><name>this</name><operator>.</operator><name>named</name></name><argument_list>()</argument_list></call></expr></member_init_list>;</constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor><specifier>factory</specifier> <name>A</name><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><call><name><name>A</name><operator>.</operator><name>named</name></name><argument_list>()</argument_list></call></expr></block_content></block>;</constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor><specifier>factory</specifier> <name><name>A</name><operator>.</operator><name>make</name></name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><call><name>A</name><argument_list>()</argument_list></call></expr>;</return>
+  </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor_decl><specifier>const</specifier> <name><name>A</name><operator>.</operator><name>c</name></name><parameter_list>(<parameter><decl><name><name>this</name><operator>.</operator><name>x</name></name></decl></parameter>)</parameter_list>;</constructor_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <constructor_decl><name>A</name><parameter_list>({<parameter><decl><name><name>this</name><operator>.</operator><name>blur</name></name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl></parameter>})</parameter_list>;</constructor_decl>
+}</block></class>
+</unit>
+
+</unit>

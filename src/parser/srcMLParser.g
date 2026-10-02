@@ -1367,6 +1367,21 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_NAMESPACE) }?
         lcurly[false] |
 
+        // block after a constructor initialization list (Dart)
+        {
+            inLanguage(LANGUAGE_DART)
+            && LA(1) == LCURLY
+            && inTransparentMode(MODE_INITIALIZATION_LIST)
+            && last_consumed != EQUAL
+            && last_consumed != OPERATORS
+            && last_consumed != LPAREN
+            && last_consumed != COMMA
+        }?
+        {
+            endDownToMode(MODE_INITIALIZATION_LIST);
+        }
+        lcurly |
+
         // do not confuse with expression block
         {
             (
@@ -6628,6 +6643,8 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
                         || !inMode(MODE_ENUM | MODE_LIST)
                     )
                 ) && (!inLanguage(LANGUAGE_KEYWORD_FAMILY) || !LT(1)->getText().empty())
+                // end of a constructor with no block (Dart)
+                && (!inLanguage(LANGUAGE_DART) || !inMode(MODE_FUNCTION_TAIL))
             )
                 startElement(SEMPTY);
 
@@ -7019,6 +7036,10 @@ statement_part[] {
         // colons were not in the expression rule, but that changed with TypeScript
         { inMode(MODE_EXPRESSION) && LA(1) != COLON }?
         expression_part_plus_linq |
+
+        // initializer in member initialization list (Dart)
+        { inLanguage(LANGUAGE_DART) && inMode(MODE_CALL | MODE_LIST) }?
+        member_init_dart |
 
         // call list in member initialization list
         {
@@ -7607,7 +7628,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
             type = OPERATOR_FUNCTION_DECL;
 
         // we actually have a macro and then a constructor
-        else if (type == FUNCTION && fla == COLON)
+        else if (type == FUNCTION && fla == COLON && !inLanguage(LANGUAGE_DART))
             type = SINGLE_MACRO;
 
         // not really a destructor
@@ -7742,6 +7763,10 @@ pattern_check_core[
         int real_type_count = 0;
         bool lcurly = false;
         bool is_event = false;
+
+        // names are used to detect a constructor (Dart)
+        if (inLanguage(LANGUAGE_DART))
+            namestack.fill("");
 
         accessor_token_dart = 0;
         int accessor_token = 0;
@@ -8381,7 +8406,10 @@ pattern_check_core[
                     || (
                         inPrevMode(MODE_CLASS)
                         && (
-                            inLanguage(LANGUAGE_JAVA_FAMILY)
+                            (
+                                inLanguage(LANGUAGE_JAVA_FAMILY)
+                                && !inLanguage(LANGUAGE_DART)
+                            )
                             || inLanguage(LANGUAGE_CSHARP)
                         )
                     )
@@ -8390,8 +8418,25 @@ pattern_check_core[
                     || (
                         specifier_count > 0
                         && (
-                            inLanguage(LANGUAGE_JAVA_FAMILY)
+                            (
+                                inLanguage(LANGUAGE_JAVA_FAMILY)
+                                && !inLanguage(LANGUAGE_DART)
+                            )
                             || inLanguage(LANGUAGE_CSHARP)
+                        )
+                    )
+
+                    // directly inside the block of a Dart class, with the name of the class (optionally with a constructor name)
+                    || (
+                        inLanguage(LANGUAGE_DART)
+                        && inPrevMode(MODE_CLASS)
+                        && !class_namestack.empty()
+                        && (
+                            (
+                                namestack[0] == class_namestack.top()
+                                && namestack[1] == ""
+                            )
+                            || namestack[1] == class_namestack.top()
                         )
                     )
 
@@ -8485,6 +8530,8 @@ pattern_check_core[
                         fla == COMMA
                         || fla == TERMINATE
                     )
+                    // a constructor declaration, not an enum constant (Dart)
+                    && !(inLanguage(LANGUAGE_DART) && isconstructor)
                 )
             ]
 
@@ -10967,7 +11014,7 @@ constructor_definition[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_DART) }? member_initialization_list)*
 ;
 
 /*
@@ -11019,6 +11066,19 @@ member_initialization_list[] { ENTRY_DEBUG } :
         }
 
         COLON
+;
+
+/*
+  member_init_dart
+
+  Handles an initializer in a constructor initialization list (Dart), e.g., a = 1, super(a)
+*/
+member_init_dart[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+
+        expression
 ;
 
 /*

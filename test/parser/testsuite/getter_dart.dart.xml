@@ -17,6 +17,12 @@
 
 <unit revision="1.0.0" language="Dart">
 <class>class <name>A</name> <block>{
+  <function type="set">set <name>a</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>v</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
   <function_decl><type><name>bool</name></type> get <name>a</name>;</function_decl>
 }</block></class>
 </unit>
