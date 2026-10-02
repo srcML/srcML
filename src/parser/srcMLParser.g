@@ -7368,7 +7368,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
                 posin
             );
         } catch (...) {
-            if (type == VARIABLE && type_count == 0) {
+            // a Dart declaration may not have a type, e.g., catch (e)
+            if (type == VARIABLE && type_count == 0 && !inLanguage(LANGUAGE_DART)) {
                 type_count = 1;
             }
         }
@@ -7509,6 +7510,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         if (
             type == VARIABLE
             && type_count == (specifier_count + attribute_count + template_count)
+            && !inLanguage(LANGUAGE_DART)
         )
             ++type_count;
 
@@ -7644,10 +7646,18 @@ pattern_check_core[
                     )
                     && (
                         LA(1) != IN
-                        || !inTransparentMode(MODE_CONTROL_CONDITION)
+                        || (
+                            !inTransparentMode(MODE_CONTROL_CONDITION)
+                            && !inLanguage(LANGUAGE_DART)
+                        )
+                    )
+                    // a Dart type never contains a bracket
+                    && (
+                        !inLanguage(LANGUAGE_DART)
+                        || LA(1) != LBRACKET
                     )
                 }?
-                set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
+                set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && (inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_DART))]
 
                 set_int[posin, LA(1) == IN ? posin = type_count : posin]
                 set_int[parameter_pack_pos, LA(1) == DOTDOTDOT ? parameter_pack_pos = type_count : parameter_pack_pos]
@@ -8180,6 +8190,19 @@ pattern_check_core[
                             )
                         )
                     )
+
+                    // declaration with only specifiers in the type (Dart), e.g., final a = 1;
+                    || (
+                        inLanguage(LANGUAGE_DART)
+                        && specifier_count > 0
+                        && (type_count - specifier_count - template_count) == 0
+                        && (
+                            LA(1) == EQUAL
+                            || LA(1) == TERMINATE
+                            || LA(1) == COMMA
+                            || LA(1) == IN
+                        )
+                    )
                 )
             ]
 
@@ -8613,7 +8636,7 @@ type_identifier[] { ENTRY_DEBUG } :
 non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         tripledotop |
 
-        { inLanguage(LANGUAGE_C_FAMILY) }?
+        { inLanguage(LANGUAGE_C_FAMILY) || (inLanguage(LANGUAGE_DART) && LA(1) == QMARK) }?
         multops |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && look_past(LBRACKET) == RBRACKET }?
@@ -10574,6 +10597,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             INTERNAL | SEALED | OVERRIDE | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
             DELEGATE | PARTIAL | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
+
+            // Dart
+            DART_COVARIANT | DART_FACTORY | DART_LATE | DART_REQUIRED |
 
             CONST |
 
@@ -15474,7 +15500,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             RVALUEREF |
 
-            { inLanguage(LANGUAGE_CSHARP) }?
+            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_DART) }?
             QMARK
             set_bool[is_qmark, true] |
 
@@ -16167,7 +16193,13 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
                     { !inLanguage(LANGUAGE_JAVA) }?
                     literals
                 )
-                (options { generateAmbigWarnings = false; } : template_operators)*
+                (options { generateAmbigWarnings = false; } :
+                    // nullable type (Dart)
+                    { inLanguage(LANGUAGE_DART) && LA(1) == QMARK }?
+                    multops |
+
+                    template_operators
+                )*
             ) |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript

@@ -437,6 +437,12 @@ tokens {
     CMAKE_RCURLY;
     CMAKE_SCOPE_FOR;
     CMAKE_ZIP_LISTS;
+
+    // Dart
+    DART_COVARIANT;
+    DART_FACTORY;
+    DART_LATE;
+    DART_REQUIRED;
 }
 
 {
@@ -1181,7 +1187,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "?["           , LBRACKET          , LANGUAGE_DART },
         { "as"           , AS                , LANGUAGE_DART },
         { "await"        , AWAIT             , LANGUAGE_DART },
+        { "covariant"    , DART_COVARIANT    , LANGUAGE_DART },
+        { "external"     , EXTERN            , LANGUAGE_DART },
+        { "factory"      , DART_FACTORY      , LANGUAGE_DART },
         { "is"           , IS                , LANGUAGE_DART },
+        { "late"         , DART_LATE         , LANGUAGE_DART },
+        { "required"     , DART_REQUIRED     , LANGUAGE_DART },
    };
 
     // fill up the literals for the language that we are parsing

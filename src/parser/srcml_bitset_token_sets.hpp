@@ -74,7 +74,8 @@ token_set(srcMLParser, argument_token_set, srcMLParser::C_ATTRIBUTE,
     srcMLParser::ALIGNAS, srcMLParser::VOID, srcMLParser::DECLTYPE, srcMLParser::TYPENAME, srcMLParser::MACRO_TYPE_NAME,
     srcMLParser::MACRO_SPECIFIER, srcMLParser::TEMPLATE, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::ATOMIC,
     srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM, srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH,
-    srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG
+    srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG,
+    srcMLParser::DART_COVARIANT, srcMLParser::DART_FACTORY, srcMLParser::DART_LATE, srcMLParser::DART_REQUIRED
 )
 
 token_set(srcMLParser, enum_preprocessing_token_set,
@@ -123,7 +124,10 @@ token_set(srcMLParser, decl_specifier_tokens_set,
     srcMLParser::FINAL,
 
     // decl_stmt
-    srcMLParser::TRANSIENT, srcMLParser::INTERNAL
+    srcMLParser::TRANSIENT, srcMLParser::INTERNAL,
+
+    // Dart
+    srcMLParser::DART_COVARIANT, srcMLParser::DART_FACTORY, srcMLParser::DART_LATE, srcMLParser::DART_REQUIRED
 
 )
 
