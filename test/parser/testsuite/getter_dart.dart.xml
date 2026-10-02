@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Dart" url="getter">
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <function type="get"><type><name>int</name></type> get <name>a</name> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <function type="get"><type><name>int</name></type> get <name>a</name> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>
+  </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <function_decl><type><name>bool</name></type> get <name>a</name>;</function_decl>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function type="get"><type><name>int</name></type> get <name>a</name> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
+</unit>
+
+</unit>

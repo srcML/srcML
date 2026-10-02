@@ -878,6 +878,9 @@ public:
     bool operatorname = false;
     std::stack<std::string> class_namestack;
 
+    // element of a getter or setter detected by pattern_check (Dart)
+    int accessor_token_dart = 0;
+
     bool skip_ternary = false;
 
     int current_column = -1;
@@ -2436,9 +2439,9 @@ pattern_statements[] {
         { stmt_type == FUNCTION_DECL }?
         function_declaration[type_count] |
 
-        // function definition
+        // function definition, including a getter or setter (Dart)
         { stmt_type == FUNCTION }?
-        function_definition[type_count] |
+        function_definition[type_count, accessor_token_dart ? accessor_token_dart : SFUNCTION_DEFINITION] |
 
         { stmt_type == OPERATOR_FUNCTION_DECL }?
         function_declaration[type_count, SOPERATOR_FUNCTION_DECL] |
@@ -2869,6 +2872,16 @@ decl_pre_type_annotation[int& type_count] { ENTRY_DEBUG } :
   The header of a function.
 */
 function_header[int type_count] { ENTRY_DEBUG } :
+        // getter or setter (Dart), where the keyword is between the type and the name
+        { accessor_token_dart != 0 }?
+        set_int[accessor_token_dart, 0]
+        function_type[type_count - 1]
+        NAME
+        function_identifier
+        {
+            replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL);
+        } |
+
         // no return value functions: casting operator method and main
         { type_count == 0 }?
         function_identifier
@@ -2959,6 +2972,9 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_JAVA) }?
             annotation_default |
 
+            { inLanguage(LANGUAGE_DART) && is_function_body_specifier_dart() }?
+            function_body_specifier_dart |
+
             // K&R
             { inLanguage(LANGUAGE_C) }?
             // macros
@@ -2973,6 +2989,63 @@ function_tail[] { ENTRY_DEBUG } :
                 TERMINATE
             )
         )*
+;
+
+/*
+  is_function_body_specifier_dart
+
+  Checks for the asynchronous or generator specifier of a function body (Dart), e.g., async, async*, and sync*.
+*/
+is_function_body_specifier_dart[] returns [bool is_specifier] {
+        is_specifier = LA(1) == ASYNC || (LA(1) == NAME && LT(1)->getText() == "sync"sv && next_token() == MULTOPS);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  eat_function_body_specifier_dart
+
+  Eats an optional asynchronous or generator specifier of a function body (Dart).  Used when guessing.
+*/
+eat_function_body_specifier_dart[] {
+        if (is_function_body_specifier_dart()) {
+            consume();
+
+            if (LA(1) == MULTOPS)
+                consume();
+        }
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  function_body_specifier_dart
+
+  Handles the asynchronous or generator specifier of a function body (Dart), e.g., async, async*, and sync*.
+*/
+function_body_specifier_dart[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (ASYNC | NAME)
+        (options { greedy = true; } : MULTOPS)*
+;
+
+/*
+  function_arrow_body_dart
+
+  Handles a function body that is a single expression (Dart), e.g., "=> a;".  The body ends at the terminate.
+*/
+function_arrow_body_dart[] { ENTRY_DEBUG } :
+        TRETURN
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            startNoSkipElement(SPSEUDO_BLOCK);
+            startNoSkipElement(SCONTENT);
+        }
 ;
 
 /*
@@ -5521,7 +5594,10 @@ friend_statement[] { ENTRY_DEBUG } :
   Used to check the ending token.
 */
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
-        LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL
+        LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL |
+
+        { inLanguage(LANGUAGE_DART) }?
+        TRETURN
 ;
 
 /*
@@ -6806,6 +6882,12 @@ statement_part[] {
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_FUNCTION_TAIL) }?
         annotation_default |
 
+        { inLanguage(LANGUAGE_DART) && inMode(MODE_FUNCTION_TAIL) && is_function_body_specifier_dart() }?
+        function_body_specifier_dart |
+
+        { inLanguage(LANGUAGE_DART) && inMode(MODE_FUNCTION_TAIL) }?
+        function_arrow_body_dart |
+
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
         (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
 
@@ -7615,6 +7697,9 @@ pattern_check_core[
         bool lcurly = false;
         bool is_event = false;
 
+        accessor_token_dart = 0;
+        int accessor_token = 0;
+
         ENTRY_DEBUG
 } :
         // main pattern for variable declarations, and most function declaration/definitions
@@ -7999,6 +8084,12 @@ pattern_check_core[
                     annotation
                     set_int[attribute_count, attribute_count + 1] |
 
+                    // getter or setter (Dart)
+                    { inLanguage(LANGUAGE_DART) && is_accessor_dart() }?
+                    set_int[accessor_token, LT(1)->getText() == "get"sv ? SFUNCTION_GET_STATEMENT : SFUNCTION_SET_STATEMENT]
+                    NAME
+                    set_int[specifier_count, specifier_count + 1] |
+
                     // macros in types
                     (macro_type_detector)=> macro_call_inner |
 
@@ -8289,8 +8380,25 @@ pattern_check_core[
                         || ismain
                         || saveisdestructor
                         || isconstructor
+                        || (inLanguage(LANGUAGE_DART) && !inparam)
                     }?
                     function_rest[fla, inparam]
+
+                    // function with no return type (Dart), which outside of a class must have a body
+                    throw_exception[
+                        inLanguage(LANGUAGE_DART)
+                        && (type_count - specifier_count - attribute_count - template_count == 0)
+                        && !isconstructor
+                        && !inPrevMode(MODE_CLASS)
+                        && fla != LCURLY
+                        && fla != TRETURN
+                    ] |
+
+                    // getter (Dart), which has no parameter list
+                    { accessor_token == SFUNCTION_GET_STATEMENT }?
+                    eat_function_body_specifier_dart
+                    set_int[fla, LA(1)]
+                    (TRETURN | LCURLY | TERMINATE)
                 ) |
 
                 {
@@ -8339,8 +8447,24 @@ pattern_check_core[
                 && !isoperator
                 && !ismain
             ]
+
+            // record a getter or setter (Dart) after any nested pattern checks of the parameters
+            set_int[accessor_token_dart, accessor_token]
         )
 ;
+
+/*
+  is_accessor_dart
+
+  Checks for the keyword of a getter or setter (Dart), e.g., "get" in "int get a => 1;"
+*/
+is_accessor_dart[] returns [bool is_accessor] {
+        is_accessor = LA(1) == NAME
+            && (LT(1)->getText() == "get"sv || LT(1)->getText() == "set"sv)
+            && next_token() == NAME;
+
+        ENTRY_DEBUG
+} :;
 
 /*
   check_global_attribute
@@ -10392,7 +10516,13 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
   Handles a compound name (Java).
 */
 compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
-        generic_argument_list | simple_name_optional_template
+        generic_argument_list |
+
+        // operator method name (Dart), e.g., operator ==
+        { inLanguage(LANGUAGE_DART) }?
+        overloaded_operator |
+
+        simple_name_optional_template
 
         (options { greedy = true; } :
             (

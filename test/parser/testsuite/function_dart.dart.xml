@@ -6,13 +6,52 @@
 </unit>
 
 <unit revision="1.0.0" language="Dart">
+<function><name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>String</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>a</name></expr>;</return>
 </block_content>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Dart">
+<function><type><name>T</name></type> <name><name>f</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><type><name>T</name></type> <name>a</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name>a</name></expr></block_content></block>;</function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
 <function_decl><type><specifier>external</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <function><name>g</name><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
+  <function><type><name>int</name></type> <name>h</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>a</name></expr>;</return> </block_content>}</block></function>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><name>main</name><parameter_list>()</parameter_list> <specifier>async</specifier> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name><name>Future</name><argument_list type="generic">&lt;<argument><name>void</name></argument>&gt;</argument_list></name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>async</specifier> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name><name>Stream</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>async*</specifier> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name><name>Iterable</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>sync*</specifier> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name><name>Future</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>async</specifier> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
 </unit>
 
 </unit>

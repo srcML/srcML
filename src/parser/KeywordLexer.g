@@ -1183,15 +1183,18 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "volatile"     , NAME              , LANGUAGE_DART },
 
         // Dart
+        { "=>"           , TRETURN           , LANGUAGE_DART },
         { "?."           , QMARK_PERIOD      , LANGUAGE_DART },
         { "?["           , LBRACKET          , LANGUAGE_DART },
         { "as"           , AS                , LANGUAGE_DART },
+        { "async"        , ASYNC             , LANGUAGE_DART },
         { "await"        , AWAIT             , LANGUAGE_DART },
         { "covariant"    , DART_COVARIANT    , LANGUAGE_DART },
         { "external"     , EXTERN            , LANGUAGE_DART },
         { "factory"      , DART_FACTORY      , LANGUAGE_DART },
         { "is"           , IS                , LANGUAGE_DART },
         { "late"         , DART_LATE         , LANGUAGE_DART },
+        { "operator"     , OPERATOR          , LANGUAGE_DART },
         { "required"     , DART_REQUIRED     , LANGUAGE_DART },
    };
 
