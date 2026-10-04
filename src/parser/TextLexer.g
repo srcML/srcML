@@ -312,6 +312,10 @@ NAME options { testLiterals = true; } :
             { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
             { $setType(STRING_START); } STRING_START |
 
+            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+                && (text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv) }?
+            { $setType(CHAR_START); } CHAR_START |
+
             { inLanguage(LANGUAGE_CXX) && (text == "R"sv || text == "u8R"sv || text == "LR"sv || text == "UR"sv || text == "uR"sv) }?
             { $setType(STRING_START); } RAW_STRING_START |
 

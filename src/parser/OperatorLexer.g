@@ -213,8 +213,8 @@ OPERATORS options { testLiterals = true; } {
     // !, !=, !== (JavaScript)
     '!' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')?)? |
 
-    // :, := (Python), ::
-    ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=')? (':')? |
+    // :, := (Python), :: (not Python)
+    ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=' | { !inLanguage(LANGUAGE_PYTHON) }? ':')? |
 
     // =, ==, => (C#/JavaScript), === (JavaScript)
     '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT) }? '>')? |

@@ -25,4 +25,20 @@
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><call><name>b</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">L'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">u'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">U'x'</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="char">u8'x'</literal></expr>;</expr_stmt>
+</unit>
+
 </unit>
