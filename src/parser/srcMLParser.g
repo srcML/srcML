@@ -7881,8 +7881,8 @@ complete_attribute_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
-            // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            // expression with right parentheses if a previous match is in one inside the attribute
+            { LA(1) != RPAREN || (getFirstMode(MODE_INTERNAL_END_PAREN | MODE_TOP) & MODE_INTERNAL_END_PAREN) != 0 }?
             expression |
 
             colon_marked
