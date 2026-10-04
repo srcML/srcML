@@ -95,4 +95,16 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit revision="1.0.0" language="C++">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument> <attribute>__attribute__((<expr><name>unused</name></expr>))</attribute>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="C++">
+<expr_stmt><expr><name>x</name> <operator>=</operator> <operator>(</operator><name>a</name> <attribute>__attribute__((<expr><name>unused</name></expr>))</attribute><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="C++">
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument> <attribute>__attribute__((<expr><call><name>aligned</name><argument_list>(<argument><expr><literal type="number">8</literal></expr></argument>)</argument_list></call></expr>))</attribute>, <argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
