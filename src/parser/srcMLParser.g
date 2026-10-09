@@ -854,13 +854,12 @@ tokens {
     SSCOPE;
 
     // Dart
-    SEXTENSION_DART;
-    SEXTENSION_TYPE_DART;
-    SLIBRARY_DART;
-    SMIXIN_DART;
-    SON_DART;
-    SPART_DART;
-    SWITH_DART;
+    SEXTENSION;
+    SEXTENSION_TYPE;
+    SLIBRARY;
+    SMIXIN;
+    SPART;
+    SWITH;
 }
 
 /*
@@ -7297,7 +7296,7 @@ with_list_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
             // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
-            startElement(SWITH_DART);
+            startElement(SWITH);
         }
 
         DART_WITH
@@ -7314,7 +7313,7 @@ on_list_dart[] { CompleteElement element(this); ENTRY_DEBUG } :
             // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
-            startElement(SON_DART);
+            startElement(SON);
         }
 
         DART_ON
@@ -9104,16 +9103,16 @@ pattern_check_core[
                         { next_token() != CLASS }?
                         DART_MIXIN
                         set_type[type, CLASS_DECL]
-                        set_int[class_token_dart, SMIXIN_DART] |
+                        set_int[class_token_dart, SMIXIN] |
 
                         // extension or extension type declaration (Dart)
                         DART_EXTENSION
                         set_type[type, CLASS_DECL]
-                        set_int[class_token_dart, SEXTENSION_DART]
+                        set_int[class_token_dart, SEXTENSION]
                         (options { greedy = true; } :
                             { LT(1)->getText() == "type"sv && next_token() != DART_ON }?
                             NAME
-                            set_int[class_token_dart, SEXTENSION_TYPE_DART]
+                            set_int[class_token_dart, SEXTENSION_TYPE]
                         )* |
 
                         CXX_CLASS
@@ -14145,9 +14144,9 @@ directive_dart[] { ENTRY_DEBUG } :
             else if (LA(1) == DART_EXPORT)
                 startElement(SEXPORT_STATEMENT);
             else if (LA(1) == DART_LIBRARY)
-                startElement(SLIBRARY_DART);
+                startElement(SLIBRARY);
             else
-                startElement(SPART_DART);
+                startElement(SPART);
         }
 
         (IMPORT | DART_EXPORT | DART_LIBRARY | DART_PART)
