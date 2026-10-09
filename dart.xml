@@ -1,0 +1,645 @@
+<?xml version="1.0"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:m="http://www.srcML.org/srcML/m" xmlns:c="http://www.srcML.org/srcML/c" xmlns:bnf="http://www.srcML.org/srcML/bnf" type="grammar" language="dart">
+<!--
+dart.xml
+
+Dart grammar in srcML
+
+Laissez-faire, Permissive, Lax Grammar
+
+m: - scrML grammar meta tags are not realized as tags in markup
+c: - denote features at the "core" of srcML grammar parsing
+
+Dart is parsed as a member of the Java family, so markup not shown here is the same as Java
+-->
+
+<!-- File Extensions
+.dart   (Dart source code file)
+-->
+
+<!--
+A list of all of Dart keywords, for reference
+-->
+
+<!-- Reserved Words
+assert     break      case       catch      class
+const      continue   default    do         else
+enum       extends    false      final      finally
+for        if         in         is         new
+null       rethrow    return     super      switch
+this       throw      true       try        var
+void       while      with
+-->
+
+<!-- Built-in Identifiers (names, except in their declarations)
+abstract   as         covariant  deferred   dynamic
+export     extension  external   factory    Function
+get        implements import     interface  late
+library    mixin      operator   part       required
+set        static     typedef
+-->
+
+<!-- Contextual Keywords
+async      await      base       hide       of
+on         sealed     show       sync       type
+when       yield
+-->
+
+<!-- Java keywords that are names in Dart
+goto       instanceof native     package    private
+protected  public     record     strictfp   synchronized
+throws     transient  volatile
+-->
+
+
+<!-- Operators
+Arithmetic
++    Addition
+-    Subtraction
+*    Multiplication
+/    Division
+~/   Integer Division
+%    Modulus
+
+Sign
+-    Negation (UNARY, PREFIX)
+
+Incrementation
+++   Incrementation (UNARY, PREFIX)
+++   Incrementation (UNARY, POSTFIX)
+\-\-   Decrementation (UNARY, PREFIX)
+\-\-   Decrementation (UNARY, POSTFIX)
+
+Bitwise
+~    Bitwise NOT (UNARY, PREFIX)
+&    Bitwise AND
+|    Bitwise OR
+^    Bitwise XOR
+<<   Left Shift
+>>   Right Shift
+>>>  Unsigned Right Shift
+
+Comparison
+==   Equals
+!=   Not Equals
+>    Greater Than
+<    Less Than
+>=   Greater Than or Equals
+<=   Less Than or Equals
+
+Assignment
+=    Assignment
++=   Addition Assignment
+-=   Subtraction Assignment
+*=   Multiplication Assignment
+/=   Division Assignment
+~/=  Integer Division Assignment
+%=   Modulus Assignment
+&=   Bitwise AND Assignment
+|=   Bitwise OR Assignment
+^=   Bitwise XOR Assignment
+<<=  Left Shift Assignment
+>>=  Right Shift Assignment
+>>>= Unsigned Right Shift Assignment
+??=  If-null Assignment
+
+Logical
+!    Logical NOT (UNARY, PREFIX)
+&&   Logical AND
+||   Logical OR
+
+Null
+??   If-null
+!    Null Assertion (UNARY, POSTFIX)
+
+Accessing
+.    Member Access
+?.   Conditional Member Access
+..   Cascade
+?..  Null-shorting Cascade
+
+Spread
+...  Spread (UNARY, PREFIX)
+...? Null-aware Spread (UNARY, PREFIX)
+
+Other
+?:   Conditional (TERNARY)
+=>   Arrow Function Body (not an operator in srcML)
+
+Word
+as     - Type Cast
+is     - Type Test
+is!    - Negated Type Test (marked as the operators is and !)
+await  - Asynchronous Wait (UNARY, PREFIX)
+-->
+
+<m:operator class="arithmetic"> + </m:operator>
+<m:operator class="arithmetic"> - </m:operator>
+<m:operator class="arithmetic"> * </m:operator>
+<m:operator class="arithmetic"> / </m:operator>
+<m:operator class="arithmetic"> ~/ </m:operator>
+<m:operator class="arithmetic"> % </m:operator>
+<m:operator class="arithmetic modifier"> ++ </m:operator>
+<m:operator class="arithmetic modifier"> -- </m:operator>
+<m:operator class="arithmetic"> ~ </m:operator>
+<m:operator class="arithmetic"> &amp; </m:operator>
+<m:operator class="arithmetic"> | </m:operator>
+<m:operator class="arithmetic"> ^ </m:operator>
+<m:operator class="arithmetic"> &lt;&lt; </m:operator>
+<m:operator class="arithmetic"> &gt;&gt; </m:operator>
+<m:operator class="arithmetic"> &gt;&gt;&gt; </m:operator>
+<m:operator class="relational"> == </m:operator>
+<m:operator class="relational"> != </m:operator>
+<m:operator class="relational"> &gt; </m:operator>
+<m:operator class="relational"> &lt; </m:operator>
+<m:operator class="relational"> &gt;= </m:operator>
+<m:operator class="relational"> &lt;= </m:operator>
+<m:operator class="modifier"> = </m:operator>
+<m:operator class="modifier"> += </m:operator>
+<m:operator class="modifier"> -= </m:operator>
+<m:operator class="modifier"> *= </m:operator>
+<m:operator class="modifier"> /= </m:operator>
+<m:operator class="modifier"> ~/= </m:operator>
+<m:operator class="modifier"> %= </m:operator>
+<m:operator class="modifier"> &amp;= </m:operator>
+<m:operator class="modifier"> |= </m:operator>
+<m:operator class="modifier"> ^= </m:operator>
+<m:operator class="modifier"> &lt;&lt;= </m:operator>
+<m:operator class="modifier"> &gt;&gt;= </m:operator>
+<m:operator class="modifier"> &gt;&gt;&gt;= </m:operator>
+<m:operator class="modifier"> ??= </m:operator>
+<m:operator class="relational"> ! </m:operator>
+<m:operator class="relational"> &amp;&amp; </m:operator>
+<m:operator class="relational"> || </m:operator>
+<m:operator class="relational"> ?? </m:operator>
+<m:operator class="access"> . </m:operator>
+<m:operator class="access"> ?. </m:operator>
+<m:operator class="access"> .. </m:operator>
+<m:operator class="access"> ?.. </m:operator>
+<m:operator> ... </m:operator>
+<m:operator> ...? </m:operator>
+<m:operator class="relational"> as </m:operator>
+<m:operator class="relational"> is </m:operator>
+<m:operator> await </m:operator>
+
+
+<!-- CORE TAGS -->
+<!-- Tags the user is not expected to define in the srcML BNF markup: -->
+<!-- <c:block>, <c:expr>, <c:operator>, and <c:name> -->
+
+
+<!-- MISCELLANEOUS -->
+<!-- Comments -->
+<comment type="line">      //    <m:text/>       </comment>
+<comment type="block">     /*    <m:text/> */    </comment>
+<comment type="hashbang">  #!    <m:text/>       </comment>
+
+<!-- Literals
+A short list of mappings from Dart types to srcML Literal types
+int      -> number (0...9, 0x0)
+double   -> number (0.0, 0e0)
+String   -> string ("", '', """""", '''''', r"", r'')
+bool     -> boolean (true, false)
+Null     -> null (null)
+Symbol   -> name (#a, #a.b)
+-->
+
+<!-- Simple Literals -->
+<literal type="boolean">  true                                            </literal>
+<literal type="boolean">  false                                           </literal>
+<literal type="null">     null                                            </literal>
+
+<!-- Complicated Literals -->
+<!-- Note: Interpolation, e.g., "$a and ${a.b}", is part of the string, and is not marked -->
+<!-- Note: Adjacent strings, e.g., 'a' 'b', are separate literals in the same expression -->
+<literal type="string">   &quot;             <m:text/> &quot;             </literal> <!-- e.g., " <m:text/> " -->
+<literal type="string">   &quot;&quot;&quot; <m:text/> &quot;&quot;&quot; </literal> <!-- e.g., """ <m:text/> """ -->
+<literal type="string">   &apos;             <m:text/> &apos;             </literal> <!-- e.g., ' <m:text/> ' -->
+<literal type="string">   &apos;&apos;&apos; <m:text/> &apos;&apos;&apos; </literal> <!-- e.g., ''' <m:text/> ''' -->
+<literal type="string">   r&quot;            <m:text/> &quot;             </literal> <!-- raw, e.g., r" <m:text/> " -->
+<literal type="string">   r&apos;            <m:text/> &apos;             </literal> <!-- raw, e.g., r' <m:text/> ' -->
+
+<!-- Symbol -->
+<name> #<c:name/> </name>
+
+<!-- Annotation -->
+<annotation> @ <c:name/>                   </annotation>
+<annotation> @ <c:name/> <argument_list/>  </annotation>
+
+
+<!-- STATEMENTS -->
+<!-- Meta Statements -->
+<m:statement> <assert/>           </m:statement>
+<m:statement> <break/>            </m:statement>
+<m:statement> <class/>            </m:statement>
+<m:statement> <constructor/>      </m:statement>
+<m:statement> <constructor_decl/> </m:statement>
+<m:statement> <continue/>         </m:statement>
+<m:statement> <decl_stmt/>        </m:statement>
+<m:statement> <do/>               </m:statement>
+<m:statement> <enum/>             </m:statement>
+<m:statement> <export/>           </m:statement>
+<m:statement> <expr_stmt/>        </m:statement>
+<m:statement> <for/>              </m:statement>
+<m:statement> <function/>         </m:statement>
+<m:statement> <function_decl/>    </m:statement>
+<m:statement> <if_stmt/>          </m:statement>
+<m:statement> <import/>           </m:statement>
+<m:statement> <label/>            </m:statement>
+<m:statement> <library/>          </m:statement>
+<m:statement> <part/>             </m:statement>
+<m:statement> <return/>           </m:statement>
+<m:statement> <switch/>           </m:statement>
+<m:statement> <throw/>            </m:statement>
+<m:statement> <try/>              </m:statement>
+<m:statement> <typedef/>          </m:statement>
+<m:statement> <while/>            </m:statement>
+<m:statement> <yield/>            </m:statement>
+
+<!-- Assert -->
+<assert> assert <argument_list> ( <argument/>               ) </argument_list> ; </assert>
+<assert> assert <argument_list> ( <argument/> , <argument/> ) </argument_list> ; </assert>
+<assert> assert <argument_list> ( <argument/>               ) </argument_list>   </assert> <!-- in a constructor initialization list -->
+<assert> assert <argument_list> ( <argument/> , <argument/> ) </argument_list>   </assert>
+
+<!-- Break -->
+<break> break           ; </break>
+<break> break <c:name/> ; </break>
+
+<!-- Continue -->
+<continue> continue           ; </continue>
+<continue> continue <c:name/> ; </continue>
+
+<!-- Label -->
+<label> <c:name/> : </label>
+
+<!-- Classes -->
+<!-- Class modifiers: abstract, base, final, interface, sealed, mixin -->
+<class>                           class <c:name/>                                                 <c:block/> </class>
+<class> <specifier/>              class <c:name/>                                                 <c:block/> </class>
+<class> <specifier/> <specifier/> class <c:name/>                                                 <c:block/> </class>
+<class> <annotation/>             class <c:name/>                                                 <c:block/> </class>
+<class>                           class <name> <c:name/> <parameter_list type="generic"/> </name> <c:block/> </class>
+<class>                           class <c:name/>                                   <super_list/> <c:block/> </class>
+
+<specifier> abstract  </specifier>
+<specifier> base      </specifier>
+<specifier> final     </specifier>
+<specifier> interface </specifier>
+<specifier> sealed    </specifier>
+<specifier> mixin     </specifier>
+
+<!-- Super List -->
+<!-- Note: Any combination, in the order extends, with, implements (classes) or on, implements (mixins) -->
+<super_list> <extends/>                         </super_list>
+<super_list> <extends/> <with/>                 </super_list>
+<super_list> <extends/> <with/> <implements/>   </super_list>
+<super_list>                    <implements/>   </super_list>
+<super_list> <on/>                              </super_list>
+<super_list> <on/>              <implements/>   </super_list>
+
+<extends>    extends    <super/>              </extends>
+<with>       with       <super/>              </with>
+<with>       with       <super/> , <super/>   </with>
+<implements> implements <super/>              </implements>
+<implements> implements <super/> , <super/>   </implements>
+<on>         on         <super/>              </on>
+<on>         on         <super/> , <super/>   </on>
+
+<super> <c:name/>                           </super>
+<super> <c:name/> <modifier> ? </modifier>  </super> <!-- e.g., extension on A? -->
+
+<!-- Mixin -->
+<class type="mixin">              mixin <c:name/>               <c:block/> </class>
+<class type="mixin">              mixin <c:name/> <super_list/> <c:block/> </class>
+<class type="mixin"> <specifier/> mixin <c:name/> <super_list/> <c:block/> </class> <!-- e.g., base mixin -->
+
+<!-- Extension -->
+<class type="extension">               extension <c:name/> <super_list> <on/> </super_list> <c:block/> </class>
+<class type="extension"> <annotation/> extension <c:name/> <super_list> <on/> </super_list> <c:block/> </class>
+<class type="extension"> extension           <super_list> <on/> </super_list> <c:block/> </class> <!-- unnamed -->
+
+<!-- Extension Type -->
+<class type="extension type"> extension type <c:name/> <parameter_list/>               <c:block/> </class>
+<class type="extension type"> extension type <c:name/> <parameter_list/> <super_list/> <c:block/> </class>
+
+<!-- Enum -->
+<enum> enum <c:name/>               <block> { <decl/> , <decl/>                } </block> </enum>
+<enum> enum <c:name/>               <block> { <decl/> , <decl/> ,              } </block> </enum>
+<enum> enum <c:name/> <super_list/> <block> { <decl/> , <decl/> ; <m:members/> } </block> </enum> <!-- enhanced enum -->
+
+<decl> <c:name/>                  </decl>
+<decl> <c:name/> <argument_list/> </decl>
+
+<!-- Constructors -->
+<!-- Note: A constructor has the name of the class, optionally with a constructor name, e.g., A.named -->
+<constructor_decl>              <c:name/> <parameter_list/>                                                            ; </constructor_decl>
+<constructor_decl> <specifier/> <c:name/> <parameter_list/>                                                            ; </constructor_decl> <!-- e.g., const -->
+<constructor>                   <c:name/> <parameter_list/> <member_init_list/>                                        ; </constructor>
+<constructor>                   <c:name/> <parameter_list/> <member_init_list/> <c:block/>                               </constructor>
+<constructor>                   <c:name/> <parameter_list/>                     <c:block/>                               </constructor>
+<constructor> <specifier/>      <c:name/> <parameter_list/>                     <c:block/>                               </constructor> <!-- e.g., factory -->
+<constructor> <specifier/>      <c:name/> <parameter_list/> =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </constructor>
+
+<specifier> const   </specifier>
+<specifier> factory </specifier>
+
+<member_init_list> : <c:expr/>             </member_init_list> <!-- e.g., : x = 0 -->
+<member_init_list> : <c:expr/> , <c:expr/> </member_init_list> <!-- e.g., : x = a, super.other(a) -->
+<member_init_list> : <assert/> , <c:expr/> </member_init_list>
+
+<!-- Declaration -->
+<!-- Note: var, final, and const are part of the type -->
+<decl_stmt> <decl/>          ; </decl_stmt>
+<decl_stmt> <decl/> , <decl/> ; </decl_stmt>
+
+<decl> <type/> <c:name/>                         </decl>
+<decl> <type/> <c:name/> <init> = <c:expr/> </init> </decl>
+
+<type>                           <name> var </name>                    </type>
+<type> <specifier/>                                                    </type> <!-- e.g., final a = 1; -->
+<type>                           <c:name/>                             </type>
+<type> <specifier/>              <c:name/>                             </type>
+<type> <specifier/> <specifier/> <c:name/>                             </type> <!-- e.g., late final String -->
+<type>                           <c:name/> <modifier> ? </modifier>    </type> <!-- nullable -->
+<type> <name> <c:name/> <argument_list type="generic"/> </name>        </type> <!-- e.g., List<int> -->
+<type> <c:name/> <name> Function </name> <parameter_list/>                          </type> <!-- function type, e.g., void Function(int) -->
+<type> <c:name/> <name> Function </name> <parameter_list/> <modifier> ? </modifier> </type>
+<type> <parameter_list/>                                               </type> <!-- record type, e.g., (int, String) -->
+<type> <parameter_list/> <modifier> ? </modifier>                      </type>
+
+<specifier> const     </specifier>
+<specifier> covariant </specifier>
+<specifier> external  </specifier>
+<specifier> final     </specifier>
+<specifier> late      </specifier>
+<specifier> required  </specifier>
+<specifier> static    </specifier>
+
+<!-- Destructuring Declaration -->
+<!-- Note: The pattern is in an expression -->
+<decl> <type/> <expr> <tuple/>      </expr> <init> = <c:expr/> </init> </decl> <!-- e.g., var (a, b) = c; -->
+<decl> <type/> <expr> <array/>      </expr> <init> = <c:expr/> </init> </decl> <!-- e.g., final [a, b] = c; -->
+<decl> <type/> <expr> <dictionary/> </expr> <init> = <c:expr/> </init> </decl> <!-- e.g., var {'k': a} = c; -->
+<decl> <type/> <expr> <call/>       </expr> <init> = <c:expr/> </init> </decl> <!-- e.g., var Point(:x, :y) = p; -->
+
+<!-- Expression Statement -->
+<expr_stmt> <c:expr/> ; </expr_stmt>
+
+<!-- For -->
+<for>       for <control> ( <init> <decl/> ; </init> <condition> <c:expr/> ; </condition> <incr> <c:expr/> </incr> ) </control> <c:block/> </for>
+<for>       for <control> ( <init> <decl> <type/> <c:name/> <range> in <c:expr/> </range> </decl> </init>             ) </control> <c:block/> </for>
+<for> await for <control> ( <init> <decl> <type/> <c:name/> <range> in <c:expr/> </range> </decl> </init>             ) </control> <c:block/> </for>
+
+<!-- Do -->
+<do> do <c:block/> while <condition> ( <c:expr/> ) </condition> ; </do>
+
+<!-- While -->
+<while> while <condition> ( <c:expr/> ) </condition> <c:block/> </while>
+
+<!-- Function -->
+<!-- Note: The return type is optional -->
+<function>                        <c:name/> <parameter_list/>              <c:block/> </function>
+<function>                        <c:name/> <parameter_list/> <specifier/> <c:block/> </function> <!-- e.g., main() async {} -->
+<function>               <type/>  <c:name/> <parameter_list/>              <c:block/> </function>
+<function> <annotation/> <type/>  <c:name/> <parameter_list/>              <c:block/> </function>
+<function>               <type/>  <c:name/> <parameter_list/> <specifier/> <c:block/> </function> <!-- e.g., async, async*, sync* -->
+<function>               <type/>  <name> <c:name/> <argument_list type="generic"/> </name> <parameter_list/> <c:block/> </function> <!-- e.g., T f<T>(T a) -->
+
+<!-- Arrow body -->
+<function>                        <c:name/> <parameter_list/>              =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </function>
+<function>               <type/>  <c:name/> <parameter_list/>              =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </function>
+<function> <annotation/> <type/>  <c:name/> <parameter_list/>              =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </function>
+<function>               <type/>  <c:name/> <parameter_list/> <specifier/> =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </function>
+
+<specifier> async  </specifier>
+<specifier> async* </specifier>
+<specifier> sync*  </specifier>
+
+<!-- Function Declaration -->
+<function_decl> <type/> <c:name/> <parameter_list/> ; </function_decl> <!-- e.g., abstract or external -->
+
+<!-- Getter and Setter -->
+<function type="get"> <type/> get <c:name/>                   <c:block/> </function>
+<function type="get"> <type/> get <c:name/>                   =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </function>
+<function type="set">         set <c:name/> <parameter_list/> <c:block/> </function>
+<function type="set"> <type/> set <c:name/> <parameter_list/> <c:block/> </function>
+<function_decl>       <type/> get <c:name/>                   ;          </function_decl> <!-- abstract getter -->
+
+<!-- Operator -->
+<function type="operator"> <type/> <name> operator <name> <c:operator/> </name> </name> <parameter_list/> <c:block/> </function> <!-- e.g., operator ==, operator [], operator []= -->
+<function type="operator"> <type/> <name> operator <name> <c:operator/> </name> </name> <parameter_list/> =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> ; </function>
+
+<!-- Parameters -->
+<!-- Note: The braces of named parameters and the brackets of optional positional parameters are not marked -->
+<parameter_list> (                                                  ) </parameter_list>
+<parameter_list> ( <parameter/>                                     ) </parameter_list>
+<parameter_list> ( <parameter/> , <parameter/>                      ) </parameter_list>
+<parameter_list> ( <parameter/> , <parameter/> ,                    ) </parameter_list>
+<parameter_list> (                { <parameter/> , <parameter/> }   ) </parameter_list> <!-- named -->
+<parameter_list> ( <parameter/> , { <parameter/>                }   ) </parameter_list>
+<parameter_list> ( <parameter/> , { <parameter/>              , }   ) </parameter_list> <!-- trailing comma -->
+<parameter_list> ( <parameter/> , [ <parameter/> , <parameter/> ]   ) </parameter_list> <!-- optional positional -->
+
+<parameter_list type="generic"> &lt; <parameter/>                &gt; </parameter_list>
+<parameter_list type="generic"> &lt; <parameter/> , <parameter/> &gt; </parameter_list>
+
+<parameter> <c:name/> </parameter> <!-- type parameter, e.g., T in class A<T> -->
+
+<parameter> <decl>         <c:name/>                              </decl> </parameter> <!-- e.g., lambda or catch parameter -->
+<parameter> <decl> <type/> <c:name/>                              </decl> </parameter>
+<parameter> <decl> <type/> <c:name/> <init> = <c:expr/> </init>   </decl> </parameter> <!-- default value -->
+<parameter> <decl> <type/>                                        </decl> </parameter> <!-- record or function type, e.g., (int, String) -->
+<parameter> <decl>         <name> <name> this  </name> <operator> . </operator> <c:name/> </name> </decl> </parameter> <!-- initializing formal -->
+<parameter> <decl>         <name> <name> this  </name> <operator> . </operator> <c:name/> </name> <init> = <c:expr/> </init> </decl> </parameter>
+<parameter> <decl>         <name> <name> super </name> <operator> . </operator> <c:name/> </name> </decl> </parameter> <!-- super parameter -->
+<parameter> <decl> <type> <specifier> required </specifier> </type> <name> <name> this </name> <operator> . </operator> <c:name/> </name> </decl> </parameter>
+
+<!-- If Statement -->
+<if_stmt> <if/>                                                 </if_stmt>
+<if_stmt> <if/> <if type="elseif"/>                             </if_stmt>
+<if_stmt> <if/> <if type="elseif"/> <if type="elseif"/>         </if_stmt>
+<if_stmt> <if/>                                         <else/> </if_stmt>
+<if_stmt> <if/> <if type="elseif"/>                     <else/> </if_stmt>
+
+<if>                 if <condition> ( <c:expr/>        ) </condition> <c:block/> </if>
+<if>                 if <condition> ( <c:expr/> <case/> ) </condition> <c:block/> </if> <!-- if-case -->
+<if type="elseif"> else if <condition> ( <c:expr/>        ) </condition> <c:block/> </if>
+
+<else> else <c:block/> </else>
+
+<!-- Directives -->
+<library> library           ; </library>
+<library> library <c:name/> ; </library>
+
+<!-- Note: The keywords show, hide, and of, and the condition of a conditional import, are not marked -->
+<import> import <literal type="string"/>                                                 ; </import>
+<import> import <literal type="string"/>                         <alias> as <c:name/> </alias> ; </import>
+<import> import <literal type="string"/> <specifier> deferred </specifier> <alias> as <c:name/> </alias> ; </import>
+<import> import <literal type="string"/>                         <alias> as <c:name/> </alias> show <c:name/> , <c:name/> hide <c:name/> ; </import>
+<import> import <literal type="string"/> if ( <m:text/> ) <literal type="string"/>       ; </import> <!-- conditional import -->
+
+<export> export <literal type="string"/>                    ; </export>
+<export> export <literal type="string"/> show <c:name/>     ; </export>
+<export> export <literal type="string"/> hide <c:name/>     ; </export>
+
+<part> part    <literal type="string"/> ; </part>
+<part> part of <literal type="string"/> ; </part>
+<part> part of <c:name/>                ; </part>
+
+<!-- Return -->
+<return> return           ; </return>
+<return> return <c:expr/> ; </return>
+
+<!-- Switch Statement -->
+<switch> switch <condition> ( <c:expr/> ) </condition> <block> { <block_content> <case/> <m:statement/> <default/> <m:statement/> </block_content> } </block> </switch>
+
+<case> case <c:expr/>                                         : </case>
+<case> case <c:expr/> when <condition> <c:expr/> </condition> : </case> <!-- guard -->
+
+<default> default : </default>
+
+<!-- Throw -->
+<throw> throw <c:expr/> ; </throw>
+<throw> rethrow         ; </throw>
+
+<!-- Try -->
+<try> try <c:block/> <catch/>                    </try>
+<try> try <c:block/> <catch/> <catch/>           </try>
+<try> try <c:block/> <catch/>          <finally/> </try>
+<try> try <c:block/> <catch/> <catch/> <finally/> </try>
+<try> try <c:block/>                   <finally/> </try>
+
+<catch>                catch <parameter_list> ( <parameter/>               ) </parameter_list> <c:block/> </catch>
+<catch>                catch <parameter_list> ( <parameter/> , <parameter/> ) </parameter_list> <c:block/> </catch> <!-- exception and stack trace -->
+<catch> on <type/>                                                                            <c:block/> </catch>
+<catch> on <type/>     catch <parameter_list> ( <parameter/>               ) </parameter_list> <c:block/> </catch>
+<catch> on <type/>     catch <parameter_list> ( <parameter/> , <parameter/> ) </parameter_list> <c:block/> </catch>
+
+<finally> finally <c:block/> </finally>
+
+<!-- Typedef -->
+<typedef> typedef <c:name/>                                         <init> = <type/> </init> ; </typedef>
+<typedef> typedef <name> <c:name/> <argument_list type="generic"/> </name> <init> = <type/> </init> ; </typedef>
+<typedef> typedef <function_decl/>                                                           </typedef> <!-- old style, e.g., typedef void A(int a); -->
+
+<!-- Yield -->
+<yield>                  yield  <c:expr/> ; </yield>
+<yield type="generator"> yield* <c:expr/> ; </yield>
+
+
+<!-- EXPRESSIONS -->
+<!-- List -->
+<array>                                [                                         ] </array>
+<array>                                [ <c:expr/>                               ] </array>
+<array>                                [ <c:expr/> , <c:expr/>                   ] </array>
+<array>                                [ <c:expr/> , <c:expr/> ,                 ] </array>
+<array> <argument_list type="generic"/> [ <c:expr/> , <c:expr/>                   ] </array> <!-- e.g., <int>[1, 2] -->
+<array>                                [ <m:element/> , <m:element/>             ] </array>
+<array>                                [ <m:element/> , <m:element/> ,           ] </array>
+
+<!-- Map -->
+<!-- Note: Empty braces are a map -->
+<dictionary>                                {                                               } </dictionary>
+<dictionary>                                { <c:expr/> : <c:expr/>                         } </dictionary>
+<dictionary>                                { <c:expr/> : <c:expr/> , <c:expr/> : <c:expr/> } </dictionary>
+<dictionary>                                { <c:expr/> : <c:expr/> ,                       } </dictionary>
+<dictionary> <argument_list type="generic"/> {                                               } </dictionary>
+<dictionary>                                { <m:element/>                                  } </dictionary>
+
+<!-- Set -->
+<set>                                {  <c:expr/>                } </set>
+<set>                                {  <c:expr/> , <c:expr/>    } </set>
+<set> <argument_list type="generic"/> {                          } </set> <!-- e.g., <int>{} -->
+
+<!-- Constant Collections -->
+<expr> <specifier> const </specifier> <array/>      </expr>
+<expr> <specifier> const </specifier> <dictionary/> </expr>
+<expr> <specifier> const </specifier> <set/>        </expr>
+
+<!-- Collection Elements -->
+<m:element> <c:expr/>                                                                     </m:element>
+<m:element> <expr> <operator> ...  </operator> <c:expr/> </expr>                           </m:element> <!-- spread -->
+<m:element> <expr> <operator> ...? </operator> <c:expr/> </expr>                           </m:element> <!-- null-aware spread -->
+<m:element> <if_stmt> <if> if <condition> ( <c:expr/> ) </condition> <m:element/> </if>                                          </if_stmt> </m:element>
+<m:element> <if_stmt> <if> if <condition> ( <c:expr/> ) </condition> <m:element/> </if> <else> else <m:element/> </else>       </if_stmt> </m:element>
+<m:element> <for> for <control> ( <init> <decl> <type/> <c:name/> <range> in <c:expr/> </range> </decl> </init> ) </control> <m:element/> </for> </m:element>
+<m:element> <c:expr/> : <c:expr/>                                                         </m:element> <!-- map entry -->
+
+<!-- Record -->
+<!-- Note: A record with a single positional field needs a trailing comma -->
+<tuple> ( <c:expr/> ,                               ) </tuple>
+<tuple> ( <c:expr/> , <c:expr/>                     ) </tuple>
+<tuple> ( <c:name/> : <c:expr/> , <c:name/> : <c:expr/> ) </tuple> <!-- named fields -->
+<tuple> ( <c:expr/> , <c:name/> : <c:expr/>         ) </tuple>
+<tuple> ( <c:expr/> ,           : <c:expr/>         ) </tuple> <!-- destructuring, field name from the variable, e.g., var (a, :b) = c; -->
+
+<!-- Record field access, e.g., a.$1 -->
+<name> <c:name/> <operator> . </operator> <name> $1 </name> </name>
+
+<!-- Call -->
+<call> <c:name/> <argument_list/> </call>
+
+<argument_list> (                           ) </argument_list>
+<argument_list> ( <argument/>               ) </argument_list>
+<argument_list> ( <argument/> , <argument/> ) </argument_list>
+<argument_list> ( <argument/> , <argument/> , ) </argument_list>
+
+<argument_list type="generic"> &lt; <argument/>               &gt; </argument_list>
+<argument_list type="generic"> &lt; <argument/> , <argument/> &gt; </argument_list>
+
+<argument>               <c:expr/> </argument> <!-- Normal Argument -->
+<argument> <c:name/> :   <c:expr/> </argument> <!-- Named Argument -->
+<argument> <c:name/>                                    </argument> <!-- Type Argument, e.g., int in List<int> -->
+<argument> <c:name/>         <modifier> ? </modifier> </argument> <!-- e.g., int? in List<int?> -->
+<argument> <parameter_list/>                          </argument> <!-- record type, e.g., (int, int) in List<(int, int)> -->
+<argument> <parameter_list/> <modifier> ? </modifier> </argument>
+
+<!-- Index -->
+<!-- Note: An index is a sub-element of a name -->
+<index>  [ <c:expr/> ] </index>
+<index> ?[ <c:expr/> ] </index>
+
+<!-- Lambda -->
+<lambda> <parameter_list/>              <c:block/> </lambda>
+<lambda> <parameter_list/> <specifier/> <c:block/> </lambda> <!-- e.g., async -->
+<lambda> <parameter_list/>              =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> </lambda>
+<lambda> <parameter_list/> <specifier/> =&gt; <block type="pseudo"> <block_content> <c:expr/> </block_content> </block> </lambda>
+
+<!-- Switch Expression -->
+<switch> switch <condition> ( <c:expr/> ) </condition> <block> { <case/>                        } </block> </switch>
+<switch> switch <condition> ( <c:expr/> ) </condition> <block> { <case/> , <case/>              } </block> </switch>
+<switch> switch <condition> ( <c:expr/> ) </condition> <block> { <case/> , <case/> ,            } </block> </switch>
+
+<case> <c:expr/>                                         =&gt; <c:expr/> </case>
+<case> <c:expr/> when <condition> <c:expr/> </condition> =&gt; <c:expr/> </case> <!-- guard -->
+
+<!-- If-case Condition -->
+<case> case <c:expr/>                                         </case>
+<case> case <c:expr/> when <condition> <c:expr/> </condition> </case>
+
+<!-- Ternary Operator -->
+<ternary> <condition> <c:expr/> ? </condition> <then> <c:expr/> </then> <else> : <c:expr/> </else> </ternary>
+
+
+<!-- PATTERNS -->
+<!--
+  Patterns are in the expression of a case, an if-case, a switch expression case,
+  or a destructuring declaration. A pattern variable is a declaration.
+
+  Brackets, braces, and parentheses of patterns are marked as their collection, e.g., <array>
+-->
+<m:pattern> <literal/>                                                </m:pattern> <!-- constant -->
+<m:pattern> <c:name/>                                                 </m:pattern> <!-- constant or wildcard, e.g., _ -->
+<m:pattern> <decl> <type/> <c:name/> </decl>                          </m:pattern> <!-- variable, e.g., int a, var a, final a -->
+<m:pattern> <operator> &gt; </operator> <c:expr/>                      </m:pattern> <!-- relational, e.g., > 10 -->
+<m:pattern> <m:pattern/> <operator> &amp;&amp; </operator> <m:pattern/> </m:pattern> <!-- logical and -->
+<m:pattern> <m:pattern/> <operator> || </operator> <m:pattern/>         </m:pattern> <!-- logical or -->
+<m:pattern> <array> [ <expr> <m:pattern/> </expr> , <expr> <m:pattern/> </expr> ] </array>               </m:pattern> <!-- list -->
+<m:pattern> <dictionary> { <c:expr/> : <expr> <m:pattern/> </expr> } </dictionary>                       </m:pattern> <!-- map -->
+<m:pattern> <tuple> ( <expr> <m:pattern/> </expr> , <expr> <m:pattern/> </expr> ) </tuple>               </m:pattern> <!-- record -->
+<m:pattern> <call> <c:name/> <argument_list> ( <argument> <c:name/> : <expr> <m:pattern/> </expr> </argument> ) </argument_list> </call> </m:pattern> <!-- object -->
+<m:pattern> <call> <c:name/> <argument_list> ( <argument>           : <expr> <m:pattern/> </expr> </argument> ) </argument_list> </call> </m:pattern> <!-- object, field name from the variable, e.g., Point(:x) -->
+
+
+</unit>
