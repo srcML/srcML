@@ -53,4 +53,16 @@
 <decl_stmt><decl><type><name>var</name></type> <name>export</name> <init>= <expr><name><name>part</name><operator>.</operator><name>of</name></name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<import>import <literal type="string">'a.dart'</literal> <alias>as <name>a</name></alias>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<export>export <literal type="string">'a.dart'</literal>;</export>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<export>export <literal type="string">'a.dart'</literal> hide <name>A</name>;</export>
+</unit>
+
 </unit>

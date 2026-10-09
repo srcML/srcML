@@ -54,4 +54,15 @@
 <function><type><name><name>Future</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>async</specifier> =&gt;<block type="pseudo"><block_content> <expr><literal type="number">1</literal></expr></block_content></block>;</function>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<function><annotation>@<name>Deprecated</name><argument_list>(<argument><expr><literal type="string">'Use g'</literal></expr></argument>)</argument_list></annotation>
+<type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <return>return;</return>
+</block_content>}</block></function>
+</unit>
+
 </unit>

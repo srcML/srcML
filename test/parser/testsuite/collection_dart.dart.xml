@@ -95,4 +95,8 @@
 )</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><set>{<expr><literal type="number">1</literal></expr>}</set></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>

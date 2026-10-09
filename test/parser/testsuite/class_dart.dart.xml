@@ -81,4 +81,28 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<class><annotation>@<name>immutable</name></annotation>
+class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <super_list><extends>extends <super><name>B</name></super></extends> <with>with <super><name>C</name></super></with></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <super_list><implements>implements <super><name>B</name></super>, <super><name>C</name></super></implements></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name><name>A</name><parameter_list type="generic">&lt;<parameter><name>K</name></parameter>, <parameter><name>V</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<class>class <name>A</name> <block>{
+  <function><annotation>@<name>override</name></annotation>
+  <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
 </unit>

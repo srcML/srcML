@@ -55,4 +55,34 @@
 <yield type="generator">yield* <expr><call><name>other</name><argument_list>()</argument_list></call></expr>;</yield>
 </unit>
 
+<unit revision="1.0.0" language="Dart">
+<while>while <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content>
+  <continue>continue;</continue>
+</block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<label><name>outer</name>:</label> <for>for <control>(<init><decl><type><name>var</name></type> <name>x</name> <range>in <expr><name>xs</name></expr></range></decl></init>)</control> <block>{<block_content>
+  <continue>continue <name>outer</name>;</continue>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<if_stmt><if>if <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>c</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>d</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Dart">
+<if_stmt><if>if <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>c</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>d</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>e</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 </unit>
