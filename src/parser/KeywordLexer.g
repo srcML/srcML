@@ -453,6 +453,10 @@ public:
     int prev;
     int currentmode;
     int lastnonspacetoken;
+
+    // for JavaScript, the token stream that records the last tokens of this parse
+    const TokenLookbackJavaScript* lookback = nullptr;
+
     bool in_cmake_string = false;
     bool in_cmake_bracket = false;
 

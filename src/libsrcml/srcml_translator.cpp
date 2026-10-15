@@ -151,6 +151,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         if (getLanguage() == LANGUAGE_JAVASCRIPT) {
             // records last non-skip token
             TokenLookbackJavaScript monitor(selector);
+            lexer.lookback = &monitor;
 
             // intermediate token stage
             NameDifferentiatorJavaScript differentiator(monitor);
