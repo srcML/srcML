@@ -358,10 +358,10 @@ LINE_COMMENT_START options { testLiterals = true; } {
                 || lastnonspacetoken == '('
                 || lastnonspacetoken == '['
                 || lastnonspacetoken == ':'
-                || srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
+                || srcMLParser::keyword_expression_pair_js_token_set.member(lookback->lastTokenType())
                 || (
-                    TokenLookbackJavaScript::lastTokenType() == srcMLParser::MULTOPS
-                    && TokenLookbackJavaScript::lastTokenTypeTwo() == srcMLParser::JS_YIELD
+                    lookback->lastTokenType() == srcMLParser::MULTOPS
+                    && lookback->lastTokenTypeTwo() == srcMLParser::JS_YIELD
                 )
                 || operatorends.find_first_of(lastnonspacetoken) != std::string::npos
             )

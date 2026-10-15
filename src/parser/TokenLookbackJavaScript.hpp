@@ -24,14 +24,16 @@ public:
 
     virtual antlr::RefToken nextToken();
 
-    static int lastTokenType();
+    int lastTokenType() const;
 
-    static int lastTokenTypeTwo();
+    int lastTokenTypeTwo() const;
 
 private:
     antlr::TokenStream& input;
-    static int lookaheadMinusOne;
-    static int lookaheadMinusTwo;
+
+    // types of the last two non-skip tokens of this parse
+    int lookaheadMinusOne = 0;
+    int lookaheadMinusTwo = 0;
 };
 
 #endif

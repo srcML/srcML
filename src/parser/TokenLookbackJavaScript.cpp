@@ -11,9 +11,6 @@
 
 #include <TokenLookbackJavaScript.hpp>
 
-int TokenLookbackJavaScript::lookaheadMinusOne = 0;
-int TokenLookbackJavaScript::lookaheadMinusTwo = 0;
-
 /**
  * Save the current token if it is not a skip token
  */
@@ -31,13 +28,13 @@ antlr::RefToken TokenLookbackJavaScript::nextToken() {
 /**
  * Returns the type of the last non-skip token.
  */
-int TokenLookbackJavaScript::lastTokenType() {
+int TokenLookbackJavaScript::lastTokenType() const {
     return lookaheadMinusOne;
 }
 
 /**
  * Returns the type of the second-to-last non-skip token.
  */
-int TokenLookbackJavaScript::lastTokenTypeTwo() {
+int TokenLookbackJavaScript::lastTokenTypeTwo() const {
     return lookaheadMinusTwo;
 }
