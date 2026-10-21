@@ -68,4 +68,32 @@
 <expr_stmt><expr><call><name><name>A</name><operator>::</operator><name>B</name><operator>.</operator><name>B</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <noexcept>noexcept</noexcept> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <noexcept>noexcept<argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></noexcept> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <throw>throw<argument_list>()</argument_list></throw> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <throw>throw<argument_list>(<argument><expr><name>int</name></expr></argument>)</argument_list></throw> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <attribute>[[<expr><name>deprecated</name></expr>]]</attribute> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <name>N</name> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<class>class <name>A</name> <block>{<private type="default"> <constructor><name>A</name><parameter_list>()</parameter_list> <noexcept>noexcept</noexcept> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call>, <call><name>b</name><argument_list>{<argument><expr><literal type="number">2</literal></expr></argument>}</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor> </private>}</block>;</class>
+</unit>
+
 </unit>

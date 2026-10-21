@@ -606,6 +606,11 @@ struct keyword { std::string_view text; int token; int language; };
 
 void changetotextlexer(int typeend, std::string delimiter = "");
 
+// digit separator in C and C++, e.g., 1'000
+bool isDigitSeparator() {
+    return (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == '\'' && isxdigit(LA(2));
+}
+
 virtual int testLiteralsTable(int ttype) const;
 virtual int testLiteralsTable(const std::string& txt, int ttype) const;
 

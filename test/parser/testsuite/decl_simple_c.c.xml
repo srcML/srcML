@@ -42,6 +42,14 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><name>double</name></type> <name>d</name> <init>= <expr><literal type="number">0x1.8p3</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><name>double</name></type> <name>e</name> <init>= <expr><literal type="number">0x1p-3</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
 <decl_stmt><decl><type><specifier>__weak</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
@@ -75,6 +83,18 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
 <decl_stmt><decl><type><specifier>register</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1'000</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><name>long</name></type> <name>b</name> <init>= <expr><literal type="number">0xFF'FF</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><name>double</name></type> <name>d</name> <init>= <expr><literal type="number">1'000.5'5</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>

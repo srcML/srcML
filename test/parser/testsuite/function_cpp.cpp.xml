@@ -213,4 +213,32 @@
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>override</specifier> <specifier>final</specifier> <block>{<block_content/>}</block></function>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>const</specifier> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <specifier>const</specifier> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <macro><name>R2</name><argument_list>(<argument>y</argument>)</argument_list></macro> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><type><name>void</name></type> <name><name>S</name><operator>::</operator><name>f</name></name><parameter_list>()</parameter_list> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<function><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template> <type><name>auto</name></type> <name>f</name><parameter_list>()</parameter_list> <macro><name>R</name><argument_list>(<argument>x</argument>)</argument_list></macro> <block>{<block_content/>}</block></function>
+</unit>
+
 </unit>

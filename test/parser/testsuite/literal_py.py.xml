@@ -188,6 +188,10 @@ newlines'</literal></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">0xff</literal><operator>.</operator><call><name>bit_length</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
 <expr_stmt><expr><literal type="number">2.556e4</literal></expr></expr_stmt>
 </unit>
 

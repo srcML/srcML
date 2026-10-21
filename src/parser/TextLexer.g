@@ -224,8 +224,17 @@ BRACKET_ARGUMENT_END :
 
 CONSTANTS :
     { startline = false; }
-    ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
-    (options { greedy = true; } : '.' | '0'..'9')*
+    (
+        // hexadecimal, including hexadecimal floating constants in C, C++, and Java, e.g., 0x1.8p3
+        { LA(1) == '0' && (LA(2) == 'x' || LA(2) == 'X') && !inLanguage(LANGUAGE_CMAKE) }?
+        '0' ('x' | 'X')
+        (options { greedy = true; } : '0'..'9' | 'a'..'f' | 'A'..'F' | '_' | { isDigitSeparator() }? '\'' |
+            { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_PYTHON) && !inLanguage(LANGUAGE_JAVASCRIPT) }? '.')*
+        (options { greedy = true; } :
+            { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_PYTHON) && !inLanguage(LANGUAGE_JAVASCRIPT) }? ('p' | 'P') ('+' | '-')? ('0'..'9')*)?
+    |
+    ('0'..'9') (options { greedy = true; } : '0'..'9' | '_' | { isDigitSeparator() }? '\'')*
+    (options { greedy = true; } : '.' | '0'..'9' | { isDigitSeparator() }? '\'')*
     (options { greedy = true; } : ('e' | 'E') ('+' | '-')* ('0'..'9')*)?
     (options { greedy = true; } :
         'i' { $setType(COMPLEX_NUMBER); } |
@@ -233,10 +242,11 @@ CONSTANTS :
         { inLanguage(LANGUAGE_PYTHON) }?
         ('j' | 'J') { $setType(COMPLEX_NUMBER); }
     )*
+    )
     (
         { !inLanguage(LANGUAGE_CMAKE) }?
         (
-            (options { greedy = true; } : NAME)*
+            (options { greedy = true; } : NAME | { isDigitSeparator() }? '\'' ('0'..'9')*)*
             {
                 //firstpreprocline = false;
                 if (onpreprocline && isline) {
@@ -325,6 +335,7 @@ NAME options { testLiterals = true; } :
                 || text == "B"sv || text == "F"sv || text == "R"sv || text == "U"sv
                 || text == "rf"sv || text == "rb"sv || text == "Rf"sv || text == "Rb"sv
                 || text == "rF"sv || text == "rB"sv || text == "RF"sv || text == "RB"sv
+                || text == "br"sv || text == "bR"sv || text == "Br"sv || text == "BR"sv
                 || text == "fr"sv || text == "fR"sv || text == "Fr"sv || text == "FR"sv
                 || text == "ur"sv || text == "Ur"sv || text == "uR"sv || text == "UR"sv)
             }?

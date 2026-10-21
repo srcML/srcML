@@ -1388,6 +1388,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_ARGUMENT_LIST) }?
         call_argument_list |
 
+        // member initialization list after a constructor function tail, e.g., noexcept
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
+        member_initialization_list |
+
         // switch cases @test switch
         {
             !inMode(MODE_INIT)
@@ -2922,6 +2926,10 @@ function_header[int type_count] { ENTRY_DEBUG } :
 function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // order is important
+            // macros
+            { inLanguage(LANGUAGE_CXX) && LA(1) == NAME && next_token() == LPAREN }?
+            macro_call |
+
             {
                 inLanguage(LANGUAGE_CXX_FAMILY)
                 && (
@@ -6764,6 +6772,15 @@ statement_part[] {
         }?
         attribute_cpp |
 
+        // macro call in function tail, must be before K&R function parameters and function_specifier
+        {
+            inLanguage(LANGUAGE_CXX)
+            && inMode(MODE_FUNCTION_TAIL)
+            && LA(1) == NAME
+            && next_token() == LPAREN
+        }?
+        macro_call |
+
         // K&R function parameters
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
@@ -7600,6 +7617,9 @@ pattern_check_core[
         bool foundpure = false;
         bool isoperator = false;
         bool ismain = false;
+
+        // a name directly before a template declaration, e.g., EXPORT template <typename T>
+        bool name_before_template = LA(1) == NAME && next_token() == TEMPLATE;
         bool isconstructor = false;
         bool saveisdestructor = false;
         bool endbracket = false;
@@ -7749,6 +7769,19 @@ pattern_check_core[
                     throw_exception[type == ACCESS_REGION] |
 
                     { true }?
+                    // a single name before a template declaration is a macro, e.g., EXPORT template <typename T>
+                    set_type[
+                        type,
+                        SINGLE_MACRO,
+                        type_count == 1
+                        && specifier_count == 0
+                        && attribute_count == 0
+                        && template_count == 0
+                        && name_before_template
+                    ]
+
+                    throw_exception[type == SINGLE_MACRO]
+
                     template_declaration_full
                     set_int[template_count, template_count + 1] |
 
