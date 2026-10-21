@@ -125,8 +125,8 @@ CHAR_START :
 
 CONSTANTS :
     { startline = false; }
-    ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
-    (options { greedy = true; } : '.' | '0'..'9')*
+    ('0'..'9') (options { greedy = true; } : '0'..'9' | '_' | { isDigitSeparator() }? '\'')*
+    (options { greedy = true; } : '.' | '0'..'9' | { isDigitSeparator() }? '\'')*
     (options { greedy = true; } : ('e' | 'E') ('+' | '-')* ('0'..'9')*)?
     (options { greedy = true; } :
         'i' { $setType(COMPLEX_NUMBER); } |
@@ -134,7 +134,7 @@ CONSTANTS :
         { inLanguage(LANGUAGE_PYTHON) }?
         ('j' | 'J') { $setType(COMPLEX_NUMBER); }
     )*
-    (options { greedy = true; } : NAME)*
+    (options { greedy = true; } : NAME | { isDigitSeparator() }? '\'' ('0'..'9')*)*
     {
         //firstpreprocline = false;
         if (onpreprocline && isline) {
