@@ -16,7 +16,7 @@
 class OpenFileLimiter {
 public:
 
-    static const int MAX_OPEN_FILES = 200;
+    static constexpr int MAX_OPEN_FILES = 200;
 
     static void open() {
         std::unique_lock<std::mutex> l(e);
