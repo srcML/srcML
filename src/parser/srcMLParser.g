@@ -1061,6 +1061,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_ARGUMENT_LIST) }?
         call_argument_list |
 
+        // member initialization list after a constructor function tail, e.g., noexcept
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
+        member_initialization_list |
+
         // switch cases @test switch
         {
             !inMode(MODE_INIT)
