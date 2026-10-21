@@ -20,8 +20,8 @@
 
 class ParserTest {
 public:
-    static const int FIELD_WIDTH_LANGUAGE = 12;
-    static const int FIELD_WIDTH_URL = 30;
+    static constexpr int FIELD_WIDTH_LANGUAGE = 12;
+    static constexpr int FIELD_WIDTH_URL = 30;
 
     ParserTest() { line_count = 0; count = 0; total = 0; failed = 0; }
 
