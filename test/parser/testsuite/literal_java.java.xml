@@ -33,4 +33,8 @@
 <expr_stmt><expr><literal type="null">null</literal></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Java">
+<class>class <name>A</name> <block>{ <decl_stmt><decl><type><name>double</name></type> <name>d</name> <init>= <expr><literal type="number">0x1.8p1</literal></expr></init></decl>;</decl_stmt> }</block></class>
+</unit>
+
 </unit>

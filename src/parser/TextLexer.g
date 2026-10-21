@@ -125,6 +125,15 @@ CHAR_START :
 
 CONSTANTS :
     { startline = false; }
+    (
+        // hexadecimal, including hexadecimal floating constants in C, C++, and Java, e.g., 0x1.8p3
+        { LA(1) == '0' && (LA(2) == 'x' || LA(2) == 'X') }?
+        '0' ('x' | 'X')
+        (options { greedy = true; } : '0'..'9' | 'a'..'f' | 'A'..'F' | '_' | { isDigitSeparator() }? '\'' |
+            { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_PYTHON) }? '.')*
+        (options { greedy = true; } :
+            { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_PYTHON) }? ('p' | 'P') ('+' | '-')? ('0'..'9')*)?
+    |
     ('0'..'9') (options { greedy = true; } : '0'..'9' | '_' | { isDigitSeparator() }? '\'')*
     (options { greedy = true; } : '.' | '0'..'9' | { isDigitSeparator() }? '\'')*
     (options { greedy = true; } : ('e' | 'E') ('+' | '-')* ('0'..'9')*)?
@@ -134,6 +143,7 @@ CONSTANTS :
         { inLanguage(LANGUAGE_PYTHON) }?
         ('j' | 'J') { $setType(COMPLEX_NUMBER); }
     )*
+    )
     (options { greedy = true; } : NAME | { isDigitSeparator() }? '\'' ('0'..'9')*)*
     {
         //firstpreprocline = false;
