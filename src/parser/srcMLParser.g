@@ -1813,6 +1813,10 @@ function_header[int type_count] { ENTRY_DEBUG } :
 function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // order is important
+            // macros
+            { inLanguage(LANGUAGE_CXX) && LA(1) == NAME && next_token() == LPAREN }?
+            macro_call |
+
             {
                 inLanguage(LANGUAGE_CXX_FAMILY)
                 && (
@@ -5445,6 +5449,15 @@ statement_part[] {
             && next_token() == LBRACKET
         }?
         attribute_cpp |
+
+        // macro call in function tail, must be before K&R function parameters and function_specifier
+        {
+            inLanguage(LANGUAGE_CXX)
+            && inMode(MODE_FUNCTION_TAIL)
+            && LA(1) == NAME
+            && next_token() == LPAREN
+        }?
+        macro_call |
 
         // K&R function parameters
         {
