@@ -20,4 +20,23 @@
   <expr_stmt><expr><name><name>io</name><operator>.</operator><name>iov_len</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
 </block_content>}</block></function></unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<macro><name>EXPORT</name></macro> <function><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template>
+<type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<macro><name>EXPORT</name></macro> <function><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template>
+<type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<macro><name>EXPORT</name></macro> <class><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template>
+class <name>X</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<namespace>namespace <name>N</name> <block>{ <macro><name>EXPORT</name></macro> <decl_stmt><decl><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template> <type><name>auto</name></type> <name>f</name><argument_list>()</argument_list> <name>R</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></decl>;</decl_stmt> }</block></namespace>
+</unit>
+
 </unit>

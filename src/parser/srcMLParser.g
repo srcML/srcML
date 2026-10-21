@@ -6230,6 +6230,9 @@ pattern_check_core[
         bool foundpure = false;
         bool isoperator = false;
         bool ismain = false;
+
+        // a name directly before a template declaration, e.g., EXPORT template <typename T>
+        bool name_before_template = LA(1) == NAME && next_token() == TEMPLATE;
         bool isconstructor = false;
         bool saveisdestructor = false;
         bool endbracket = false;
@@ -6379,6 +6382,19 @@ pattern_check_core[
                     throw_exception[type == ACCESS_REGION] |
 
                     { true }?
+                    // a single name before a template declaration is a macro, e.g., EXPORT template <typename T>
+                    set_type[
+                        type,
+                        SINGLE_MACRO,
+                        type_count == 1
+                        && specifier_count == 0
+                        && attribute_count == 0
+                        && template_count == 0
+                        && name_before_template
+                    ]
+
+                    throw_exception[type == SINGLE_MACRO]
+
                     template_declaration_full
                     set_int[template_count, template_count + 1] |
 
