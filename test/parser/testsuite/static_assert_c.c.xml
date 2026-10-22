@@ -17,4 +17,12 @@
 <assert type="static">_Static_assert<argument_list>(<argument><expr><literal type="number">0</literal> <operator>+</operator> <name>a</name></expr></argument>, <argument><expr><literal type="string">"Message"</literal></expr></argument>)</argument_list>;</assert>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<assert type="static">static_assert<argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="string">"m"</literal></expr></argument>)</argument_list>;</assert>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<assert type="static">static_assert<argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list>;</assert>
+</unit>
+
 </unit>

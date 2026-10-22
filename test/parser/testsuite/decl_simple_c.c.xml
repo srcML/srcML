@@ -6,6 +6,14 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr><literal type="number">16</literal></expr></argument>)</argument_list></alignas> <name>int</name></type> <name>x</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<struct>struct <name>S</name> <block>{ <decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr><literal type="number">8</literal></expr></argument>)</argument_list></alignas> <name>char</name></type> <name>c</name></decl>;</decl_stmt> }</block>;</struct>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
 <decl_stmt><decl><type><alignas>_Alignas<argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 

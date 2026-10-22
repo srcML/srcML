@@ -87,4 +87,8 @@
 </unit>
 
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<expr_stmt><expr><name>n</name> <operator>=</operator> <alignof>alignof<argument_list>(<argument><expr><name>int</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
 </unit>
