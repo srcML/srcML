@@ -126,7 +126,16 @@ OPERATORS options { testLiterals = true; } {
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
     '#' (
         { inLanguage(LANGUAGE_CMAKE) && LA(1) == '[' && (LA(2) == '[' || LA(2) == '=') }?
-            { $setType(CMAKE_BLOCK_COMMENT_START); changetotextlexer(CMAKE_BLOCK_COMMENT_END); } |
+        {
+            $setType(CMAKE_BLOCK_COMMENT_START);
+
+            // block comment ends with the same number of '=' as it starts with, e.g., #[==[ ... ]==]
+            int equal_count = 0;
+            while (LA(equal_count + 2) == '=')
+                ++equal_count;
+
+            changetotextlexer(CMAKE_BLOCK_COMMENT_END, std::string(equal_count, '='));
+        } |
 
         { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_CMAKE)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |

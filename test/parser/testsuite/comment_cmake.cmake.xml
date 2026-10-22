@@ -27,4 +27,18 @@
 ]==]</comment>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<comment type="block">#[[ a ]=] b ]]</comment>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<comment type="block">#[=[ a ]] b ]=]</comment>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<comment type="block">#[==[
+Usage: f([A [B]])
+]==]</comment>
+</unit>
+
 </unit>

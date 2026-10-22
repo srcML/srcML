@@ -448,9 +448,18 @@ COMMENT_TEXT {
     } |
 
     ']' {
-        // detect the end of a CMake bracket argument or block comment (both end with '=]' or ']]')
-        if ((mode == CMAKE_BLOCK_COMMENT_END) && (lookaheadMinusTwo == '=' || lookaheadMinusTwo == ']')) {
-            $setType(mode); selector->pop();
+        // detect the end of a CMake block comment, ']' then the same number of '=' as the start, then ']'
+        if (mode == CMAKE_BLOCK_COMMENT_END) {
+            std::size_t equal_count = 0;
+            while (LA(equal_count + 1) == '=')
+                ++equal_count;
+
+            if (equal_count == delimiter1.size() && LA(equal_count + 1) == ']') {
+                for (std::size_t i = 0; i <= equal_count; ++i)
+                    consume();
+
+                $setType(mode); selector->pop();
+            }
         }
     } |
 
