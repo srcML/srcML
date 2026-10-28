@@ -3,7 +3,7 @@
 include(FetchContent)
 FetchContent_Declare(srcsax
     GIT_REPOSITORY https://github.com/srcML/srcSAX.git
-    GIT_TAG aae92cf9849ef1046a44d12229d16ace17882ca7
+    GIT_TAG fbcd31409ff6eee85603096ca26c55ca082d6ec0
 )
 
 # Keep srcSAX's build options and directory settings local to its build.
