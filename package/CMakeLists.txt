@@ -6,6 +6,9 @@
 #
 # CPack configuration for all installers
 
+# Include the separate srcSAX project in development installs and packages.
+include(${CMAKE_CURRENT_LIST_DIR}/srcsax.cmake)
+
 # The CMake variable CPACK_OUTPUT_FILE_PREFIX defines where the installers are placed.
 # Choose in this order:
 # 1. The preset or user defined CPACK_OUTPUT_FILE_PREFIX
@@ -76,7 +79,7 @@ cpack_add_component(SRCML
 
 cpack_add_component(DEVLIBS
                     DISPLAY_NAME "libsrcml"
-                    DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
+                    DESCRIPTION "Headers and development libraries for libsrcml, libsrcml CMake configuration, and srcSAX"
                     INSTALL_TYPES DEVELOPER)
 
 # Copy and rename the README file for the proper extension
