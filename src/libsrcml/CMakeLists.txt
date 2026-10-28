@@ -11,6 +11,20 @@ find_package(LibXslt REQUIRED)
 find_package(Iconv REQUIRED)
 find_package(Threads REQUIRED)
 
+# The compiler already searches the SDK's system headers.
+# Explicitly adding this directory breaks libc++ header ordering.
+if(APPLE)
+    foreach(dep LibXslt::LibXslt LibXslt::LibExslt)
+        get_target_property(includes ${dep} INTERFACE_INCLUDE_DIRECTORIES)
+        if(includes)
+            list(FILTER includes EXCLUDE REGEX
+                "/SDKs/[^/]+\\.sdk/usr/include/?$")
+            set_property(TARGET ${dep} PROPERTY
+                INTERFACE_INCLUDE_DIRECTORIES "${includes}")
+        endif()
+    endforeach()
+endif()
+
 # libsrcml library
 file(GLOB LIBSRCML_SOURCE *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
