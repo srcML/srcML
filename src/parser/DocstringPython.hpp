@@ -12,7 +12,7 @@
 #ifndef INCLUDED_DOCSTRINGPYTHON_HPP
 #define INCLUDED_DOCSTRINGPYTHON_HPP
 
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 #include <srcMLToken.hpp>
 #include <srcMLParser.hpp>
 #include <deque>
