@@ -15711,7 +15711,9 @@ template_param[] { in_template_param = true; ENTRY_DEBUG } :
 exception
 catch[antlr::RecognitionException&] {
         in_template_param = false;
-        throw antlr::RecognitionException();
+
+        // fail with the flag instead of an exception, which is costly to unwind
+        fail();
 }
 
 /*
