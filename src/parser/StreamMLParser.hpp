@@ -200,29 +200,38 @@ private:
                 return;
             }
 
+            // parse failures are flagged instead of thrown, and the start rules handle them
+            failSoftly = true;
+
             // more partial parsing to do
             switch (getLanguage()) {
             case LANGUAGE_PYTHON:
-                srcMLParser::start_python();
+                srcMLParser::start_python_impl();
                 break;
 
             case LANGUAGE_JAVASCRIPT:
-                srcMLParser::start_javascript();
+                srcMLParser::start_javascript_impl();
                 break;
 
             case LANGUAGE_CMAKE:
-                srcMLParser::start_cmake();
+                srcMLParser::start_cmake_impl();
                 break;
 
             default:
-                srcMLParser::start();
+                srcMLParser::start_impl();
             }
 
+            failSoftly = false;
+            throwIfFailed();
+
         } catch (const std::exception&) {
+
+            failSoftly = false;
 
             // when an error occurs just insert an error element
             emptyElement(srcMLParser::SERROR_PARSE);
         } catch (...) {
+            failSoftly = false;
             srcMLParser::endAllModes();
             throw;
         }

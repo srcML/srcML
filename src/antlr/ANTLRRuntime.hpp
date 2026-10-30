@@ -1158,12 +1158,15 @@ public:
 	 */
 	bool failed = false;
 
+	/// flag failures outside of guessing too, for rules that handle them with the failed flag
+	bool failSoftly = false;
+
 	bool matchOrFail(int t) {
 		if (LA(1) == t) {
 			consume();
 			return true;
 		}
-		if (inputState->guessing > 0) {
+		if (inputState->guessing > 0 || failSoftly) {
 			failed = true;
 			return false;
 		}
@@ -1174,7 +1177,7 @@ public:
 			consume();
 			return true;
 		}
-		if (inputState->guessing > 0) {
+		if (inputState->guessing > 0 || failSoftly) {
 			failed = true;
 			return false;
 		}
@@ -1185,21 +1188,21 @@ public:
 			consume();
 			return true;
 		}
-		if (inputState->guessing > 0) {
+		if (inputState->guessing > 0 || failSoftly) {
 			failed = true;
 			return false;
 		}
 		throw MismatchedTokenException(getTokenNames(), getNumTokens(), LT(1), b, false, getFilename());
 	}
 	void failNoViable() {
-		if (inputState->guessing > 0) {
+		if (inputState->guessing > 0 || failSoftly) {
 			failed = true;
 			return;
 		}
 		throw NoViableAltException(LT(1), getFilename());
 	}
 	void failSemantic(const char* predicate) {
-		if (inputState->guessing > 0) {
+		if (inputState->guessing > 0 || failSoftly) {
 			failed = true;
 			return;
 		}
@@ -1207,7 +1210,7 @@ public:
 	}
 	/// fail the current guess, or throw when not guessing
 	void fail() {
-		if (inputState->guessing > 0) {
+		if (inputState->guessing > 0 || failSoftly) {
 			failed = true;
 			return;
 		}

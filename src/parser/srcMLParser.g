@@ -6459,6 +6459,13 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
 
             // end the current mode for the block; do not end more than one since they may be nested
             if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
+
+                // a "}" without a block is an error for the start rule, as when endMode() throws, without the cost of an exception
+                if (size() <= 1) {
+                    failed = true;
+                    return;
+                }
+
                 endMode(MODE_TOP);
             }
             // special case for JavaScript function expressions enclosed in operator or call parentheses

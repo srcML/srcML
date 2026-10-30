@@ -1721,6 +1721,20 @@ void CppCodeGenerator::genErrorCatchForElement(AlternativeElement* el) {
     }
 }
 
+void CppCodeGenerator::genFlaggedErrorHandler(ExceptionSpec* ex) {
+    // the first handler, which catches any recognition exception
+    auto handler = ex->handlers.front();
+    println("if (failed && inputState->guessing == 0) {");
+    tabs++;
+    println("failed = false;");
+    ActionTransInfo tInfo;
+    genLineNo(handler->action);
+    printAction(processActionForSpecialSymbols(handler->action->text, handler->action->line, currentRule, &tInfo));
+    genLineNo2();
+    tabs--;
+    println("}");
+}
+
 void CppCodeGenerator::genErrorHandler(ExceptionSpec* ex) {
     for (auto handler : ex->handlers) {
         println("catch (" + handler->exceptionTypeAndName->text + ") {");
@@ -2556,6 +2570,15 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
         tabs++;
     }
 
+    // a failure flagged instead of thrown runs the handler, as a thrown one does,
+    // so the body is in a lambda that the failure returns from
+    bool handlerLambda = flagFailures && grammar->isParser() && unlabeledUserSpec;
+    if (handlerLambda) {
+        println("[&]() {");
+        tabs++;
+        inHandlerLambda = true;
+    }
+
     if (rblk->numAlternatives() == 1) {
         Alternative* alt = rblk->getAlternativeAt(0);
         if (alt->semPred)
@@ -2568,6 +2591,13 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
 
         CppBlockFinishingInfo howToFinish = genCommonBlock(rblk, false);
         genBlockFinish(howToFinish, noViable());
+    }
+
+    if (handlerLambda) {
+        inHandlerLambda = false;
+        tabs--;
+        println("}();");
+        genFlaggedErrorHandler(unlabeledUserSpec);
     }
 
     if (unlabeledUserSpec || rblk->getDefaultErrorHandler()) {
@@ -2746,7 +2776,7 @@ std::string CppCodeGenerator::implName(const std::string& rule) const {
 }
 
 std::string CppCodeGenerator::failReturn() const {
-    if (syntacticPredLevel > 0 || !currentRule || !currentRule->returnAction)
+    if (syntacticPredLevel > 0 || inHandlerLambda || !currentRule || !currentRule->returnAction)
         return "return;";
     return "return {};";
 }

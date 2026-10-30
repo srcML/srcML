@@ -139,6 +139,7 @@ private:
     static std::string parameterName(const std::string& param);
     std::string implName(const std::string& rule) const;
     std::string failReturn() const;
+    void genFlaggedErrorHandler(ExceptionSpec* ex);
     std::string noViable() const;
     void GenRuleInvocation(RuleRefElement* rr);
     void genSemPred(std::string pred, int line);
@@ -175,6 +176,9 @@ private:
 
     // CppCodeGenerator state
     int syntacticPredLevel = 0;
+
+    // generating the body of a rule in a lambda, so that a flagged failure can run the rule's handler
+    bool inHandlerLambda = false;
     // parsers report failed guesses with a flag instead of an exception
     bool flagFailures = false;
     bool genAST = false;
