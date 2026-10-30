@@ -69,6 +69,16 @@ defineXML output3 <<- 'STDOUT'
 	</unit>
 STDOUT
 
+defineXML output4 <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="dir3">
+
+	<unit revision="REVISION" language="CMake" filename="dir3/CMakeLists.txt" hash="f75da8241368ba3b1cc2e221f0d85bc6d1233408">
+	<command><name>set</name><argument_list>(<argument><expr><name>a</name></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></command></unit>
+
+	</unit>
+STDOUT
+
 # directory of just source
 createfile dir/file.aj "\na;"
 createfile dir/file.c  "\na;"
@@ -171,6 +181,13 @@ check dir2/dir2.xml "$output2"
 srcml dir2 --quiet
 check "$output2"
 
+# CMakeLists.txt is CMake, other .txt files are skipped
+createfile dir3/CMakeLists.txt "\nset(a 1)"
+createfile dir3/notes.txt "\na;"
+
+srcml dir3 --quiet
+check "$output4"
+
 # Ensure proper behavior with symbolic links (ignore them)
 if [[ "$OSTYPE" == 'msys' ]]; then
     exit 0
@@ -191,3 +208,4 @@ check symtest/symtest.xml "$output3"
 rmdir symtest
 rmdir dir
 rmdir dir2
+rmdir dir3
