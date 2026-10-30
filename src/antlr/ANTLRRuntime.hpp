@@ -811,6 +811,77 @@ public:
 			throw MismatchedCharException(la_1, c1, c2, false, this);
 		consume();
 	}
+
+	/*
+	 * Generated code reports failures while guessing (syntactic predicates)
+	 * by setting failed and returning, instead of throwing an exception.
+	 * Outside of guessing, failures throw as usual.
+	 */
+	bool matchOrFail(int c) {
+		int la_1 = LA(1);
+		if (la_1 == c) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedCharException(la_1, c, false, this);
+	}
+	bool matchOrFail(const BitSet& b) {
+		int la_1 = LA(1);
+		if (b.member(la_1)) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedCharException(la_1, b, false, this);
+	}
+	bool matchOrFail(const char* s) {
+		while (*s != '\0') {
+			if (!matchOrFail(*s++ & 0xFF))
+				return false;
+		}
+		return true;
+	}
+	bool matchNotOrFail(int c) {
+		int la_1 = LA(1);
+		if (la_1 != c) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedCharException(la_1, c, true, this);
+	}
+	bool matchRangeOrFail(int c1, int c2) {
+		int la_1 = LA(1);
+		if (la_1 >= c1 && la_1 <= c2) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedCharException(la_1, c1, c2, false, this);
+	}
+	void failNoViable();
+	void failSemantic(const char* predicate) {
+		if (inputState->guessing > 0) {
+			failed = true;
+			return;
+		}
+		throw SemanticException(predicate);
+	}
+	bool failed = false;
+
 	virtual bool getCaseSensitive() const { return caseSensitive; }
 	virtual void setCaseSensitive(bool t) { caseSensitive = t; }
 	virtual bool getCaseSensitiveLiterals() const = 0;
@@ -942,6 +1013,14 @@ protected:
 	int foundChar;
 };
 
+inline void CharScanner::failNoViable() {
+	if (inputState->guessing > 0) {
+		failed = true;
+		return;
+	}
+	throw NoViableAltForCharException(LA(1), getFilename(), getLine(), getColumn());
+}
+
 /* Parser */
 
 class TokenBuffer {
@@ -1071,6 +1150,87 @@ public:
 			throw MismatchedTokenException(getTokenNames(), getNumTokens(), LT(1), b, false, getFilename());
 		consume();
 	}
+
+	/*
+	 * Generated code reports failures while guessing (syntactic predicates)
+	 * by setting failed and returning, instead of throwing an exception.
+	 * Outside of guessing, failures throw as usual.
+	 */
+	bool failed = false;
+
+	bool matchOrFail(int t) {
+		if (LA(1) == t) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedTokenException(getTokenNames(), getNumTokens(), LT(1), t, false, getFilename());
+	}
+	bool matchNotOrFail(int t) {
+		if (LA(1) != t) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedTokenException(getTokenNames(), getNumTokens(), LT(1), t, true, getFilename());
+	}
+	bool matchOrFail(const BitSet& b) {
+		if (b.member(LA(1))) {
+			consume();
+			return true;
+		}
+		if (inputState->guessing > 0) {
+			failed = true;
+			return false;
+		}
+		throw MismatchedTokenException(getTokenNames(), getNumTokens(), LT(1), b, false, getFilename());
+	}
+	void failNoViable() {
+		if (inputState->guessing > 0) {
+			failed = true;
+			return;
+		}
+		throw NoViableAltException(LT(1), getFilename());
+	}
+	void failSemantic(const char* predicate) {
+		if (inputState->guessing > 0) {
+			failed = true;
+			return;
+		}
+		throw SemanticException(predicate);
+	}
+	/// fail the current guess, or throw when not guessing
+	void fail() {
+		if (inputState->guessing > 0) {
+			failed = true;
+			return;
+		}
+		throw RecognitionException();
+	}
+	/// run code that may fail a guess; false if it failed
+	template <class F>
+	bool attempt(F f) {
+		f();
+		if (failed) {
+			failed = false;
+			return false;
+		}
+		return true;
+	}
+	/// for rules called from user code, which expects an exception for a failed guess
+	void throwIfFailed() {
+		if (failed) {
+			failed = false;
+			throw RecognitionException("syntactic predicate failed");
+		}
+	}
+
 	virtual unsigned int mark() { return inputState->getInput().mark(); }
 	virtual void rewind(unsigned int pos) { inputState->getInput().rewind(pos); }
 	virtual void recover(const RecognitionException&, const BitSet& tokenSet) {

@@ -2706,7 +2706,8 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
         try {
             (this->*rule)();
-            token = LA(1);
+            token = failed ? -1 : LA(1);
+            failed = false;
         } catch(...) {
             token = -1;
         }
@@ -3082,10 +3083,10 @@ function_declarator_list[int& fla, bool inparam] {
             int start = mark();
             ++inputState->guessing;
 
-            try {
-                function_declarator_list_check();
+            try { attempt([&] {
+                function_declarator_list_check_impl(); if (failed) return;
                 fla = TERMINATE;
-            } catch (...) {}
+            }); } catch (...) {}
 
             --inputState->guessing;
             rewind(start);
@@ -3203,7 +3204,7 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
                 (options { generateAmbigWarnings = false; } :
                     specifier |
 
-                    { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                    { look_past_rule(&srcMLParser::identifier_impl) != LPAREN }?
                     identifier |
 
                     macro_call
@@ -3376,7 +3377,7 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 */
 lambda_expression_cpp[] { ENTRY_DEBUG } :
         {
-            bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
+            bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp_impl) == LPAREN;
 
             if (iscall) {
                 // start a new mode that will end after the argument list
@@ -3509,7 +3510,7 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 block_lambda_expression[] { ENTRY_DEBUG } :
         {
-            bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full) == LPAREN;
+            bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full_impl) == LPAREN;
 
             if (iscall) {
                 // start a new mode that will end after the argument list
@@ -3990,6 +3991,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         int postcalltoken = 0;
         call_count = 0;
 
+        bool check_failed = false;
         try {
             // do not mark "< <" as a call in JavaScript
             if (
@@ -3999,69 +4001,78 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             )
                 throw antlr::RecognitionException();
 
-            call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
+            call_check_impl(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
-            // do not mark "NAME() =>" as a call in JavaScript
-            if (
-                inLanguage(LANGUAGE_JAVASCRIPT)
-                && (
-                    postcalltoken == JS_ARROW
-                    || (postcalltoken == LBRACKET && !inTransparentMode(MODE_DECORATOR_TS))
+            if (failed) {
+                failed = false;
+                check_failed = true;
+            } else {
+                // do not mark "NAME() =>" as a call in JavaScript
+                if (
+                    inLanguage(LANGUAGE_JAVASCRIPT)
+                    && (
+                        postcalltoken == JS_ARROW
+                        || (postcalltoken == LBRACKET && !inTransparentMode(MODE_DECORATOR_TS))
+                    )
                 )
-            )
-                throw antlr::RecognitionException();
+                    throw antlr::RecognitionException();
 
-            // call syntax succeeded
-            type = CALL;
+                // call syntax succeeded
+                type = CALL;
 
-            // call syntax succeeded, however post-call token is not legitimate
-            if (
-                isoption(parser_options, SRCML_PARSER_OPTION_CPP)
-                && (
-                    (
+                // call syntax succeeded, however post-call token is not legitimate
+                if (
+                    isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+                    && (
                         (
-                            !inLanguage(LANGUAGE_OBJECTIVE_C)
-                            || !inTransparentMode(MODE_OBJECTIVE_C_CALL)
+                            (
+                                !inLanguage(LANGUAGE_OBJECTIVE_C)
+                                || !inTransparentMode(MODE_OBJECTIVE_C_CALL)
+                            )
+                            && (
+                                keyword_token_set.member(postcalltoken)
+                                || postcalltoken == NAME
+                                || postcalltoken == VOID
+                            )
                         )
-                        && (
-                            keyword_token_set.member(postcalltoken)
-                            || postcalltoken == NAME
-                            || postcalltoken == VOID
+                        || (
+                            !inLanguage(LANGUAGE_CSHARP)
+                            && postcalltoken == LCURLY
                         )
+                        || postcalltoken == EXTERN
+                        || postcalltoken == STRUCT
+                        || postcalltoken == UNION
+                        || postcalltoken == CLASS
+                        || postcalltoken == CXX_CLASS
+                        || (
+                            !inLanguage(LANGUAGE_CSHARP)
+                            && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+                            && postcalltoken == RCURLY
+                        )
+                        || postcalltoken == TEMPLATE
+                        || postcalltoken == INLINE
+                        || postcalltoken == PUBLIC
+                        || postcalltoken == PRIVATE
+                        || postcalltoken == PROTECTED
+                        || postcalltoken == SIGNAL
+                        || postcalltoken == ATREQUIRED
+                        || postcalltoken == ATOPTIONAL
+                        || postcalltoken == STATIC
+                        || postcalltoken == CONST
                     )
-                    || (
-                        !inLanguage(LANGUAGE_CSHARP)
-                        && postcalltoken == LCURLY
-                    )
-                    || postcalltoken == EXTERN
-                    || postcalltoken == STRUCT
-                    || postcalltoken == UNION
-                    || postcalltoken == CLASS
-                    || postcalltoken == CXX_CLASS
-                    || (
-                        !inLanguage(LANGUAGE_CSHARP)
-                        && !inTransparentMode(MODE_INTERNAL_END_CURLY)
-                        && postcalltoken == RCURLY
-                    )
-                    || postcalltoken == TEMPLATE
-                    || postcalltoken == INLINE
-                    || postcalltoken == PUBLIC
-                    || postcalltoken == PRIVATE
-                    || postcalltoken == PROTECTED
-                    || postcalltoken == SIGNAL
-                    || postcalltoken == ATREQUIRED
-                    || postcalltoken == ATOPTIONAL
-                    || postcalltoken == STATIC
-                    || postcalltoken == CONST
+                    && (save_first != DECLTYPE)
                 )
-                && (save_first != DECLTYPE)
-            )
-                type = MACRO;
+                    type = MACRO;
 
-            if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
-                type = NOCALL;
+                if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
+                    type = NOCALL;
 
+            }
         } catch (...) {
+            check_failed = true;
+        }
+
+        if (check_failed) {
             type = NOCALL;
 
             if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
@@ -4254,8 +4265,10 @@ perform_ternary_check[] returns [bool is_ternary] {
         inputState->guessing++;
 
         try {
-            ternary_check();
-            if (
+            ternary_check_impl();
+            if (failed)
+                failed = false;
+            else if (
                 LA(1) == QMARK
                 && (
                     !inLanguage(LANGUAGE_JAVASCRIPT)
@@ -5688,7 +5701,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
   protocol
 */
 protocol[] { ENTRY_DEBUG } :
-        { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }?
+        { look_past_rule(&srcMLParser::protocol_declaration_impl) == TERMINATE }?
         protocol_declaration |
 
         protocol_definition
@@ -7370,7 +7383,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         int fla = 0;
 
         try {
-            pattern_check_core(
+            pattern_check_core_impl(
                 token,
                 fla,
                 type_count,
@@ -7384,6 +7397,12 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
                 sawdcolon,
                 posin
             );
+            if (failed) {
+                failed = false;
+                if (type == VARIABLE && type_count == 0) {
+                    type_count = 1;
+                }
+            }
         } catch (...) {
             if (type == VARIABLE && type_count == 0) {
                 type_count = 1;
@@ -8373,7 +8392,7 @@ check_global_attribute[] returns [bool flag] {
 */
 throw_exception[bool condition = true] {
         if (condition)
-            throw antlr::RecognitionException();
+            fail();
 } :;
 
 /*
@@ -9618,10 +9637,10 @@ try_linq_expression_complete_inner[int& count_paren] returns [bool success = fal
         int start = mark();
         ++inputState->guessing;
 
-        try {
-            linq_expression_complete_inner(count_paren);
+        try { attempt([&] {
+            linq_expression_complete_inner_impl(count_paren); if (failed) return;
             success = true;
-        } catch (antlr::RecognitionException& e) {
+        }); } catch (antlr::RecognitionException& e) {
             success = false;
         }
 
@@ -9958,10 +9977,11 @@ function_pointer_name_check[] returns [bool is_fp_name = false] {
             int start = mark();
 
             try {
-                function_pointer_name_grammar();
+                function_pointer_name_grammar_impl();
 
                 is_fp_name =
-                    LA(1) == PERIOD
+                    !failed
+                    && (LA(1) == PERIOD
                     || LA(1) == TRETURN
                     || (
                         inLanguage(LANGUAGE_CXX)
@@ -9969,7 +9989,8 @@ function_pointer_name_check[] returns [bool is_fp_name = false] {
                             LA(1) == MPDEREF
                             || LA(1) == DOTDEREF
                         )
-                    );
+                    ));
+                failed = false;
             } catch (...) {}
 
             rewind(start);
@@ -10508,7 +10529,7 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
             )
 
             (options { greedy = true; } :
-                { look_past_rule(&srcMLParser::multops_star) == DCOLON }?
+                { look_past_rule(&srcMLParser::multops_star_impl) == DCOLON }?
                 multops
             )*
         )*
@@ -11935,15 +11956,14 @@ eat_optional_macro_call[] {
 
         try {
             // check for the name
-            if (LA(1) == NAME)
-                match(NAME);
-            else 
-                match(VOID);
+            if (LA(1) == NAME ? matchOrFail(NAME) : matchOrFail(VOID)) {
 
-            // handle the parentheses
-            paren_pair();
+                // handle the parentheses
+                paren_pair_impl();
 
-            success = true;
+                success = !failed;
+            }
+            failed = false;
         } catch (...) {}
 
         inputState->guessing--;
@@ -13027,7 +13047,7 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
                 (options { generateAmbigWarnings = false; } :
                     specifier |
 
-                    { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                    { look_past_rule(&srcMLParser::identifier_impl) != LPAREN }?
                     identifier |
 
                     macro_call
@@ -13099,7 +13119,7 @@ is_class_type_identifier[] returns [bool is_class_type = false] {
         )
             return is_class_type;
 
-        int token = look_past_rule(&srcMLParser::specifiers_or_macro);
+        int token = look_past_rule(&srcMLParser::specifiers_or_macro_impl);
 
         if (class_tokens_set.member(token))
             is_class_type = true;
@@ -15231,7 +15251,7 @@ argument[] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { inLanguage(LANGUAGE_CSHARP) && look_past_rule(&srcMLParser::identifier) == COLON }?
+            { inLanguage(LANGUAGE_CSHARP) && look_past_rule(&srcMLParser::identifier_impl) == COLON }?
             argument_named_csharp
         )*
 
@@ -15376,7 +15396,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                 && LA(1) != DOTDOTDOT
                 && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
                 && (
-                    (look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA
+                    (look_past_token = look_past_rule(&srcMLParser::type_identifier_impl)) == COMMA
                     || look_past_token == RPAREN
                     || look_past_token == TRETURN
                     || look_past_token == LAMBDA
@@ -15447,7 +15467,7 @@ parameter_type_count[int& type_count, bool output_type = true] {
                     (options { generateAmbigWarnings = false; } :
                         specifier |
 
-                        { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                        { look_past_rule(&srcMLParser::identifier_impl) != LPAREN }?
                         identifier |
 
                         macro_call
@@ -15589,7 +15609,7 @@ parameter_type[] {
                     (options { generateAmbigWarnings = false; } :
                         specifier |
 
-                        { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                        { look_past_rule(&srcMLParser::identifier_impl) != LPAREN }?
                         identifier |
 
                         macro_call
@@ -20279,7 +20299,7 @@ perform_accessor_is_name_check_js[] returns [bool isaccessor] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             if (LA(1) == JS_GET || LA(1) == JS_SET) {
                 consume();
 
@@ -20287,12 +20307,12 @@ perform_accessor_is_name_check_js[] returns [bool isaccessor] {
                 if (LA(1) == NAME)
                     consume();
                 else if (LA(1) == LBRACKET)
-                    bracket_pair();
+                    { bracket_pair_impl(); if (failed) return; }
                 else if (literal_tokens_set.member((unsigned int) LA(1)))
-                    literals();
+                    { literals_impl(); if (failed) return; }
 
                 // consume the parameter list
-                paren_pair();
+                paren_pair_impl(); if (failed) return;
 
                 if (
                     LA(1) == COLON
@@ -20302,7 +20322,7 @@ perform_accessor_is_name_check_js[] returns [bool isaccessor] {
                 )
                     isaccessor = true;
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -21024,19 +21044,19 @@ perform_with_as_function_decl_check_ts[] returns [bool isdecl] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             if (LA(1) == JS_WITH) {
                 consume();  // "with"
 
                 if (LA(1) == LPAREN) {
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
 
                     // found "with():", indicating a TypeScript function declaration
                     if (LA(1) == COLON)
                         isdecl = true;
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -21056,12 +21076,12 @@ perform_with_statement_check_js[] returns [bool isstatement] {
         int start = mark();
         inputState->guessing++;
         
-        try {
+        try { attempt([&] {
             if (LA(1) == JS_WITH) {
                 consume(); // "with"
 
                 // "with" must be followed by (...) to be a statement
-                paren_pair();
+                paren_pair_impl(); if (failed) return;
 
                 // with statements can have a pseudoblock
                 // therefore, it is insufficient to check if there is a block
@@ -21079,7 +21099,7 @@ perform_with_statement_check_js[] returns [bool isstatement] {
                     isstatement = true;
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -22172,7 +22192,7 @@ perform_function_expression_check_js[] returns [bool isfunction] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional specifiers
             while (
                 LA(1) != TS_DECLARE
@@ -22200,11 +22220,11 @@ perform_function_expression_check_js[] returns [bool isfunction] {
                     }
                     // found a computed property
                     else if (LA(1) == LBRACKET) {
-                        bracket_pair();
+                        bracket_pair_impl(); if (failed) return;
                     }
                     // found a literal, which can be a name in this case
                     else if (literal_tokens_set.member((unsigned int) LA(1))) {
-                        literals();
+                        literals_impl(); if (failed) return;
                     }
                     else {
                         break;
@@ -22213,11 +22233,11 @@ perform_function_expression_check_js[] returns [bool isfunction] {
 
                 // consume optional generic argument list
                 if (LA(1) == TEMPOPS && generic_argument_list_check())
-                    angle_bracket_pair();
+                    { angle_bracket_pair_impl(); if (failed) return; }
 
                 // consume the function parameter list
                 if (LA(1) == LPAREN) {
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
 
                     // consume optional auto-generated TERMINATE
                     if (
@@ -22269,7 +22289,7 @@ perform_function_expression_check_js[] returns [bool isfunction] {
                     }
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -22578,7 +22598,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional decorator before checking
             while (LA(1) == TS_ATSIGN) {
                 consume();  // "@"
@@ -22646,12 +22666,12 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 }
                 // found a computed property
                 else if (LA(1) == LBRACKET) {
-                    bracket_pair();
+                    bracket_pair_impl(); if (failed) return;
                     found_name = true;
                 }
                 // found a literal, which can be a name in this case
                 else if (literal_tokens_set.member((unsigned int) LA(1))) {
-                    literals();
+                    literals_impl(); if (failed) return;
                     found_name = true;
                 }
                 else {
@@ -22692,7 +22712,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
             // match "("
             if (found_name && LA(1) == LPAREN) {
-                paren_pair();
+                paren_pair_impl(); if (failed) return;
 
                 // consume auto-inserted terminate, if applicable
                 if (
@@ -22749,7 +22769,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     }
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -24045,7 +24065,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 // case 1: compound names
                 if (LA(1) == NAME || LA(1) == PERIOD) {
@@ -24053,24 +24073,24 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
                 }
                 // case 2: generic argument list on a compound name
                 else if (LA(1) == TEMPOPS && generic_argument_list_check()) {
-                    angle_bracket_pair();
+                    angle_bracket_pair_impl(); if (failed) return;
                 }
                 // case 3: backtick literals
                 else if (LA(1) == BACKTICK_START) {
                     if (last_consumed_guessing_mode == NAME || last_consumed_guessing_mode == RPAREN)
                         istagged = true;
 
-                    backtick_literal_js();
+                    backtick_literal_js_impl(); if (failed) return;
                     ++call_count;
                 }
                 // case 4: call argument lists
                 else if (LA(1) == LPAREN) {
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
                     ++call_count;
                 }
                 // case 5: array indexing on names
                 else if (last_consumed_guessing_mode == NAME && LA(1) == LBRACKET) {
-                    bracket_pair();
+                    bracket_pair_impl(); if (failed) return;
                 }
                 // otherwise, break
                 else {
@@ -24080,7 +24100,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
             if (!istagged)
                 call_count = 0;
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -24137,7 +24157,7 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // keyword IIFE must start with "("
             if (LA(1) == LPAREN) {
                 consume();
@@ -24155,7 +24175,7 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                         consume();
 
                     // consume parameter list
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
 
                     // determine the type of block that "{" starts
                     if (
@@ -24206,12 +24226,12 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
 
                         // consume optional TypeScript array after type block
                         if (LA(1) == LBRACKET)
-                            bracket_pair();
+                            { bracket_pair_impl(); if (failed) return; }
                     }
 
                     // consume block
                     if (LA(1) == LCURLY) {
-                        curly_pair();
+                        curly_pair_impl(); if (failed) return;
 
                         // looking for "})" after the function expression
                         if (LA(1) == RPAREN) {
@@ -24223,7 +24243,7 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                     }
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -24342,7 +24362,7 @@ perform_keyword_dc_iife_check_js[] returns [bool isiife] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // keyword IIFE must start with "("
             if (LA(1) == LPAREN) {
                 consume();
@@ -24360,7 +24380,7 @@ perform_keyword_dc_iife_check_js[] returns [bool isiife] {
                         consume();
 
                     // consume parameter list
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
 
                     // determine the type of block that "{" starts
                     if (
@@ -24411,13 +24431,13 @@ perform_keyword_dc_iife_check_js[] returns [bool isiife] {
 
                         // consume optional TypeScript array after type block
                         if (LA(1) == LBRACKET)
-                            bracket_pair();
+                            { bracket_pair_impl(); if (failed) return; }
                     }
 
                     // consume block
                     if (LA(1) == LCURLY) {
-                        curly_pair();
-                        paren_pair();
+                        curly_pair_impl(); if (failed) return;
+                        paren_pair_impl(); if (failed) return;
 
                         // looking for ")" after the function expression
                         if (LA(1) == RPAREN)
@@ -24425,7 +24445,7 @@ perform_keyword_dc_iife_check_js[] returns [bool isiife] {
                     }
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -24552,7 +24572,7 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // keywordless IIFE must start with "("
             if (LA(1) == LPAREN) {
                 consume();
@@ -24562,7 +24582,7 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                     consume();
 
                 // consume parameter list
-                paren_pair();
+                paren_pair_impl(); if (failed) return;
 
                 // determine the type of block that "{" starts
                 if (
@@ -24649,7 +24669,7 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                 }
 
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -24776,7 +24796,7 @@ perform_keywordless_dc_iife_check_js[] returns [bool isiife] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // keywordless IIFE must start with "("
             if (LA(1) == LPAREN) {
                 consume();
@@ -24786,7 +24806,7 @@ perform_keywordless_dc_iife_check_js[] returns [bool isiife] {
                     consume();
 
                 // consume parameter list
-                paren_pair();
+                paren_pair_impl(); if (failed) return;
 
                 // determine the type of block that "{" starts
                 if (
@@ -24845,8 +24865,8 @@ perform_keywordless_dc_iife_check_js[] returns [bool isiife] {
 
                     // consume block
                     if (LA(1) == LCURLY) {
-                        curly_pair();
-                        paren_pair();
+                        curly_pair_impl(); if (failed) return;
+                        paren_pair_impl(); if (failed) return;
 
                         // looking for ")" after the function expression
                         if (LA(1) == RPAREN)
@@ -24855,7 +24875,7 @@ perform_keywordless_dc_iife_check_js[] returns [bool isiife] {
                 }
 
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -24990,16 +25010,16 @@ perform_optional_call_chaining_check_js[] returns [bool iscall] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // do not mark a regular function call as an optional chained function call
             if (perform_call_check(type, isempty, call_count, -1) && type == CALL)
-                throw antlr::RecognitionException();
+                { failed = true; return; }
 
             int optional_call_chain_count = perform_chained_call_count_js();
 
             if (optional_call_chain_count > 0)
                 iscall = true;
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -25117,7 +25137,7 @@ perform_chained_call_count_js[] returns [int numcalls] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 // immediately exit if the bracket count is negative
                 if (bracket_count < 0) {
@@ -25132,11 +25152,11 @@ perform_chained_call_count_js[] returns [int numcalls] {
                     && LA(1) == LPAREN
                 ) {
                     ++numcalls;
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
                 }
                 // looking for "[]" as an index
                 else if (LA(1) == LBRACKET) {
-                    bracket_pair();
+                    bracket_pair_impl(); if (failed) return;
                 }
                 // looking for the start of a bracket (e.g., "(" and "{")
                 else if (LA(1) == LPAREN || LA(1) == LCURLY) {
@@ -25169,7 +25189,7 @@ perform_chained_call_count_js[] returns [int numcalls] {
             // only record call count if the call is an optional chained call
             if (!is_optional_call)
                 numcalls = 0;
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -25775,15 +25795,15 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional specifiers
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
-                    function_declaration_specifiers_ts();
+                    function_declaration_specifiers_ts_impl(); if (failed) return;
                     found_specifier = true;
                 }
                 else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
-                    declaration_specifiers_ts();
+                    declaration_specifiers_ts_impl(); if (failed) return;
                     found_specifier = true;
                 }
                 else {
@@ -25801,15 +25821,15 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
             // consume a computed property or a NAME
             if (LA(1) == LBRACKET)
-                bracket_pair();
+                { bracket_pair_impl(); if (failed) return; }
             else if (LA(1) == NAME)
                 consume();
 
             // handle optional argument list since compound_name will not in guessing mode
             if (LA(1) == TEMPOPS && generic_argument_list_check())
-                angle_bracket_pair();
+                { angle_bracket_pair_impl(); if (failed) return; }
 
-            paren_pair();
+            paren_pair_impl(); if (failed) return;
 
             // consume optional modifiers
             while (
@@ -25823,7 +25843,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                     )
                 )
             )
-                declaration_modifiers_ts();
+                { declaration_modifiers_ts_impl(); if (failed) return; }
 
             // found "NAME() :"
             if (LA(1) == COLON) {
@@ -25849,7 +25869,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                     }
 
                     if (LA(1) == LPAREN)
-                        paren_pair();
+                        { paren_pair_impl(); if (failed) return; }
 
                     if (
                         tempops_count < 0
@@ -25923,7 +25943,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             else if (found_specifier && LA(1) == TERMINATE && next_token() != LCURLY) {
                 isdecl = true;
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -26032,14 +26052,14 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional specifiers
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
-                    function_declaration_specifiers_ts();
+                    function_declaration_specifiers_ts_impl(); if (failed) return;
                 }
                 else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
-                    declaration_specifiers_ts();
+                    declaration_specifiers_ts_impl(); if (failed) return;
                 }
                 else {
                     break;
@@ -26048,9 +26068,9 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
 
             // consume optional generic argument list
             if (LA(1) == TEMPOPS && generic_argument_list_check())
-                angle_bracket_pair();
+                { angle_bracket_pair_impl(); if (failed) return; }
 
-            paren_pair();
+            paren_pair_impl(); if (failed) return;
 
             // consume optional declaration modifiers
             while (
@@ -26064,7 +26084,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
                     )
                 )
             )
-                declaration_modifiers_ts();
+                { declaration_modifiers_ts_impl(); if (failed) return; }
 
             // found "() :"
             if (LA(1) == COLON) {
@@ -26112,7 +26132,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
                     consume();
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -26201,7 +26221,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional decorator before checking
             while (LA(1) == TS_ATSIGN) {
                 consume();  // "@"
@@ -26290,7 +26310,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             }
             // or, consume a string-like literal
             else if (LA(1) == STRING_START || LA(1) == CHAR_START) {
-                literals();
+                literals_impl(); if (failed) return;
                 continue_guessing = true;
             }
 
@@ -26306,7 +26326,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
                     )
                 )
             )
-                declaration_modifiers_ts();
+                { declaration_modifiers_ts_impl(); if (failed) return; }
 
             // found "NAME:" or "[NAME]:" or "NAME =" or "[NAME] =" or "NAME;" or "[NAME];"
             if (
@@ -26317,7 +26337,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
                 )
             )
                 isdecl = true;
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -26947,7 +26967,7 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume any TERMINATE tokens that may appear before the first "{"
             while (LA(1) == TERMINATE)
                 consume();
@@ -26982,14 +27002,14 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
                 }
                 // case 3: the first token in the block or object is a square bracket
                 else if (LA(1) == LBRACKET) {
-                    bracket_pair();
+                    bracket_pair_impl(); if (failed) return;
 
                     // match computed properties (not arrays)
                     if (LA(1) == COLON)
                         isblock = false;
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -27163,9 +27183,9 @@ perform_label_with_block_check_js[] returns [bool islabel] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume a name
-            compound_name();
+            compound_name_impl(); if (failed) return;
 
             if (LA(1) == COLON)
                 consume();
@@ -27173,7 +27193,7 @@ perform_label_with_block_check_js[] returns [bool islabel] {
             // found "NAME: {}", where "{}" is a block
             if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
                 islabel = true;
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -27427,7 +27447,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional "await" before checking
             if (LA(1) == JS_AWAIT)
                 consume();
@@ -27440,7 +27460,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
                 if (LA(1) == TEMPOPS && generic_argument_list_check()) {
 
                     // try to consume generic arugment list
-                    angle_bracket_pair();
+                    angle_bracket_pair_impl(); if (failed) return;
 
                     // match parameter list
                     if (LA(1) == LPAREN) {
@@ -27470,7 +27490,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
                     }
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -27732,7 +27752,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // match the first set of parentheses
             if (LA(1) == LPAREN) {
                 while (LA(1) != antlr::Token::EOF_TYPE) {
@@ -27754,7 +27774,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
 
             // match optional call chaining syntax (e.g., "?.")
             if (LA(1) == QMARK_PERIOD)
-                qmark_period();
+                { qmark_period_impl(); if (failed) return; }
 
             // match the second set of parentheses
             if (found_comma && LA(1) == LPAREN) {
@@ -27779,7 +27799,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
                         break;
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -27989,7 +28009,7 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // must be in a class, otherwise the check is pointless
             if (perform_top_level_class_check_js()) {
                 // case 1: first token is a name
@@ -27997,10 +28017,10 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
                     consume();
                 // case 2: first token is a computed property
                 else if (LA(1) == LBRACKET)
-                    bracket_pair();
+                    { bracket_pair_impl(); if (failed) return; }
                 // otherwise, the parser should not be here
                 else
-                    throw antlr::RecognitionException();
+                    { failed = true; return; }
 
                 // consume optional "?" or "!" modifiers after the name
                 while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
@@ -28009,7 +28029,7 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
                 if (LA(1) == EQUAL)
                     isdecl = true;
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -28032,7 +28052,7 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional "await" before checking
             if (LA(1) == JS_AWAIT)
                 consume();
@@ -28043,7 +28063,7 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
 
                 // match parameter list
                 if (LA(1) == LPAREN) {
-                    paren_pair();
+                    paren_pair_impl(); if (failed) return;
 
                     // match generic argument list
                     if (LA(1) == TEMPOPS) {
@@ -28073,7 +28093,7 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
                     }
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -28156,10 +28176,10 @@ perform_pseudo_generic_argument_list_check_ts[] returns [bool islist] {
         int start = mark();
         inputState->guessing++;
 
-        try {
-            angle_bracket_pair();
+        try { attempt([&] {
+            angle_bracket_pair_impl(); if (failed) return;
             islist = true;
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -28213,15 +28233,15 @@ perform_named_array_with_index_check_ts[] returns [bool isarray] {
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             if (LA(1) == LBRACKET) {
-                bracket_pair();
+                bracket_pair_impl(); if (failed) return;
 
                 // found "[...]["
                 if (LA(1) == LBRACKET)
                     isarray = true;
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;
@@ -28286,7 +28306,7 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
         int start = mark();
         inputState->guessing++;
 
-        try {
+        try { attempt([&] {
             // consume optional specifiers before checking
             while (
                 LA(1) != TS_DECLARE
@@ -28302,10 +28322,10 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
 
                 // handle optional TypeScript generic argument list
                 if (LA(1) == TEMPOPS && generic_argument_list_check())
-                    angle_bracket_pair();
+                    { angle_bracket_pair_impl(); if (failed) return; }
 
                 // handle required parameter list
-                paren_pair();
+                paren_pair_impl(); if (failed) return;
 
                 // handle optional TypeScript type
                 if (LA(1) == COLON) {
@@ -28345,11 +28365,11 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
                 }
                 // handle required block
                 else {
-                    curly_pair();
+                    curly_pair_impl(); if (failed) return;
                     isfunction = true;
                 }
             }
-        }
+        }); }
         catch (...) {}
 
         inputState->guessing--;

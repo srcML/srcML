@@ -574,7 +574,7 @@ void CppCodeGenerator::gen(AlternativeBlock* blk) {
     grammar->theLLkAnalyzer->deterministic(blk);
 
     CppBlockFinishingInfo howToFinish = genCommonBlock(blk, true);
-    genBlockFinish(howToFinish, throwNoViable);
+    genBlockFinish(howToFinish, noViable());
 
     println("}");
 
@@ -594,9 +594,15 @@ void CppCodeGenerator::gen(CharLiteralElement* atom) {
     if (!saveText || atom->getAutoGenType() == AUTO_GEN_BANG)
         println("_saveIndex = text.length();");
 
-    print(atom->not_ ? "matchNot(" : "match(");
-    _print(convertJavaToCppString(atom->atomText, true));
-    _println(" /* charlit */ );");
+    if (flagFailures) {
+        print(atom->not_ ? "if (!matchNotOrFail(" : "if (!matchOrFail(");
+        _print(convertJavaToCppString(atom->atomText, true));
+        _println(" /* charlit */ )) " + failReturn());
+    } else {
+        print(atom->not_ ? "matchNot(" : "match(");
+        _print(convertJavaToCppString(atom->atomText, true));
+        _println(" /* charlit */ );");
+    }
 
     if (!saveText || atom->getAutoGenType() == AUTO_GEN_BANG)
         println("text.erase(_saveIndex);");
@@ -615,7 +621,10 @@ void CppCodeGenerator::gen(CharRangeElement* r) {
     if (save)
         println("_saveIndex=text.length();");
 
-    println("matchRange(" + convertJavaToCppString(r->beginText, true) + "," + convertJavaToCppString(r->endText, true) + ");");
+    if (flagFailures)
+        println("if (!matchRangeOrFail(" + convertJavaToCppString(r->beginText, true) + "," + convertJavaToCppString(r->endText, true) + ")) " + failReturn());
+    else
+        println("matchRange(" + convertJavaToCppString(r->beginText, true) + "," + convertJavaToCppString(r->endText, true) + ");");
 
     if (save)
         println("text.erase(_saveIndex);");
@@ -674,7 +683,7 @@ void CppCodeGenerator::gen(OneOrMoreBlock* blk) {
     }
 
     CppBlockFinishingInfo howToFinish = genCommonBlock(blk, false);
-    genBlockFinish(howToFinish, "if ( " + cnt + ">=1 ) { goto " + label + "; } else {" + throwNoViable + "}");
+    genBlockFinish(howToFinish, "if ( " + cnt + ">=1 ) { goto " + label + "; } else {" + noViable() + "}");
 
     println(cnt + "++;");
     tabs--;
@@ -859,11 +868,17 @@ void CppCodeGenerator::gen(WildcardElement* wc) {
     } else if (grammar->isLexer()) {
         if (!saveText || wc->getAutoGenType() == AUTO_GEN_BANG)
             println("_saveIndex = text.length();");
-        println("matchNot(EOF/*_CHAR*/);");
+        if (flagFailures)
+            println("if (!matchNotOrFail(EOF/*_CHAR*/)) " + failReturn());
+        else
+            println("matchNot(EOF/*_CHAR*/);");
         if (!saveText || wc->getAutoGenType() == AUTO_GEN_BANG)
             println("text.erase(_saveIndex);");
     } else {
-        println("matchNot(" + getValueString(TokenType::EOF_TYPE) + ");");
+        if (flagFailures)
+            println("if (!matchNotOrFail(" + getValueString(TokenType::EOF_TYPE) + ")) " + failReturn());
+        else
+            println("matchNot(" + getValueString(TokenType::EOF_TYPE) + ");");
     }
 
     if (grammar->isTreeWalker())
@@ -1428,7 +1443,10 @@ CppBlockFinishingInfo CppCodeGenerator::genCommonBlock(AlternativeBlock* blk, bo
                 astArgs = "_t,";
         }
 
-        println("match(" + astArgs + getBitsetName(markBitsetForGen(p.fset)) + ");");
+        if (flagFailures)
+            println("if (!matchOrFail(" + getBitsetName(markBitsetForGen(p.fset)) + ")) " + failReturn());
+        else
+            println("match(" + astArgs + getBitsetName(markBitsetForGen(p.fset)) + ");");
 
         if (grammar->isTreeWalker())
             println("_t = _t->getNextSibling();");
@@ -2228,7 +2246,11 @@ void CppCodeGenerator::genMatchUsingAtomText(GrammarAtom* atom) {
     if (grammar->isLexer() && (!saveText || atom->getAutoGenType() == AUTO_GEN_BANG))
         println("_saveIndex = text.length();");
 
-    print(atom->not_ ? "matchNot(" : "match(");
+    bool flagged = flagFailures && astArgs.empty();
+    if (flagged)
+        print(atom->not_ ? "if (!matchNotOrFail(" : "if (!matchOrFail(");
+    else
+        print(atom->not_ ? "matchNot(" : "match(");
     _print(astArgs);
 
     if (atom->atomText == "EOF")
@@ -2238,7 +2260,7 @@ void CppCodeGenerator::genMatchUsingAtomText(GrammarAtom* atom) {
     else
         _print(atom->atomText);
 
-    _println(");");
+    _println(flagged ? ")) " + failReturn() : std::string(");"));
 
     if (grammar->isLexer() && (!saveText || atom->getAutoGenType() == AUTO_GEN_BANG))
         println("text.erase(_saveIndex);");
@@ -2254,7 +2276,10 @@ void CppCodeGenerator::genMatchUsingAtomTokenType(GrammarAtom* atom) {
     }
 
     std::string s = astArgs + getValueString(atom->getType());
-    println((atom->not_ ? "matchNot(" : "match(") + s + ");");
+    if (flagFailures)
+        println("if (!" + std::string(atom->not_ ? "matchNotOrFail(" : "matchOrFail(") + s + ")) " + failReturn());
+    else
+        println((atom->not_ ? "matchNot(" : "match(") + s + ");");
 }
 
 void CppCodeGenerator::genNextToken() {
@@ -2273,6 +2298,9 @@ void CppCodeGenerator::genNextToken() {
         println("");
         return;
     }
+
+    bool saveFlagFailures = flagFailures;
+    flagFailures = false;
 
     RuleBlock* nextTokenBlk = MakeGrammar::createNextTokenRule(grammar, grammar->rules, "nextToken");
     auto nextTokenRs = new RuleSymbol("mnextToken");
@@ -2410,6 +2438,8 @@ void CppCodeGenerator::genNextToken() {
     tabs--;
     println("}");
     println("");
+
+    flagFailures = saveFlagFailures;
 }
 
 void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& prefix) {
@@ -2438,7 +2468,7 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
     else
         _print("void ");
 
-    _print(prefix + s->getId() + "(");
+    _print(prefix + (flagFailures ? implName(s->getId()) : s->getId()) + "(");
 
     _print(commonExtraParams);
     if (!commonExtraParams.empty() && rblk->argAction)
@@ -2537,7 +2567,7 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
         grammar->theLLkAnalyzer->deterministic(static_cast<AlternativeBlock*>(rblk));
 
         CppBlockFinishingInfo howToFinish = genCommonBlock(rblk, false);
-        genBlockFinish(howToFinish, throwNoViable);
+        genBlockFinish(howToFinish, noViable());
     }
 
     if (unlabeledUserSpec || rblk->getDefaultErrorHandler()) {
@@ -2606,10 +2636,138 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
     println("}");
     println("");
 
+    if (flagFailures && grammar->isParser())
+        genRuleWrapper(s, prefix);
+
     genAST = savegenAST;
 }
 
-void CppCodeGenerator::genRuleHeader(RuleSymbol* s, bool) {
+void CppCodeGenerator::genRuleWrapper(RuleSymbol* s, const std::string& prefix) {
+    RuleBlock* rblk = s->getBlock();
+    std::string type = rblk->returnAction ? extractTypeOfAction(*rblk->returnAction, rblk->getLine(), rblk->getColumn()) : "void";
+    std::string params;
+    std::string args;
+    if (rblk->argAction) {
+        std::string comma;
+        for (auto& param : splitParameters(*rblk->argAction)) {
+            int eqpos = indexOf(param, '=');
+            params += comma + trim(eqpos == -1 ? param : param.substr(0, static_cast<std::size_t>(eqpos)));
+            args += comma + parameterName(param);
+            comma = ", ";
+        }
+    }
+    std::string call = implName(s->getId()) + "(" + args + ");";
+
+    println(trim(type) + " " + prefix + s->getId() + "(" + params + ") {");
+    tabs++;
+    if (rblk->returnAction) {
+        println(trim(type) + " result = " + call);
+        println("throwIfFailed();");
+        println("return result;");
+    } else {
+        println(call);
+        println("throwIfFailed();");
+    }
+    tabs--;
+    println("}");
+    println("");
+}
+
+std::vector<std::string> CppCodeGenerator::splitParameters(const std::string& argAction) {
+    // remove comments
+    std::string text;
+    for (std::size_t i = 0; i < argAction.size(); ++i) {
+        if (argAction.compare(i, 2, "/*") == 0) {
+            std::size_t end = argAction.find("*/", i + 2);
+            i = end == std::string::npos ? argAction.size() : end + 1;
+            text += ' ';
+        } else if (argAction.compare(i, 2, "//") == 0) {
+            std::size_t end = argAction.find('\n', i);
+            i = end == std::string::npos ? argAction.size() : end;
+            text += ' ';
+        } else {
+            text += argAction[i];
+        }
+    }
+
+    std::vector<std::string> params;
+    std::string current;
+    int depth = 0;
+    for (char c : text) {
+        if (c == '(' || c == '<' || c == '[' || c == '{')
+            ++depth;
+        else if (c == ')' || c == '>' || c == ']' || c == '}')
+            --depth;
+        if (c == ',' && depth == 0) {
+            params.push_back(current);
+            current.clear();
+        } else {
+            current += c;
+        }
+    }
+    if (!trim(current).empty())
+        params.push_back(current);
+    return params;
+}
+
+std::string CppCodeGenerator::parameterName(const std::string& param) {
+    auto isIdChar = [](char c) { return isJavaLetterOrDigit(static_cast<unsigned char>(c)) || c == '_'; };
+
+    // function pointer, e.g., void (Parser::*rule)()
+    int star = indexOf(param, '*');
+    int paren = indexOf(param, '(');
+    if (paren != -1 && star > paren) {
+        std::size_t b = static_cast<std::size_t>(star) + 1;
+        std::size_t e = b;
+        while (e < param.size() && isIdChar(param[e]))
+            ++e;
+        return param.substr(b, e - b);
+    }
+
+    int eqpos = indexOf(param, '=');
+    std::string decl = trim(eqpos == -1 ? param : param.substr(0, static_cast<std::size_t>(eqpos)));
+    std::size_t e = decl.size();
+    while (e > 0 && decl[e - 1] == ']') {
+        e = decl.rfind('[', e - 1);
+        while (e > 0 && decl[e - 1] == ' ')
+            --e;
+    }
+    std::size_t b = e;
+    while (b > 0 && isIdChar(decl[b - 1]))
+        --b;
+    return decl.substr(b, e - b);
+}
+
+std::string CppCodeGenerator::implName(const std::string& rule) const {
+    // lexer rules are not called from user code, so they need no wrapper
+    if (!grammar->isParser())
+        return rule;
+    return rule + "_impl";
+}
+
+std::string CppCodeGenerator::failReturn() const {
+    if (syntacticPredLevel > 0 || !currentRule || !currentRule->returnAction)
+        return "return;";
+    return "return {};";
+}
+
+std::string CppCodeGenerator::noViable() const {
+    if (!flagFailures)
+        return throwNoViable;
+    return "failNoViable(); " + failReturn();
+}
+
+void CppCodeGenerator::genRuleHeader(RuleSymbol* s, bool startSymbol) {
+    if (flagFailures && grammar->isParser()) {
+        // declaration of the implementation, then the original name for the wrapper
+        flagFailures = false;
+        RuleSymbol impl(implName(s->getId()));
+        impl.block = s->block;
+        impl.defined = s->defined;
+        impl.access = s->access;
+        genRuleHeader(&impl, startSymbol);
+        flagFailures = true;
+    }
     tabs = 1;
     if (!s->isDefined()) {
         antlrTool->error("undefined rule: " + s->getId());
@@ -2655,7 +2813,7 @@ void CppCodeGenerator::genRuleHeader(RuleSymbol* s, bool) {
 }
 
 void CppCodeGenerator::GenRuleInvocation(RuleRefElement* rr) {
-    _print(rr->targetRule + "(");
+    _print(flagFailures ? implName(rr->targetRule) + "(" : rr->targetRule + "(");
 
     if (grammar->isLexer()) {
         if (rr->getLabel())
@@ -2684,6 +2842,9 @@ void CppCodeGenerator::GenRuleInvocation(RuleRefElement* rr) {
     }
     _println(");");
 
+    if (flagFailures)
+        println("if (failed) " + failReturn());
+
     if (grammar->isTreeWalker())
         println("_t = _retTree;");
 }
@@ -2696,7 +2857,10 @@ void CppCodeGenerator::genSemPred(std::string predIn, int line) {
 
     println("if (!(" + (pred ? p : std::string("null")) + "))");
     tabs++;
-    println("throw " + namespaceAntlr + "SemanticException(\"" + escapedPred + "\");");
+    if (flagFailures)
+        println("{ failSemantic(\"" + escapedPred + "\"); " + failReturn() + " }");
+    else
+        println("throw " + namespaceAntlr + "SemanticException(\"" + escapedPred + "\");");
     tabs--;
 }
 
@@ -2725,7 +2889,20 @@ void CppCodeGenerator::genSynPred(SynPredBlock* blk, const std::string& lookahea
     syntacticPredLevel++;
     println("try {");
     tabs++;
-    gen(static_cast<AlternativeBlock*>(blk));
+    if (flagFailures) {
+        // a failed guess returns from the lambda instead of throwing
+        println("[&]() {");
+        gen(static_cast<AlternativeBlock*>(blk));
+        println("}();");
+        println("if (failed) {");
+        tabs++;
+        println("failed = false;");
+        println("synPredMatched" + id + " = false;");
+        tabs--;
+        println("}");
+    } else {
+        gen(static_cast<AlternativeBlock*>(blk));
+    }
     tabs--;
     println("}");
     println("catch (" + exceptionThrown + "& pe) {");
@@ -3144,6 +3321,8 @@ void CppCodeGenerator::setupGrammarParameters(Grammar* g) {
             antlrTool->error("noConstructors option must be true or false", antlrTool->grammarFile, t->line, t->column);
         noConstructors = t->text == "true";
     }
+
+    flagFailures = g->isParser() || g->isLexer();
 
     if (g->isParser()) {
         labeledElementASTType = namespaceAntlr + "RefAST";
