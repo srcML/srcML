@@ -99,7 +99,7 @@ if(NOT MSVC)
         add_custom_command(
                 TARGET libsrcml_js
                 POST_BUILD
-                COMMAND emcc "${CMAKE_BINARY_DIR}/bin/libsrcml.a" ${VCPKG_SRCML_DEPENDENCIES}
+                COMMAND em++ "${CMAKE_BINARY_DIR}/bin/libsrcml.a" ${VCPKG_SRCML_DEPENDENCIES}
                 -o "${CMAKE_BINARY_DIR}/bin/libsrcml-${PROJECT_VERSION}.js"
                 -sEXPORTED_FUNCTIONS=${EXPORTS},_malloc,_free
                 -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,setValue,getValue,UTF8ToString,stringToUTF8
