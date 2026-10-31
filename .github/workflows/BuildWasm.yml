@@ -17,7 +17,11 @@ jobs:
         run: emcc -v
 
       - name: Install Mono
-        run: sudo apt-get install -y mono-complete
+        run: |
+          sudo apt-get install -y mono-complete
+          # trust the system CA certificates in mono, so NuGet can reach GitHub Packages
+          sudo mkdir -p /usr/share/.mono/new-certs/Trust
+          sudo cp -L /etc/ssl/certs/*.0 /usr/share/.mono/new-certs/Trust/
 
       - name: Setup vcpkg
         uses: ./.github/actions/vcpkg
