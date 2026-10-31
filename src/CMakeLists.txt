@@ -22,6 +22,7 @@ option(BUILD_CLIENT "Build srcML client" ON)
 add_compile_options(${SRCML_GLOBAL_COMPILE_OPTIONS})
 add_link_options("${SRCML_GLOBAL_LINK_OPTIONS}")
 
+add_subdirectory(antlr)
 add_subdirectory(parser)
 add_subdirectory(libsrcml)
 

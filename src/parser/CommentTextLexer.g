@@ -30,7 +30,7 @@ header "pre_include_cpp" {
 
 header {
    #include <iostream>
-   #include <antlr/TokenStreamSelector.hpp>
+   #include <ANTLRRuntime.hpp>
    #include <srcml_options.hpp>
    #include <Language.hpp>
 }

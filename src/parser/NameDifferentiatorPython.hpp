@@ -13,7 +13,7 @@
 #ifndef INCLUDED_NAMEDIFFERENTIATORPYTHON_HPP
 #define INCLUDED_NAMEDIFFERENTIATORPYTHON_HPP
 
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 #include <srcMLToken.hpp>
 #include <srcMLParser.hpp>
 #include <deque>

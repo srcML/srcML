@@ -24,7 +24,7 @@
 #ifndef INCLUDED_SRCMLTOKENSTREAM_HPP
 #define INCLUDED_SRCMLTOKENSTREAM_HPP
 
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 #include <queue>
 
 /**
