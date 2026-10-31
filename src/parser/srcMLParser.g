@@ -16230,6 +16230,10 @@ template_argument_expression[] { ENTRY_DEBUG } :
                 options { generateAmbigWarnings = false; } :
                     general_operators |
 
+                    // Nullable tuple elements must not close an enclosing ternary condition.
+                    { inLanguage(LANGUAGE_CSHARP) && LA(1) == QMARK }?
+                    template_operators |
+
                     qmark |
 
                     (variable_identifier) => variable_identifier |
