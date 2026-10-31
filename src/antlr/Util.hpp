@@ -24,8 +24,8 @@ using OStr = std::optional<std::string>;
 // java.lang.String.hashCode()
 inline std::int32_t javaHashCode(const std::string& s) {
     std::uint32_t h = 0;
-    for (unsigned char c : s)
-        h = 31 * h + c;
+    for (char c : s)
+        h = 31 * h + static_cast<unsigned char>(c);
     return static_cast<std::int32_t>(h);
 }
 
