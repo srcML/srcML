@@ -12,7 +12,7 @@
 #ifndef HTMLCOMMENTJAVASCRIPT_HPP
 #define HTMLCOMMENTJAVASCRIPT_HPP
 
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 #include <srcMLToken.hpp>
 #include <srcMLParser.hpp>
 #include <deque>

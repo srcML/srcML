@@ -13,7 +13,7 @@
 #ifndef INCLUDED_STREAM_MLPARSER_HPP
 #define INCLUDED_STREAM_MLPARSER_HPP
 
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 #include <TokenStream.hpp>
 
 #include <deque>
