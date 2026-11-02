@@ -134,6 +134,13 @@ private:
     void genNextToken();
     void genRule(RuleSymbol* s, bool startSymbol, int ruleNum, const std::string& prefix);
     void genRuleHeader(RuleSymbol* s, bool startSymbol);
+    void genRuleWrapper(RuleSymbol* s, const std::string& prefix);
+    static std::vector<std::string> splitParameters(const std::string& argAction);
+    static std::string parameterName(const std::string& param);
+    std::string implName(const std::string& rule) const;
+    std::string failReturn() const;
+    void genFlaggedErrorHandler(ExceptionSpec* ex);
+    std::string noViable() const;
     void GenRuleInvocation(RuleRefElement* rr);
     void genSemPred(std::string pred, int line);
     void genSynPred(SynPredBlock* blk, const std::string& lookaheadExpr);
@@ -169,6 +176,11 @@ private:
 
     // CppCodeGenerator state
     int syntacticPredLevel = 0;
+
+    // generating the body of a rule in a lambda, so that a flagged failure can run the rule's handler
+    bool inHandlerLambda = false;
+    // parsers report failed guesses with a flag instead of an exception
+    bool flagFailures = false;
     bool genAST = false;
     bool saveText = false;
     bool genHashLines = true;
