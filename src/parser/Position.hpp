@@ -12,7 +12,7 @@
 #ifndef INCLUDED_POSITION_HPP
 #define INCLUDED_POSITION_HPP
 
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 
 struct Position {
 

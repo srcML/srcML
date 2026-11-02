@@ -12,8 +12,7 @@
 #ifndef INCLUDED_SRCMLTOKEN_HPP
 #define INCLUDED_SRCMLTOKEN_HPP
 
-#include <antlr/Token.hpp>
-#include <antlr/TokenRefCount.hpp>
+#include <ANTLRRuntime.hpp>
 
 /** anonymous enum for srcML token categories (xml based) */
 enum { STARTTOKEN = 0, ENDTOKEN = 50, EMPTYTOKEN = 75 };

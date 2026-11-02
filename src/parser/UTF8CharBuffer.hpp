@@ -16,7 +16,7 @@
 #ifndef INCLUDED_UTF8CHARBUFFER_HPP
 #define INCLUDED_UTF8CHARBUFFER_HPP
 
-#include <antlr/CharBuffer.hpp>
+#include <ANTLRRuntime.hpp>
 #include <string>
 #include <string_view>
 #include <iconv.h>

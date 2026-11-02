@@ -50,7 +50,7 @@ endif()
 
 # Merge all object code into one object file to build static library from
 # Use this to build static library as it 1) hides filenames 2) hides symbols that are internal only
-set(LIBSRCML_OBJECTS $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr>)
+set(LIBSRCML_OBJECTS $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser>)
 
 if(NOT MSVC)
     set(LIBSRCML_OBJECT_FILENAME libsrcml${CMAKE_CXX_OUTPUT_EXTENSION})
@@ -63,7 +63,7 @@ if(NOT MSVC)
         add_custom_command(
             OUTPUT ${LIBSRCML_OBJECT_FILENAME}
             COMMAND emcc -r ${LIBSRCML_OBJECTS} -o ${LIBSRCML_OBJECT_FILENAME}
-            DEPENDS libsrcml parser antlr
+            DEPENDS libsrcml parser
             COMMAND_EXPAND_LISTS
         )
 
@@ -116,7 +116,7 @@ if(NOT MSVC)
           COMMAND ld -r -arch arm64 ${LIBSRCML_OBJECTS} -o libsrcml.arm64.o
           COMMAND ld -r -arch x86_64 ${LIBSRCML_OBJECTS} -o libsrcml.x86_64.o
           COMMAND lipo -create libsrcml.arm64.o libsrcml.x86_64.o -output ${LIBSRCML_OBJECT_FILENAME}
-          DEPENDS libsrcml parser antlr
+          DEPENDS libsrcml parser
           COMMAND_EXPAND_LISTS
         )
     elseif(${NUM_OSX_ARCHITECTURES} EQUAL 1)
@@ -124,7 +124,7 @@ if(NOT MSVC)
         add_custom_command(
           OUTPUT ${LIBSRCML_OBJECT_FILENAME}
           COMMAND ld -arch ${CMAKE_OSX_ARCHITECTURES} -r ${LIBSRCML_OBJECTS} -o ${LIBSRCML_OBJECT_FILENAME}
-          DEPENDS libsrcml parser antlr
+          DEPENDS libsrcml parser
           COMMAND_EXPAND_LISTS
         )
     else()
@@ -132,7 +132,7 @@ if(NOT MSVC)
         add_custom_command(
           OUTPUT ${LIBSRCML_OBJECT_FILENAME}
           COMMAND ld -r ${LIBSRCML_OBJECTS} -o ${LIBSRCML_OBJECT_FILENAME}
-          DEPENDS libsrcml parser antlr
+          DEPENDS libsrcml parser
           COMMAND_EXPAND_LISTS
         )
     endif()
@@ -194,7 +194,7 @@ if(BUILD_SHARED_LIBS)
         VISIBILITY_INLINES_HIDDEN ON
     )
     target_include_directories(libsrcml_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-    target_link_libraries(libsrcml_shared PRIVATE libsrcml parser antlr)
+    target_link_libraries(libsrcml_shared PRIVATE libsrcml parser)
 
     if(WIN32)
         set(SRCML_LIBSRCML_SHARED_OUTPUT_NAME "libsrcml")

@@ -12,7 +12,7 @@
 #ifndef SRCMLOUTPUT_HPP
 #define SRCMLOUTPUT_HPP
 
-#include <antlr/Token.hpp>
+#include <ANTLRRuntime.hpp>
 #include <TokenStream.hpp>
 #include <srcMLException.hpp>
 #include <string>

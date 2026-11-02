@@ -33,7 +33,7 @@
 #define TOKENPARSER_HPP
 
 #include <iostream>
-#include <antlr/TokenStream.hpp>
+#include <ANTLRRuntime.hpp>
 #include <list>
 
 /**

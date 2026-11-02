@@ -33,7 +33,7 @@ header {
     #include <unordered_map>
     #include <Language.hpp>
     #include <UTF8CharBuffer.hpp>
-    #include <antlr/TokenStreamSelector.hpp>
+    #include <ANTLRRuntime.hpp>
     #include <CommentTextLexer.hpp>
     #include <srcMLToken.hpp>
     #include <TokenLookbackJavaScript.hpp>
