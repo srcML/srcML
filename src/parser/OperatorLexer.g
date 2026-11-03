@@ -558,7 +558,7 @@ OPERATORS options { testLiterals = true; } {
 
         (
             EOL { $setType(EOL_BACKSLASH); }
-        )*
+        )?
     )
 )
 { startline = false; lastpos = getColumn(); prev = start; }
