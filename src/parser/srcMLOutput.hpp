@@ -138,6 +138,12 @@ private:
     // adds the position attributes to a token
     void addPosition(const antlr::RefToken& token);
 
+    // close any start tag not yet closed with '>'
+    void closeStartTag();
+
+    // output an attribute directly to the output buffer
+    void outputAttribute(const char* name, const char* value);
+
     // token stream input
     TokenStream* input = nullptr;
 
@@ -200,6 +206,15 @@ private:
 
     // stack of start elements for position calculation
     std::stack<antlr::RefToken> startElementStack;
+
+    // elements in the unit written directly to the output buffer as (prefix, name)
+    std::vector<std::pair<const char*, const char*>> openElements;
+
+    // start tag of the innermost open element is not yet closed with '>'
+    bool startTagOpen = false;
+
+    // text writer may have a start tag (e.g., unit) not yet closed with '>'
+    bool writerPending = false;
 
     // record position for <type prev=""/>
     Position lastTypeEndPosition;
