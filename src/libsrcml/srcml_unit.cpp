@@ -1256,6 +1256,11 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     // store the generated srcml in a char buffer
     char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
 
+    // loc counted during output when parsed from source (before the translator is replaced)
+    std::optional<int> loc;
+    if (unit->unit_translator->out.consumed())
+        loc = unit->unit_translator->out.getLOC();
+
     // record the current content_begin (which may change)
     int content_begin = unit->content_begin;
     int content_end = unit->content_end;
@@ -1283,13 +1288,17 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     free(srcml);
 
     // record the loc
-    if (!unit->src) {
-        unit->src = extract_src(unit->srcml);
-    }
+    if (loc && !unit->src) {
+        unit->loc = *loc;
+    } else {
+        if (!unit->src) {
+            unit->src = extract_src(unit->srcml);
+        }
 
-    unit->loc = (int) std::count(unit->src->begin(), unit->src->end(), '\n');
-    if (!unit->src->empty() && unit->src->back() != '\n')
-        ++unit->loc;
+        unit->loc = (int) std::count(unit->src->begin(), unit->src->end(), '\n');
+        if (!unit->src->empty() && unit->src->back() != '\n')
+            ++unit->loc;
+    }
 
     // finished with any parsing
     delete unit->unit_translator;

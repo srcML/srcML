@@ -114,6 +114,12 @@ public:
     // close the output
     void close();
 
+    // if consume() output any source
+    bool consumed() const { return isConsumed; }
+
+    // lines of code of the source output by consume(), with XML end-of-line normalization
+    int getLOC() const { return srcNewlines + (srcPartialLine ? 1 : 0); }
+
     // destructor
     ~srcMLOutput();
 
@@ -215,6 +221,18 @@ private:
 
     // text writer may have a start tag (e.g., unit) not yet closed with '>'
     bool writerPending = false;
+
+    // consume() was called
+    bool isConsumed = false;
+
+    // newlines in the source output by consume()
+    int srcNewlines = 0;
+
+    // source output by consume() has characters after the last newline
+    bool srcPartialLine = false;
+
+    // last source character output by consume() was a carriage return
+    bool srcLastCR = false;
 
     // record position for <type prev=""/>
     Position lastTypeEndPosition;

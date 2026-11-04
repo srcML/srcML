@@ -174,6 +174,7 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_encoding = encoding;
 
     writerPending = true;
+    isConsumed = true;
 
     Position currentPosition;
 
@@ -561,6 +562,23 @@ inline void srcMLOutput::processText(std::string_view str) {
 
     closeStartTag();
 
+    // count lines of code, where "\r\n" and "\r" are newlines as in XML parsing
+    for (const auto c : str) {
+        if (c == '\n') {
+            if (!srcLastCR)
+                ++srcNewlines;
+            srcPartialLine = false;
+            srcLastCR = false;
+        } else if (c == '\r') {
+            ++srcNewlines;
+            srcPartialLine = false;
+            srcLastCR = true;
+        } else {
+            srcPartialLine = true;
+            srcLastCR = false;
+        }
+    }
+
     // output any '<', '>', or '&', or any text before
     std::size_t p = 0;
     auto lastp = p;
@@ -661,6 +679,12 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
     if (isstart(token) || isempty(token)) {
 
         closeStartTag();
+
+        // escaped control character is part of the source
+        if (token->getType() == srcMLParserTokenTypes::CONTROL_CHAR) {
+            srcPartialLine = true;
+            srcLastCR = false;
+        }
 
         xmlOutputBufferWrite(output_buffer, 1, "<");
         if (prefix[0] != '\0') {
