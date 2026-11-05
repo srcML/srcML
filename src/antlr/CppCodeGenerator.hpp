@@ -140,6 +140,7 @@ private:
     std::string implName(const std::string& rule) const;
     std::string failReturn() const;
     void genFlaggedErrorHandler(ExceptionSpec* ex);
+    bool genPredicateDispatch(AlternativeBlock* blk, bool createdLL1Switch, CppBlockFinishingInfo& finishingInfo);
     std::string noViable() const;
     void GenRuleInvocation(RuleRefElement* rr);
     void genSemPred(std::string pred, int line);
