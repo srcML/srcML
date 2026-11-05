@@ -199,7 +199,7 @@ enum CALL_TYPE {
 // position in output stream
 struct TokenPosition {
     TokenPosition()
-        : token(0), sp(0) {}
+        : token(0), elements(0), pos(0) {}
 
     // sets a particular token in the output token stream
     void setType(int type) {
@@ -207,13 +207,15 @@ struct TokenPosition {
         (*token)->setType(type);
 
         // set this position in the element stack to type
-        *sp = type;
+        if (pos < elements->size())
+            (*elements)[pos] = type;
     }
 
     ~TokenPosition() {}
 
     antlr::RefToken* token;
-    int* sp;
+    srcMLState::OpenElements* elements;
+    size_t pos;
 };
 
 static std::vector<std::string> split(const std::string& s, char delimiter) {
@@ -889,7 +891,7 @@ public:
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
-    std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
+    std::vector<std::pair<srcMLState::MODE_TYPE, srcMLState::OpenElements>> finish_elements_add;
     std::deque<char> lparen_types_py;
     std::deque<char> lparen_types_js;
     std::deque<char> lcurly_types_js;
@@ -972,7 +974,8 @@ public:
     // sets to the current token in the output token stream
     void setTokenPosition(TokenPosition& tp) {
         tp.token = CurrentToken();
-        tp.sp = &(currentState().openelements.top());
+        tp.elements = &currentState().openelements;
+        tp.pos = currentState().openelements.size() - 1;
     }
 
     void endAllModes();
@@ -13701,7 +13704,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     }
 
                     if (cppif_duplicate) {
-                        std::stack<int> open_elements;
+                        srcMLState::OpenElements open_elements;
 
                         // Commented-out code
                         // open_elements.push(STHEN);
@@ -13729,7 +13732,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     }
 
                     if (cppif_duplicate) {
-                        std::stack<int> open_elements;
+                        srcMLState::OpenElements open_elements;
 
                         if (LA(1) != LCURLY && LA(1) != INDENT)
                             open_elements.push(SPSEUDO_BLOCK);
@@ -13749,7 +13752,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     }
 
                     if (cppif_duplicate) {
-                        std::stack<int> open_elements;
+                        srcMLState::OpenElements open_elements;
 
                         if (LA(1) != LCURLY && LA(1) != INDENT)
                             open_elements.push(SPSEUDO_BLOCK);
@@ -13767,7 +13770,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     }
 
                     if (cppif_duplicate) {
-                        std::stack<int> open_elements;
+                        srcMLState::OpenElements open_elements;
 
                         if (LA(1) != LCURLY && LA(1) != INDENT)
                             open_elements.push(SPSEUDO_BLOCK);
@@ -17213,7 +17216,7 @@ eol_post[int directive_token, bool markblockzero] {
                         }
 
                         if (inTransparentMode(MODE_CONDITION) && item == RPAREN) {
-                            std::stack<int> open_elements;
+                            srcMLState::OpenElements open_elements;
                             open_elements.push(SCONDITION);
 
                             if (number_finishing_elements) {
