@@ -19,6 +19,7 @@
 #include "MakeGrammar.hpp"
 #include "ActionLexer.hpp"
 #include <stdexcept>
+#include <algorithm>
 
 namespace antlrcpp {
 
@@ -1502,6 +1503,12 @@ CppBlockFinishingInfo CppCodeGenerator::genCommonBlock(AlternativeBlock* blk, bo
         tabs++;
     }
 
+    if (flagFailures && grammar->isParser() && genPredicateDispatch(blk, createdLL1Switch, finishingInfo)) {
+        genAST = savegenAST;
+        saveText = oldsaveTest;
+        return finishingInfo;
+    }
+
     int startDepth = grammar->isLexer() ? grammar->maxk : 0;
     for (int altDepth = startDepth; altDepth >= 0; altDepth--) {
         for (int i = 0; i < blk->numAlternatives(); i++) {
@@ -2954,6 +2961,169 @@ void CppCodeGenerator::genSynPred(SynPredBlock* blk, const std::string& lookahea
     println("}");
 
     println("if ( synPredMatched" + id + " ) {");
+}
+
+/*
+ * A chain of alternatives with predicates, in a parser with one token of lookahead, as a
+ * switch on the token. Each case tests only the predicates of the alternatives the token
+ * predicts, in the original order, and jumps to the alternative, so the same predicates are
+ * evaluated as by the chain, without the tests of the token for the other alternatives.
+ * A syntactic predicate is tested where it is in the chain, between switches for the
+ * alternatives before and after it.
+ */
+bool CppCodeGenerator::genPredicateDispatch(AlternativeBlock* blk, bool createdLL1Switch, CppBlockFinishingInfo& finishingInfo) {
+    if (grammar->maxk != 1 || grammar->isTreeWalker())
+        return false;
+
+    // the alternatives of the chain, in order, up to any without a prediction or a predicate
+    std::vector<Alternative*> alts;
+    int catchAll = -1;
+    for (int i = 0; i < blk->numAlternatives(); i++) {
+        Alternative* alt = blk->getAlternativeAt(i);
+        if (createdLL1Switch && suitableForCaseExpression(alt))
+            continue;
+        alts.push_back(alt);
+        if (lookaheadIsEmpty(alt, grammar->maxk)) {
+            if (alt->semPred || alt->synPred)
+                return false;
+            catchAll = static_cast<int>(alts.size()) - 1;
+            break;
+        }
+    }
+    if (alts.size() < 2)
+        return false;
+
+    const std::string id = std::to_string(blk->ID);
+    auto altLabel = [&](int k) { return "_alt" + id + "_" + std::to_string(k); };
+    auto segmentLabel = [&](int k) { return "_seg" + id + "_" + std::to_string(k); };
+    const std::string noAlt = "_noalt" + id;
+    const std::string end = "_end" + id;
+    bool usesNoAlt = false;
+
+    // the semantic predicate of an alternative
+    auto predicate = [&](Alternative* alt) {
+        ActionTransInfo tInfo;
+        OStr actionStr = processActionForSpecialSymbols(*alt->semPred, blk->line, currentRule, &tInfo);
+        return "(" + (actionStr ? *actionStr : std::string("null")) + ")";
+    };
+
+    // segments of alternatives without syntactic predicates, separated by those with
+    std::size_t k = 0;
+    while (k < alts.size()) {
+
+        if (alts[k]->synPred) {
+            Alternative* alt = alts[k];
+            println(segmentLabel(static_cast<int>(k)) + ":");
+            println("{");
+            tabs++;
+            std::string e = getLookaheadTestExpression(alt, grammar->maxk);
+            if (alt->semPred)
+                e = "(" + e + "&&" + predicate(alt) + ")";
+            genSynPred(alt->synPred, e);
+            tabs++;
+            println("goto " + altLabel(static_cast<int>(k)) + ";");
+            tabs--;
+            println("}");
+            tabs--;
+            println("}");
+            ++k;
+            continue;
+        }
+
+        // the segment and where to go after it
+        std::size_t segmentEnd = k;
+        while (segmentEnd < alts.size() && !alts[segmentEnd]->synPred)
+            ++segmentEnd;
+        std::string next;
+        if (segmentEnd < alts.size()) {
+            next = segmentLabel(static_cast<int>(segmentEnd));
+        } else {
+            next = noAlt;
+        }
+        const bool segmentHasCatchAll = catchAll >= static_cast<int>(k) && catchAll < static_cast<int>(segmentEnd);
+
+        // for each token, the alternatives to test in order, ending at the first without a predicate
+        BitSet tokens;
+        for (std::size_t j = k; j < segmentEnd && static_cast<int>(j) != catchAll; j++)
+            tokens.orInPlace(alts[j]->cache[1]->fset);
+        std::vector<std::pair<std::vector<int>, BitSet>> groups;
+        for (auto t : tokens.toArray()) {
+            std::vector<int> candidates;
+            for (std::size_t j = k; j < segmentEnd; j++) {
+                if (static_cast<int>(j) == catchAll) {
+                    candidates.push_back(static_cast<int>(j));
+                    break;
+                }
+                if (!alts[j]->cache[1]->fset.member(t))
+                    continue;
+                candidates.push_back(static_cast<int>(j));
+                if (!alts[j]->semPred)
+                    break;
+            }
+            auto group = std::find_if(groups.begin(), groups.end(), [&](const auto& g) { return g.first == candidates; });
+            if (group == groups.end()) {
+                groups.emplace_back(candidates, BitSet());
+                group = std::prev(groups.end());
+            }
+            group->second.add(static_cast<int>(t));
+        }
+
+        println("switch ( " + lookaheadString(1) + ") {");
+        for (const auto& group : groups) {
+            genCases(group.second);
+            println("{");
+            tabs++;
+            bool unconditional = false;
+            for (int j : group.first) {
+                Alternative* alt = alts[static_cast<std::size_t>(j)];
+                if (alt->semPred) {
+                    println("if " + predicate(alt) + " goto " + altLabel(j) + ";");
+                } else {
+                    println("goto " + altLabel(j) + ";");
+                    unconditional = true;
+                }
+            }
+            if (!unconditional)
+                println("goto " + next + ";");
+            tabs--;
+            println("}");
+        }
+        println("default:");
+        tabs++;
+        if (segmentHasCatchAll)
+            println("goto " + altLabel(catchAll) + ";");
+        else
+            println("goto " + next + ";");
+        tabs--;
+        println("}");
+
+        usesNoAlt = usesNoAlt || (next == noAlt);
+        k = segmentEnd;
+    }
+
+    for (std::size_t j = 0; j < alts.size(); j++) {
+        println(altLabel(static_cast<int>(j)) + ":");
+        println("{");
+        tabs++;
+        genAlt(alts[j], blk);
+        println("goto " + end + ";");
+        tabs--;
+        println("}");
+    }
+
+    // no alternative, where the caller generates the action
+    if (usesNoAlt)
+        println(noAlt + ":");
+    finishingInfo.needAnErrorClause = usesNoAlt;
+    finishingInfo.generatedAnIf = false;
+    finishingInfo.generatedSwitch = usesNoAlt;
+    if (createdLL1Switch) {
+        tabs--;
+        finishingInfo.postscript = end + ":;\n}";
+    } else {
+        finishingInfo.postscript = end + ":;";
+    }
+    return true;
 }
 
 void CppCodeGenerator::genTokenStrings(const std::string& prefix) {
