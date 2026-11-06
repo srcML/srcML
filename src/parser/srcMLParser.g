@@ -2726,7 +2726,7 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 */
 look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inmode = false;
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -2761,7 +2761,7 @@ look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
 */
 look_back_three_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inmode = false;
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -27039,7 +27039,7 @@ perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [boo
         if (!inTransparentMode(m))
             return false;
 
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -27068,7 +27068,7 @@ perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [boo
 */
 perform_in_class_block_check_js[] returns [bool inclass] {
         inclass = false;
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -27106,7 +27106,7 @@ perform_statement_has_block_check_js[] returns [bool hasblock] {
 
         hasblock = false;
         last_consumed_guessing_mode = -1;
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -27137,7 +27137,7 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
 
         skipterminate = false;
         last_consumed_guessing_mode = -1;
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -27983,7 +27983,7 @@ perform_top_level_class_check_js[] returns [bool istop] {
 
         istop = false;
         last_consumed_guessing_mode = -1;
-        std::list<srcMLState> temp_st = st;
+        StateList temp_st = st;
         int start = mark();
         inputState->guessing++;
 

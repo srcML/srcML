@@ -12,6 +12,70 @@
 
 #include <TokenParser.hpp>
 #include <srcMLState.hpp>
+#include <list>
+#include <vector>
+
+/**
+ * ModeAllocator
+ *
+ * Allocator for the mode stack that reuses the memory of popped modes, per thread,
+ * since modes are pushed and popped constantly.
+ */
+template <typename T>
+struct ModeAllocator {
+
+    using value_type = T;
+
+    ModeAllocator() = default;
+
+    template <typename U>
+    ModeAllocator(const ModeAllocator<U>&) {}
+
+    T* allocate(std::size_t n) {
+        auto& pool = freeBlocks();
+        if (n == 1 && !pool.blocks.empty()) {
+            void* p = pool.blocks.back();
+            pool.blocks.pop_back();
+            return static_cast<T*>(p);
+        }
+        return static_cast<T*>(::operator new(n * sizeof(T)));
+    }
+
+    void deallocate(T* p, std::size_t n) {
+        auto& pool = freeBlocks();
+        if (n == 1 && pool.blocks.size() < MAX_FREE_BLOCKS) {
+            pool.blocks.push_back(p);
+            return;
+        }
+        ::operator delete(p);
+    }
+
+    template <typename U>
+    bool operator==(const ModeAllocator<U>&) const { return true; }
+
+    template <typename U>
+    bool operator!=(const ModeAllocator<U>&) const { return false; }
+
+private:
+
+    /** maximum number of blocks kept for reuse */
+    static constexpr std::size_t MAX_FREE_BLOCKS = 1024;
+
+    /** memory of popped modes, per thread */
+    struct FreeBlocks {
+        std::vector<void*> blocks;
+
+        ~FreeBlocks() {
+            for (auto p : blocks)
+                ::operator delete(p);
+        }
+    };
+
+    static FreeBlocks& freeBlocks() {
+        thread_local FreeBlocks pool;
+        return pool;
+    }
+};
 
 /**
  * ModeStack
@@ -44,8 +108,11 @@ public:
      /** token parser */
     TokenParser* parser;
 
+    /** list of states/modes */
+    typedef std::list<srcMLState, ModeAllocator<srcMLState>> StateList;
+
     /** stack of states/modes */
-    std::list<srcMLState> st;
+    StateList st;
 
 protected:
 
@@ -178,7 +245,7 @@ protected:
      */
     srcMLState::MODE_TYPE getFirstMode(const srcMLState::MODE_TYPE& m) const {
 
-        for(std::list<srcMLState>::const_reverse_iterator citr = st.rbegin(); citr != st.rend(); ++citr) {
+        for(StateList::const_reverse_iterator citr = st.rbegin(); citr != st.rend(); ++citr) {
 
             if((citr->getMode() & m) != 0) return citr->getMode();
 
@@ -499,7 +566,7 @@ protected:
      */
     void insertModeAfter(const srcMLState::MODE_TYPE& m, const srcMLState::MODE_TYPE& new_m, const srcMLState::OpenElements & open_elements) {
 
-        std::list<srcMLState> alist;
+        StateList alist;
         while((st.back().getMode() & m) != m) {
 
             alist.push_front(st.back());
@@ -510,7 +577,7 @@ protected:
         st.push_back(new_m);
         st.back().openelements = open_elements;
 
-       for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i)
+       for(StateList::iterator i = alist.begin(); i != alist.end(); ++i)
             st.push_back(*i);
 
     }
@@ -523,7 +590,7 @@ protected:
      */
     void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
 
-        std::list<srcMLState> alist;
+        StateList alist;
         while((st.back().getMode() & m).none()) {
 
             alist.push_front(st.back());
@@ -535,13 +602,13 @@ protected:
         st.pop_back();
 
         alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
-        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+        for(StateList::iterator i = alist.begin(); i != alist.end(); ++i) {
             i->setMode(MODE_END_AT_ENDIF);
             st.push_back(*i);
         }
 
         alist.front().openelements = srcMLState::OpenElements();
-        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+        for(StateList::iterator i = alist.begin(); i != alist.end(); ++i) {
             i->setMode(MODE_ISSUE_EMPTY_AT_POP);
             st.push_back(*i);
 
