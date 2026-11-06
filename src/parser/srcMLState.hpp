@@ -11,6 +11,8 @@
 #define SRCMLSTATE_HPP
 
 #include <stack>
+#include <vector>
+#include <algorithm>
 
 #include <srcMLException.hpp>
 #include <bitset>
@@ -27,6 +29,53 @@ public:
 
     /** type of mode for GNU */
     typedef std::bitset<256> MODE_TYPE;
+
+    /**
+     * stack of open elements
+     * Inline storage for shallow stacks avoids an allocation for each new stack.
+     * Elements are accessed by position, since pointers to them do not stay valid.
+     */
+    class OpenElements {
+    public:
+        bool empty() const { return count == 0; }
+        size_t size() const { return count; }
+        int& top() { return data()[count - 1]; }
+        int& operator[](size_t pos) { return data()[pos]; }
+
+        void push(int id) {
+            if (count < INLINE_SIZE) {
+                local[count] = id;
+            } else {
+                // move inline elements to the heap when first needed
+                if (count == INLINE_SIZE)
+                    heap.assign(local, local + INLINE_SIZE);
+                heap.push_back(id);
+            }
+            ++count;
+        }
+
+        void pop() {
+            --count;
+            if (count >= INLINE_SIZE) {
+                heap.pop_back();
+
+                // back to inline elements
+                if (count == INLINE_SIZE) {
+                    std::copy(heap.begin(), heap.end(), local);
+                    heap.clear();
+                }
+            }
+        }
+
+    private:
+        static constexpr size_t INLINE_SIZE = 4;
+
+        int* data() { return count > INLINE_SIZE ? heap.data() : local; }
+
+        size_t count = 0;
+        int local[INLINE_SIZE] = {};
+        std::vector<int> heap;
+    };
 
     /**
      * srcMLState
@@ -283,7 +332,7 @@ public:
     MODE_TYPE flags_all;
 
     /** stack of open elements */
-    std::stack<int> openelements;
+    OpenElements openelements;
 
 private:
 
