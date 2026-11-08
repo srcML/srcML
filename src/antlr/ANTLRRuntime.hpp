@@ -13,6 +13,8 @@
  */
 
 #include <string>
+#include <string_view>
+#include <algorithm>
 #include <vector>
 #include <map>
 #include <stack>
@@ -684,6 +686,68 @@ protected:
 	CharScanner* scanner;
 };
 
+/*
+ * Text of the token being lexed. The characters of a token are appended one at a time, and for a std::string each
+ * append is a call into the library, since its members are extern templates, so here the append is inline.
+ */
+class TokenText {
+public:
+	static constexpr size_t npos = std::string::npos;
+
+	TokenText() = default;
+	TokenText(const TokenText&) = delete;
+	TokenText& operator=(const TokenText&) = delete;
+	~TokenText() { delete[] chars; }
+
+	TokenText& operator=(std::string_view s) {
+		count = 0;
+		append(s);
+		return *this;
+	}
+	void operator+=(char c) {
+		if (count == capacity)
+			grow(count + 1);
+		chars[count++] = c;
+	}
+	void operator+=(std::string_view s) { append(s); }
+	void append(std::string_view s) {
+		if (count + s.size() > capacity)
+			grow(count + s.size());
+		std::memcpy(chars + count, s.data(), s.size());
+		count += s.size();
+	}
+	void pop_back() { --count; }
+	void clear() { count = 0; }
+
+	size_t length() const { return count; }
+	size_t size() const { return count; }
+	bool empty() const { return count == 0; }
+	const char* data() const { return chars; }
+	char operator[](size_t i) const { return chars[i]; }
+	std::string substr(size_t pos, size_t n = npos) const {
+		return std::string(chars + pos, std::min(n, count - pos));
+	}
+	operator std::string_view() const { return std::string_view(chars, count); }
+
+private:
+	// out of line, since it is rare
+	void grow(size_t n);
+
+	char* chars = nullptr;
+	size_t count = 0;
+	size_t capacity = 0;
+};
+
+inline void TokenText::grow(size_t n) {
+	size_t newCapacity = std::max(n, capacity ? capacity * 2 : size_t(64));
+	char* newChars = new char[newCapacity];
+	if (count)
+		std::memcpy(newChars, chars, count);
+	delete[] chars;
+	chars = newChars;
+	capacity = newCapacity;
+}
+
 class CharScannerLiteralsLess {
 private:
 	const CharScanner* scanner;
@@ -722,12 +786,8 @@ public:
 		return toLower(c);
 	}
 	virtual void append(char c) {
-		if (saveConsumedInput) {
-			size_t l = text.length();
-			if ((l % 256) == 0)
-				text.reserve(l + 256);
-			text.replace(l, 0, &c, 1);
-		}
+		if (saveConsumedInput)
+			text += c;
 	}
 	virtual void append(const std::string& s) {
 		if (saveConsumedInput)
@@ -893,10 +953,10 @@ public:
 	virtual void setFilename(const std::string& f) { inputState->filename = f; }
 	virtual bool getCommitToPath() const { return commitToPath; }
 	virtual void setCommitToPath(bool commit) { commitToPath = commit; }
-	virtual const std::string& getText() const { return text; }
+	virtual std::string_view getText() const { return text; }
 	virtual void setText(const std::string& s) { text = s; }
 	virtual void resetText() {
-		text = "";
+		text.clear();
 		inputState->tokenStartColumn = inputState->column;
 		inputState->tokenStartLine = inputState->line;
 	}
@@ -934,7 +994,7 @@ public:
 	virtual void setInputState(LexerSharedInputState state) { inputState = state; }
 	virtual void setTokenObjectFactory(factory_type factory) { tokenFactory = factory; }
 	virtual int testLiteralsTable(int ttype) const {
-		std::map<std::string, int, CharScannerLiteralsLess>::const_iterator i = literals.find(text);
+		std::map<std::string, int, CharScannerLiteralsLess>::const_iterator i = literals.find(std::string(text));
 		if (i != literals.end())
 			ttype = (*i).second;
 		return ttype;
@@ -951,7 +1011,7 @@ public:
 	static const int EOF_CHAR = EOF;
 
 protected:
-	std::string text;
+	TokenText text;
 	bool saveConsumedInput;
 	factory_type tokenFactory;
 	bool caseSensitive;
