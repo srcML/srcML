@@ -124,7 +124,10 @@ public:
 
 	virtual int getColumn() const { return 0; }
 	virtual int getLine() const { return 0; }
-	virtual std::string getText() const { return "<no text>"; }
+	virtual const std::string& getText() const {
+		static const std::string noText("<no text>");
+		return noText;
+	}
 	virtual const std::string& getFilename() const {
 		static const std::string emptyString;
 		return emptyString;
@@ -174,7 +177,7 @@ public:
 	CommonToken(int t, const std::string& txt) : Token(t), line(1), col(1), text(txt) {}
 	CommonToken(const std::string& s) : Token(), line(1), col(1), text(s) {}
 
-	virtual std::string getText() const { return text; }
+	virtual const std::string& getText() const { return text; }
 	virtual void setText(std::string_view s) { text = s; }
 	virtual int getLine() const { return line; }
 	virtual int getColumn() const { return col; }
