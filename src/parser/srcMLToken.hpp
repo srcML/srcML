@@ -106,7 +106,7 @@ public:
      *
      * @returns the current text of the token.
      */
-    virtual std::string getText() const final { return text; }
+    virtual const std::string& getText() const final { return text; }
 
     /**
      * setText
