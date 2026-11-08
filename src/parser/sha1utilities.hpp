@@ -8,7 +8,34 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
+#ifdef __APPLE__
+// CommonCrypto is hardware accelerated, so use it in place of TinySHA1 with the same interface
+#include <CommonCrypto/CommonDigest.h>
+#include <cstddef>
+#include <cstdint>
+
+namespace sha1 {
+    class SHA1 {
+    public:
+        SHA1() { CC_SHA1_Init(&context); }
+
+        SHA1& processBytes(const void* const data, size_t len) {
+            CC_SHA1_Update(&context, data, static_cast<CC_LONG>(len));
+            return *this;
+        }
+
+        const uint8_t* getDigestBytes(uint8_t* digest) {
+            CC_SHA1_Final(digest, &context);
+            return digest;
+        }
+
+    private:
+        CC_SHA1_CTX context;
+    };
+}
+#else
 #include <TinySHA1.hpp>
+#endif
 #include <type_traits>
 
 static constexpr char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
