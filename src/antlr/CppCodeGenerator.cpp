@@ -2660,7 +2660,7 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
     if (grammar->isLexer()) {
         println("if ( _createToken && _token==" + namespaceAntlr + "nullToken && _ttype!=" + namespaceAntlr + "Token::SKIP ) {");
         println("   _token = makeToken(_ttype);");
-        println("   _token->setText(text.substr(_begin, text.length()-_begin));");
+        println("   _token->setText(std::string_view(text).substr(_begin, text.length()-_begin));");
         println("}");
         println("_returnToken = _token;");
         println("_saveIndex=0;");

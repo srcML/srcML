@@ -114,7 +114,7 @@ public:
      *
      * Set the current text of the token.
      */
-    virtual void setText(const std::string& s) final { text = s; }
+    virtual void setText(std::string_view s) final { text = s; }
 
     /**
      * ~srcMLToken
