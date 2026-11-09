@@ -16,6 +16,7 @@
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <Timer.hpp>
+#include <PerfCounters.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
 #include <iostream>
@@ -51,6 +52,9 @@ int main(int argc, char* argv[]) {
 
     // parse the command line
     auto srcml_request = parseCLI11(argc, argv);
+
+    // hardware counters for debugging information
+    PerfCounters counters(srcml_request.command & (SRCML_DEBUG_MODE | SRCML_TIMING_MODE));
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
@@ -246,6 +250,15 @@ See `srcml --help` for more information.
         auto realtime = runtime.real_world_elapsed();
         SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
                                << "Real Time: " << realtime << "ms\n";
+        std::uint64_t instructions = 0;
+        std::uint64_t cycles = 0;
+        if (counters.read(instructions, cycles)) {
+            SRCMLstatus(DEBUG_MSG) << "Instructions: " << PerfCounters::scaled(instructions) << '\n'
+                                   << "Cycles: " << PerfCounters::scaled(cycles) << '\n';
+            if (cycles > 0) {
+                SRCMLstatus(DEBUG_MSG) << "IPC: " << std::round(100.0 * instructions / cycles) / 100 << '\n';
+            }
+        }
         if (TraceLog::totalLOC() > 0) {
             SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
                                    << "KLOC/s: " << (realtime > 0 ? std::round((double) TraceLog::totalLOC() / realtime) : 0) << '\n';
