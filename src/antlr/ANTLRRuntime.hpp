@@ -533,7 +533,8 @@ public:
 	}
 	virtual int getChar() = 0;
 	virtual int LA(unsigned int i) {
-		fill(i);
+		if (queue.entries() < i + markerOffset)
+			fill(i);
 		return queue.elementAt(markerOffset + i - 1);
 	}
 	virtual unsigned int mark() {
