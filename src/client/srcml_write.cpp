@@ -43,7 +43,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
         if (option(SRCML_COMMAND_VERBOSE)) {
             if (!option(SRCML_COMMAND_QUIET)) {
                 std::ostringstream outs;
-                outs << std::setw(option(SRCML_DEBUG_MODE) ? 52 + 15 : 52) << ' ' << (prequest->filename ? *prequest->filename : "");
+                outs << std::setw(log.fieldsWidth()) << ' ' << (prequest->filename ? *prequest->filename : "");
                 log << '-' << outs.str();
             } else {
                 log.skip();
@@ -210,17 +210,17 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
         // logging
         if (option(SRCML_COMMAND_VERBOSE)) {
             std::ostringstream outs;
-            outs << std::setw(4) << std::left << prequest->language;
-            outs << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(prequest->unit.get());
+            outs << std::setw(log.isTerminal() ? TraceLog::language_width : 4) << std::left << prequest->language;
+            outs << ' ' << std::setw(log.isTerminal() ? TraceLog::loc_width : 5) << std::right << srcml_unit_get_loc(prequest->unit.get());
             if (option(SRCML_DEBUG_MODE)) {
                 auto runtime = std::round(prequest->runtime * 10) / 10;
                 outs << ' ' << std::setw(6) << std::right << std::fixed << std::setprecision(1) << runtime << "ms";
                 auto kloc = std::round(prequest->runtime > 0 ? (10 * srcml_unit_get_loc(prequest->unit.get()) / prequest->runtime) : 0) / 10;
-                outs << ' ' << std::setw(5) << std::right << std::fixed << std::setprecision(1) << kloc;
+                outs << ' ' << std::setw(log.isTerminal() ? TraceLog::klocs_width : 5) << std::right << std::fixed << std::setprecision(1) << kloc;
             }
             const char* hash = srcml_unit_get_hash(prequest->unit.get());
             if (hash)
-                outs << ' ' << hash;
+                outs << ' ' << (log.isTerminal() ? std::string_view(hash).substr(0, TraceLog::short_hash) : std::string_view(hash));
             if (prequest->filename)
                 outs << ' ' << *prequest->filename;
 

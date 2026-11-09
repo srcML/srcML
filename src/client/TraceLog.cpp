@@ -13,10 +13,30 @@
 #include <iomanip>
 #include <iostream>
 
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif
+
 size_t TraceLog::loc = 0;
 
 TraceLog::TraceLog()
     : enabled(option(SRCML_COMMAND_VERBOSE)) {
+
+#ifndef _MSC_VER
+    terminal = enabled && isatty(fileno(stderr));
+#endif
+}
+
+int TraceLog::fieldsWidth() const {
+
+    int width = option(SRCML_DEBUG_MODE) ? 52 + 15 : 52;
+    if (terminal) {
+        width += (language_width - 4) + (loc_width - 5) - (40 - short_hash);
+        if (option(SRCML_DEBUG_MODE))
+            width += klocs_width - 5;
+    }
+
+    return width;
 }
 
 void TraceLog::output(const char* s) {

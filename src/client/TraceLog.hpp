@@ -32,6 +32,26 @@ public:
         return loc;
     }
 
+    // output to a terminal, with a shortened hash
+    inline bool isTerminal() const {
+        return terminal;
+    }
+
+    // length of the shortened hash
+    static constexpr int short_hash = 8;
+
+    // width of the language field, for the longest language name, Objective-C
+    static constexpr int language_width = 11;
+
+    // width of the LOC field, for files of 100K lines or more
+    static constexpr int loc_width = 6;
+
+    // width of the KLOC/s field, for its header
+    static constexpr int klocs_width = 6;
+
+    // width of the fields between the count and the filename
+    int fieldsWidth() const;
+
     inline void skip() {
         ++num_skipped;
     }
@@ -44,6 +64,7 @@ private:
     int num_skipped = 0;
     int num_error = 0;
     static size_t loc;
+    bool terminal = false;
 };
 
 #endif
