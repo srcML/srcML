@@ -81,6 +81,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 {
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
+
+    // output buffered for writing in blocks
+    outbuf.reset(new char[OUTPUT_BLOCK_SIZE]);
 }
 
 /**
@@ -261,9 +264,26 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
             for (const auto& token: *buffer) {
                 outputToken(token);
             }
+            flushOutput();
             throw;
         }
     }
+
+    flushOutput();
+}
+
+/**
+ * flushOutput
+ *
+ * Write the buffered output to the output buffer.
+ */
+void srcMLOutput::flushOutput() {
+
+    if (outsize == 0)
+        return;
+
+    xmlOutputBufferWrite(output_buffer, (int) outsize, outbuf.get());
+    outsize = 0;
 }
 
 /**
@@ -274,9 +294,10 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
 inline void srcMLOutput::closeStartTag() {
 
     if (startTagOpen) {
-        xmlOutputBufferWrite(output_buffer, 1, ">");
+        outputRaw(">", 1);
         startTagOpen = false;
     } else if (writerPending) {
+        flushOutput();
         xmlTextWriterWriteRawLen(xout, BAD_CAST "", 0);
         writerPending = false;
     }
@@ -291,24 +312,24 @@ inline void srcMLOutput::closeStartTag() {
  */
 void srcMLOutput::outputAttribute(const char* name, const char* value) {
 
-    xmlOutputBufferWrite(output_buffer, 1, " ");
-    xmlOutputBufferWriteString(output_buffer, name);
-    xmlOutputBufferWrite(output_buffer, 2, "=\"");
+    outputRaw(" ", 1);
+    outputRaw(name);
+    outputRaw("=\"", 2);
 
     // values without special characters are output directly
     const char* p = value;
     while (*p >= 0x20 && *p < 0x7F && *p != '&' && *p != '<' && *p != '>' && *p != '"')
         ++p;
     if (*p == '\0') {
-        xmlOutputBufferWrite(output_buffer, (int) (p - value), value);
+        outputRaw(value, (int) (p - value));
     } else {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlAttrSerializeTxtContent(buffer, 0, 0, BAD_CAST value);
-        xmlOutputBufferWrite(output_buffer, xmlBufferLength(buffer), (const char*) xmlBufferContent(buffer));
+        outputRaw((const char*) xmlBufferContent(buffer), xmlBufferLength(buffer));
         xmlBufferFree(buffer);
     }
 
-    xmlOutputBufferWrite(output_buffer, 1, "\"");
+    outputRaw("\"", 1);
 }
 
 /**
@@ -585,22 +606,22 @@ inline void srcMLOutput::processText(std::string_view str) {
     while ((p = str.find_first_of("<>&"sv, p)) != str.npos) {
 
         // output section before
-        xmlOutputBufferWrite(output_buffer, (int) (p - lastp), &str.data()[lastp]);
+        outputRaw(&str.data()[lastp], (int) (p - lastp));
 
         // output special characters
         if (str[p] == '<') {
-            xmlOutputBufferWrite(output_buffer, (int) "&lt;"sv.size(), "&lt;");
+            outputRaw("&lt;", (int) "&lt;"sv.size());
         } else if (str[p] == '>') {
-            xmlOutputBufferWrite(output_buffer, (int) "&gt;"sv.size(), "&gt;");
+            outputRaw("&gt;", (int) "&gt;"sv.size());
         } else if (str[p] == '&') {
-            xmlOutputBufferWrite(output_buffer, (int) "&amp;"sv.size(), "&amp;");
+            outputRaw("&amp;", (int) "&amp;"sv.size());
         }
         ++p;
         lastp = p;
     }
 
     // output remaining text after last '<', '>', or '&', or the entire string if these do not occur
-    xmlOutputBufferWrite(output_buffer, (int) (str.size() - lastp), &str.data()[lastp]);
+    outputRaw(&str.data()[lastp], (int) (str.size() - lastp));
 }
 
 /**
@@ -646,25 +667,24 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
     // highly optimized as this is output for every start tag
     // position start attribute, e.g. pos:start="1:4"
-    xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.data());
-    xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
-    xmlOutputBufferWrite(output_buffer, 1, ":");
-    xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
-    xmlOutputBufferWrite(output_buffer, 1, "\"");
-    xmlOutputBufferFlush(output_buffer);
+    outputRaw(startAttribute.data(), (int) startAttribute.size());
+    outputRaw(positoa(token->getLine()));
+    outputRaw(":", 1);
+    outputRaw(positoa(token->getColumn()));
+    outputRaw("\"", 1);
 
     // position end attribute, e.g. pos:end="2:1"
-    xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.data());
+    outputRaw(endAttribute.data(), (int) endAttribute.size());
     if (token->getLine() > stoken->endline) {
-        xmlOutputBufferWriteString(output_buffer, "INVALID_POS(");
+        outputRaw("INVALID_POS(");
     }
-    xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
+    outputRaw(positoa(stoken->endline));
     if (token->getLine() > stoken->endline) {
-        xmlOutputBufferWriteString(output_buffer, ")");
+        outputRaw(")");
     }
-    xmlOutputBufferWrite(output_buffer, 1, ":");
-    xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));
-    xmlOutputBufferWrite(output_buffer, 1, "\"");
+    outputRaw(":", 1);
+    outputRaw(positoa(stoken->endcolumn));
+    outputRaw("\"", 1);
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -686,12 +706,12 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
             srcLastCR = false;
         }
 
-        xmlOutputBufferWrite(output_buffer, 1, "<");
+        outputRaw("<", 1);
         if (prefix[0] != '\0') {
-            xmlOutputBufferWriteString(output_buffer, prefix);
-            xmlOutputBufferWrite(output_buffer, 1, ":");
+            outputRaw(prefix);
+            outputRaw(":", 1);
         }
-        xmlOutputBufferWriteString(output_buffer, name);
+        outputRaw(name);
         openElements.emplace_back(prefix, name);
         startTagOpen = true;
 
@@ -729,23 +749,24 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
         // no open element in the unit, so end the text writer element
         if (openElements.empty()) {
+            flushOutput();
             xmlTextWriterEndElement(xout);
             writerPending = false;
             return;
         }
 
         if (startTagOpen) {
-            xmlOutputBufferWrite(output_buffer, 2, "/>");
+            outputRaw("/>", 2);
             startTagOpen = false;
         } else {
             const auto& [eprefix, ename] = openElements.back();
-            xmlOutputBufferWrite(output_buffer, 2, "</");
+            outputRaw("</", 2);
             if (eprefix[0] != '\0') {
-                xmlOutputBufferWriteString(output_buffer, eprefix);
-                xmlOutputBufferWrite(output_buffer, 1, ":");
+                outputRaw(eprefix);
+                outputRaw(":", 1);
             }
-            xmlOutputBufferWriteString(output_buffer, ename);
-            xmlOutputBufferWrite(output_buffer, 1, ">");
+            outputRaw(ename);
+            outputRaw(">", 1);
         }
         openElements.pop_back();
     }

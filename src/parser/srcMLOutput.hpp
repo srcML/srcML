@@ -23,6 +23,8 @@
 #include <srcmlns.hpp>
 #include <Position.hpp>
 #include <optional>
+#include <memory>
+#include <cstring>
 #include <stack>
 #include <queue>
 
@@ -147,6 +149,27 @@ private:
     // close any start tag not yet closed with '>'
     void closeStartTag();
 
+    // output raw characters, buffered
+    void outputRaw(const char* s, size_t size) {
+        if (size > OUTPUT_BLOCK_SIZE - outsize) {
+            flushOutput();
+
+            // larger than the buffer, so output directly
+            if (size > OUTPUT_BLOCK_SIZE) {
+                xmlOutputBufferWrite(output_buffer, (int) size, s);
+                return;
+            }
+        }
+        memcpy(outbuf.get() + outsize, s, size);
+        outsize += size;
+    }
+
+    // output a raw c-string, buffered
+    void outputRaw(const char* s) { outputRaw(s, strlen(s)); }
+
+    // write the buffered output to the output buffer
+    void flushOutput();
+
     // output an attribute directly to the output buffer
     void outputAttribute(const char* name, const char* value);
 
@@ -218,6 +241,15 @@ private:
 
     // start tag of the innermost open element is not yet closed with '>'
     bool startTagOpen = false;
+
+    // output not yet written to the output buffer
+    std::unique_ptr<char[]> outbuf;
+
+    // size of the output not yet written
+    size_t outsize = 0;
+
+    // size of the blocks of output written to the output buffer
+    static constexpr size_t OUTPUT_BLOCK_SIZE = 64 * 1024;
 
     // text writer may have a start tag (e.g., unit) not yet closed with '>'
     bool writerPending = false;
