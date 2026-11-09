@@ -19,6 +19,11 @@
 
 size_t TraceLog::loc = 0;
 
+namespace {
+
+    const char* const checkmark = "\x1b[32m✓\x1b[0m";
+}
+
 TraceLog::TraceLog()
     : enabled(option(SRCML_COMMAND_VERBOSE)) {
 
@@ -51,6 +56,9 @@ TraceLog& operator<<(TraceLog& tlog, char c) {
 
     if (!tlog.enabled)
         return tlog;
+
+    if (tlog.terminal)
+        std::clog << (c != '-' ? checkmark : " ") << ' ';
 
     if (c != '-') {
         std::clog << std::setw(5) << ++tlog.count << ' ';
