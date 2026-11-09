@@ -21,6 +21,7 @@
 #undef IN
 #undef THIS
 #include <KeywordLexer.hpp>
+#include <FastKeywordLexer.hpp>
 #include <srcMLParser.hpp>
 #include <StreamMLParser.hpp>
 #ifdef _MSC_VER
@@ -134,7 +135,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         antlr::TokenStreamSelector selector;
 
         // srcML lexical analyzer from standard input
-        KeywordLexer lexer(parser_input, getLanguage(), options, user_macro_list);
+        FastKeywordLexer lexer(parser_input, getLanguage(), options, user_macro_list);
         lexer.setSelector(&selector);
         lexer.setTabsize((int)tabsize);
 
