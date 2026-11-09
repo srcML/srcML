@@ -803,11 +803,10 @@ public:
 	}
 	virtual void consume() {
 		if (inputState->guessing == 0) {
-			int c = LA(1);
-			if (caseSensitive)
-				append(static_cast<char>(c));
-			else
-				append(static_cast<char>(inputState->getInput().LA(1)));
+			// the raw character is appended, and is the same as LA(1) when case sensitive
+			int c = inputState->getInput().LA(1);
+			if (saveConsumedInput)
+				text += static_cast<char>(c);
 			if (c == '\t')
 				tab();
 			else
