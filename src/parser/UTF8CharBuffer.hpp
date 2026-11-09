@@ -87,6 +87,9 @@ public:
     // Get the next character from the stream
     int getChar();
 
+    // Fill the lookahead with at least amount characters, plus characters already decoded
+    void fill(unsigned int amount);
+
     // Get the used encoding
     std::string_view getEncoding() const;
 

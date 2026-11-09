@@ -10,6 +10,7 @@
 #include <UTF8CharBuffer.hpp>
 
 #include <algorithm>
+#include <cstring>
 #include <sha1utilities.hpp>
 #include <iostream>
 #include <fcntl.h>
@@ -601,6 +602,54 @@ size_t UTF8CharBuffer::readChars() {
     }
 
     return trivial ? raw.size() : cooked.size();
+}
+
+/**
+ * fill
+ * @param amount number of characters needed in the lookahead
+ *
+ * Fill the lookahead with the characters needed, then with characters that are
+ * already decoded, without reading more input, to avoid a call per character.
+ */
+void UTF8CharBuffer::fill(unsigned int amount) {
+
+    // characters needed, which may read more input
+    antlr::InputBuffer::fill(amount);
+
+    // characters already decoded, with the same processing as getChar(),
+    // added in runs up to the next carriage return
+    const unsigned char* data = reinterpret_cast<const unsigned char*>((trivial ? raw : cooked).data());
+    const size_t end = std::min(insize, pos + 1024);
+    while (pos < end) {
+
+        // skip the '\n' of "\r\n", as the '\r' was already converted to a '\n'
+        if (lastcr) {
+            lastcr = false;
+            if (data[pos] == '\n') {
+                ++pos;
+                continue;
+            }
+        }
+
+        // run of characters without a carriage return
+        const void* cr = memchr(data + pos, '\r', end - pos);
+        const size_t runEnd = cr ? static_cast<size_t>(static_cast<const unsigned char*>(cr) - data) : end;
+        if (runEnd > pos) {
+            queue.append(data + pos, data + runEnd);
+            loc += static_cast<int>(std::count(data + pos, data + runEnd, '\n'));
+            lastchar = data[runEnd - 1];
+            pos = runEnd;
+        }
+
+        // convert carriage returns to a line feed
+        if (cr && pos < end) {
+            ++pos;
+            lastcr = true;
+            lastchar = '\n';
+            ++loc;
+            queue.append('\n');
+        }
+    }
 }
 
 /**
