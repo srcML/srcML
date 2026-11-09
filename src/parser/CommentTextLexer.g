@@ -10,6 +10,7 @@
  */
 
 header "pre_include_hpp" {
+    #include <array>
 }
 
 header "pre_include_cpp" {
@@ -127,6 +128,27 @@ private:
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
         selector=selector_;
+    }
+
+    // characters of COMMENT_TEXT without any special processing
+    static bool isPlainCharacter(int c) {
+        static const auto plain = [] {
+            std::array<bool, 256> plain{};
+            for (int c : { ' ', '!', '#', '$', '%', '&', '(', '*', '+', ',', '-', '.', '<', '=', '|' })
+                plain[c] = true;
+            for (int c = '0'; c <= ';'; ++c)
+                plain[c] = true;
+            for (int c = '?'; c <= '['; ++c)
+                plain[c] = true;
+            for (int c = '^'; c <= '_'; ++c)
+                plain[c] = true;
+            for (int c = 'a'; c <= 'z'; ++c)
+                plain[c] = true;
+            for (int c = '~'; c <= 0xFF; ++c)
+                plain[c] = true;
+            return plain;
+        }();
+        return c >= 0 && c <= 0xFF && plain[c];
     }
 
     // reinitialize comment lexer
@@ -489,19 +511,36 @@ COMMENT_TEXT {
             Line comments are not ended if there is a line continuation character for C and C++. They do end the line comment for
             C# and Java
         */
-        if (_ttype == COMMENT_TEXT && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && lookaheadMinusOne == '\\' && LA(1) == '\n') {
+        auto endCheck = [&]() {
+            if (_ttype == COMMENT_TEXT && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && lookaheadMinusOne == '\\' && LA(1) == '\n') {
 
-            // line continuation for C++ and C of line comments
-            ;
+                // line continuation for C++ and C of line comments
+                ;
 
-        } else if (_ttype == COMMENT_TEXT &&
-            ((LA(1) == '\n' && mode != RAW_STRING_END) || LA(1) == EOF_CHAR) &&
-            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
-             || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END)) {
+            } else if (_ttype == COMMENT_TEXT &&
+                ((LA(1) == '\n' && mode != RAW_STRING_END) || LA(1) == EOF_CHAR) &&
+                ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
+                 || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END)) {
 
-            $setType(mode);
-            selector->pop();
-        } 
+                $setType(mode);
+                selector->pop();
+            }
+        };
+        endCheck();
+
+        // a run of characters without any special processing is consumed directly, with the
+        // same record of previous characters, and the check of the end after the last of them,
+        // since the end can only occur before a newline or EOF
+        if (_ttype == COMMENT_TEXT && isPlainCharacter(LA(1))) {
+            do {
+                lookaheadMinusThree = lookaheadMinusTwo;
+                lookaheadMinusTwo = lookaheadMinusOne;
+                lookaheadMinusOne = LA(1);
+                consume();
+            } while (isPlainCharacter(LA(1)));
+
+            endCheck();
+        }
    } )+
 ;
 
