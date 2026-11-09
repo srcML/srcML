@@ -512,19 +512,22 @@ private:
 
 class InputBuffer {
 public:
-	InputBuffer() : nMarkers(0), markerOffset(0), numToConsume(0) {}
+	InputBuffer() : nMarkers(0), markerOffset(0) {}
 	virtual ~InputBuffer() {}
 
 	virtual void reset() {
 		nMarkers = 0;
 		markerOffset = 0;
-		numToConsume = 0;
 		queue.clear();
 	}
 	void commit() { nMarkers--; }
-	virtual void consume() { numToConsume++; }
+	virtual void consume() {
+		if (nMarkers > 0)
+			++markerOffset;
+		else
+			queue.removeFirst();
+	}
 	virtual void fill(unsigned int amount) {
-		syncConsume();
 		while (queue.entries() < amount + markerOffset)
 			queue.append(getChar());
 	}
@@ -534,13 +537,11 @@ public:
 		return queue.elementAt(markerOffset + i - 1);
 	}
 	virtual unsigned int mark() {
-		syncConsume();
 		nMarkers++;
 		return markerOffset;
 	}
 	virtual bool isMarked() const { return nMarkers != 0; }
 	virtual void rewind(unsigned int mark) {
-		syncConsume();
 		markerOffset = mark;
 		nMarkers--;
 	}
@@ -549,18 +550,7 @@ public:
 protected:
 	unsigned int nMarkers;
 	unsigned int markerOffset;
-	unsigned int numToConsume;
 	CircularQueue<int> queue;
-
-	void syncConsume() {
-		if (numToConsume > 0) {
-			if (nMarkers > 0)
-				markerOffset += numToConsume;
-			else
-				queue.removeItems(numToConsume);
-			numToConsume = 0;
-		}
-	}
 
 private:
 	InputBuffer(const InputBuffer& other);
