@@ -461,8 +461,9 @@ public:
     bool in_cmake_bracket = false;
 
     virtual void consume() noexcept(false) {
-        if (LA(1) != ' ')
-            lastnonspacetoken = LA(1);
+        const int c = LA(1);
+        if (c != ' ')
+            lastnonspacetoken = c;
 
         antlr::CharScanner::consume();
     }
@@ -483,10 +484,11 @@ public:
 
     // adjust the prior non-whitespace character values
     void updateNonWhitespaceCharacters() {
-        if (LA(1) != '\n' && LA(1) != '\t' && LA(1) != ' ') {
+        const int c = LA(1);
+        if (c != '\n' && c != '\t' && c != ' ') {
             lookaheadMinusThree = lookaheadMinusTwo;
             lookaheadMinusTwo = lookaheadMinusOne;
-            lookaheadMinusOne = LA(1);
+            lookaheadMinusOne = c;
         }
     }
 
