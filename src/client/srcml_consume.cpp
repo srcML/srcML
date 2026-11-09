@@ -84,6 +84,7 @@ void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> prequ
         srcml_unit_set_timestamp(prequest->unit.get(), prequest->time_stamp->data());
 
     // parse the buffer/file, timing as we go
+    write_queue->log.start(prequest->position, prequest->filename ? *prequest->filename : "");
     Timer parsetime;
 
     if (prequest->disk_filename) {
@@ -94,6 +95,7 @@ void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> prequ
         prequest->status = srcml_unit_parse_memory(prequest->unit.get(), prequest->buffer.data(), prequest->buffer.size());
 
     }
+    write_queue->log.finish(prequest->position);
     if (prequest->status == SRCML_STATUS_INVALID_ARGUMENT) {
         prequest->status = SRCML_STATUS_IO_ERROR;
         prequest->errormsg = "";
