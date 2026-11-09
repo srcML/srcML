@@ -167,6 +167,9 @@ private:
     // output a raw c-string, buffered
     void outputRaw(const char* s) { outputRaw(s, strlen(s)); }
 
+    // output a raw string, buffered
+    void outputRaw(std::string_view s) { outputRaw(s.data(), s.size()); }
+
     // write the buffered output to the output buffer
     void flushOutput();
 
@@ -237,7 +240,7 @@ private:
     std::stack<antlr::RefToken> startElementStack;
 
     // elements in the unit written directly to the output buffer as (prefix, name)
-    std::vector<std::pair<const char*, const char*>> openElements;
+    std::vector<std::pair<std::string_view, std::string_view>> openElements;
 
     // start tag of the innermost open element is not yet closed with '>'
     bool startTagOpen = false;
@@ -271,7 +274,7 @@ private:
     Position lastTypeStartPosition;
 
     // token handler
-    void processToken(const antlr::RefToken& token, const char* name, const char* prefix,
+    void processToken(const antlr::RefToken& token, std::string_view name, std::string_view prefix,
                       const char* attr_name1, const char* attr_value1,
                       const char* attr_name2, const char* attr_value2);
 
@@ -280,6 +283,15 @@ private:
 
     // map token to output element
     static const std::unordered_map<int, Element> process;
+
+    // output element for a token type with the length of its name
+    struct ElementInfo {
+        const Element* element = nullptr;
+        std::string_view name;
+    };
+
+    // output element for token type, or null if text
+    static const ElementInfo* findElement(int type);
 };
 
 #endif

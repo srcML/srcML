@@ -205,8 +205,7 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
                 }
 
                 // text token
-                auto search = process.find(token->getType());
-                if (!(search != process.end() && search->second.name)) {
+                if (!findElement(token->getType())) {
 
                     // update the text position
                     currentPosition.append(token->getText(), tabsize);
@@ -687,11 +686,11 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     outputRaw("\"", 1);
 }
 
-void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
+void srcMLOutput::processToken(const antlr::RefToken& token, std::string_view name, std::string_view prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
     // no name, no token
-    if (name[0] == 0)
+    if (name.empty())
         return;
 
     bool isposition = isoption(options, SRCML_PARSER_OPTION_POSITION);
@@ -707,7 +706,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         }
 
         outputRaw("<", 1);
-        if (prefix[0] != '\0') {
+        if (!prefix.empty()) {
             outputRaw(prefix);
             outputRaw(":", 1);
         }
@@ -761,7 +760,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         } else {
             const auto& [eprefix, ename] = openElements.back();
             outputRaw("</", 2);
-            if (eprefix[0] != '\0') {
+            if (!eprefix.empty()) {
                 outputRaw(eprefix);
                 outputRaw(":", 1);
             }
@@ -770,6 +769,30 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         }
         openElements.pop_back();
     }
+}
+
+/**
+ * findElement
+ * @param type token type
+ *
+ * @returns output element of the token type with a name, or null if a text token
+ */
+const srcMLOutput::ElementInfo* srcMLOutput::findElement(int type) {
+
+    // table indexed by token type, built from the element map
+    static const std::vector<ElementInfo> table = [] {
+        std::vector<ElementInfo> table;
+        for (const auto& [elementType, element] : process) {
+            if (!element.name)
+                continue;
+            if (elementType >= (int) table.size())
+                table.resize(elementType + 1);
+            table[elementType] = { &element, element.name };
+        }
+        return table;
+    }();
+
+    return type >= 0 && type < (int) table.size() && table[type].element ? &table[type] : nullptr;
 }
 
 /**
@@ -785,14 +808,13 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         return;
 
     // find the token in the element map. If found and it has a name, then process the token
-    auto search = process.find(token->getType());
-    if (search != process.end() && search->second.name) {
-        const Element& eparts = search->second;
+    if (const ElementInfo* info = findElement(token->getType())) {
+        const Element& eparts = *info->element;
 
         // process the token using the fields in the element
-        processToken(token, eparts.name,
+        processToken(token, info->name,
                     // use getPrefix() to record that this prefix was used
-                    namespaces[eparts.prefix].getPrefix().data(),
+                    namespaces[eparts.prefix].getPrefix(),
                     eparts.attr_name,
                     // if attribute name and no value, then take text from token
                     eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().data(),
