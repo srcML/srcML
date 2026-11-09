@@ -43,7 +43,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
         if (option(SRCML_COMMAND_VERBOSE)) {
             if (!option(SRCML_COMMAND_QUIET)) {
                 std::ostringstream outs;
-                outs << std::setw(option(SRCML_DEBUG_MODE) ? 52 + 14 : 52) << ' ' << (prequest->filename ? *prequest->filename : "");
+                outs << std::setw(option(SRCML_DEBUG_MODE) ? 52 + 15 : 52) << ' ' << (prequest->filename ? *prequest->filename : "");
                 log << '-' << outs.str();
             } else {
                 log.skip();
@@ -216,7 +216,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
                 auto runtime = std::round(prequest->runtime * 10) / 10;
                 outs << ' ' << std::setw(6) << std::right << std::fixed << std::setprecision(1) << runtime << "ms";
                 auto kloc = std::round(prequest->runtime > 0 ? (10 * srcml_unit_get_loc(prequest->unit.get()) / prequest->runtime) : 0) / 10;
-                outs << ' ' << std::setw(4) << std::right << std::fixed << std::setprecision(1) << kloc;
+                outs << ' ' << std::setw(5) << std::right << std::fixed << std::setprecision(1) << kloc;
             }
             const char* hash = srcml_unit_get_hash(prequest->unit.get());
             if (hash)
