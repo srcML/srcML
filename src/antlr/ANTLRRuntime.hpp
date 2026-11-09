@@ -521,7 +521,7 @@ public:
 		queue.clear();
 	}
 	void commit() { nMarkers--; }
-	virtual void consume() {
+	void consume() {
 		if (nMarkers > 0)
 			++markerOffset;
 		else
@@ -532,7 +532,7 @@ public:
 			queue.append(getChar());
 	}
 	virtual int getChar() = 0;
-	virtual int LA(unsigned int i) {
+	int LA(unsigned int i) {
 		if (queue.entries() < i + markerOffset)
 			fill(i);
 		return queue.elementAt(markerOffset + i - 1);
