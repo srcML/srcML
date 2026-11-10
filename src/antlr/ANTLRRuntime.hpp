@@ -82,6 +82,7 @@ private:
 public:
 	TokenRefCount(const Token* p = 0) : ref(p ? TokenRef::getRef(p) : 0) {}
 	TokenRefCount(const TokenRefCount<T>& other) : ref(other.ref ? other.ref->increment() : 0) {}
+	TokenRefCount(TokenRefCount<T>&& other) noexcept : ref(other.ref) { other.ref = 0; }
 	~TokenRefCount() {
 		if (ref && ref->decrement())
 			delete ref;
@@ -96,6 +97,16 @@ public:
 	TokenRefCount<T>& operator=(const TokenRefCount<T>& other) {
 		if (other.ref != ref) {
 			TokenRef* tmp = other.ref ? other.ref->increment() : 0;
+			if (ref && ref->decrement())
+				delete ref;
+			ref = tmp;
+		}
+		return *this;
+	}
+	TokenRefCount<T>& operator=(TokenRefCount<T>&& other) noexcept {
+		if (this != &other) {
+			TokenRef* tmp = other.ref;
+			other.ref = 0;
 			if (ref && ref->decrement())
 				delete ref;
 			ref = tmp;
