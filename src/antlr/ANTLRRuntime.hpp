@@ -1085,11 +1085,18 @@ public:
 		markerOffset = 0;
 		numToConsume = 0;
 		queue.clear();
+		la1token = nullptr;
 	}
 	ANTLR_ALWAYS_INLINE int LA(unsigned int i) {
+		// the token at LT(1) is cached until the position changes; its type is read each time, since it may change
+		if (i == 1 && la1token)
+			return la1token->getType();
 		if (numToConsume > 0 || queue.entries() < i + markerOffset)
 			fill(i);
-		return queue.elementAt(markerOffset + i - 1)->getType();
+		Token* token = queue.elementAt(markerOffset + i - 1).get();
+		if (i == 1)
+			la1token = token;
+		return token->getType();
 	}
 	const RefToken& LT(unsigned int i) {
 		if (numToConsume > 0 || queue.entries() < i + markerOffset)
@@ -1102,11 +1109,12 @@ public:
 		return markerOffset;
 	}
 	void rewind(unsigned int mark) {
+		la1token = nullptr;
 		syncConsume();
 		markerOffset = mark;
 		nMarkers--;
 	}
-	void consume() { numToConsume++; }
+	void consume() { numToConsume++; la1token = nullptr; }
 	virtual unsigned int entries() const { return static_cast<unsigned int>(queue.entries()) - markerOffset; }
 
 private:
@@ -1130,6 +1138,7 @@ protected:
 	unsigned int nMarkers;
 	unsigned int markerOffset;
 	unsigned int numToConsume;
+	Token* la1token = nullptr;
 	CircularQueue<RefToken> queue;
 
 private:
