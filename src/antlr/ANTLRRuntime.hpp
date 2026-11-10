@@ -479,7 +479,7 @@ public:
 		m_offset = 0;
 		storage.clear();
 	}
-	T elementAt(size_t idx) const { return storage[idx + m_offset]; }
+	const T& elementAt(size_t idx) const { return storage[idx + m_offset]; }
 	void removeFirst() {
 		if (m_offset >= OFFSET_MAX_RESIZE) {
 			storage.erase(storage.begin(), storage.begin() + m_offset + 1);
@@ -1093,7 +1093,7 @@ public:
 		fill(i);
 		return queue.elementAt(markerOffset + i - 1)->getType();
 	}
-	RefToken LT(unsigned int i) {
+	const RefToken& LT(unsigned int i) {
 		fill(i);
 		return queue.elementAt(markerOffset + i - 1);
 	}
@@ -1176,7 +1176,7 @@ public:
 	virtual ~Parser() {}
 
 	virtual int LA(unsigned int i) = 0;
-	virtual RefToken LT(unsigned int i) = 0;
+	virtual const RefToken& LT(unsigned int i) = 0;
 	virtual std::string getFilename() const { return inputState->filename; }
 	virtual void setFilename(const std::string& f) { inputState->filename = f; }
 	virtual void setInputState(ParserSharedInputState state) { inputState = state; }
@@ -1328,7 +1328,7 @@ public:
 
 	virtual void consume() { inputState->getInput().consume(); }
 	virtual int LA(unsigned int i) { return inputState->getInput().LA(i); }
-	virtual RefToken LT(unsigned int i) { return inputState->getInput().LT(i); }
+	virtual const RefToken& LT(unsigned int i) { return inputState->getInput().LT(i); }
 
 protected:
 	int k;
