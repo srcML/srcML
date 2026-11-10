@@ -18,6 +18,7 @@
 
 #include <deque>
 #include <stack>
+#include <array>
 #include <cassert>
 
 #include <srcMLToken.hpp>
@@ -50,6 +51,8 @@ public:
 
         pouttb = &tb;
         pskiptb = &skiptb;
+
+        handledTokens = handledTokenTable();
 
         srcMLParser::startUnit();
     }
@@ -182,6 +185,30 @@ private:
 
         // anything else is passed to the parser
         return false;
+    }
+
+    /**
+     * handledTokenTable
+     *
+     * Table of the token types consumeSkippedToken() may handle, i.e., a skip token,
+     * EOL, or a token parsed specially.
+     *
+     * @returns the table, indexed by token type
+     */
+    static const bool* handledTokenTable() {
+
+        static const auto handled = [] {
+            std::array<bool, MAX_TOKEN_TYPES> handled{};
+            for (int type = 0; type < MAX_TOKEN_TYPES; ++type)
+                handled[type] = srcMLParser::whitespace_token_set.member(static_cast<unsigned long>(type));
+            for (int type : { (int) srcMLParser::EOL, (int) srcMLParser::PREPROC, (int) srcMLParser::MACRO_NAME,
+                              (int) srcMLParser::C_ATTRIBUTE, (int) srcMLParser::VISUAL_CXX_ASM,
+                              (int) srcMLParser::TRAILING_HTML_COMMENT_START })
+                handled[type] = true;
+            return handled;
+        }();
+
+        return handled.data();
     }
 
     /**
@@ -318,6 +345,23 @@ private:
      * @returns if consumed any skip tokens.
      */
     bool consumeSkippedToken() {
+
+        // most tokens need none of the handling, which is out of the way of this check
+        const int la = srcMLParser::LA(1);
+        if (la >= 0 && la < MAX_TOKEN_TYPES && !handledTokens[la])
+            return false;
+
+        return consumeHandledToken();
+    }
+
+    /**
+     * consumeHandledToken
+     *
+     * Consume a skip token, or a token parsed specially, for consumeSkippedToken().
+     *
+     * @returns if consumed any skip tokens.
+     */
+    bool consumeHandledToken() {
 
         if (isSkipToken(srcMLParser::LA(1))) {
 
@@ -988,6 +1032,12 @@ private:
 
     /** parser options */
     OPTION_TYPE & options;
+
+    /** number of token types in the table of tokens that consumeSkippedToken() handles */
+    static constexpr int MAX_TOKEN_TYPES = 2048;
+
+    /** token types that consumeSkippedToken() handles, from handledTokenTable() */
+    const bool* handledTokens = nullptr;
 
     /** if in a skip */
     bool inskip = false;
