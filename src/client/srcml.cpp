@@ -22,6 +22,7 @@
 #include <iostream>
 #include <csignal>
 #include <cmath>
+#include <cstdio>
 #include <TraceLog.hpp>
 #include <stdin_libarchive.hpp>
 #include <src_input_clipboard.hpp>
@@ -41,6 +42,10 @@ namespace {
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
     bool request_create_src        (const srcml_request_t&);
+
+    // format for debugging information
+    std::string with_commas(std::uint64_t);
+    std::string milliseconds(double);
 }
 
 const char* SRCML_CLIENT_VERSION_STRING = "1.2.0";
@@ -248,8 +253,8 @@ See `srcml --help` for more information.
     // debugging information
     if (srcml_request.command & SRCML_DEBUG_MODE || srcml_request.command & SRCML_TIMING_MODE) {
         auto realtime = runtime.real_world_elapsed();
-        SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
-                               << "Real Time: " << realtime << "ms\n";
+        SRCMLstatus(DEBUG_MSG) << "CPU Time: " << milliseconds(runtime.cpu_time_elapsed()) << '\n'
+                               << "Real Time: " << milliseconds(realtime) << '\n';
         std::uint64_t instructions = 0;
         std::uint64_t cycles = 0;
         if (counters.read(instructions, cycles)) {
@@ -260,8 +265,8 @@ See `srcml --help` for more information.
             }
         }
         if (TraceLog::totalLOC() > 0) {
-            SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
-                                   << "KLOC/s: " << (realtime > 0 ? std::round((double) TraceLog::totalLOC() / realtime) : 0) << '\n';
+            SRCMLstatus(DEBUG_MSG) << "LOC: " << with_commas(TraceLog::totalLOC()) << '\n'
+                                   << "KLOC/s: " << with_commas(realtime > 0 ? (std::uint64_t) std::round((double) TraceLog::totalLOC() / realtime) : 0) << '\n';
         }
 
         SRCMLstatus(DEBUG_MSG) << "Status: " << (SRCMLStatus::errors() ? 1 : 0) << '\n';
@@ -323,5 +328,40 @@ namespace {
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
             !request_display_metadata(request)));
+    }
+
+    /*
+        Integer with commas between groups of three digits, e.g., 27,154,393
+    */
+    std::string with_commas(std::uint64_t value) {
+
+        std::string digits = std::to_string(value);
+        std::string result;
+        for (std::size_t i = 0; i < digits.size(); ++i) {
+            if (i > 0 && (digits.size() - i) % 3 == 0)
+                result += ',';
+            result += digits[i];
+        }
+
+        return result;
+    }
+
+    /*
+        Time with 4 significant digits, in milliseconds under a second, otherwise in seconds, e.g., 28.01ms, 152.8s
+    */
+    std::string milliseconds(double ms) {
+
+        // seconds when the value would round to 1000.0ms or more
+        double value = ms;
+        const char* unit = "ms";
+        if (value >= 999.95) {
+            value /= 1000;
+            unit = "s";
+        }
+        int decimals = value < 10 ? 3 : value < 100 ? 2 : 1;
+
+        char buffer[32];
+        snprintf(buffer, sizeof(buffer), "%.*f%s", decimals, value, unit);
+        return buffer;
     }
 }
