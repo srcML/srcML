@@ -133,11 +133,11 @@ public:
 		static const std::string emptyString;
 		return emptyString;
 	}
-	virtual int getType() const { return type; }
+	int getType() const { return type; }
 	virtual void setColumn(int) {}
 	virtual void setLine(int) {}
 	virtual void setText(std::string_view) {}
-	virtual void setType(int t) { type = t; }
+	void setType(int t) { type = t; }
 	virtual void setFilename(const std::string&) {}
 	virtual std::string toString() const { return "[\"" + getText() + "\",<" + std::to_string(type) + ">]"; }
 
