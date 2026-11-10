@@ -215,6 +215,10 @@ private:
     // archive namespaces
     Namespaces archiveNamespaces;
 
+    // position attributes up to the value, e.g., ' pos:start="', from the prefix of the namespaces
+    std::string startAttribute;
+    std::string endAttribute;
+
     // attributes added
     Attributes attributes;
 

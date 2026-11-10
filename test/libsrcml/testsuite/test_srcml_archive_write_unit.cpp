@@ -82,6 +82,16 @@ int main(int, char* argv[]) {
 </unit>
 )";
 
+    const std::string srcml_a_position = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" pos:tabs="8"><expr_stmt pos:start="1:1" pos:end="1:2"><expr pos:start="1:1" pos:end="1:1"><name pos:start="1:1" pos:end="1:1">a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+    const std::string srcml_a_position_prefix = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:p="http://www.srcML.org/srcML/position" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" p:tabs="8"><expr_stmt p:start="1:1" p:end="1:2"><expr p:start="1:1" p:end="1:1"><name p:start="1:1" p:end="1:1">a</name></expr>;</expr_stmt>
+</unit>
+)";
+
     const std::string srcml_a_archive = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
 
@@ -610,6 +620,54 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
+        free(s);
+    }
+
+    // position attributes use the prefix of the archive, after an archive with a different prefix
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_disable_hash(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_POSITION);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_filename(unit, "a.cpp");
+        srcml_unit_set_language(unit, "C++");
+        srcml_unit_parse_memory(unit, "a;\n", 3);
+
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        dassert(std::string(s, size), srcml_a_position);
+        free(s);
+    }
+
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_disable_hash(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_POSITION);
+        srcml_archive_register_namespace(archive, "p", "http://www.srcML.org/srcML/position");
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_filename(unit, "a.cpp");
+        srcml_unit_set_language(unit, "C++");
+        srcml_unit_parse_memory(unit, "a;\n", 3);
+
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        dassert(std::string(s, size), srcml_a_position_prefix);
         free(s);
     }
 

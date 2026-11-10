@@ -101,6 +101,11 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
     if (depth == 0)
         archiveNamespaces = namespaces;
+
+    // position attributes up to the value, e.g., ' pos:start="', with the prefix of this output
+    const std::string prefix(namespaces[POS].prefix);
+    startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
+    endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 }
 
 /**
@@ -659,10 +664,6 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     // how we detect empty elements: the position is wrong
     if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
             return;
-
-    thread_local const std::string prefix(namespaces[POS].prefix);
-    thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
-    thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
     // highly optimized as this is output for every start tag
     // position start attribute, e.g. pos:start="1:4"
