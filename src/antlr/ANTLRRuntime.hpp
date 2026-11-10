@@ -68,63 +68,44 @@ inline std::string charName(int ch) {
 
 class Token;
 
-struct TokenRef {
-	Token* const ptr;
-	unsigned int count;
-
-	TokenRef(Token* p);
-	~TokenRef();
-	TokenRef* increment() { ++count; return this; }
-	bool decrement() { return --count == 0; }
-	static TokenRef* getRef(const Token* p);
-
-private:
-	TokenRef(const TokenRef&);
-	TokenRef& operator=(const TokenRef&);
-};
-
 template <class T>
 class TokenRefCount {
 private:
-	TokenRef* ref;
+	Token* ptr;
+
+	void acquire();
+	static void release(Token* p);
 
 public:
-	TokenRefCount(const Token* p = 0) : ref(p ? TokenRef::getRef(p) : 0) {}
-	TokenRefCount(const TokenRefCount<T>& other) : ref(other.ref ? other.ref->increment() : 0) {}
-	TokenRefCount(TokenRefCount<T>&& other) noexcept : ref(other.ref) { other.ref = 0; }
-	~TokenRefCount() {
-		if (ref && ref->decrement())
-			delete ref;
-	}
+	TokenRefCount(const Token* p = 0) : ptr(const_cast<Token*>(p)) { acquire(); }
+	TokenRefCount(const TokenRefCount<T>& other) : ptr(other.ptr) { acquire(); }
+	TokenRefCount(TokenRefCount<T>&& other) noexcept : ptr(other.ptr) { other.ptr = 0; }
+	~TokenRefCount() { release(ptr); }
 	TokenRefCount<T>& operator=(Token* other) {
-		TokenRef* tmp = TokenRef::getRef(other);
-		if (ref && ref->decrement())
-			delete ref;
-		ref = tmp;
+		// the new token is acquired before the old is released, in case the old token holds the only reference
+		Token* old = ptr;
+		ptr = other;
+		acquire();
+		release(old);
 		return *this;
 	}
 	TokenRefCount<T>& operator=(const TokenRefCount<T>& other) {
-		if (other.ref != ref) {
-			TokenRef* tmp = other.ref ? other.ref->increment() : 0;
-			if (ref && ref->decrement())
-				delete ref;
-			ref = tmp;
-		}
+		if (other.ptr != ptr)
+			*this = other.ptr;
 		return *this;
 	}
 	TokenRefCount<T>& operator=(TokenRefCount<T>&& other) noexcept {
 		if (this != &other) {
-			TokenRef* tmp = other.ref;
-			other.ref = 0;
-			if (ref && ref->decrement())
-				delete ref;
-			ref = tmp;
+			Token* old = ptr;
+			ptr = other.ptr;
+			other.ptr = 0;
+			release(old);
 		}
 		return *this;
 	}
-	operator T*() const { return ref ? static_cast<T*>(ref->ptr) : 0; }
-	T* operator->() const { return ref ? static_cast<T*>(ref->ptr) : 0; }
-	T* get() const { return ref ? static_cast<T*>(ref->ptr) : 0; }
+	operator T*() const { return static_cast<T*>(ptr); }
+	T* operator->() const { return static_cast<T*>(ptr); }
+	T* get() const { return static_cast<T*>(ptr); }
 };
 
 typedef TokenRefCount<Token> RefToken;
@@ -137,9 +118,9 @@ public:
 	static const int EOF_TYPE = 1;
 	static const int SKIP = -1;
 
-	Token() : ref(0), type(INVALID_TYPE) {}
-	Token(int t) : ref(0), type(t) {}
-	Token(int t, const std::string& txt) : ref(0), type(t) { setText(txt); }
+	Token() : refCount(0), type(INVALID_TYPE) {}
+	Token(int t) : refCount(0), type(t) {}
+	Token(int t, const std::string& txt) : refCount(0), type(t) { setText(txt); }
 	virtual ~Token() {}
 
 	virtual int getColumn() const { return 0; }
@@ -161,8 +142,10 @@ public:
 	virtual std::string toString() const { return "[\"" + getText() + "\",<" + std::to_string(type) + ">]"; }
 
 private:
-	friend struct TokenRef;
-	TokenRef* ref;
+	// number of references to the token, which is deleted with its last reference
+	template <class T>
+	friend class TokenRefCount;
+	unsigned int refCount;
 	int type;
 
 	Token(RefToken other);
@@ -171,22 +154,16 @@ private:
 	Token(const Token&);
 };
 
-inline TokenRef::TokenRef(Token* p) : ptr(p), count(1) {
-	if (p && !p->ref)
-		p->ref = this;
+template <class T>
+inline void TokenRefCount<T>::acquire() {
+	if (ptr)
+		++ptr->refCount;
 }
 
-inline TokenRef::~TokenRef() {
-	delete ptr;
-}
-
-inline TokenRef* TokenRef::getRef(const Token* p) {
-	if (!p)
-		return 0;
-	Token* pp = const_cast<Token*>(p);
-	if (pp->ref)
-		return pp->ref->increment();
-	return new TokenRef(pp);
+template <class T>
+inline void TokenRefCount<T>::release(Token* p) {
+	if (p && --p->refCount == 0)
+		delete p;
 }
 
 inline RefToken nullToken;
