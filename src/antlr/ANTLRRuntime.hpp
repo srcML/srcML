@@ -35,6 +35,15 @@
 #define ANTLR_BEGIN_NAMESPACE(_x_) namespace _x_ {
 #define ANTLR_END_NAMESPACE }
 
+// lookahead is called constantly from very large generated functions, where it would otherwise not be inlined
+#if defined(__GNUC__) || defined(__clang__)
+#define ANTLR_ALWAYS_INLINE __attribute__((always_inline)) inline
+#elif defined(_MSC_VER)
+#define ANTLR_ALWAYS_INLINE __forceinline
+#else
+#define ANTLR_ALWAYS_INLINE inline
+#endif
+
 namespace antlr {
 
 inline std::string charName(int ch) {
@@ -1100,12 +1109,14 @@ public:
 		numToConsume = 0;
 		queue.clear();
 	}
-	int LA(unsigned int i) {
-		fill(i);
+	ANTLR_ALWAYS_INLINE int LA(unsigned int i) {
+		if (numToConsume > 0 || queue.entries() < i + markerOffset)
+			fill(i);
 		return queue.elementAt(markerOffset + i - 1)->getType();
 	}
 	const RefToken& LT(unsigned int i) {
-		fill(i);
+		if (numToConsume > 0 || queue.entries() < i + markerOffset)
+			fill(i);
 		return queue.elementAt(markerOffset + i - 1);
 	}
 	unsigned int mark() {
@@ -1338,8 +1349,8 @@ public:
 	LLkParser(TokenStream& lexer, int k_) : Parser(new TokenBuffer(lexer)), k(k_) {}
 
 	virtual void consume() { inputState->getInput().consume(); }
-	virtual int LA(unsigned int i) { return inputState->getInput().LA(i); }
-	virtual const RefToken& LT(unsigned int i) { return inputState->getInput().LT(i); }
+	ANTLR_ALWAYS_INLINE int LA(unsigned int i) final { return inputState->getInput().LA(i); }
+	const RefToken& LT(unsigned int i) final { return inputState->getInput().LT(i); }
 
 protected:
 	int k;
