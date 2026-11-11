@@ -2745,6 +2745,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (declaration_simple)=>
         declaration_simple |
 
+        // call
+        (call_statement_start)=>
+        call_statement |
+
         pattern_check_statements
 ;
 
@@ -3125,6 +3129,45 @@ declaration_simple_name[] { ENTRY_DEBUG } :
         variable_declaration_nameinit |
 
         function_header[0]
+;
+
+/*
+  call_statement_start
+
+  The start of a C/C++ call statement, e.g., "f(x);", "a->f(x);", or "f(x)->y = 1;".
+*/
+call_statement_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && LA(1) == NAME
+        }?
+        NAME ((PERIOD | TRETURN) NAME)*
+
+        call_check_paren_pair[argumenttoken]
+
+        // the call syntax followed by any of these is a call, including the end of the file, e.g., "module_exit(f)"
+        (TERMINATE | TRETURN | PERIOD | EQUAL | ASSIGNMENT | EOF)
+;
+
+/*
+  call_statement
+
+  A C/C++ call statement.
+*/
+call_statement[] { ENTRY_DEBUG } :
+        expression_statement[CALL, 1]
 ;
 
 /*
