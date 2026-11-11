@@ -2841,6 +2841,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (macro_call_other_start)=>
         macro_call_statement |
 
+        // expression starting with an indexed name, e.g., "a[i]->b = c;"
+        (expression_index_start)=>
+        expression_statement_simple |
+
         pattern_check_statements
 ;
 
@@ -3432,6 +3436,50 @@ macro_call_other_start[] {
             || LA(1) == CONST
             || LA(1) == INLINE
         }?
+;
+
+/*
+  expression_index_start
+
+  The start of a C/C++ expression statement that starts with an indexed name or a member, e.g., "a[i]->b = c;",
+  "a[i].b++;", "a->b[i]->c = d;", "a[N - sizeof(x)];", or "p->main.x = y;". A name, or a member of it, followed by an
+  index cannot start a declaration.
+*/
+expression_index_start[] { bool sawmain = false; ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && LA(1) == NAME
+        }?
+        NAME
+
+        // "main" may be a member, e.g., "p->main.x = y;"
+        (options { greedy = true; } :
+            (TRETURN | PERIOD)
+            (
+                NAME |
+
+                MAIN
+                set_bool[sawmain, true]
+            )
+        )*
+
+        (
+            // an index, which in C may also end the statement, e.g., "a[N - sizeof(x)];"
+            (options { greedy = true; } : bracket_pair)+
+            (
+                TRETURN | PERIOD | EQUAL | ASSIGNMENT | OPERATORS | LPAREN |
+
+                { inLanguage(LANGUAGE_C) }?
+                TERMINATE
+            ) |
+
+            // no index, after a "main" member
+            { sawmain }?
+            (TRETURN | PERIOD | EQUAL | ASSIGNMENT | OPERATORS | LPAREN)
+        )
 ;
 
 /*
