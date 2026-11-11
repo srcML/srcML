@@ -506,6 +506,7 @@ public:
 		storage.clear();
 	}
 	const T& elementAt(size_t idx) const { return storage[idx + m_offset]; }
+	const T* data() const { return storage.data() + m_offset; }
 	void removeFirst() {
 		if (m_offset >= OFFSET_MAX_RESIZE) {
 			storage.erase(storage.begin(), storage.begin() + m_offset + 1);
@@ -555,6 +556,14 @@ public:
 			++markerOffset;
 		else
 			queue.removeFirst();
+	}
+	// Buffered characters are contiguous until fill() or consume() changes the queue.
+	const int* data() const { return queue.data() + markerOffset; }
+	void consume(unsigned int count) {
+		if (nMarkers > 0)
+			markerOffset += count;
+		else
+			queue.removeItems(count);
 	}
 	virtual void fill(unsigned int amount) {
 		while (queue.entries() < amount + markerOffset)
@@ -738,6 +747,14 @@ public:
 			grow(count + s.size());
 		std::memcpy(chars + count, s.data(), s.size());
 		count += s.size();
+	}
+	// InputBuffer stores decoded bytes as ints (with a separate EOF value).
+	void append(const int* first, size_t n) {
+		if (count + n > capacity)
+			grow(count + n);
+		for (size_t i = 0; i < n; ++i)
+			chars[count + i] = static_cast<char>(first[i]);
+		count += n;
 	}
 	void pop_back() { --count; }
 	void clear() { count = 0; }
