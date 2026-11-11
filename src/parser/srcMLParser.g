@@ -3135,6 +3135,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (specifier_call_start)=>
         specifier_call |
 
+        // a name or "asm" before "volatile", e.g., "asm_inline volatile (...)" or "__asm__ __volatile__ goto (...)"
+        (asm_volatile_start)=>
+        specifier_call |
+
         pattern_check_statements
 ;
 
@@ -3911,6 +3915,37 @@ specifier_call_start[] {
 
             { LA(1) == STRUCT || LA(1) == UNION }?
         )
+;
+
+/*
+  asm_volatile_start
+
+  The start of a C statement of a name or "asm" before "volatile", e.g., "asm_inline volatile (...)" or
+  "__asm__ __volatile__ goto (...)", which is not a declaration.
+*/
+asm_volatile_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && (LA(1) == NAME || LA(1) == ASM)
+            && next_token() == VOLATILE
+        }?
+        // the token after the first part
+        set_int[specifier_call_secondtoken, next_token()]
+
+        .
+
+        VOLATILE
 ;
 
 /*
