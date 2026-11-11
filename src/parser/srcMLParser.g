@@ -1071,6 +1071,7 @@ public:
     // syntactic predicate
     int declaration_general_type_count = 0;
     int declaration_general_type_parts = 0;
+    int declaration_general_specifiers = 0;
 
     /*
       declaration_general_name_scan
@@ -1172,6 +1173,22 @@ public:
         i = scan_skip(i + 1);
 
         return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN;
+    }
+
+    /*
+      parameter_simple_name_scan
+
+      For parameter_simple_check, the check from the token buffer, without parsing, that LA(1) is the name of the
+      parameter, i.e., a name followed by "," or ")".
+    */
+    bool parameter_simple_name_scan() {
+
+        if (LA(1) != NAME)
+            return false;
+
+        unsigned int i = scan_skip(2);
+
+        return LA(i) == COMMA || LA(i) == RPAREN;
     }
 
     // the number of names in the type of a declaration with an attribute macro, found by the syntactic predicate
@@ -3845,7 +3862,8 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
             || LA(1) == ALIGNAS
             || (LA(1) == ATOMIC && next_token() != LPAREN)
         }?
-        specifier |
+        specifier
+        set_int[declaration_general_specifiers, declaration_general_specifiers + 1] |
 
         // "_Atomic(...)", a type
         { LA(1) == ATOMIC }?
@@ -17888,6 +17906,10 @@ parameter[] {
         }
 
         (
+            // a C parameter of a type and an optional name, e.g., "const char *s" or "int"
+            (parameter_simple_check)=>
+            parameter_type_variable[declaration_general_type_count, VARIABLE] |
+
             {
                 pattern_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
@@ -17905,6 +17927,52 @@ parameter[] {
 
             parameter_type_variable[type_count, stmt_type]
         )
+;
+
+/*
+  parameter_simple_check
+
+  A C parameter of a type and an optional name, e.g., "const char *s", "struct x *p", "int", or "void". The parts of
+  the type are as for declaration_general_start. With a name, the type is all of the parts before it. With no name,
+  the last part is taken as the name, unless the rest of the type is only specifiers.
+*/
+parameter_simple_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+        declaration_general_specifiers = 0;
+
+        bool last_class = false;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (options { greedy = true; } :
+            // not the name of the parameter, nor a member, e.g., "t->l", which is not part of a type
+            {
+                !parameter_simple_name_scan()
+                && !(LA(1) == NAME && (next_token() == PERIOD || next_token() == TRETURN))
+            }?
+            set_bool[last_class, LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM]
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )+
+
+        { declaration_general_type_parts > 0 }?
+        (
+            // a name
+            NAME |
+
+            // no name, so the last part is taken as the name, but not when the rest is only specifiers, and not a
+            // struct, union, or enum type, e.g., "enum e"
+            { (LA(1) == COMMA || LA(1) == RPAREN) && !last_class }?
+            set_int[
+                declaration_general_type_count,
+                declaration_general_type_count - 1 == declaration_general_specifiers
+                ? declaration_general_type_count : declaration_general_type_count - 1
+            ]
+        )
+
+        (COMMA | RPAREN)
 ;
 
 /*
