@@ -13,7 +13,7 @@
 #define INCLUDED_SRCMLTOKEN_HPP
 
 #include <ANTLRRuntime.hpp>
-#include <vector>
+#include <BlockPool.hpp>
 
 /** anonymous enum for srcML token categories (xml based) */
 enum { STARTTOKEN = 0, ENDTOKEN = 50, EMPTYTOKEN = 75 };
@@ -131,11 +131,9 @@ public:
      * Reuse the memory of deleted tokens, since tokens are created and deleted constantly.
      */
     static void* operator new(std::size_t size) {
-        auto& pool = freeTokens();
-        if (size == sizeof(srcMLToken) && !pool.blocks.empty()) {
-            void* p = pool.blocks.back();
-            pool.blocks.pop_back();
-            return p;
+        if (size == sizeof(srcMLToken)) {
+            if (void* p = FreeTokens::take())
+                return p;
         }
         return ::operator new(size);
     }
@@ -148,11 +146,8 @@ public:
      * Keep the memory of deleted tokens for reuse.
      */
     static void operator delete(void* p, std::size_t size) {
-        auto& pool = freeTokens();
-        if (size == sizeof(srcMLToken) && pool.blocks.size() < MAX_FREE_TOKENS) {
-            pool.blocks.push_back(p);
+        if (size == sizeof(srcMLToken) && FreeTokens::give(p))
             return;
-        }
         ::operator delete(p);
     }
 
@@ -177,19 +172,7 @@ private:
     static constexpr std::size_t MAX_FREE_TOKENS = 4096;
 
     /** memory of deleted tokens, per thread */
-    struct FreeTokens {
-        std::vector<void*> blocks;
-
-        ~FreeTokens() {
-            for (auto p : blocks)
-                ::operator delete(p);
-        }
-    };
-
-    static FreeTokens& freeTokens() {
-        thread_local FreeTokens pool;
-        return pool;
-    }
+    typedef BlockPool<srcMLToken, MAX_FREE_TOKENS> FreeTokens;
 };
 
 /**
