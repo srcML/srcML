@@ -3159,6 +3159,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (name_before_struct_variable_start)=>
         name_before_struct_variable |
 
+        // a name and call syntax, with no type, e.g., "typeof(x) *p;" or "f(x)[i] = 1;"
+        (name_call_start)=>
+        name_call |
+
         pattern_check_statements
 ;
 
@@ -4856,6 +4860,74 @@ expression_statement_simple[] {
         ENTRY_DEBUG
 } :
         expression_statement
+;
+
+/*
+  name_call_start
+
+  The start of a C statement of a name and call syntax, e.g., "typeof(x) *p;", "f(x)[i] = 1;", or "X(a) ? b : c;".
+  The name is the only part before the call syntax, so it is not the type of a declaration, unless it is a function
+  pointer, i.e., followed by the rest of a function, e.g., "int (*f)(int);", or a macro in the type, e.g., "M(a) x;".
+  Not a macro label, e.g., "M(x):".
+*/
+name_call_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+            && next_token() == LPAREN
+        }?
+        (
+            (macro_type_detector)=>
+            NAME
+            throw_exception[true] |
+
+            NAME
+
+            (
+                // a function pointer, i.e., followed by the rest of a function
+                (function_pointer_name_grammar declaration_paren_function_rest)=>
+                function_pointer_name_grammar
+                throw_exception[true] |
+
+                paren_pair
+
+                { LA(1) != COLON }?
+            )
+        )
+;
+
+/*
+  name_call
+
+  A C statement of a name and call syntax, which is a macro call when perform_call_check() says so, and otherwise an
+  expression statement of the kind of call it finds.
+*/
+name_call[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, LPAREN)
+            && type == MACRO
+        }?
+        macro_call |
+
+        expression_statement[type, call_count]
 ;
 
 /*
