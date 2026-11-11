@@ -1110,6 +1110,38 @@ public:
         return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA;
     }
 
+    /*
+      expression_other_scan
+
+      For expression_other_start, whether the first token LA(1) of a C statement cannot start a type, e.g., "sizeof",
+      a character literal, or ".".
+    */
+    bool expression_other_scan() {
+
+        if (!inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_OBJECTIVE_C))
+            return false;
+
+        switch (LA(1)) {
+        case PERIOD:
+        case TRETURN:
+        case LCURLY:
+        case LBRACKET:
+        case EQUAL:
+        case REFOPS:
+        case DOTDOTDOT:
+        case CHAR_START:
+        case LITERAL_TRUE:
+        case LITERAL_FALSE:
+        case SIZEOF:
+        case ALIGNOF:
+        case GENERIC_SELECTION:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
     // the element of a struct or union definition after specifiers, SSTRUCT or SUNION, found by the syntactic predicate
     int type_definition_specifier_element = 0;
 
@@ -3087,6 +3119,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (type_definition_specifier_check)=>
         type_definition_specifier |
 
+        // statement that cannot start with a type, e.g., "sizeof(x);" or "'c';"
+        (expression_other_start)=>
+        expression_other |
+
         pattern_check_statements
 ;
 
@@ -3795,6 +3831,46 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  expression_other_start
+
+  The start of a C statement whose first token cannot start a type, e.g., "sizeof(x);", "'c';", "_Generic(x, int: 1);",
+  or ".name = x,", so it is not a declaration.
+*/
+expression_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { expression_other_scan() }?
+        .
+;
+
+/*
+  expression_other
+
+  A C statement whose first token cannot start a type, which is a macro call when perform_call_check() says so, and
+  otherwise an expression statement of the kind of call it finds.
+*/
+expression_other[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, 0)
+            && type == MACRO
+        }?
+        macro_call |
+
+        expression_statement[type, call_count]
 ;
 
 /*
