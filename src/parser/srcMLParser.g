@@ -2849,6 +2849,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (label_error_statement)=>
         label_error_statement |
 
+        // call of a function named "error", e.g., "error(\"m\");"
+        (call_error_start)=>
+        call_statement |
+
         pattern_check_statements
 ;
 
@@ -3440,6 +3444,37 @@ macro_call_other_start[] {
             || LA(1) == CONST
             || LA(1) == INLINE
         }?
+;
+
+/*
+  call_error_start
+
+  The start of a C/C++ call statement of a function named "error", e.g., "error(\"m\");", where "error" is also a
+  preprocessor keyword.
+*/
+call_error_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && LA(1) == ERRORPREC
+        }?
+        ERRORPREC
+
+        call_check_paren_pair[argumenttoken]
+
+        // the call syntax followed by any of these is a call
+        (TERMINATE | TRETURN | PERIOD | EQUAL | ASSIGNMENT)
 ;
 
 /*
