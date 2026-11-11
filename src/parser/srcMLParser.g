@@ -2683,7 +2683,16 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we do not know yet whether it starts an expression,
   function definition, function declaration, or even a label.
 */
-pattern_statements[] {
+pattern_statements[] { ENTRY_DEBUG } :
+        pattern_check_statements
+;
+
+/*
+  pattern_check_statements
+
+  Statements, declarations, and definitions that must be matched by pattern_check().
+*/
+pattern_check_statements[] {
         int secondtoken = 0;
         int type_count = 0;
         int after_token = 0;
