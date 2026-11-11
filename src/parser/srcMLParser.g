@@ -1190,9 +1190,18 @@ public:
         case LPAREN:
         case CONSTANTS:
         case SIZEOF:
+        case MULTOPS:
+        case REFOPS:
+        case DESTOP:
+        case CHAR_START:
             return true;
 
+        // a name, including the C keywords that are names, e.g., "error"
         case NAME:
+        case ERRORPREC:
+        case LINE:
+        case WARNING:
+        case MAIN:
             break;
 
         default:
@@ -1211,6 +1220,7 @@ public:
         case LBRACKET:
         case EQUAL:
         case ASSIGNMENT:
+        case QMARK:
             return true;
 
         default:
