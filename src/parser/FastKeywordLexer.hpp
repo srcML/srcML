@@ -162,17 +162,32 @@ private:
 
         antlr::InputBuffer& input = inputState->getInput();
 
-        // as the WS rule: a tab is the last non-space character
-        for (int ch = input.LA(1); ch == ' ' || ch == '\t'; ch = input.LA(1)) {
-            text += static_cast<char>(ch);
-            if (ch == '\t') {
-                lastnonspacetoken = '\t';
-                tab();
-            } else {
-                ++inputState->column;
+        unsigned int n = 0;
+        int column = getColumn();
+        bool hasTab = false;
+        for (;;) {
+            const unsigned int available = input.entries();
+            const int* chars = input.data();
+            while (n < available && (chars[n] == ' ' || chars[n] == '\t')) {
+                if (chars[n] == '\t') {
+                    column = (((column - 1) / getTabSize()) + 1) * getTabSize() + 1;
+                    hasTab = true;
+                } else {
+                    ++column;
+                }
+                ++n;
             }
-            input.consume();
+            if (n < available)
+                break;
+            // Refill can reallocate the queue, so reacquire its pointer above.
+            input.LA(n + 1);
         }
+        text.append(input.data(), n);
+        input.consume(n);
+        inputState->column = column;
+        // As the WS rule: spaces preserve the last non-space character, but tabs replace it.
+        if (hasTab)
+            lastnonspacetoken = '\t';
 
         _returnToken = makeToken(WS);
         _returnToken->setText(text);
