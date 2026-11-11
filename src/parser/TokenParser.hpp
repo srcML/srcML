@@ -81,6 +81,9 @@ public:
     /** abstract method for indicating if the stream is paused */
     virtual bool isPaused() = 0;
 
+    /** abstract method for indicating if skipped tokens, e.g., a preprocessor line, are being parsed */
+    virtual bool inSkippedTokens() const = 0;
+
     /** abstract method for replacing start of stream with a NOP */
     virtual void nopStreamStart() = 0;
 

@@ -1021,6 +1021,11 @@ private:
         return paused;
     }
 
+    /** abstract method for indicating if skipped tokens, e.g., a preprocessor line, are being parsed */
+    bool inSkippedTokens() const final {
+        return inskip;
+    }
+
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() final {
 
