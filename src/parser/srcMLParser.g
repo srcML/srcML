@@ -2684,7 +2684,55 @@ keyword_statements[] { ENTRY_DEBUG } :
   function definition, function declaration, or even a label.
 */
 pattern_statements[] { ENTRY_DEBUG } :
+        // struct, union, or enum definition
+        (type_definition_simple_check)=>
+        type_definition_simple |
+
         pattern_check_statements
+;
+
+/*
+  type_definition_simple_check
+
+  The start of a simple C/C++ struct, union, or enum definition, e.g., "struct s {", "union {", or "enum e {".
+*/
+type_definition_simple_check[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (
+            // a macro before the name, e.g., "struct M A {"
+            (STRUCT | UNION)
+            (NAME (NAME)?)? |
+
+            ENUM
+            (NAME)?
+        )
+
+        LCURLY
+;
+
+/*
+  type_definition_simple
+
+  A simple C/C++ struct, union, or enum definition.
+*/
+type_definition_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { LA(1) == STRUCT }?
+        struct_union_definition[SSTRUCT] |
+
+        { LA(1) == UNION }?
+        struct_union_definition[SUNION] |
+
+        enum_definition
 ;
 
 /*
