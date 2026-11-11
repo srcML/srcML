@@ -1110,6 +1110,9 @@ public:
         return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA;
     }
 
+    // the kind of a general function, FUNCTION or FUNCTION_DECL, found by the syntactic predicate
+    int function_general_kind = 0;
+
     /*
       function_pointer_scan
 
@@ -3069,6 +3072,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (declaration_general_start)=>
         declaration_general |
 
+        // function declaration or definition with a type of any parts, e.g., "static void f(int x) __attr(a) {"
+        (function_general_start)=>
+        function_general |
+
         pattern_check_statements
 ;
 
@@ -3777,6 +3784,84 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  function_general_start
+
+  The start of a C function declaration or definition with a type of any parts, e.g., "static void f(int x) {" or
+  "static void f(int x) __attr(a);". The type is as for declaration_general_start, and the name is followed by the rest
+  of a function: an optional macro, the parameter list, what follows it, e.g., macros, and then "{", ";", or "=". In a
+  function body, one that ends with ";" is a variable, so it is not matched.
+*/
+function_general_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int fla = 0;
+        int type_count = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } :
+            { !((LA(1) == NAME || LA(1) == MAIN) && next_token() == LPAREN) }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
+
+        // a type with at least one part that is not a specifier, except for "main" with no type at all, e.g., "main() {"
+        { declaration_general_type_parts > 0 || (LA(1) == MAIN && declaration_general_type_count == 0) }?
+        function_general_name
+
+        // the parameters are parsed with the same counts, so keep the count of the type
+        set_int[type_count, declaration_general_type_count]
+
+        function_rest[fla]
+
+        set_int[declaration_general_type_count, type_count]
+
+        // in a function body, a function declaration that ends with ";" is a variable
+        { fla == LCURLY || fla == EQUAL || (fla == TERMINATE && !inTransparentMode(MODE_FUNCTION_BODY)) }?
+        set_int[function_general_kind, fla == LCURLY ? FUNCTION : FUNCTION_DECL]
+;
+
+/*
+  function_general_name
+
+  The name of a general function. Not a name that starts a macro in the type, i.e., call syntax followed by a name and
+  then ";", "{", or "=", e.g., "f(int x) M {", where "M" is the name of a variable.
+*/
+function_general_name[] { ENTRY_DEBUG } :
+        (macro_type_detector)=>
+        NAME
+        throw_exception[true] |
+
+        NAME |
+
+        MAIN
+;
+
+/*
+  function_general
+
+  A C function declaration or definition with a type of any parts.
+*/
+function_general[] { ENTRY_DEBUG } :
+        { function_general_kind == FUNCTION }?
+        function_definition[declaration_general_type_count] |
+
+        function_declaration[declaration_general_type_count]
 ;
 
 /*
