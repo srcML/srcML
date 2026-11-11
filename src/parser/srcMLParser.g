@@ -991,6 +991,66 @@ public:
             return false;
         }
     }
+
+    // the number of names in the type of a declaration with an attribute macro, found by the syntactic predicate
+    int declaration_attribute_type_count = 0;
+
+    /*
+      declaration_attribute_scan
+
+      For declaration_attribute_start, the check from the token buffer, without parsing, that the name LA(1) is
+      followed by an argument list that starts with a constant or a string, e.g., "__aligned(8)" or "SEC(\"license\")",
+      which is not a parameter list.
+    */
+    bool declaration_attribute_scan() {
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the token after the "("
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == CONSTANTS || LA(i) == STRING_START;
+    }
+
+    /*
+      declaration_attribute_kr_scan
+
+      For declaration_attribute_start, the check from the token buffer, without parsing, that the name LA(1) is
+      followed by a list of names, e.g., "(a, b)", as for a K&R function.
+    */
+    bool declaration_attribute_kr_scan() {
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the first token in the "("
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != NAME)
+            return false;
+
+        // the token after the first name
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == COMMA || LA(i) == RPAREN;
+    }
     bool notdestructor = false;
     bool operatorname = false;
     std::stack<std::string> class_namestack;
@@ -2853,6 +2913,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (call_error_start)=>
         call_statement |
 
+        // declaration with an attribute macro, e.g., "u32 type __aligned(8);"
+        (declaration_attribute_start)=>
+        declaration_attribute |
+
         pattern_check_statements
 ;
 
@@ -3444,6 +3508,76 @@ macro_call_other_start[] {
             || LA(1) == CONST
             || LA(1) == INLINE
         }?
+;
+
+/*
+  declaration_attribute_start
+
+  The start of a C variable declaration with an attribute macro, e.g., "u32 type __aligned(8);",
+  "char _license[] SEC(\"license\") = \"GPL\";", or "int f(int a) __weak;". The name before the argument list is the
+  name of the variable, and the names before it, each with an optional index without parentheses, are its type. Either
+  the argument list starts with a constant or a string, so it is not a parameter list, or names follow it, and it is
+  not the list of names of a K&R function, e.g., "int f(a, b) int a; int b; {".
+*/
+declaration_attribute_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_attribute_type_count = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+        }?
+        (options { greedy = true; } :
+            { next_token() != LPAREN }?
+            NAME
+
+            // an index without parentheses, e.g., "[]" or "[16]"
+            (options { greedy = true; } :
+                LBRACKET
+                (~(LBRACKET | RBRACKET | LPAREN | RPAREN))*
+                RBRACKET
+            )*
+
+            set_int[declaration_attribute_type_count, declaration_attribute_type_count + 1]
+        )+
+
+        (
+            { declaration_attribute_scan() }?
+            NAME
+
+            paren_pair
+
+            (TERMINATE | EQUAL) |
+
+            // names after the argument list, e.g., "int f(int a) __weak;", but not a K&R function
+            { !declaration_attribute_kr_scan() }?
+            NAME
+
+            paren_pair
+
+            // names, or the keywords "__weak" and "__strong"
+            (options { greedy = true; } : NAME | WEAK | STRONG)+
+
+            TERMINATE
+        )
+;
+
+/*
+  declaration_attribute
+
+  A C variable declaration with an attribute macro.
+*/
+declaration_attribute[] { ENTRY_DEBUG } :
+        variable_declaration_statement[declaration_attribute_type_count]
 ;
 
 /*
