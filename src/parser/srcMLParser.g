@@ -2819,6 +2819,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (macro_call_statement_start)=>
         macro_call_statement |
 
+        // expression, e.g., an assignment
+        (expression_statement_start)=>
+        expression_statement_simple |
+
         pattern_check_statements
 ;
 
@@ -3297,6 +3301,84 @@ macro_call_statement_start[] {
 */
 macro_call_statement[] { ENTRY_DEBUG } :
         macro_call
+;
+
+/*
+  expression_statement_start
+
+  The start of a C/C++ expression statement which is not a call, e.g., "x = 0;", "x->y += 1;", "x++;", "a.b = c;",
+  "*p = 0;", "5;", "(void)x;", "++x;", "\"str\";", "x ? a : b;", "x, y;", or a name alone, e.g., the Linux
+  "fallthrough;" or "asm;". A leading constant, "(", or operator is unambiguously an expression, since none of those can start a
+  declaration, label, or call.
+*/
+expression_statement_start[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && (
+                LA(1) == NAME
+                || LA(1) == ERRORPREC
+                || (LA(1) == ASM && next_token() == TERMINATE)
+
+                // a word that is a name in C, e.g., "line"
+                || (
+                    inLanguage(LANGUAGE_C)
+                    && (
+                        LA(1) == LINE
+                        || LA(1) == DEFINE
+                        || LA(1) == INCLUDE
+                        || LA(1) == PRAGMA
+                        || LA(1) == UNDEF
+                        || LA(1) == IFDEF
+                        || LA(1) == IFNDEF
+                        || LA(1) == ELIF
+                        || LA(1) == ENDIF
+                        || LA(1) == WARNING
+                    )
+                )
+                || LA(1) == MULTOPS
+                || LA(1) == CONSTANTS
+                || LA(1) == STRING_START
+                || LA(1) == LPAREN
+                || LA(1) == OPERATORS
+            )
+        }?
+        (
+            MULTOPS | CONSTANTS | STRING_START | LPAREN | OPERATORS |
+
+            // "error" is also a preprocessor keyword
+            compound_name
+
+            (
+                EQUAL | ASSIGNMENT | OPERATORS | PERIOD | TERMINATE | QMARK | COMMA | RCURLY | EOF |
+
+                // in C++, "<" after a name may start a declaration
+                { inLanguage(LANGUAGE_C) }?
+                (TEMPOPS | TEMPOPE) |
+
+                // "&" followed by a name is a declaration, e.g., "a & b;", but not by "~" or a constant
+                { inLanguage(LANGUAGE_C) }?
+                REFOPS
+                { LA(1) == DESTOP || LA(1) == CONSTANTS }?
+            )
+        )
+;
+
+/*
+  expression_statement_simple
+
+  A C/C++ expression statement which is not a call.
+*/
+expression_statement_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        expression_statement
 ;
 
 /*
