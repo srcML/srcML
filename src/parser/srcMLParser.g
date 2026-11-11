@@ -2833,6 +2833,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (label_statement_simple)=>
         label_statement_simple |
 
+        // enum constant, last since it is only in an enum
+        (enum_constant_simple_check)=>
+        enum_constant_simple |
+
         pattern_check_statements
 ;
 
@@ -2957,6 +2961,45 @@ type_declaration_simple[] {
         enum_declaration |
 
         union_declaration
+;
+
+/*
+  enum_constant_simple_check
+
+  The start of a C/C++ enum constant, e.g., "A = 1," or "A,". A name followed by "}" is not matched, since it is a
+  macro.
+*/
+enum_constant_simple_check[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && inMode(MODE_ENUM)
+            && inMode(MODE_LIST)
+            && LA(1) == NAME
+        }?
+        NAME
+
+        (
+            EQUAL | COMMA |
+
+            // the last enum constant, e.g., "{ a }"
+            { inLanguage(LANGUAGE_C) }?
+            RCURLY
+        )
+;
+
+/*
+  enum_constant_simple
+
+  A C/C++ enum constant.
+*/
+enum_constant_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        enum_short_variable_declaration
 ;
 
 /*
