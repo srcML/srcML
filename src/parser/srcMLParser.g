@@ -2823,6 +2823,12 @@ pattern_statements[] { ENTRY_DEBUG } :
         (expression_statement_start)=>
         expression_statement_simple |
 
+        // a specifier followed by call syntax and nothing else, e.g. "static DEFINE_SPINLOCK(lock);", never a
+        // declaration (that needs a declarator name after the type, not "("), so an expression statement, with the
+        // specifier marked up as stray
+        (static_call_expression_start)=>
+        expression_statement_simple |
+
         pattern_check_statements
 ;
 
@@ -3364,6 +3370,44 @@ expression_statement_start[] { ENTRY_DEBUG } :
                 { LA(1) == DESTOP || LA(1) == CONSTANTS }?
             )
         )
+;
+
+/*
+  static_call_expression_start
+
+  The start of a C/C++ statement with a leading "static" or "static const" followed by call syntax and nothing else,
+  e.g., "static DEFINE_SPINLOCK(lock);" or "static const BIN_ATTR(f, 0);" (macros) or even "static int (*fp);" (not a
+  macro, but still not a declaration, since a declaration needs a declarator name after the type, not "("). Either
+  way it is an expression statement, with the specifiers marked up as stray.
+*/
+static_call_expression_start[] {
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && LA(1) == STATIC
+            && (next_token() == NAME || next_token() == CONST)
+        }?
+        STATIC
+
+        (CONST)?
+
+        NAME
+
+        (
+            // in C, any arguments, e.g., "static DEFINE_PER_CPU(unsigned long, x);"
+            { inLanguage(LANGUAGE_C) }?
+            paren_pair |
+
+            call_check_paren_pair[argumenttoken]
+        )
+
+        TERMINATE
 ;
 
 /*
