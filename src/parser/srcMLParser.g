@@ -3123,6 +3123,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (expression_other_start)=>
         expression_other |
 
+        // a specifier alone, e.g., "static;"
+        (declaration_specifier_only_start)=>
+        declaration_specifier_only |
+
         pattern_check_statements
 ;
 
@@ -3831,6 +3835,57 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  declaration_specifier_only_start
+
+  The start of a C declaration of a single specifier and nothing else, e.g., "static;" or "__weak;".
+*/
+declaration_specifier_only_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && next_token() == TERMINATE
+            && (
+                LA(1) == STATIC
+                || LA(1) == EXTERN
+                || LA(1) == INLINE
+                || LA(1) == REGISTER
+                || LA(1) == CONST
+                || LA(1) == VOLATILE
+                || LA(1) == RESTRICT
+                || LA(1) == NORETURN
+                || LA(1) == COMPLEX
+                || LA(1) == IMAGINARY
+                || LA(1) == THREAD_LOCAL
+                || LA(1) == BLOCK
+                || LA(1) == WEAK
+                || LA(1) == STRONG
+            )
+        }?
+        .
+
+        TERMINATE
+;
+
+/*
+  declaration_specifier_only
+
+  A C declaration of a single specifier and nothing else.
+*/
+declaration_specifier_only[] { ENTRY_DEBUG } :
+        variable_declaration_statement[1]
 ;
 
 /*
