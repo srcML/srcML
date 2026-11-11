@@ -925,6 +925,72 @@ public:
             return true;
         }
     }
+
+    /*
+      macro_call_declarator_scan
+
+      For macro_call_statement_start in C, the check from the token buffer, without parsing, that the "(" after the
+      name LA(1) may start a declarator, e.g., "int (*fp) D(a) (int);", a function declaration.
+    */
+    bool macro_call_declarator_scan() {
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the token after the "("
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == MULTOPS || LA(i) == LPAREN;
+    }
+
+    /*
+      macro_call_name_scan
+
+      For macro_call_statement_start in C, the check from the token buffer, without parsing, that the name LA(1) after
+      the call syntax of a macro is a separate statement, e.g., "A(x) b = 1;" or
+      "A(x) B(y);", and not the name of a declaration with the macro as its type, "A(x) b;". Returns false when the
+      check needs the parse, e.g., for a preprocessor line after the name.
+    */
+    bool macro_call_name_scan() {
+
+        // EOL is a token of a preprocessor line
+        if (inSkippedTokens())
+            return false;
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        switch (LA(i)) {
+        case LPAREN:
+        case EQUAL:
+        case ASSIGNMENT:
+        case COMMA:
+        case LBRACKET:
+        case NAME:
+        case VOID:
+        case MULTOPS:
+        case REFOPS:
+        case COLON:
+        case PERIOD:
+        case TRETURN:
+        case OPERATORS:
+        case CONST:
+        case RCURLY:
+            return true;
+
+        default:
+            return false;
+        }
+    }
     bool notdestructor = false;
     bool operatorname = false;
     std::stack<std::string> class_namestack;
@@ -2749,6 +2815,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (call_statement_start)=>
         call_statement |
 
+        // macro call
+        (macro_call_statement_start)=>
+        macro_call_statement |
+
         pattern_check_statements
 ;
 
@@ -3168,6 +3238,65 @@ call_statement_start[] {
 */
 call_statement[] { ENTRY_DEBUG } :
         expression_statement[CALL, 1]
+;
+
+/*
+  macro_call_statement_start
+
+  The start of a C/C++ macro call statement, e.g., "list_for_each(p, h) {" or "DEFINE_MUTEX(foo)\nstatic int x;". The
+  call syntax followed (with no separating ";") by any of these is not a real call, i.e., it is a macro.
+  Only for C, since in C++ the call syntax followed by "{" may be a constructor or a call with an initializer list,
+  and the other tokens are themselves ambiguous with a declaration (e.g., trailing "const" on a member function).
+*/
+macro_call_statement_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+            && LA(1) == NAME
+            && !macro_call_declarator_scan()
+        }?
+        NAME
+
+        call_check_paren_pair[argumenttoken]
+
+        {
+            // a name or void after the call syntax is a separate statement, e.g., consecutive
+            // macro calls "A(x) B(y)" or "A(x) b = 1;", except a name that ends a declaration with the macro as its
+            // type, "A(x) b;", and except in a typedef
+            (
+                (LA(1) == VOID || (LA(1) == NAME && macro_call_name_scan()))
+                && !inTransparentMode(MODE_TYPEDEF)
+            )
+            || keyword_token_set.member(LA(1))
+            || LA(1) == LCURLY
+            || LA(1) == RCURLY
+            || LA(1) == EXTERN
+            || LA(1) == STRUCT
+            || LA(1) == UNION
+            || LA(1) == STATIC
+            || LA(1) == CONST
+            || LA(1) == INLINE
+        }?
+;
+
+/*
+  macro_call_statement
+
+  A C/C++ macro call statement.
+*/
+macro_call_statement[] { ENTRY_DEBUG } :
+        macro_call
 ;
 
 /*
