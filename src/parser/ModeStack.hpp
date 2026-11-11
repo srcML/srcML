@@ -12,8 +12,8 @@
 
 #include <TokenParser.hpp>
 #include <srcMLState.hpp>
+#include <BlockPool.hpp>
 #include <list>
-#include <vector>
 
 /**
  * ModeAllocator
@@ -32,21 +32,16 @@ struct ModeAllocator {
     ModeAllocator(const ModeAllocator<U>&) {}
 
     T* allocate(std::size_t n) {
-        auto& pool = freeBlocks();
-        if (n == 1 && !pool.blocks.empty()) {
-            void* p = pool.blocks.back();
-            pool.blocks.pop_back();
-            return static_cast<T*>(p);
+        if (n == 1) {
+            if (void* p = FreeBlocks::take())
+                return static_cast<T*>(p);
         }
         return static_cast<T*>(::operator new(n * sizeof(T)));
     }
 
     void deallocate(T* p, std::size_t n) {
-        auto& pool = freeBlocks();
-        if (n == 1 && pool.blocks.size() < MAX_FREE_BLOCKS) {
-            pool.blocks.push_back(p);
+        if (n == 1 && FreeBlocks::give(p))
             return;
-        }
         ::operator delete(p);
     }
 
@@ -62,19 +57,7 @@ private:
     static constexpr std::size_t MAX_FREE_BLOCKS = 1024;
 
     /** memory of popped modes, per thread */
-    struct FreeBlocks {
-        std::vector<void*> blocks;
-
-        ~FreeBlocks() {
-            for (auto p : blocks)
-                ::operator delete(p);
-        }
-    };
-
-    static FreeBlocks& freeBlocks() {
-        thread_local FreeBlocks pool;
-        return pool;
-    }
+    typedef BlockPool<T, MAX_FREE_BLOCKS> FreeBlocks;
 };
 
 /**
