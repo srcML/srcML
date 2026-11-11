@@ -2315,7 +2315,7 @@ void CppCodeGenerator::genNextToken() {
     if (!hasPublicRules) {
         println("");
         println(namespaceAntlr + "RefToken " + cn + "::nextToken() { return " + namespaceAntlr + "RefToken(new " + namespaceAntlr +
-                "CommonToken(" + namespaceAntlr + "Token::EOF_TYPE, \"\")); }");
+                "Token(" + namespaceAntlr + "Token::EOF_TYPE, \"\")); }");
         println("");
         return;
     }

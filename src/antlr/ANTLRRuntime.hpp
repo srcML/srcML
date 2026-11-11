@@ -24,6 +24,7 @@
 #include <cstdio>
 #include <cctype>
 #include <cstring>
+#include <BlockPool.hpp>
 
 #ifndef ANTLR_API
 # define ANTLR_API
@@ -110,6 +111,7 @@ public:
 
 typedef TokenRefCount<Token> RefToken;
 
+/// the token of srcML, with its category and positions, allocated from a pool of deleted tokens
 class Token {
 public:
 	static const int MIN_USER_TYPE = 4;
@@ -118,35 +120,65 @@ public:
 	static const int EOF_TYPE = 1;
 	static const int SKIP = -1;
 
-	Token() : refCount(0), type(INVALID_TYPE) {}
-	Token(int t) : refCount(0), type(t) {}
-	Token(int t, const std::string& txt) : refCount(0), type(t) { setText(txt); }
-	virtual ~Token() {}
+	Token() {}
+	Token(int t) : type(t) {}
+	Token(int t, int cat) : type(t), category(cat) {}
+	Token(int t, const std::string& txt) : type(t), text(txt) {}
 
-	virtual int getColumn() const { return 0; }
-	virtual int getLine() const { return 0; }
-	virtual const std::string& getText() const {
-		static const std::string noText("<no text>");
-		return noText;
-	}
-	virtual const std::string& getFilename() const {
-		static const std::string emptyString;
-		return emptyString;
-	}
+	static RefToken factory();
+
+	int getColumn() const { return column; }
+	int getLine() const { return line; }
+	int getEndLine() const { return endline; }
+	int getEndColumn() const { return endcolumn; }
+	const std::string& getText() const { return text; }
 	int getType() const { return type; }
-	virtual void setColumn(int) {}
-	virtual void setLine(int) {}
-	virtual void setText(std::string_view) {}
+	void setColumn(int c) { column = c; }
+	void setLine(int l) { line = l; }
+	void setText(std::string_view s) { text = s; }
 	void setType(int t) { type = t; }
-	virtual void setFilename(const std::string&) {}
-	virtual std::string toString() const { return "[\"" + getText() + "\",<" + std::to_string(type) + ">]"; }
+	std::string toString() const {
+		return "[\"" + getText() + "\",<" + std::to_string(type) + ">,line=" + std::to_string(getLine()) +
+		       ",column=" + std::to_string(getColumn()) + "]";
+	}
+
+	// reuse the memory of deleted tokens, since tokens are created and deleted constantly
+	static void* operator new(std::size_t size) {
+		if (void* p = FreeTokens::take())
+			return p;
+		return ::operator new(size);
+	}
+	static void operator delete(void* p) {
+		if (!FreeTokens::give(p))
+			::operator delete(p);
+	}
 
 private:
 	// number of references to the token, which is deleted with its last reference
 	template <class T>
 	friend class TokenRefCount;
-	unsigned int refCount;
-	int type;
+	unsigned int refCount = 0;
+	int type = INVALID_TYPE;
+
+public:
+	/** token category */
+	int category = -1;
+
+	/** start and end positions */
+	int line = 0;
+	int column = 0;
+	int endline = 0;
+	int endcolumn = 0;
+
+	/** token text */
+	std::string text;
+
+private:
+	/** maximum number of deleted tokens kept for reuse per thread */
+	static constexpr std::size_t MAX_FREE_TOKENS = 4096;
+
+	/** memory of deleted tokens, per thread */
+	typedef BlockPool<Token, MAX_FREE_TOKENS> FreeTokens;
 
 	Token(RefToken other);
 	Token& operator=(const Token& other);
@@ -168,33 +200,7 @@ inline void TokenRefCount<T>::release(Token* p) {
 
 inline RefToken nullToken;
 
-class CommonToken : public Token {
-public:
-	CommonToken() : Token(), line(1), col(1), text("") {}
-	CommonToken(int t, const std::string& txt) : Token(t), line(1), col(1), text(txt) {}
-	CommonToken(const std::string& s) : Token(), line(1), col(1), text(s) {}
-
-	virtual const std::string& getText() const { return text; }
-	virtual void setText(std::string_view s) { text = s; }
-	virtual int getLine() const { return line; }
-	virtual int getColumn() const { return col; }
-	virtual void setLine(int l) { line = l; }
-	virtual void setColumn(int c) { col = c; }
-	virtual std::string toString() const {
-		return "[\"" + getText() + "\",<" + std::to_string(getType()) + ">,line=" + std::to_string(getLine()) +
-		       ",column=" + std::to_string(getColumn()) + "]";
-	}
-	static RefToken factory() { return RefToken(new CommonToken); }
-
-protected:
-	int line;
-	int col;
-	std::string text;
-
-private:
-	CommonToken(const CommonToken&);
-	const CommonToken& operator=(const CommonToken&);
-};
+inline RefToken Token::factory() { return RefToken(new Token); }
 
 class TokenStream {
 public:
@@ -751,24 +757,18 @@ public:
 };
 
 class CharScanner : public TokenStream {
-protected:
-	typedef RefToken (*factory_type)();
-
 public:
 	CharScanner(InputBuffer& cb, bool case_sensitive)
 	    : saveConsumedInput(true), caseSensitive(case_sensitive), literals(CharScannerLiteralsLess(this)),
 	      inputState(new LexerInputState(cb)), commitToPath(false), tabsize(8) {
-		setTokenObjectFactory(&CommonToken::factory);
 	}
 	CharScanner(InputBuffer* cb, bool case_sensitive)
 	    : saveConsumedInput(true), caseSensitive(case_sensitive), literals(CharScannerLiteralsLess(this)),
 	      inputState(new LexerInputState(cb)), commitToPath(false), tabsize(8) {
-		setTokenObjectFactory(&CommonToken::factory);
 	}
 	CharScanner(const LexerSharedInputState& state, bool case_sensitive)
 	    : saveConsumedInput(true), caseSensitive(case_sensitive), literals(CharScannerLiteralsLess(this)),
 	      inputState(state), commitToPath(false), tabsize(8) {
-		setTokenObjectFactory(&CommonToken::factory);
 	}
 	virtual ~CharScanner() {}
 
@@ -984,7 +984,6 @@ public:
 	virtual InputBuffer& getInputBuffer() { return inputState->getInput(); }
 	virtual LexerSharedInputState getInputState() { return inputState; }
 	virtual void setInputState(LexerSharedInputState state) { inputState = state; }
-	virtual void setTokenObjectFactory(factory_type factory) { tokenFactory = factory; }
 	virtual int testLiteralsTable(int ttype) const {
 		std::map<std::string, int, CharScannerLiteralsLess>::const_iterator i = literals.find(std::string(text));
 		if (i != literals.end())
@@ -1005,7 +1004,6 @@ public:
 protected:
 	TokenText text;
 	bool saveConsumedInput;
-	factory_type tokenFactory;
 	bool caseSensitive;
 	std::map<std::string, int, CharScannerLiteralsLess> literals;
 	RefToken _returnToken;
@@ -1014,10 +1012,9 @@ protected:
 	int tabsize;
 
 	virtual RefToken makeToken(int t) {
-		RefToken tok = tokenFactory();
-		tok->setType(t);
-		tok->setColumn(inputState->tokenStartColumn);
-		tok->setLine(inputState->tokenStartLine);
+		RefToken tok(new Token(t));
+		tok->column = inputState->tokenStartColumn;
+		tok->line = inputState->tokenStartLine;
 		return tok;
 	}
 
