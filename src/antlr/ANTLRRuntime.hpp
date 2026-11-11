@@ -525,6 +525,7 @@ public:
 		}
 	}
 	void append(const T& t) { storage.push_back(t); }
+	void append(T&& t) { storage.push_back(std::move(t)); }
 	template <class It>
 	void append(It first, It last) { storage.insert(storage.end(), first, last); }
 	size_t entries() const { return storage.size() - m_offset; }

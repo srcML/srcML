@@ -759,7 +759,8 @@ void CppCodeGenerator::gen(RuleRefElement* rr) {
             }
         }
 
-        if (grammar->isLexer() && rr->getLabel())
+        // the label of the rule references of nextToken is never used, and copying the token is not free
+        if (grammar->isLexer() && rr->getLabel() && rr->enclosingRuleName != "nextToken")
             println(*rr->getLabel() + "=_returnToken;");
 
         if (doNoGuessTest) {
@@ -2662,7 +2663,7 @@ void CppCodeGenerator::genRule(RuleSymbol* s, bool, int, const std::string& pref
         println("   _token = makeToken(_ttype);");
         println("   _token->setText(std::string_view(text).substr(_begin, text.length()-_begin));");
         println("}");
-        println("_returnToken = _token;");
+        println("_returnToken = std::move(_token);");
         println("_saveIndex=0;");
     }
 
