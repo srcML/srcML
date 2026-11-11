@@ -18077,19 +18077,32 @@ parameter_function_pointer_check[] {
 
   For parameter_simple_check, the parts of the type and an optional name.
 */
-parameter_simple_type[] { bool last_class = false; ENTRY_DEBUG } :
+parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             // not the name of the parameter, nor a member, e.g., "t->l", which is not part of a type
             {
                 !parameter_simple_name_scan()
                 && !(LA(1) == NAME && (next_token() == PERIOD || next_token() == TRETURN))
             }?
-            // a struct, union, or enum type without a pointer, e.g., "enum e", but not "struct s *"
-            set_bool[
-                last_class,
-                (LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM) && LA(scan_skip(scan_skip(2) + 1)) != MULTOPS
-            ]
-            declaration_general_part
+            (
+                // an enum type, as for an enum declaration, with the names after it separated by ",", so it takes the
+                // first name of the next parameter, e.g., "int" in "enum e, int v", and counts as two parts. When no
+                // name follows a ",", the rest is the next parameter.
+                { LA(1) == ENUM && declaration_general_type_parts == 0 && !class_tokens_set.member(next_token()) }?
+                ENUM
+                enum_class_header
+                set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+                set_int[declaration_general_type_count, declaration_general_type_count + 1]
+                set_bool[enum_list, LA(1) == COMMA]
+                set_bool[last_class, false] |
+
+                // a struct or union type without a pointer, e.g., "struct s", but not "struct s *"
+                set_bool[
+                    last_class,
+                    (LA(1) == STRUCT || LA(1) == UNION) && LA(scan_skip(scan_skip(2) + 1)) != MULTOPS
+                ]
+                declaration_general_part
+            )
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )+
 
@@ -18099,11 +18112,13 @@ parameter_simple_type[] { bool last_class = false; ENTRY_DEBUG } :
             NAME |
 
             // no name, so the last part is taken as the name, but not when the rest is only specifiers, and not a
-            // struct, union, or enum type without a pointer, e.g., "enum e"
+            // struct or union type without a pointer, e.g., "struct s". An enum type followed by "," is a type of one
+            // part.
             { (LA(1) == COMMA || LA(1) == RPAREN) && !last_class }?
             set_int[
                 declaration_general_type_count,
-                declaration_general_type_count - 1 == declaration_general_specifiers
+                enum_list ? 1
+                : declaration_general_type_count - 1 == declaration_general_specifiers
                 ? declaration_general_type_count : declaration_general_type_count - 1
             ]
         )
