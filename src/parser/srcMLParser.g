@@ -1073,6 +1073,44 @@ public:
     int declaration_general_type_parts = 0;
 
     /*
+      declaration_general_name_scan
+
+      For declaration_general_start, the check from the token buffer, without parsing, that LA(1) is the name of the
+      variable, i.e., a name, or a word that is a name in C, e.g., "line", followed by "[", ";", "=", or ",".
+    */
+    bool declaration_general_name_scan() {
+
+        // a name, or a word that is a name in C, e.g., "line" or "define", or "__weak" or "__strong" as the last word
+        switch (LA(1)) {
+        case NAME:
+        case WEAK:
+        case STRONG:
+        case INCLUDE:
+        case DEFINE:
+        case ELIF:
+        case ENDIF:
+        case ERRORPREC:
+        case IFDEF:
+        case IFNDEF:
+        case LINE:
+        case PRAGMA:
+        case UNDEF:
+        case WARNING:
+            break;
+
+        default:
+            return false;
+        }
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA;
+    }
+
+    /*
       function_pointer_scan
 
       For function_pointer_declaration_start, the check from the token buffer, without parsing, that the first "(" of
@@ -3027,6 +3065,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (call_other_start)=>
         call_other |
 
+        // variable declaration with a type of any parts, e.g., "static __iomem u32 *p;"
+        (declaration_general_start)=>
+        declaration_general |
+
         pattern_check_statements
 ;
 
@@ -3621,6 +3663,67 @@ macro_call_other_start[] {
 ;
 
 /*
+  declaration_general_start
+
+  The start of a C variable declaration with a type of any parts, e.g., "static __iomem u32 *p;",
+  "DEFINE_MIN_HEAP(struct s, heap) heap;", or "register unsigned long r asm(\"r0\");". Each part of the type is a
+  specifier, a macro, a struct, union, or enum name (only as the first part that is not a specifier), a name, or a
+  "*", and at least one is not a specifier. The name is followed by an optional index of only names and constants, and
+  then ";", "=", or ",". An attribute after the name with an argument list that starts with a constant or a string,
+  e.g., "asm(\"r0\")" or "__aligned(8)", is itself the name, with the name before it a part of the type.
+*/
+declaration_general_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } :
+            {
+                !declaration_general_name_scan()
+                && !((LA(1) == NAME || LA(1) == ASM) && declaration_attribute_scan())
+            }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )+
+
+        { declaration_general_type_parts > 0 }?
+        (
+            { declaration_general_name_scan() }?
+            .
+
+            // an index of only names and constants, e.g., "[]", "[16]", or "[ETH_ALEN]"
+            (options { greedy = true; } :
+                LBRACKET
+                (NAME | CONSTANTS)*
+                RBRACKET
+            )*
+
+            (TERMINATE | EQUAL | COMMA) |
+
+            // an attribute with an argument list that starts with a constant or a string, e.g., "asm(\"r0\")", which is
+            // the name, with the name before it part of the type
+            { declaration_attribute_scan() }?
+            (NAME | ASM)
+
+            paren_pair
+
+            (TERMINATE | EQUAL)
+        )
+;
+
+/*
   declaration_general_part
 
   A part of the type of a variable declaration.
@@ -3674,6 +3777,15 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  declaration_general
+
+  A C variable declaration with a type of any parts.
+*/
+declaration_general[] { ENTRY_DEBUG } :
+        variable_declaration_statement[declaration_general_type_count]
 ;
 
 /*
