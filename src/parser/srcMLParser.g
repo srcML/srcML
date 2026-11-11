@@ -1176,6 +1176,33 @@ public:
     }
 
     /*
+      kr_parameter_guess
+
+      For C K&R parameters, whether kr_parameter_check matches, run only in a function tail.
+    */
+    bool kr_parameter_guess() {
+
+        bool matched = true;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            kr_parameter_check_impl();
+            if (failed) {
+                failed = false;
+                matched = false;
+            }
+        } catch (...) {
+            matched = false;
+        }
+
+        rewind(start);
+        inputState->guessing--;
+
+        return matched;
+    }
+
+    /*
       condition_declaration_scan
 
       For condition_declaration_check, the check from the token buffer, without parsing, that the condition has a "="
@@ -9449,11 +9476,20 @@ statement_part[] {
         }?
         macro_call |
 
+        // C K&R function parameters, e.g., "int a;" in "int f(a) int a; {"
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && inMode(MODE_FUNCTION_TAIL)
+            && kr_parameter_guess()
+        }?
+        kr_parameter[declaration_general_type_count] |
+
         // K&R function parameters
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
-            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_expression_scan())
+            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
             && pattern_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
@@ -17868,6 +17904,57 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
         kr_parameter_terminate
 
         /* Commented-out code: complete_parameter terminate_pre terminate_token */
+;
+
+/*
+  kr_parameter_check
+
+  A C K&R parameter declaration after the parameter list of a function, e.g., "int a;" in "int f(a) int a; {".
+*/
+kr_parameter_check[] { ENTRY_DEBUG } :
+        (
+            (declaration_general_start)=>
+            declaration_general_start |
+
+            kr_parameter_declaration_start
+        )
+;
+
+/*
+  kr_parameter_declaration_start
+
+  A C K&R parameter declaration with an index of any expression or an attribute after the name, e.g., "int a[N + 1];"
+  or "int a __attribute__((x));".
+*/
+kr_parameter_declaration_start[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        kr_parameter_declaration_type
+;
+
+/*
+  kr_parameter_declaration_type
+
+  The type of a C K&R parameter declaration, and its name. Each part of the type is a specifier, a struct, union, or
+  enum name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier.
+  The name, with any indexes and attributes, is followed by ";" or ",".
+*/
+kr_parameter_declaration_type[] { ENTRY_DEBUG } :
+        ((NAME | MAIN) (bracket_pair)* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA))=>
+        { declaration_general_type_parts > 0 }?
+        (NAME | MAIN)
+        (bracket_pair)*
+        (C_ATTRIBUTE paren_pair)*
+        (TERMINATE | COMMA) |
+
+        { !(LA(1) == NAME && next_token() == LPAREN) }?
+        declaration_general_part
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        kr_parameter_declaration_type
 ;
 
 /*
