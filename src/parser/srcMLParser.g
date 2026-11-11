@@ -2837,6 +2837,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (enum_constant_simple_check)=>
         enum_constant_simple |
 
+        // macro call with arguments that are not expressions, last since only what is left pays for the call check
+        (macro_call_other_start)=>
+        macro_call_statement |
+
         pattern_check_statements
 ;
 
@@ -3378,6 +3382,56 @@ macro_call_statement_start[] {
 */
 macro_call_statement[] { ENTRY_DEBUG } :
         macro_call
+;
+
+/*
+  macro_call_other_start
+
+  The start of a C macro call statement with arguments that are not expressions, e.g.,
+  "PP_ASSERT_WITH_CODE(x, \"m\", return r);", "DEFINE_PER_CPU(unsigned long *, p);", or "SYSCALL_DEFINE3(f, int, a) {",
+  when perform_call_check() says it is a macro, and as for macro_call_statement_start, what follows is not part of a
+  declaration.
+*/
+macro_call_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && LA(1) == NAME
+            && !macro_call_declarator_scan()
+            && perform_call_check(type, isempty, call_count, LPAREN)
+            && type == MACRO
+        }?
+        NAME
+
+        paren_pair
+
+        {
+            (LA(1) == VOID || (LA(1) == NAME && macro_call_name_scan()))
+            || keyword_token_set.member(LA(1))
+            || LA(1) == TERMINATE
+            || LA(1) == EQUAL
+            || LA(1) == LCURLY
+            || LA(1) == RCURLY
+            || LA(1) == EXTERN
+            || LA(1) == STRUCT
+            || LA(1) == UNION
+            || LA(1) == STATIC
+            || LA(1) == CONST
+            || LA(1) == INLINE
+        }?
 ;
 
 /*
