@@ -3139,6 +3139,11 @@ pattern_statements[] { ENTRY_DEBUG } :
         (asm_volatile_start)=>
         specifier_call |
 
+        // a name before a block, e.g., "BTREE_TYPE_HEAD { ... };", or before "const" and a struct or union, e.g.,
+        // "__bpf_kfunc const struct x *f(void) {"
+        (name_other_start)=>
+        specifier_call |
+
         pattern_check_statements
 ;
 
@@ -3946,6 +3951,42 @@ asm_volatile_start[] {
         .
 
         VOLATILE
+;
+
+/*
+  name_other_start
+
+  The start of a C statement of a name before a block, e.g., "BTREE_TYPE_HEAD { ... };", or before "const" and a struct
+  or union, e.g., "__bpf_kfunc const struct x *f(void) {", which is not a declaration.
+*/
+name_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+            && (next_token() == LCURLY || next_token() == CONST)
+        }?
+        // the token after the first part
+        set_int[specifier_call_secondtoken, next_token()]
+
+        NAME
+
+        (
+            LCURLY |
+
+            (CONST)+
+            { LA(1) == STRUCT || LA(1) == UNION }?
+        )
 ;
 
 /*
