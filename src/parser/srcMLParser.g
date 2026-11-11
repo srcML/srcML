@@ -1019,6 +1019,54 @@ public:
         }
     }
 
+    /*
+      call_other_scan
+
+      For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
+      that does not start a declarator, i.e., not "(*", "((", or a parenthesized name, e.g., "guard(mvm)(mvm);", unless
+      an operator or arguments that are not parameters follow it, e.g., "f(a) + g(b);" or "guard(mutex)(&lock);".
+    */
+    bool call_other_scan() {
+
+        // the token after the name
+        unsigned int i = scan_skip(2);
+
+        // a CUDA kernel call, e.g., "f<<<1>>>()"
+        if (LA(i) == CUDA)
+            return true;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the token after the "("
+        i = scan_skip(i + 1);
+
+        if (LA(i) == MULTOPS || LA(i) == LPAREN)
+            return false;
+
+        if (LA(i) != NAME)
+            return true;
+
+        // the token after the name in the "("
+        i = scan_skip(i + 1);
+
+        if (LA(i) != RPAREN)
+            return true;
+
+        // after the parenthesized name
+        i = scan_skip(i + 1);
+
+        if (LA(i) == OPERATORS)
+            return true;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        i = scan_skip(i + 1);
+
+        return LA(i) == OPERATORS || LA(i) == REFOPS || LA(i) == CONSTANTS || LA(i) == STRING_START;
+    }
+
     // the number of parts of the type of a general declaration, and how many are not specifiers, found by the
     // syntactic predicate
     int declaration_general_type_count = 0;
@@ -2975,6 +3023,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (declaration_attribute_start)=>
         declaration_attribute |
 
+        // call that is not only a name and call syntax, e.g., "guard(mutex)(&lock);"
+        (call_other_start)=>
+        call_other |
+
         pattern_check_statements
 ;
 
@@ -3622,6 +3674,62 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  call_other_start
+
+  The start of a C statement with a call that call_statement_start does not match, e.g., "guard(mutex)(&lock);",
+  "this_cpu_ptr(x)[i].a = 1;", or "f(0), f(1);", when perform_call_check() says it is a call. Not a "(*" or a
+  parenthesized name, e.g., "guard(mvm)(mvm);", which may be a declarator.
+*/
+call_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        // without the preprocessor option, there is no call check, and it is an expression statement
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && LA(1) == NAME
+            && call_other_scan()
+            && (
+                !isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+                || (perform_call_check(type, isempty, call_count, LPAREN) && type == CALL)
+            )
+        }?
+        NAME
+;
+
+/*
+  call_other
+
+  A C statement with a call that call_statement_start does not match.
+*/
+call_other[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, LPAREN)
+        }?
+        expression_statement[type, call_count] |
+
+        expression_statement
 ;
 
 /*
