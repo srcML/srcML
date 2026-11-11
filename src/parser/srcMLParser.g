@@ -2845,6 +2845,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (expression_index_start)=>
         expression_statement_simple |
 
+        // label named "error", e.g., "error:"
+        (label_error_statement)=>
+        label_error_statement |
+
         pattern_check_statements
 ;
 
@@ -3436,6 +3440,31 @@ macro_call_other_start[] {
             || LA(1) == CONST
             || LA(1) == INLINE
         }?
+;
+
+/*
+  label_error_statement
+
+  A C/C++ label named "error", e.g., "error:", where "error" is also a preprocessor keyword.
+*/
+label_error_statement[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == ERRORPREC
+            && next_token() == COLON
+        }?
+        label_statement
 ;
 
 /*
