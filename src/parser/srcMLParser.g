@@ -1082,8 +1082,102 @@ public:
     bool declaration_general_name_scan() {
 
         // a name, or a word that is a name in C, e.g., "line" or "define", or "__weak" or "__strong" as the last word
-        switch (LA(1)) {
+        if (!c_name_token(LA(1)) || LA(1) == MAIN)
+            return false;
+
+        // the token after the name, past what is skipped
+        unsigned int i = scan_skip(2);
+
+        return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA || LA(i) == LCURLY
+            || LA(i) == 1 /* EOF */;
+    }
+
+    /*
+      index_token_scan
+
+      For declaration_index and single_macro_index_start, the check from the token buffer, without parsing, that the
+      index starting at LA(1) has the token inside it.
+    */
+    bool index_token_scan(int token) {
+
+        int depth = 0;
+        for (unsigned int i = 1; ; ++i) {
+            switch (LA(i)) {
+            case LBRACKET:
+                ++depth;
+                break;
+
+            case RBRACKET:
+                if (--depth == 0)
+                    return false;
+                break;
+
+            case TERMINATE:
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+
+            default:
+                if (LA(i) == token)
+                    return true;
+                break;
+            }
+        }
+    }
+
+    /*
+      index_struct_cast_scan
+
+      For single_macro_index_start, the check from the token buffer, without parsing, that the index starting at LA(1)
+      has a "(" followed by "struct" that is not after "sizeof", i.e., a cast, e.g., "[sizeof(((struct s *)0)->x)]".
+    */
+    bool index_struct_cast_scan() {
+
+        int depth = 0;
+        int previous = 0;
+        for (unsigned int i = 1; ; ++i) {
+            switch (LA(i)) {
+            case LBRACKET:
+                ++depth;
+                break;
+
+            case RBRACKET:
+                if (--depth == 0)
+                    return false;
+                break;
+
+            case STRUCT:
+                if (previous == LPAREN && LA(i - 2) != SIZEOF)
+                    return true;
+                break;
+
+            case TERMINATE:
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+
+            default:
+                break;
+            }
+
+            if (!whitespace_token_set.member((unsigned int) LA(i)))
+                previous = LA(i);
+        }
+    }
+
+    /*
+      c_name_token
+
+      Whether the token is a name in C: a name, "main", or a word that is a name in C, e.g., "line" or "define", or
+      "__weak" or "__strong".
+    */
+    bool c_name_token(int token) {
+
+        switch (token) {
         case NAME:
+        case MAIN:
         case WEAK:
         case STRONG:
         case INCLUDE:
@@ -1097,18 +1191,11 @@ public:
         case PRAGMA:
         case UNDEF:
         case WARNING:
-            break;
+            return true;
 
         default:
             return false;
         }
-
-        // the token after the name, past what is skipped
-        unsigned int i = 2;
-        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
-            ++i;
-
-        return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA;
     }
 
     /*
@@ -1158,7 +1245,7 @@ public:
 
       For function_pointer_declaration_start, the check from the token buffer, without parsing, that the first "(" of
       the statement, before a ";", "{", "=", or "}", may start a function pointer name, i.e., "(" followed by a name, a
-      "*", or a "(".
+      "*", a "(", or an attribute.
     */
     bool function_pointer_scan() {
 
@@ -1172,7 +1259,7 @@ public:
 
         i = scan_skip(i + 1);
 
-        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN;
+        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN || LA(i) == C_ATTRIBUTE;
     }
 
     /*
@@ -3288,6 +3375,20 @@ pattern_statements[] { ENTRY_DEBUG } :
         (single_macro_start)=>
         macro_call |
 
+        // a macro as the type of a variable, e.g., "__aligned(64) x;"
+        (macro_type_variable_start)=>
+        variable_declaration_statement[1] |
+
+        // a name before a name with an index that has a union in it, e.g., "u8" in "u8 offs[sizeof(union u)];", or a
+        // struct in it that is not a complete expression, is a macro
+        (single_macro_index_start)=>
+        macro_call |
+
+        // a C variable declaration with an index of any expression, an attribute, or a bit-field after the name, e.g.,
+        // "u8 offs[N + 1];" or "unsigned int warning : 1;"
+        (declaration_index_attribute_start[false])=>
+        variable_declaration_statement[declaration_general_type_count] |
+
         pattern_check_statements
 ;
 
@@ -3327,9 +3428,10 @@ type_definition_simple_check[] { ENTRY_DEBUG } :
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         (
-            // a macro before the name, e.g., "struct M A {"
+            // a macro before the name, e.g., "struct M A {" or "struct __aligned(8) A {", and the name may be a word
+            // that is a name in C, e.g., "line"
             (STRUCT | UNION)
-            (NAME (NAME)?)? |
+            (identifier ((paren_pair)? identifier)?)? |
 
             ENUM
             (NAME)?
@@ -3888,7 +3990,7 @@ macro_call_other_start[] {
   "DEFINE_MIN_HEAP(struct s, heap) heap;", or "register unsigned long r asm(\"r0\");". Each part of the type is a
   specifier, a macro, a struct, union, or enum name (only as the first part that is not a specifier), a name, or a
   "*", and at least one is not a specifier. The name is followed by an optional index of only names and constants, and
-  then ";", "=", or ",". An attribute after the name with an argument list that starts with a constant or a string,
+  then ";", "=", ",", "{", or the end of the input. An attribute after the name with an argument list that starts with a constant or a string,
   e.g., "asm(\"r0\")" or "__aligned(8)", is itself the name, with the name before it a part of the type.
 */
 declaration_general_start[] {
@@ -3898,6 +4000,9 @@ declaration_general_start[] {
 
         declaration_general_type_count = 0;
         declaration_general_type_parts = 0;
+
+        bool late_enum = false;
+        int enum_parts = 0;
 
         ENTRY_DEBUG
 } :
@@ -3913,6 +4018,8 @@ declaration_general_start[] {
                 !declaration_general_name_scan()
                 && !((LA(1) == NAME || LA(1) == ASM) && declaration_attribute_scan())
             }?
+            set_bool[late_enum, LA(1) == ENUM && declaration_general_type_parts > 0]
+            set_int[enum_parts, late_enum ? declaration_general_type_parts : enum_parts]
             declaration_general_part
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )+
@@ -3929,7 +4036,16 @@ declaration_general_start[] {
                 RBRACKET
             )*
 
-            (TERMINATE | EQUAL | COMMA) |
+            (
+                TERMINATE | EQUAL | COMMA |
+
+                // not in a function tail, where "{" starts the body
+                { !inMode(MODE_FUNCTION_TAIL) }?
+                LCURLY |
+
+                // the end of the input, e.g., after a list of macros
+                EOF
+            ) |
 
             // an attribute with an argument list that starts with a constant or a string, e.g., "asm(\"r0\")", which is
             // the name, with the name before it part of the type
@@ -3938,7 +4054,16 @@ declaration_general_start[] {
 
             paren_pair
 
-            (TERMINATE | EQUAL)
+            // any names after it, e.g., "__used"
+            (NAME)*
+
+            (TERMINATE | EQUAL) |
+
+            // an enum type after other parts, then its body, e.g., "static __initdata enum state {". After two or more
+            // parts, the enum name is the name of the variable, e.g., "e" in "A B enum e {".
+            { late_enum && !inMode(MODE_FUNCTION_TAIL) }?
+            LCURLY
+            set_int[declaration_general_type_count, declaration_general_type_count - (enum_parts >= 2 ? 1 : 0)]
         )
 ;
 
@@ -3978,10 +4103,11 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
         macro_call_inner
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
 
-        // a struct, union, or enum is only the first part that is not a specifier
+        // a struct or union is only the first part that is not a specifier, and an enum may also follow other parts,
+        // e.g., "static __always_inline enum e f(void)"
         {
-            declaration_general_type_parts == 0
-            && (LA(1) == STRUCT || LA(1) == UNION || (LA(1) == ENUM && !class_tokens_set.member(next_token())))
+            (declaration_general_type_parts == 0 && (LA(1) == STRUCT || LA(1) == UNION))
+            || (LA(1) == ENUM && !class_tokens_set.member(next_token()))
         }?
         class_type_identifier[is_compound]
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
@@ -4360,7 +4486,7 @@ expression_other[] {
   type_definition_specifier_check
 
   The start of a C struct, union, or enum definition after specifiers, e.g., "static struct {",
-  "static const struct s {", or "static enum {".
+  "static const struct s {", "extern struct s {", or "static enum {". The name is as for type_definition_simple_check.
 */
 type_definition_specifier_check[] {
         // a new statement, so no "?" or destructor seen yet
@@ -4375,7 +4501,7 @@ type_definition_specifier_check[] {
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
-        (options { greedy = true; } : STATIC | CONST | VOLATILE)+
+        (options { greedy = true; } : STATIC | CONST | VOLATILE | EXTERN | INLINE | REGISTER)+
 
         (
             STRUCT
@@ -4388,7 +4514,7 @@ type_definition_specifier_check[] {
             set_int[type_definition_specifier_element, 0]
         )
 
-        (NAME)?
+        (identifier ((paren_pair)? identifier)?)?
 
         LCURLY
 ;
@@ -4423,6 +4549,8 @@ function_general_start[] {
 
         int fla = 0;
         int type_count = 0;
+        bool is_main = false;
+        bool empty = false;
 
         ENTRY_DEBUG
 } :
@@ -4434,14 +4562,16 @@ function_general_start[] {
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         (options { greedy = true; } :
-            { !((LA(1) == NAME || LA(1) == MAIN) && next_token() == LPAREN) }?
+            { !((c_name_token(LA(1)) || LA(1) == ASM) && next_token() == LPAREN) }?
             declaration_general_part
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )*
 
         // a type with at least one part that is not a specifier, except for "main" with no type at all, e.g., "main() {"
         { declaration_general_type_parts > 0 || (LA(1) == MAIN && declaration_general_type_count == 0) }?
+        set_bool[is_main, LA(1) == MAIN]
         function_general_name
+        set_bool[empty, next_token() == RPAREN]
 
         // the parameters are parsed with the same counts, so keep the count of the type
         set_int[type_count, declaration_general_type_count]
@@ -4450,8 +4580,13 @@ function_general_start[] {
 
         set_int[declaration_general_type_count, type_count]
 
-        // in a function body, a function declaration that ends with ";" is a variable
-        { fla == LCURLY || fla == EQUAL || (fla == TERMINATE && !inTransparentMode(MODE_FUNCTION_BODY)) }?
+        // in a function body, a function declaration that ends with ";" is a variable, unless the parameter list is
+        // empty or it is "main"
+        {
+            fla == LCURLY
+            || fla == EQUAL
+            || (fla == TERMINATE && (!inTransparentMode(MODE_FUNCTION_BODY) || empty || is_main))
+        }?
         set_int[function_general_kind, fla == LCURLY ? FUNCTION : FUNCTION_DECL]
 ;
 
@@ -4471,27 +4606,116 @@ declaration_paren_start[] {
 
         declaration_general_type_count = 0;
         declaration_general_type_parts = 0;
+        declaration_general_specifiers = 0;
 
-        int fla = 0;
-        bool nonempty = false;
         int type_count = 0;
+        int type_parts = 0;
+        int specifiers = 0;
+        bool last_specifier = false;
 
         ENTRY_DEBUG
 } :
         {
             inLanguage(LANGUAGE_C)
             && !inLanguage(LANGUAGE_OBJECTIVE_C)
-            && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         (options { greedy = true; } :
-            { !((LA(1) == NAME || LA(1) == MAIN) && next_token() == LPAREN) }?
+            { !((c_name_token(LA(1)) || LA(1) == ASM) && next_token() == LPAREN) }?
+            set_int[specifiers, declaration_general_specifiers]
             declaration_general_part
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
-        )+
+            set_bool[last_specifier, declaration_general_specifiers > specifiers]
+        )*
 
+        // the name and the rest are checked with the same counts, so keep the counts of the type
+        set_int[type_count, declaration_general_type_count]
+        set_int[type_parts, declaration_general_type_parts]
+        set_int[specifiers, declaration_general_specifiers]
+
+        (
+            (declaration_paren_name_check)=>
+            declaration_paren_name_rest |
+
+            (declaration_paren_lists[type_count, type_parts, specifiers, last_specifier])=>
+            declaration_paren_lists[type_count, type_parts, specifiers, last_specifier] |
+
+            set_int[declaration_general_type_count, type_count]
+            set_int[declaration_general_type_parts, type_parts]
+            set_int[declaration_general_specifiers, specifiers]
+
+            // a function pointer in a list of declarators, e.g., "int (*f)(void), i;"
+            (options { greedy = true; } :
+                { LA(1) == NAME || LA(1) == VOID }?
+                (NAME | VOID)
+                set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            )?
+            { declaration_general_type_count > declaration_general_specifiers }?
+            set_int[type_count, declaration_general_type_count]
+            function_pointer_name_grammar
+            parameter_list
+            set_int[declaration_general_type_count, type_count]
+            COMMA
+        )
+;
+
+/*
+  declaration_paren_lists
+
+  For declaration_paren_start, with the counts of the type so far, no name before the lists, a type of at least two
+  parts other than specifiers, with the last part maybe a name before the lists, and lists that are not the rest of a
+  function, e.g., "const struct s (*p)[];" or "unsigned int (*f)(unsigned int (*g)(int));", but not "s8 (*p)[2];". A
+  specifier as the last part is not part of the type.
+*/
+declaration_paren_lists[int type_count, int type_parts, int specifiers, bool last_specifier] {
+        declaration_general_type_count = type_count;
+        declaration_general_type_parts = type_parts;
+        declaration_general_specifiers = specifiers;
+
+        ENTRY_DEBUG
+} :
+        (options { greedy = true; } :
+            { c_name_token(LA(1)) && next_token() == LPAREN }?
+            .
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            set_bool[last_specifier, false]
+        )?
+
+        {
+            declaration_general_type_count - declaration_general_specifiers >= 2
+            && LA(1) == LPAREN
+            && next_token() != RPAREN
+        }?
+        set_int[type_count, declaration_general_type_count - (last_specifier ? 1 : 0)]
+
+        (options { greedy = true; } : paren_pair)+
+
+        set_int[declaration_general_type_count, type_count]
+;
+
+/*
+  declaration_paren_name_check
+
+  For declaration_paren_start, a type with a part that is not a specifier, then the name and the rest after it.
+*/
+declaration_paren_name_check[] { ENTRY_DEBUG } :
         { declaration_general_type_parts > 0 }?
+        declaration_paren_name_rest
+;
+
+/*
+  declaration_paren_name_rest
+
+  For declaration_paren_start, the name and the rest after it.
+*/
+declaration_paren_name_rest[] {
+        int fla = 0;
+        bool nonempty = false;
+        int type_count = 0;
+
+        ENTRY_DEBUG
+} :
         function_general_name
 
         // whether the list after the name is not empty
@@ -4501,6 +4725,13 @@ declaration_paren_start[] {
         set_int[type_count, declaration_general_type_count]
 
         (
+            // a list that is not a parenthesized name or a function pointer name, then other lists, e.g.,
+            // "void M(2)(int a) {", "int CONCAT(a, b)(void);", "int __printf(1, 0) (*f)(const char *fmt);", or
+            // "unsigned int (*f(u64 m))(int x) {"
+            (declaration_paren_lists_check)=>
+            paren_pair
+            set_int[declaration_general_type_count, type_count] |
+
             // in a function body, ";" ends a variable only when the list is not empty, e.g., "T t(a);", unlike
             // "char *f();"
             (declaration_paren_function_rest)=>
@@ -4523,6 +4754,25 @@ declaration_paren_start[] {
 ;
 
 /*
+  declaration_paren_lists_check
+
+  For declaration_paren_name_rest, a list that is not a parenthesized name or a function pointer name, then other lists.
+*/
+declaration_paren_lists_check[] { ENTRY_DEBUG } :
+        (function_pointer_name_grammar)=>
+        function_pointer_name_grammar
+        throw_exception[true] |
+
+        {
+            next_token() != RPAREN
+            && !(LA(scan_skip(2)) == NAME && LA(scan_skip(scan_skip(2) + 1)) == RPAREN)
+        }?
+        paren_pair
+        (paren_pair)+
+        (TERMINATE | LCURLY | EQUAL | COMMA)
+;
+
+/*
   declaration_paren_function_rest
 
   The rest of a function, for declaration_paren_start.
@@ -4542,9 +4792,10 @@ function_general_name[] { ENTRY_DEBUG } :
         NAME
         throw_exception[true] |
 
-        NAME |
+        declaration_index_attribute_name |
 
-        MAIN
+        // "asm" with an argument list that is not a string, e.g., "register void *p asm(REG);"
+        ASM
 ;
 
 /*
@@ -4755,8 +5006,9 @@ label_error_statement[] {
 
   The start of a C/C++ function pointer declaration, e.g., "int (*fp)(int);", "void (*fp)(void);",
   "typedef int (*fp_t)(int);", or "int (*fp)(int) = f;". In C, the type may have parts before the last name, as for
-  declaration_general_start, e.g., "unsigned long (*fp)(unsigned long) = f;", and then in a function body, ";" ends a
-  variable, so it is not matched.
+  declaration_general_start, e.g., "unsigned long (*fp)(unsigned long) = f;", or may end with other parts, e.g.,
+  "struct s *(*fp)(void);". With parts before a last name, or with a struct, union, or enum, in a function body ";"
+  ends a variable, so it is not matched.
 */
 function_pointer_declaration_start[] {
         // a new statement, so no "?" or destructor seen yet
@@ -4768,6 +5020,8 @@ function_pointer_declaration_start[] {
 
         int type_count = 0;
         int type_parts = 0;
+        bool last_name = false;
+        bool has_class = false;
 
         ENTRY_DEBUG
 } :
@@ -4791,19 +5045,26 @@ function_pointer_declaration_start[] {
                 inLanguage(LANGUAGE_C)
                 && !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN)
             }?
+            set_bool[has_class, has_class || LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM]
             declaration_general_part
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )*
 
-        { LA(1) == NAME || LA(1) == VOID }?
-        (NAME | VOID)
-        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        // the last part of the type, a name or "void", unless there are other parts, e.g., "struct s *(*fp)(void)"
+        (
+            { LA(1) == NAME || LA(1) == VOID }?
+            (NAME | VOID)
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            set_bool[last_name, true] |
+
+            { inLanguage(LANGUAGE_C) && declaration_general_type_parts > 0 }?
+        )
 
         // the parameters are parsed with the same counts, so keep the counts of the type
         set_int[type_count, declaration_general_type_count]
         set_int[type_parts, declaration_general_type_parts]
 
-        function_pointer_name_grammar
+        function_pointer_attribute_name
 
         eat_optional_macro_call
 
@@ -4811,12 +5072,37 @@ function_pointer_declaration_start[] {
 
         set_int[declaration_general_type_count, type_count]
 
+        // in C, macro calls after the parameter list, e.g., "__printf(2, 3)"
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_C) && next_token() == LPAREN }?
+            NAME
+            paren_pair
+        )*
+
         (
             EQUAL |
 
-            { !(type_parts > 0 && inTransparentMode(MODE_FUNCTION_BODY)) }?
+            { !(((type_parts > 0 && last_name) || has_class) && inTransparentMode(MODE_FUNCTION_BODY)) }?
             TERMINATE
         )
+;
+
+/*
+  function_pointer_attribute_name
+
+  For function_pointer_declaration_start, the function pointer name, which in C may start with an attribute, e.g.,
+  "(__attribute__((nocf_check)) *f)".
+*/
+function_pointer_attribute_name[] { ENTRY_DEBUG } :
+        (LPAREN C_ATTRIBUTE)=>
+        { inLanguage(LANGUAGE_C) }?
+        LPAREN
+        C_ATTRIBUTE
+        paren_pair
+        function_pointer_name_base
+        RPAREN |
+
+        function_pointer_name_grammar
 ;
 
 /*
@@ -4991,7 +5277,8 @@ expression_statement_simple[] {
 /*
   single_macro_start
 
-  The start of a C statement of a macro of only a name before a keyword, e.g., "CASES return x;" or "asm goto (...)".
+  The start of a C statement of a macro of only a name before a keyword, e.g., "CASES return x;" or "asm goto (...)",
+  or before parts of a type and then "default", e.g., "A B default:".
 */
 single_macro_start[] {
         // a new statement, so no "?" or destructor seen yet
@@ -5010,7 +5297,15 @@ single_macro_start[] {
         }?
         (NAME | ASM)
 
-        { keyword_token_set.member(LA(1)) }?
+        (
+            { keyword_token_set.member(LA(1)) }? |
+
+            (paren_pair)?
+
+            (options { greedy = true; } : declaration_general_part)+
+
+            DEFAULT
+        )
 ;
 
 /*
@@ -5095,9 +5390,12 @@ pattern_check_statements[] {
         STMT_TYPE stmt_type = NONE;
         CALL_TYPE type = NOCALL;
 
-        // detect the declaration/definition type for non-declarative languages
-        if (!inLanguage(LANGUAGE_PYTHON))
+        // detect the declaration/definition type for non-declarative languages, except for C, which is checked by the
+        // statement rules before this
+        if (!inLanguage(LANGUAGE_PYTHON) && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
+        else if (inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            secondtoken = next_token();
 
         ENTRY_DEBUG
 } :
@@ -7259,7 +7557,7 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             control_initialization_variable_declaration[declaration_general_type_count] |
 
             // a C variable declaration with an index of any expression or an attribute, e.g., "int a[N + 1] = {}"
-            (declaration_index_attribute_start)=>
+            (declaration_index_attribute_start[true])=>
             control_initialization_variable_declaration[declaration_general_type_count] |
 
             // explicitly check for a variable declaration since it can easily be confused with an expression, except
@@ -10113,15 +10411,15 @@ condition_declaration_type[bool is_class, bool last_specifier] {
 
         ENTRY_DEBUG
 } :
-        ((NAME | MAIN) (bracket_pair)* EQUAL)=>
+        ((NAME | MAIN) (declaration_index[false])* EQUAL)=>
         { declaration_general_type_parts > 0 }?
         (NAME | MAIN)
-        (bracket_pair)*
+        (declaration_index[false])*
         EQUAL |
 
         // a struct, union, or enum type with no name, e.g., "struct s = 0"
         { is_class }?
-        (bracket_pair)*
+        (declaration_index[false])*
         EQUAL
         set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier ? 1 : 0)] |
 
@@ -15617,7 +15915,11 @@ generic_selection_association_type[] {
         }
 
         (
-            { pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
+            // in C, a type, e.g., "struct s *"
+            (generic_selection_association_type_check)=>
+            variable_declaration_type[declaration_general_type_count + 1] |
+
+            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
             variable_declaration_type[type_count + 1] |
 
             generic_selection_association_default
@@ -15626,6 +15928,25 @@ generic_selection_association_type[] {
         {
             clearMode(MODE_ASSOCIATION_TYPE);
         }
+;
+
+/*
+  generic_selection_association_type_check
+
+  For a C generic selection association, e.g., "struct s *" in "_Generic(x, struct s *: f)", the count of the parts of
+  the type as for declaration_general_start. Any association, including "default", is a type.
+*/
+generic_selection_association_type_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (options { greedy = true; } :
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
 ;
 
 /*
@@ -17956,7 +18277,7 @@ kr_parameter_check[] { ENTRY_DEBUG } :
             (declaration_general_start)=>
             declaration_general_start |
 
-            declaration_index_attribute_start
+            declaration_index_attribute_start[false]
         )
 ;
 
@@ -17966,7 +18287,7 @@ kr_parameter_check[] { ENTRY_DEBUG } :
   The start of a C variable declaration with an index of any expression or an attribute after the name, e.g.,
   "int a[N + 1];" or "int a __attribute__((x)) = 0".
 */
-declaration_index_attribute_start[] {
+declaration_index_attribute_start[bool index_union] {
         declaration_general_type_count = 0;
         declaration_general_type_parts = 0;
 
@@ -17981,7 +18302,7 @@ declaration_index_attribute_start[] {
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )?
 
-        declaration_index_attribute_type[false, false, false]
+        declaration_index_attribute_type[false, false, false, index_union]
 ;
 
 /*
@@ -17989,27 +18310,27 @@ declaration_index_attribute_start[] {
 
   The type of a C variable declaration, and its name. Each part of the type is a specifier, a struct, union, or enum
   name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier. The
-  name, with any indexes and attributes, is followed by ";", ",", "=", or ":". When the type ends with a struct, union,
+  name, which may be a member, e.g., "b.c", with any indexes and attributes, is followed by ";", ",", "=", or ":". When the type ends with a struct, union,
   or enum type or a "*", with only specifiers after it, the name is optional before "=" or ":", and a specifier or a
   "*" as the last part is not part of the type.
 */
-declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_pointer] {
+declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_pointer, bool index_union] {
         bool class_part = false;
         bool pointer_part = false;
         int specifiers = declaration_general_specifiers;
 
         ENTRY_DEBUG
 } :
-        ((NAME | MAIN) (bracket_pair)* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA | EQUAL | COLON))=>
+        (declaration_member_name (declaration_index[index_union])* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA | EQUAL | COLON))=>
         { declaration_general_type_parts > 0 }?
-        (NAME | MAIN)
-        (bracket_pair)*
+        declaration_member_name
+        (declaration_index[index_union])*
         (C_ATTRIBUTE paren_pair)*
         (TERMINATE | COMMA | EQUAL | COLON) |
 
         // no name, e.g., "struct s = 0" or "int * = 0"
         { no_name }?
-        (bracket_pair)*
+        (declaration_index[index_union])*
         (EQUAL | COLON)
         set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier || last_pointer ? 1 : 0)] |
 
@@ -18024,8 +18345,83 @@ declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_po
         declaration_index_attribute_type[
             class_part || pointer_part || (no_name && declaration_general_specifiers > specifiers),
             declaration_general_specifiers > specifiers,
-            pointer_part
+            pointer_part,
+            index_union
         ]
+;
+
+/*
+  declaration_index
+
+  An index after the name of a C variable declaration, e.g., "[N + 1]", that is a complete expression. A union inside
+  it, e.g., "[sizeof(union u)]", is only in a for initialization.
+*/
+declaration_index[bool index_union] { bool is_complex = false; ENTRY_DEBUG } :
+        { index_union || !index_token_scan(UNION) }?
+        variable_identifier_array_grammar_sub[is_complex]
+;
+
+/*
+  macro_type_variable_start
+
+  The start of a C variable declaration with a macro as its type, e.g., "__aligned(64) x;".
+*/
+macro_type_variable_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        NAME
+
+        paren_pair
+
+        NAME
+
+        TERMINATE
+;
+
+/*
+  single_macro_index_start
+
+  The start of a C statement of a name, then a name with an index that has a union in it, e.g.,
+  "u8 offs[sizeof(union u)];", or a cast to a struct in it, e.g., "char d[sizeof(((struct s *)0)->x)];", where the
+  first name is a macro.
+*/
+single_macro_index_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        NAME
+
+        (MULTOPS)*
+
+        NAME
+
+        (
+            { index_token_scan(UNION) }?
+            LBRACKET |
+
+            { index_struct_cast_scan() }?
+            LBRACKET
+        )
+;
+
+/*
+  declaration_index_attribute_name
+
+  For declaration_index_attribute_type, the name, including "main" and the words that are names in C, e.g., "line".
+*/
+declaration_index_attribute_name[] { ENTRY_DEBUG } :
+        NAME | MAIN | LINE | WARNING | ERRORPREC | INCLUDE | DEFINE | ELIF | ENDIF | IFDEF | IFNDEF | PRAGMA | UNDEF | WEAK | STRONG
+;
+
+/*
+  declaration_member_name
+
+  For declaration_index_attribute_type, the name, which may be a member, e.g., "b.c" or "p->x".
+*/
+declaration_member_name[] { ENTRY_DEBUG } :
+        declaration_index_attribute_name
+
+        (options { greedy = true; } :
+            (PERIOD | TRETURN)
+            declaration_index_attribute_name
+        )*
 ;
 
 /*
