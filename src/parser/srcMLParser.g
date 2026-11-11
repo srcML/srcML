@@ -3152,6 +3152,13 @@ pattern_statements[] { ENTRY_DEBUG } :
         (macro_before_struct_start)=>
         macro_call |
 
+        // a name before a struct or union type of a function or a variable, e.g., "noinstr struct x *f(void) {"
+        (name_before_struct_function_start)=>
+        name_before_struct_function |
+
+        (name_before_struct_variable_start)=>
+        name_before_struct_variable |
+
         pattern_check_statements
 ;
 
@@ -3860,6 +3867,53 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  name_before_struct_function_start
+
+  The start of a C function with a name before its struct or union type, e.g., "noinstr struct x *f(void) {". The name
+  is one more part of the type.
+*/
+name_before_struct_function_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION) }?
+        NAME
+
+        function_general_start
+;
+
+/*
+  name_before_struct_function
+
+  A C function with a name before its struct or union type.
+*/
+name_before_struct_function[] { ENTRY_DEBUG } :
+        { function_general_kind == FUNCTION }?
+        function_definition[declaration_general_type_count + 1] |
+
+        function_declaration[declaration_general_type_count + 1]
+;
+
+/*
+  name_before_struct_variable_start
+
+  The start of a C variable declaration with a name before its struct or union type, e.g., "__iomem struct x *p;".
+  The name is one more part of the type.
+*/
+name_before_struct_variable_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION) }?
+        NAME
+
+        declaration_general_start
+;
+
+/*
+  name_before_struct_variable
+
+  A C variable declaration with a name before its struct or union type.
+*/
+name_before_struct_variable[] { ENTRY_DEBUG } :
+        variable_declaration_statement[declaration_general_type_count + 1]
 ;
 
 /*
