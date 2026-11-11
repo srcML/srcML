@@ -71,10 +71,20 @@ private:
     // a name, unless it is a prefix of a string or character literal, which the grammar handles
     antlr::RefToken fastName() {
 
+        antlr::InputBuffer& input = inputState->getInput();
         unsigned int n = 1;
-        while (isNameChar(LA(n + 1)))
-            ++n;
-        const int after = LA(n + 1);
+        for (;;) {
+            const unsigned int available = input.entries();
+            const int* chars = input.data();
+            while (n < available && isNameChar(chars[n]))
+                ++n;
+            if (n < available)
+                break;
+            // Refill can reallocate the queue, so reacquire its pointer above.
+            input.LA(n + 1);
+        }
+        const int* chars = input.data();
+        const int after = chars[n];
         if (after == '"' || after == '\'')
             return KeywordLexer::nextToken();
 
@@ -101,15 +111,19 @@ private:
 
         // as the NAME rule: not at the start of a line, and each character is a non-whitespace character
         startline = false;
-        antlr::InputBuffer& input = inputState->getInput();
-        for (unsigned int i = 1; i <= n; ++i) {
-            const int ch = input.LA(1);
+        text.append(chars, n);
+        if (n >= 3) {
+            lookaheadMinusThree = chars[n - 3];
+            lookaheadMinusTwo = chars[n - 2];
+        } else if (n == 2) {
+            lookaheadMinusThree = lookaheadMinusOne;
+            lookaheadMinusTwo = chars[0];
+        } else {
             lookaheadMinusThree = lookaheadMinusTwo;
             lookaheadMinusTwo = lookaheadMinusOne;
-            lookaheadMinusOne = ch;
-            text += static_cast<char>(ch);
-            input.consume();
         }
+        lookaheadMinusOne = chars[n - 1];
+        input.consume(n);
         lastnonspacetoken = lookaheadMinusOne;
         inputState->column += (int) n;
 
