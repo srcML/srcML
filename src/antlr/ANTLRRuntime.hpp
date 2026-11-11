@@ -142,6 +142,9 @@ public:
 		       ",column=" + std::to_string(getColumn()) + "]";
 	}
 
+	/** memory of deleted tokens, per thread */
+	typedef BlockPool<Token, 4096> FreeTokens;
+
 	// reuse the memory of deleted tokens, since tokens are created and deleted constantly
 	static void* operator new(std::size_t size) {
 		if (void* p = FreeTokens::take())
@@ -151,6 +154,29 @@ public:
 	static void operator delete(void* p) {
 		if (!FreeTokens::give(p))
 			::operator delete(p);
+	}
+
+	// a token from a pool kept by the caller, returned to the pool when deleted, without finding the pool each time
+	template <typename... Args>
+	static Token* create(FreeTokens::List& pool, Args&&... args) {
+		void* p = FreeTokens::take(pool);
+		if (!p)
+			p = ::operator new(sizeof(Token));
+		Token* token = ::new (p) Token(std::forward<Args>(args)...);
+		token->pool = &pool;
+		return token;
+	}
+
+	// delete the token, to its pool when known
+	static void destroy(Token* token) {
+		FreeTokens::List* p = token->pool;
+		if (!p) {
+			delete token;
+			return;
+		}
+		token->~Token();
+		if (!FreeTokens::give(*p, token))
+			::operator delete(token);
 	}
 
 private:
@@ -174,11 +200,8 @@ public:
 	std::string text;
 
 private:
-	/** maximum number of deleted tokens kept for reuse per thread */
-	static constexpr std::size_t MAX_FREE_TOKENS = 4096;
-
-	/** memory of deleted tokens, per thread */
-	typedef BlockPool<Token, MAX_FREE_TOKENS> FreeTokens;
+	/** pool of the memory of the token, when created from one */
+	FreeTokens::List* pool = nullptr;
 
 	Token(RefToken other);
 	Token& operator=(const Token& other);
@@ -195,7 +218,7 @@ inline void TokenRefCount<T>::acquire() {
 template <class T>
 inline void TokenRefCount<T>::release(Token* p) {
 	if (p && --p->refCount == 0)
-		delete p;
+		Token::destroy(p);
 }
 
 inline RefToken nullToken;
@@ -1007,12 +1030,15 @@ protected:
 	bool caseSensitive;
 	std::map<std::string, int, CharScannerLiteralsLess> literals;
 	RefToken _returnToken;
+
+	// pool of tokens of the thread of the scanner
+	Token::FreeTokens::List& tokenPool = Token::FreeTokens::local();
 	LexerSharedInputState inputState;
 	bool commitToPath;
 	int tabsize;
 
 	virtual RefToken makeToken(int t) {
-		RefToken tok(new Token(t));
+		RefToken tok(Token::create(tokenPool, t));
 		tok->column = inputState->tokenStartColumn;
 		tok->line = inputState->tokenStartLine;
 		return tok;

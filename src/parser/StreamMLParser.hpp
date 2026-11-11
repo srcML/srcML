@@ -133,7 +133,7 @@ public:
     void emptyElement(int id) final {
 
         // push a empty element token
-        auto gentoken = antlr::RefToken(EmptyTokenFactory(id));
+        auto gentoken = antlr::RefToken(antlr::Token::create(tokenPool, id, EMPTYTOKEN));
 
         pushTokenFlush(gentoken);
     }
@@ -279,7 +279,7 @@ private:
     inline void pushSToken(int token) {
 
         // push a new start token
-        auto ntoken = antlr::RefToken(StartTokenFactory(token));
+        auto ntoken = antlr::RefToken(antlr::Token::create(tokenPool, token, STARTTOKEN));
 
         pushToken(ntoken);
     }
@@ -287,7 +287,7 @@ private:
     inline void pushSSkipToken(int token) {
 
         // push a new start token
-        auto ntoken = antlr::RefToken(StartTokenFactory(token));
+        auto ntoken = antlr::RefToken(antlr::Token::create(tokenPool, token, STARTTOKEN));
 
         pushSkipToken(ntoken);
     }
@@ -295,7 +295,7 @@ private:
     inline void pushSTokenFlush(int token) {
 
         // push a new start token
-        auto ntoken = antlr::RefToken(StartTokenFactory(token));
+        auto ntoken = antlr::RefToken(antlr::Token::create(tokenPool, token, STARTTOKEN));
 
         pushTokenFlush(ntoken);
     }
@@ -310,13 +310,13 @@ private:
     inline void pushEToken(int token) {
 
         // push a new end token
-        pushToken(antlr::RefToken(EndTokenFactory(token)));
+        pushToken(antlr::RefToken(antlr::Token::create(tokenPool, token, ENDTOKEN)));
     }
 
     inline void pushESkipToken(int token) {
 
         // push a new end token
-        pushSkipToken(antlr::RefToken(EndTokenFactory(token)));
+        pushSkipToken(antlr::RefToken(antlr::Token::create(tokenPool, token, ENDTOKEN)));
      }
 
     /**
@@ -368,7 +368,7 @@ private:
             switch (srcMLParser::LA(1)) {
             case srcMLParser::CONTROL_CHAR:
             {
-                antlr::RefToken controlElement = EmptyTokenFactory(LA(1));
+                antlr::RefToken controlElement = antlr::Token::create(tokenPool, LA(1), EMPTYTOKEN);
                 int n = LT(1)->getText()[0];
                 char outar[20 + 2 + 1];
                 snprintf(outar, 22, "0x%02x", n);
@@ -998,6 +998,9 @@ private:
 
         return &(output().back());
     }
+
+    /** pool of tokens of the thread of the parser */
+    antlr::Token::FreeTokens::List& tokenPool = antlr::Token::FreeTokens::local();
 
     antlr::RefToken pausetoken = nullptr;
 

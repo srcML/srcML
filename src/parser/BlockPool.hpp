@@ -26,9 +26,24 @@ template <typename Tag, std::size_t MAX_BLOCKS>
 class BlockPool {
 public:
 
+    struct List {
+        void* head;
+        std::size_t count;
+        bool registered;
+        bool ended;
+    };
+
+    // blocks of this thread, for a caller to keep instead of finding them each time
+    static List& local() {
+        return list();
+    }
+
     // a block for reuse, or null if none
     static void* take() {
-        auto& l = list();
+        return take(list());
+    }
+
+    static void* take(List& l) {
         void* p = l.head;
         if (p) {
             l.head = *static_cast<void**>(p);
@@ -39,7 +54,10 @@ public:
 
     // keep the block for reuse, returning false if not kept
     static bool give(void* p) {
-        auto& l = list();
+        return give(list(), p);
+    }
+
+    static bool give(List& l, void* p) {
         if (l.count >= MAX_BLOCKS || l.ended)
             return false;
 
@@ -56,13 +74,6 @@ public:
     }
 
 private:
-
-    struct List {
-        void* head;
-        std::size_t count;
-        bool registered;
-        bool ended;
-    };
 
     static List& list() {
         static thread_local List l = { nullptr, 0, false, false };
