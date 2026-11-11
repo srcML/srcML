@@ -1178,8 +1178,8 @@ public:
     /*
       condition_expression_scan
 
-      For condition_inner and control_initialization in C, the check from the token buffer, without parsing, that the
-      condition or initialization cannot be a declaration: it starts with what cannot start a type, e.g., "!x" or "(a)",
+      For condition_inner, control_initialization, and K&R parameters in C, the check from the token buffer, without
+      parsing, that the condition, initialization, or what follows a parameter list cannot be a declaration: it starts with what cannot start a type, e.g., "!x" or "(a)",
       or with a name followed by what cannot follow the first part of a type, e.g., "p->x", "a == b", "i = 0", or
       "f(x)".
     */
@@ -9409,6 +9409,7 @@ statement_part[] {
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
+            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_expression_scan())
             && pattern_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
