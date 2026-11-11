@@ -1178,9 +1178,10 @@ public:
     /*
       condition_expression_scan
 
-      For condition_inner in C, the check from the token buffer, without parsing, that the condition cannot be a
-      declaration: it starts with what cannot start a type, e.g., "!x" or "(a)", or with a name followed by what cannot
-      follow the first part of a type, e.g., "p->x", "a == b", or "f(x)".
+      For condition_inner and control_initialization in C, the check from the token buffer, without parsing, that the
+      condition or initialization cannot be a declaration: it starts with what cannot start a type, e.g., "!x" or "(a)",
+      or with a name followed by what cannot follow the first part of a type, e.g., "p->x", "a == b", "i = 0", or
+      "f(x)".
     */
     bool condition_expression_scan() {
 
@@ -1208,6 +1209,8 @@ public:
         case TEMPOPE:
         case REFOPS:
         case LBRACKET:
+        case EQUAL:
+        case ASSIGNMENT:
             return true;
 
         default:
@@ -7190,8 +7193,13 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
         control_initialization_action
 
         (
-            // explicitly check for a variable declaration since it can easily be confused with an expression
-            { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+            // explicitly check for a variable declaration since it can easily be confused with an expression, except
+            // for a C initialization that cannot be a declaration
+            {
+                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_expression_scan())
+                && pattern_check(stmt_type, secondtoken, type_count, after_token)
+                && stmt_type == VARIABLE
+            }?
             control_initialization_variable_declaration[type_count] |
 
             { if (secondtoken == COLON)
