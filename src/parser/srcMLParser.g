@@ -1232,11 +1232,11 @@ public:
       parameter_simple_name_scan
 
       For parameter_simple_check, the check from the token buffer, without parsing, that LA(1) is the name of the
-      parameter, i.e., a name followed by "," or ")".
+      parameter, i.e., a name or "main" followed by "," or ")".
     */
     bool parameter_simple_name_scan() {
 
-        if (LA(1) != NAME)
+        if (LA(1) != NAME && LA(1) != MAIN)
             return false;
 
         unsigned int i = scan_skip(2);
@@ -18020,7 +18020,7 @@ parameter_simple_check[] {
         (
             // a single name
             { parameter_simple_name_scan() }?
-            NAME
+            (NAME | MAIN)
             set_int[declaration_general_type_count, 1] |
 
             parameter_simple_type
@@ -18091,9 +18091,10 @@ parameter_enum_names[] { ENTRY_DEBUG } :
 */
 parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
-            // not the name of the parameter, nor a member, e.g., "t->l", which is not part of a type
+            // not the name of the parameter, unless only specifiers are before it, e.g., "u32" in "const u32", nor a
+            // member, e.g., "t->l", which is not part of a type
             {
-                !parameter_simple_name_scan()
+                (!parameter_simple_name_scan() || (LA(1) == NAME && declaration_general_type_count == declaration_general_specifiers))
                 && !(LA(1) == NAME && (next_token() == PERIOD || next_token() == TRETURN))
             }?
             (
@@ -18122,7 +18123,8 @@ parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY
         { declaration_general_type_parts > 0 }?
         (
             // a name
-            NAME |
+            { parameter_simple_name_scan() }?
+            (NAME | MAIN) |
 
             // no name, so the last part is taken as the name, but not when the rest is only specifiers. An enum type, or
             // a struct or union type without a pointer, e.g., "struct s", followed by "," is a type of one part.
