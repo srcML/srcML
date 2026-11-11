@@ -2829,7 +2829,35 @@ pattern_statements[] { ENTRY_DEBUG } :
         (static_call_expression_start)=>
         expression_statement_simple |
 
+        // label
+        (label_statement_simple)=>
+        label_statement_simple |
+
         pattern_check_statements
+;
+
+/*
+  label_statement_simple
+
+  A C/C++ label, e.g., "out:".
+*/
+label_statement_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+        }?
+        label_statement
 ;
 
 /*
