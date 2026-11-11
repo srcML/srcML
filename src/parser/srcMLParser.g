@@ -1021,6 +1021,204 @@ public:
             return 0;
         }
     }
+
+    /*
+      ternary_scan
+
+      For perform_ternary_check() in C and C++, the check from the token buffer, without parsing.
+      Returns the position of the token that ends the check when the check is certainly not a ternary,
+      with the last token the check consumes, or 0 when the token buffer is not enough, e.g., for
+      a preprocessor line, a template, or a lambda.
+    */
+    // namestack of a ternary_scan(), as the positions of the tokens, or the original or empty names
+    enum { TERNARY_SCAN_EMPTY = -1, TERNARY_SCAN_ORIGINAL0 = -2, TERNARY_SCAN_ORIGINAL1 = -3 };
+
+    // set the namestack from a ternary_scan()
+    void ternary_scan_namestack(int name0, int name1) {
+
+        auto name = [&](int code) -> std::string {
+            if (code == TERNARY_SCAN_EMPTY)
+                return "";
+            if (code == TERNARY_SCAN_ORIGINAL0)
+                return namestack[0];
+            if (code == TERNARY_SCAN_ORIGINAL1)
+                return namestack[1];
+            return LT((unsigned int) code)->getText();
+        };
+
+        std::string first = name(name0);
+        std::string second = name(name1);
+        namestack[0] = std::move(first);
+        namestack[1] = std::move(second);
+    }
+
+    unsigned int ternary_scan(int& last, bool& qmark, int& name0, int& name1) {
+
+        if (getLanguage() != LANGUAGE_C && getLanguage() != LANGUAGE_CXX)
+            return 0;
+
+        // EOL is a token of a preprocessor line
+        if (inSkippedTokens())
+            return 0;
+
+        last = -1;
+        qmark = false;
+
+        // namestack of the names of the compound names, as compound_name_c and compound_name_cpp
+        name0 = TERNARY_SCAN_ORIGINAL0;
+        name1 = TERNARY_SCAN_ORIGINAL1;
+        const bool cpp = getLanguage() == LANGUAGE_CXX;
+
+        // depth of the "()" or "[]" pair the check starts, where other pairs are any tokens
+        int depth = 0;
+        int open = 0;
+        int close = 0;
+
+        // ".", "->", or "::" after a name of a compound name, and the name after it
+        bool member = false;
+        int memberToken = 0;
+        bool inName = false;
+
+        // a "::" in the compound name, after which a name after "." or "->" is also in the namestack
+        bool colon = false;
+        for (unsigned int i = 1; i < 4096; ++i) {
+
+            const int token = LA(i);
+
+            // a name follows ".", "->", and "::" in a compound name, otherwise compound_name_inner may stop, e.g., "x->~T()", "x->main"
+            if (member && !skip_tokens_set.member((unsigned int) token) && token != NAME)
+                return 0;
+
+            // a compound name is only of NAMEs, and ends at any other token
+            if (depth == 0 && token != NAME && !skip_tokens_set.member((unsigned int) token)) {
+                if (identifier_list_tokens_set.member((unsigned int) token))
+                    return 0;
+                if (token != PERIOD && token != TRETURN && token != DCOLON && (!cpp || (token != MPDEREF && token != DOTDEREF)))
+                    inName = false;
+            }
+
+            switch (token) {
+
+            // parsed specially, or as more than tokens
+            case 1:
+            case PREPROC:
+            case MACRO_NAME:
+            case C_ATTRIBUTE:
+            case VISUAL_CXX_ASM:
+                return 0;
+
+            // names that compound_name_inner may stop at, e.g., a CUDA kernel call, and "operator", which is a NAME in C
+            case OPERATOR:
+            case TEMPOPS:
+            case DESTOP:
+            case CUDA:
+                if (depth == 0)
+                    return 0;
+                break;
+
+            // in C, ".*" and "->*" are not in a compound name
+            case PERIOD:
+            case TRETURN:
+            case DCOLON:
+            case MPDEREF:
+            case DOTDEREF:
+                if (depth == 0) {
+                    if (token == DCOLON && (!cpp || !inName))
+                        return 0;
+                    if (!cpp && (token == MPDEREF || token == DOTDEREF)) {
+                        inName = false;
+                        break;
+                    }
+                    member = inName;
+                    memberToken = token;
+                }
+                break;
+
+            case NAME:
+                if (depth == 0) {
+                    if (LT(i)->getText() == "operator"sv)
+                        return 0;
+
+                    if (!member) {
+
+                        // start of a compound name
+                        if (cpp) {
+                            name0 = TERNARY_SCAN_EMPTY;
+                            name1 = TERNARY_SCAN_EMPTY;
+                        }
+                        name1 = name0;
+                        name0 = (int) i;
+                        colon = false;
+
+                    } else if (cpp) {
+
+                        // "." and "->" clear the namestack, and a name is in the namestack after a "::"
+                        if (memberToken == DCOLON) {
+                            colon = true;
+                        } else {
+                            name0 = TERNARY_SCAN_EMPTY;
+                            name1 = TERNARY_SCAN_EMPTY;
+                        }
+                        if (colon) {
+                            name1 = name0;
+                            name0 = (int) i;
+                        }
+                    }
+                    member = false;
+                    inName = true;
+                }
+                break;
+
+            case LCURLY:
+                if (depth == 0)
+                    return 0;
+                break;
+
+            case LPAREN:
+            case LBRACKET:
+                if (depth == 0) {
+                    open = token;
+                    close = token == LPAREN ? RPAREN : RBRACKET;
+                }
+                if (token == open)
+                    ++depth;
+                break;
+
+            case RPAREN:
+            case RBRACKET:
+                if (depth == 0)
+                    return i;
+                if (token == close)
+                    --depth;
+                break;
+
+            // a "?" in a pair is a qmark of the pair
+            case QMARK:
+                if (depth == 0)
+                    return 0;
+                qmark = true;
+                break;
+
+            case TERMINATE:
+            case COMMA:
+            case COLON:
+            case EQUAL:
+            case ASSIGNMENT:
+            case RCURLY:
+                if (depth == 0)
+                    return i;
+                break;
+
+            default:
+                break;
+            }
+
+            if (!skip_tokens_set.member((unsigned int) token))
+                last = token;
+        }
+
+        return 0;
+    }
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
@@ -4350,6 +4548,22 @@ perform_ternary_check[] returns [bool is_ternary] {
         is_ternary = false;
 
         last_consumed_guessing_mode = -1;
+
+        // the check from the token buffer, with the same changes to the state as the check
+        int scan_last = -1;
+        bool scan_qmark = false;
+        int scan_name0 = 0;
+        int scan_name1 = 0;
+        const unsigned int scan_end = ternary_scan(scan_last, scan_qmark, scan_name0, scan_name1);
+        if (scan_end) {
+            if (scan_last != -1)
+                last_consumed = scan_last;
+            if (scan_qmark)
+                is_qmark = true;
+            if (!is_qmark && (LA(scan_end) == TERMINATE || LA(scan_end) == LCURLY))
+                skip_ternary = true;
+            ternary_scan_namestack(scan_name0, scan_name1);
+        } else {
         int start = mark();
         inputState->guessing++;
 
@@ -4379,6 +4593,7 @@ perform_ternary_check[] returns [bool is_ternary] {
 
         inputState->guessing--;
         rewind(start);
+        }
 
         ENTRY_DEBUG
 } :;
