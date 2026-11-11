@@ -794,7 +794,8 @@ private:
 
 public:
 	CharScannerLiteralsLess(const CharScanner* theScanner) : scanner(theScanner) {}
-	bool operator()(const std::string& x, const std::string& y) const;
+	using is_transparent = void;
+	bool operator()(std::string_view x, std::string_view y) const;
 };
 
 class CharScanner : public TokenStream {
@@ -1026,7 +1027,7 @@ public:
 	virtual LexerSharedInputState getInputState() { return inputState; }
 	virtual void setInputState(LexerSharedInputState state) { inputState = state; }
 	virtual int testLiteralsTable(int ttype) const {
-		std::map<std::string, int, CharScannerLiteralsLess>::const_iterator i = literals.find(std::string(text));
+		std::map<std::string, int, CharScannerLiteralsLess>::const_iterator i = literals.find(std::string_view(text));
 		if (i != literals.end())
 			ttype = (*i).second;
 		return ttype;
@@ -1067,9 +1068,9 @@ private:
 	CharScanner& operator=(const CharScanner& other);
 };
 
-inline bool CharScannerLiteralsLess::operator()(const std::string& x, const std::string& y) const {
+inline bool CharScannerLiteralsLess::operator()(std::string_view x, std::string_view y) const {
 	if (scanner->getCaseSensitiveLiterals())
-		return std::less<std::string>()(x, y);
+		return x < y;
 	for (size_t i = 0;; ++i) {
 		int c1 = i < x.size() ? std::tolower(static_cast<unsigned char>(x[i])) : 0;
 		int c2 = i < y.size() ? std::tolower(static_cast<unsigned char>(y[i])) : 0;
