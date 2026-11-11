@@ -888,6 +888,139 @@ public:
     TokenPosition prevTokenPosition;
     int last_consumed = -1;
     int last_consumed_guessing_mode = -1;
+
+    /*
+      call_success_type
+
+      Type of a call check when the call syntax succeeded, from the token after the call.
+    */
+    CALL_TYPE call_success_type(int postcalltoken, int save_first) {
+
+        // call syntax succeeded
+        CALL_TYPE type = CALL;
+
+        // call syntax succeeded, however post-call token is not legitimate
+        if (
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && (
+                (
+                    (
+                        !inLanguage(LANGUAGE_OBJECTIVE_C)
+                        || !inTransparentMode(MODE_OBJECTIVE_C_CALL)
+                    )
+                    && (
+                        keyword_token_set.member(postcalltoken)
+                        || postcalltoken == NAME
+                        || postcalltoken == VOID
+                    )
+                )
+                || (
+                    !inLanguage(LANGUAGE_CSHARP)
+                    && postcalltoken == LCURLY
+                )
+                || postcalltoken == EXTERN
+                || postcalltoken == STRUCT
+                || postcalltoken == UNION
+                || postcalltoken == CLASS
+                || postcalltoken == CXX_CLASS
+                || (
+                    !inLanguage(LANGUAGE_CSHARP)
+                    && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+                    && postcalltoken == RCURLY
+                )
+                || postcalltoken == TEMPLATE
+                || postcalltoken == INLINE
+                || postcalltoken == PUBLIC
+                || postcalltoken == PRIVATE
+                || postcalltoken == PROTECTED
+                || postcalltoken == SIGNAL
+                || postcalltoken == ATREQUIRED
+                || postcalltoken == ATOPTIONAL
+                || postcalltoken == STATIC
+                || postcalltoken == CONST
+            )
+            && (save_first != DECLTYPE)
+        )
+            type = MACRO;
+
+        if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
+            type = NOCALL;
+
+        return type;
+    }
+
+    /*
+      call_failed_type
+
+      Type of a call check when the call syntax failed.
+    */
+    CALL_TYPE call_failed_type(int argumenttoken, int postcalltoken, int secondtoken) {
+
+        CALL_TYPE type = NOCALL;
+
+        if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
+            type = MACRO;
+
+        // single macro call followed by statement_cfg
+        else if (
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && secondtoken != -1
+            && (
+                keyword_token_set.member(secondtoken)
+                || secondtoken == LCURLY
+                || secondtoken == 1 /* EOF */
+                || secondtoken == PUBLIC
+                || secondtoken == PRIVATE
+                || secondtoken == PROTECTED
+            )
+        )
+            type = MACRO;
+
+        return type;
+    }
+
+    /*
+      call_scan
+
+      For perform_call_check() in C and C++, the check from the token buffer, without parsing,
+      for a name that is not followed by anything that is part of a name or a call, where the
+      call syntax fails. Returns the token after the name, or 0 when the token buffer is not enough.
+    */
+    int call_scan() {
+
+        if (getLanguage() != LANGUAGE_C && getLanguage() != LANGUAGE_CXX)
+            return 0;
+
+        // EOL is a token of a preprocessor line
+        if (inSkippedTokens())
+            return 0;
+
+        if (LA(1) != NAME || LT(1)->getText() == "operator"sv)
+            return 0;
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        const int token = LA(i);
+        switch (token) {
+        case TERMINATE:
+        case COMMA:
+        case RPAREN:
+        case RBRACKET:
+        case RCURLY:
+        case EQUAL:
+        case ASSIGNMENT:
+        case OPERATORS:
+        case QMARK:
+        case COLON:
+            return token;
+
+        default:
+            return 0;
+        }
+    }
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
@@ -3985,6 +4118,19 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         type = NOCALL;
 
         last_consumed_guessing_mode = -1;
+
+        // a name alone, from the token buffer, is a call check that fails after the name
+        const int scan_token = call_scan();
+        if (scan_token) {
+            call_count = 0;
+            type = call_failed_type(0, 0, secondtoken);
+        } else {
+
+        // the check does not change the state the scan does not, which is unused after the check
+        const int save_last_consumed = last_consumed;
+        auto save_namestack = namestack;
+        const bool save_isdestructor = isdestructor;
+
         int start = mark();
         inputState->guessing++;
         int save_first = LA(1);
@@ -4021,87 +4167,27 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
                     throw antlr::RecognitionException();
 
                 // call syntax succeeded
-                type = CALL;
-
-                // call syntax succeeded, however post-call token is not legitimate
-                if (
-                    isoption(parser_options, SRCML_PARSER_OPTION_CPP)
-                    && (
-                        (
-                            (
-                                !inLanguage(LANGUAGE_OBJECTIVE_C)
-                                || !inTransparentMode(MODE_OBJECTIVE_C_CALL)
-                            )
-                            && (
-                                keyword_token_set.member(postcalltoken)
-                                || postcalltoken == NAME
-                                || postcalltoken == VOID
-                            )
-                        )
-                        || (
-                            !inLanguage(LANGUAGE_CSHARP)
-                            && postcalltoken == LCURLY
-                        )
-                        || postcalltoken == EXTERN
-                        || postcalltoken == STRUCT
-                        || postcalltoken == UNION
-                        || postcalltoken == CLASS
-                        || postcalltoken == CXX_CLASS
-                        || (
-                            !inLanguage(LANGUAGE_CSHARP)
-                            && !inTransparentMode(MODE_INTERNAL_END_CURLY)
-                            && postcalltoken == RCURLY
-                        )
-                        || postcalltoken == TEMPLATE
-                        || postcalltoken == INLINE
-                        || postcalltoken == PUBLIC
-                        || postcalltoken == PRIVATE
-                        || postcalltoken == PROTECTED
-                        || postcalltoken == SIGNAL
-                        || postcalltoken == ATREQUIRED
-                        || postcalltoken == ATOPTIONAL
-                        || postcalltoken == STATIC
-                        || postcalltoken == CONST
-                    )
-                    && (save_first != DECLTYPE)
-                )
-                    type = MACRO;
-
-                if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
-                    type = NOCALL;
+                type = call_success_type(postcalltoken, save_first);
 
             }
         } catch (...) {
             check_failed = true;
         }
 
-        if (check_failed) {
-            type = NOCALL;
-
-            if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
-                type = MACRO;
-
-            // single macro call followed by statement_cfg
-            else if (
-                isoption(parser_options, SRCML_PARSER_OPTION_CPP)
-                && secondtoken != -1
-                && (
-                    keyword_token_set.member(secondtoken)
-                    || secondtoken == LCURLY
-                    || secondtoken == 1 /* EOF */
-                    || secondtoken == PUBLIC
-                    || secondtoken == PRIVATE
-                    || secondtoken == PROTECTED
-                )
-            )
-                type = MACRO;
-        }
+        if (check_failed)
+            type = call_failed_type(argumenttoken, postcalltoken, secondtoken);
 
         if (type == CALL && postnametoken == 1)
             type = NOCALL;
 
         inputState->guessing--;
         rewind(start);
+
+        last_consumed = save_last_consumed;
+        namestack = std::move(save_namestack);
+        isdestructor = save_isdestructor;
+
+        }
 
         ENTRY_DEBUG
 } :;
