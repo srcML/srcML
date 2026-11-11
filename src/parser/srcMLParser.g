@@ -3144,6 +3144,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (name_other_start)=>
         specifier_call |
 
+        // extern block, e.g., "extern "C" { ... }"
+        (extern_block_start)=>
+        extern_definition |
+
         pattern_check_statements
 ;
 
@@ -3852,6 +3856,34 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  extern_block_start
+
+  The start of a C/C++ extern block with a linkage string, e.g., "extern "C" {", or in C, of "extern" before a name
+  and call syntax, e.g., "extern DECLARE_BITMAP(b, N);".
+*/
+extern_block_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+        }?
+        EXTERN
+
+        (
+            STRING_START |
+
+            // in C, a name and call syntax that is not a declarator, e.g., "extern DECLARE_BITMAP(b, N);"
+            { inLanguage(LANGUAGE_C) && LA(1) == NAME && next_token() == LPAREN && !macro_call_declarator_scan() }?
+            NAME
+        )
 ;
 
 /*
