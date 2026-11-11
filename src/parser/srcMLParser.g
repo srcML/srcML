@@ -1176,6 +1176,46 @@ public:
     }
 
     /*
+      condition_declaration_scan
+
+      For condition_declaration_check, the check from the token buffer, without parsing, that the condition has a "="
+      outside of any parentheses or brackets, which a declaration in a condition must have.
+    */
+    bool condition_declaration_scan() {
+
+        int depth = 0;
+        for (unsigned int i = 1; ; ++i) {
+            switch (LA(i)) {
+            case LPAREN:
+            case LBRACKET:
+                ++depth;
+                break;
+
+            case RPAREN:
+            case RBRACKET:
+                if (depth == 0)
+                    return false;
+                --depth;
+                break;
+
+            case EQUAL:
+                if (depth == 0)
+                    return true;
+                break;
+
+            case TERMINATE:
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+
+            default:
+                break;
+            }
+        }
+    }
+
+    /*
       condition_expression_scan
 
       For condition_inner, control_initialization, and K&R parameters in C, the check from the token buffer, without
@@ -9960,14 +10000,21 @@ condition_inner[] {
         int after_token = 0;
         STMT_TYPE stmt_type = NONE;
 
-        // a C condition that cannot be a declaration is an expression
-        if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_expression_scan()))
+        // a C condition is checked for a declaration by condition_declaration_check
+        if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
             startNewMode(MODE_INTERNAL_END_PAREN);
         }
 } :
+        // a C declaration, e.g., "if (int a = 0)"
+        (condition_declaration_check)=>
+        {
+            startNewMode(MODE_INTERNAL_END_PAREN);
+        }
+        control_initialization_variable_declaration[declaration_general_type_count] |
+
         { stmt_type == VARIABLE }?
         control_initialization_variable_declaration[type_count] |
 
@@ -9975,6 +10022,41 @@ condition_inner[] {
         expression |
 
         rparen[false]
+;
+
+/*
+  condition_declaration_check
+
+  A C declaration in a condition, e.g., "if (int a = 0)" or "while (struct s *p = f())".
+*/
+condition_declaration_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_declaration_scan() }?
+        condition_declaration_type
+;
+
+/*
+  condition_declaration_type
+
+  The type of a C declaration in a condition, and its name. Each part of the type is a specifier, a struct, union, or
+  enum name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier.
+  The name, with any indexes, is followed by "=".
+*/
+condition_declaration_type[] { ENTRY_DEBUG } :
+        ((NAME | MAIN) (bracket_pair)* EQUAL)=>
+        { declaration_general_type_parts > 0 }?
+        (NAME | MAIN)
+        (bracket_pair)*
+        EQUAL |
+
+        { !(LA(1) == NAME && next_token() == LPAREN) }?
+        declaration_general_part
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        condition_declaration_type
 ;
 
 /*
