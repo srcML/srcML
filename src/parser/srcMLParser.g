@@ -1027,32 +1027,10 @@ public:
 
       For perform_ternary_check() in C and C++, the check from the token buffer, without parsing.
       Returns the position of the token that ends the check when the check is certainly not a ternary,
-      with the last token the check consumes, or 0 when the token buffer is not enough, e.g., for
-      a preprocessor line, a template, or a lambda.
+      with whether a "?" is in a pair, or 0 when the token buffer is not enough, e.g., for a
+      preprocessor line, a template, or a lambda.
     */
-    // namestack of a ternary_scan(), as the positions of the tokens, or the original or empty names
-    enum { TERNARY_SCAN_EMPTY = -1, TERNARY_SCAN_ORIGINAL0 = -2, TERNARY_SCAN_ORIGINAL1 = -3 };
-
-    // set the namestack from a ternary_scan()
-    void ternary_scan_namestack(int name0, int name1) {
-
-        auto name = [&](int code) -> std::string {
-            if (code == TERNARY_SCAN_EMPTY)
-                return "";
-            if (code == TERNARY_SCAN_ORIGINAL0)
-                return namestack[0];
-            if (code == TERNARY_SCAN_ORIGINAL1)
-                return namestack[1];
-            return LT((unsigned int) code)->getText();
-        };
-
-        std::string first = name(name0);
-        std::string second = name(name1);
-        namestack[0] = std::move(first);
-        namestack[1] = std::move(second);
-    }
-
-    unsigned int ternary_scan(int& last, bool& qmark, int& name0, int& name1) {
+    unsigned int ternary_scan(bool& qmark) {
 
         if (getLanguage() != LANGUAGE_C && getLanguage() != LANGUAGE_CXX)
             return 0;
@@ -1061,12 +1039,7 @@ public:
         if (inSkippedTokens())
             return 0;
 
-        last = -1;
         qmark = false;
-
-        // namestack of the names of the compound names, as compound_name_c and compound_name_cpp
-        name0 = TERNARY_SCAN_ORIGINAL0;
-        name1 = TERNARY_SCAN_ORIGINAL1;
         const bool cpp = getLanguage() == LANGUAGE_CXX;
 
         // depth of the "()" or "[]" pair the check starts, where other pairs are any tokens
@@ -1074,13 +1047,9 @@ public:
         int open = 0;
         int close = 0;
 
-        // ".", "->", or "::" after a name of a compound name, and the name after it
+        // ".", "->", or "::" after a name of a compound name, as compound_name_c and compound_name_cpp
         bool member = false;
-        int memberToken = 0;
         bool inName = false;
-
-        // a "::" in the compound name, after which a name after "." or "->" is also in the namestack
-        bool colon = false;
         for (unsigned int i = 1; i < 4096; ++i) {
 
             const int token = LA(i);
@@ -1130,7 +1099,6 @@ public:
                         break;
                     }
                     member = inName;
-                    memberToken = token;
                 }
                 break;
 
@@ -1138,32 +1106,6 @@ public:
                 if (depth == 0) {
                     if (LT(i)->getText() == "operator"sv)
                         return 0;
-
-                    if (!member) {
-
-                        // start of a compound name
-                        if (cpp) {
-                            name0 = TERNARY_SCAN_EMPTY;
-                            name1 = TERNARY_SCAN_EMPTY;
-                        }
-                        name1 = name0;
-                        name0 = (int) i;
-                        colon = false;
-
-                    } else if (cpp) {
-
-                        // "." and "->" clear the namestack, and a name is in the namestack after a "::"
-                        if (memberToken == DCOLON) {
-                            colon = true;
-                        } else {
-                            name0 = TERNARY_SCAN_EMPTY;
-                            name1 = TERNARY_SCAN_EMPTY;
-                        }
-                        if (colon) {
-                            name1 = name0;
-                            name0 = (int) i;
-                        }
-                    }
                     member = false;
                     inName = true;
                 }
@@ -1212,9 +1154,6 @@ public:
             default:
                 break;
             }
-
-            if (!skip_tokens_set.member((unsigned int) token))
-                last = token;
         }
 
         return 0;
@@ -4550,20 +4489,20 @@ perform_ternary_check[] returns [bool is_ternary] {
         last_consumed_guessing_mode = -1;
 
         // the check from the token buffer, with the same changes to the state as the check
-        int scan_last = -1;
         bool scan_qmark = false;
-        int scan_name0 = 0;
-        int scan_name1 = 0;
-        const unsigned int scan_end = ternary_scan(scan_last, scan_qmark, scan_name0, scan_name1);
+        const unsigned int scan_end = ternary_scan(scan_qmark);
         if (scan_end) {
-            if (scan_last != -1)
-                last_consumed = scan_last;
             if (scan_qmark)
                 is_qmark = true;
             if (!is_qmark && (LA(scan_end) == TERMINATE || LA(scan_end) == LCURLY))
                 skip_ternary = true;
-            ternary_scan_namestack(scan_name0, scan_name1);
         } else {
+
+        // the check does not change the state the scan does not, which is unused after the check
+        const int save_last_consumed = last_consumed;
+        auto save_namestack = namestack;
+        const bool save_isdestructor = isdestructor;
+
         int start = mark();
         inputState->guessing++;
 
@@ -4593,6 +4532,10 @@ perform_ternary_check[] returns [bool is_ternary] {
 
         inputState->guessing--;
         rewind(start);
+
+        last_consumed = save_last_consumed;
+        namestack = std::move(save_namestack);
+        isdestructor = save_isdestructor;
         }
 
         ENTRY_DEBUG
