@@ -3148,6 +3148,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (extern_block_start)=>
         extern_definition |
 
+        // macro before a struct or union, e.g., "MACRO struct { } u;"
+        (macro_before_struct_start)=>
+        macro_call |
+
         pattern_check_statements
 ;
 
@@ -3856,6 +3860,39 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  macro_before_struct_start
+
+  The start of a C macro of only a name before a struct or union definition or declaration, e.g.,
+  "MACRO struct { } u;" or "MACRO struct s;". The macro is a statement of its own.
+*/
+macro_before_struct_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        NAME
+
+        (STRUCT | UNION)
+
+        (
+            NAME
+            (LCURLY | TERMINATE) |
+
+            LCURLY
+        )
 ;
 
 /*
