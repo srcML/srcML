@@ -3163,6 +3163,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (name_call_start)=>
         name_call |
 
+        // a name before a keyword, e.g., "CASES return x;" or "asm goto (...)"
+        (single_macro_start)=>
+        macro_call |
+
         pattern_check_statements
 ;
 
@@ -4860,6 +4864,31 @@ expression_statement_simple[] {
         ENTRY_DEBUG
 } :
         expression_statement
+;
+
+/*
+  single_macro_start
+
+  The start of a C statement of a macro of only a name before a keyword, e.g., "CASES return x;" or "asm goto (...)".
+*/
+single_macro_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (NAME | ASM)
+
+        { keyword_token_set.member(LA(1)) }?
 ;
 
 /*
