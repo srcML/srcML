@@ -7203,6 +7203,10 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
         control_initialization_action
 
         (
+            // a C variable declaration with a type of any parts, e.g., "int i = 0" or "struct s *p = h"
+            (declaration_general_start)=>
+            control_initialization_variable_declaration[declaration_general_type_count] |
+
             // explicitly check for a variable declaration since it can easily be confused with an expression, except
             // for a C initialization that cannot be a declaration
             {
