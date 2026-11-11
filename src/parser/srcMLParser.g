@@ -1176,6 +1176,46 @@ public:
     }
 
     /*
+      condition_expression_scan
+
+      For condition_inner in C, the check from the token buffer, without parsing, that the condition cannot be a
+      declaration: it starts with what cannot start a type, e.g., "!x" or "(a)", or with a name followed by what cannot
+      follow the first part of a type, e.g., "p->x", "a == b", or "f(x)".
+    */
+    bool condition_expression_scan() {
+
+        switch (LA(1)) {
+        case OPERATORS:
+        case LPAREN:
+        case CONSTANTS:
+        case SIZEOF:
+            return true;
+
+        case NAME:
+            break;
+
+        default:
+            return false;
+        }
+
+        switch (LA(scan_skip(2))) {
+        case TRETURN:
+        case RPAREN:
+        case LPAREN:
+        case OPERATORS:
+        case PERIOD:
+        case TEMPOPS:
+        case TEMPOPE:
+        case REFOPS:
+        case LBRACKET:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    /*
       parameter_simple_name_scan
 
       For parameter_simple_check, the check from the token buffer, without parsing, that LA(1) is the name of the
@@ -9897,7 +9937,9 @@ condition_inner[] {
         int after_token = 0;
         STMT_TYPE stmt_type = NONE;
 
-        pattern_check(stmt_type, secondtoken, type_count, after_token);
+        // a C condition that cannot be a declaration is an expression
+        if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_expression_scan()))
+            pattern_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
             startNewMode(MODE_INTERNAL_END_PAREN);
