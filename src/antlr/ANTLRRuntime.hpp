@@ -772,7 +772,7 @@ public:
 	}
 	virtual ~CharScanner() {}
 
-	virtual int LA(unsigned int i) {
+	int LA(unsigned int i) {
 		int c = inputState->getInput().LA(i);
 		if (caseSensitive)
 			return c;
