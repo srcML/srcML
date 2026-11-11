@@ -1176,6 +1176,43 @@ public:
     }
 
     /*
+      initialization_expression_scan
+
+      For a C "for" initialization, the check from the token buffer, without parsing, that it is an expression, e.g.,
+      "i = 0", "++i", or "(a)": it starts with an operator, "(", or a constant, or with a name followed by an
+      assignment, an operator, "(", ",", ";", or ")".
+    */
+    bool initialization_expression_scan() {
+
+        switch (LA(1)) {
+        case OPERATORS:
+        case LPAREN:
+        case CONSTANTS:
+            return true;
+
+        case NAME:
+            break;
+
+        default:
+            return false;
+        }
+
+        switch (LA(scan_skip(2))) {
+        case EQUAL:
+        case ASSIGNMENT:
+        case OPERATORS:
+        case LPAREN:
+        case COMMA:
+        case TERMINATE:
+        case RPAREN:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    /*
       kr_parameter_guess
 
       For C K&R parameters, whether kr_parameter_check matches, run only in a function tail.
@@ -1239,59 +1276,6 @@ public:
             default:
                 break;
             }
-        }
-    }
-
-    /*
-      condition_expression_scan
-
-      For condition_inner, control_initialization, and K&R parameters in C, the check from the token buffer, without
-      parsing, that the condition, initialization, or what follows a parameter list cannot be a declaration: it starts with what cannot start a type, e.g., "!x" or "(a)",
-      or with a name followed by what cannot follow the first part of a type, e.g., "p->x", "a == b", "i = 0", or
-      "f(x)".
-    */
-    bool condition_expression_scan() {
-
-        switch (LA(1)) {
-        case OPERATORS:
-        case LPAREN:
-        case CONSTANTS:
-        case SIZEOF:
-        case MULTOPS:
-        case REFOPS:
-        case DESTOP:
-        case CHAR_START:
-            return true;
-
-        // a name, including the C keywords that are names, e.g., "error"
-        case NAME:
-        case ERRORPREC:
-        case LINE:
-        case WARNING:
-        case MAIN:
-            break;
-
-        default:
-            return false;
-        }
-
-        switch (LA(scan_skip(2))) {
-        case TRETURN:
-        case RPAREN:
-        case LPAREN:
-        case OPERATORS:
-        case PERIOD:
-        case TEMPOPS:
-        case TEMPOPE:
-        case REFOPS:
-        case LBRACKET:
-        case EQUAL:
-        case ASSIGNMENT:
-        case QMARK:
-            return true;
-
-        default:
-            return false;
         }
     }
 
@@ -7274,14 +7258,26 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             (declaration_general_start)=>
             control_initialization_variable_declaration[declaration_general_type_count] |
 
+            // a C variable declaration with an index of any expression or an attribute, e.g., "int a[N + 1] = {}"
+            (declaration_index_attribute_start)=>
+            control_initialization_variable_declaration[declaration_general_type_count] |
+
             // explicitly check for a variable declaration since it can easily be confused with an expression, except
-            // for a C initialization that cannot be a declaration
+            // for C, which is checked above
             {
-                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_expression_scan())
+                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
                 && pattern_check(stmt_type, secondtoken, type_count, after_token)
                 && stmt_type == VARIABLE
             }?
             control_initialization_variable_declaration[type_count] |
+
+            // a C initialization of one part of a type followed by ":", e.g., "for (a : b)", is a range
+            (control_initialization_range_check)=>
+            {
+                setMode(MODE_RANGED_FOR);
+            }
+
+            expression |
 
             { if (secondtoken == COLON)
                 setMode(MODE_RANGED_FOR);
@@ -7289,6 +7285,26 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
 
             expression
         )
+;
+
+/*
+  control_initialization_range_check
+
+  A C "for" initialization of one part of a type followed by ":", e.g., "a : b" or "struct s : x".
+*/
+control_initialization_range_check[] {
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !initialization_expression_scan()
+        }?
+        declaration_general_part
+
+        COLON
 ;
 
 /*
@@ -17916,45 +17932,45 @@ kr_parameter_check[] { ENTRY_DEBUG } :
             (declaration_general_start)=>
             declaration_general_start |
 
-            kr_parameter_declaration_start
+            declaration_index_attribute_start
         )
 ;
 
 /*
-  kr_parameter_declaration_start
+  declaration_index_attribute_start
 
-  A C K&R parameter declaration with an index of any expression or an attribute after the name, e.g., "int a[N + 1];"
-  or "int a __attribute__((x));".
+  The start of a C variable declaration with an index of any expression or an attribute after the name, e.g.,
+  "int a[N + 1];" or "int a __attribute__((x)) = 0".
 */
-kr_parameter_declaration_start[] {
+declaration_index_attribute_start[] {
         declaration_general_type_count = 0;
         declaration_general_type_parts = 0;
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        kr_parameter_declaration_type
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && !initialization_expression_scan() }?
+        declaration_index_attribute_type
 ;
 
 /*
-  kr_parameter_declaration_type
+  declaration_index_attribute_type
 
-  The type of a C K&R parameter declaration, and its name. Each part of the type is a specifier, a struct, union, or
-  enum name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier.
-  The name, with any indexes and attributes, is followed by ";" or ",".
+  The type of a C variable declaration, and its name. Each part of the type is a specifier, a struct, union, or enum
+  name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier. The
+  name, with any indexes and attributes, is followed by ";", ",", "=", or ":".
 */
-kr_parameter_declaration_type[] { ENTRY_DEBUG } :
-        ((NAME | MAIN) (bracket_pair)* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA))=>
+declaration_index_attribute_type[] { ENTRY_DEBUG } :
+        ((NAME | MAIN) (bracket_pair)* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA | EQUAL | COLON))=>
         { declaration_general_type_parts > 0 }?
         (NAME | MAIN)
         (bracket_pair)*
         (C_ATTRIBUTE paren_pair)*
-        (TERMINATE | COMMA) |
+        (TERMINATE | COMMA | EQUAL | COLON) |
 
         { !(LA(1) == NAME && next_token() == LPAREN) }?
         declaration_general_part
         set_int[declaration_general_type_count, declaration_general_type_count + 1]
-        kr_parameter_declaration_type
+        declaration_index_attribute_type
 ;
 
 /*
