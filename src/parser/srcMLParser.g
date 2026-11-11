@@ -876,6 +876,55 @@ public:
     int ruledepth = 0;
 #endif
     bool is_qmark = false;
+
+    // the kind of a simple declaration, VARIABLE, FUNCTION, or FUNCTION_DECL, found by the syntactic predicate
+    int declaration_simple_kind = 0;
+
+    // the name token of a simple declaration, found by the syntactic predicate
+    const void* declaration_simple_name_token = nullptr;
+
+    /*
+      declaration_simple_scan
+
+      For declaration_simple, the check from the token buffer, without parsing, that the statement may be a simple
+      declaration. It is not when a name is followed by what cannot follow the first part of a type, e.g., "f(x);" in
+      a function body or "x = 0;", nor in a C++ class body, where it can only be a variable, when a "(", "{", or ":"
+      comes before the ";", "=", or "," after a variable name. Returns true when the check needs the parse.
+    */
+    bool declaration_simple_scan() {
+
+        // EOL is a token of a preprocessor line
+        if (inSkippedTokens())
+            return true;
+
+        if (LA(1) != NAME)
+            return true;
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        switch (LA(i)) {
+        case LPAREN:
+            // a function pointer name after the type, e.g., "int (*f)(void);", is not in a function body
+            return !inTransparentMode(MODE_FUNCTION_BODY);
+
+        case TERMINATE:
+        case COMMA:
+        case EQUAL:
+        case ASSIGNMENT:
+        case OPERATORS:
+        case PERIOD:
+        case TRETURN:
+        case LBRACKET:
+        case COLON:
+            return false;
+
+        default:
+            return true;
+        }
+    }
     bool notdestructor = false;
     bool operatorname = false;
     std::stack<std::string> class_namestack;
@@ -2692,6 +2741,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (type_declaration_simple_check)=>
         type_declaration_simple |
 
+        // variable declaration, function definition, or function declaration
+        (declaration_simple)=>
+        declaration_simple |
+
         pattern_check_statements
 ;
 
@@ -2792,6 +2845,286 @@ type_declaration_simple[] {
         enum_declaration |
 
         union_declaration
+;
+
+/*
+  declaration_simple
+
+  A simple C/C++ declaration: a variable declaration, e.g.,
+  "static const int* x = 0;", a function definition, e.g., "static int* f(int x) {", or a function declaration, e.g.,
+  "int f(int x);". The syntactic predicate parses the specifiers, the type, and the name once, and records the kind of
+  declaration and the name. The type and the name are parsed here, and as for variable_declaration_statement,
+  function_definition, and function_declaration, the rest is parsed in the modes started here.
+*/
+declaration_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && declaration_simple_scan()
+        }?
+        {
+            if (declaration_simple_kind == VARIABLE) {
+
+                // as variable_declaration_statement and variable_declaration, no declaration elements in a typedef,
+                // except in a class
+                bool output_decl = !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL);
+
+                // as variable_declaration_statement
+                startNewMode(MODE_STATEMENT);
+
+                if (output_decl) {
+                    startElement(SDECLARATION_STATEMENT);
+
+                    pauseStream();
+                }
+
+                // as variable_declaration
+                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+                startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_INCLUDE_ATTRIBUTE);
+
+                if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
+                    setMode(MODE_LIST);
+
+                if (output_decl)
+                    startElement(SDECLARATION);
+
+                // as variable_declaration_type
+                startNewMode(MODE_EAT_TYPE);
+
+                startElement(STYPE);
+
+            } else {
+
+                // as function_definition and function_declaration
+                startNewMode(MODE_STATEMENT);
+
+                startElement(declaration_simple_kind == FUNCTION ? SFUNCTION_DEFINITION : SFUNCTION_DECLARATION);
+
+                // as function_type
+                startNewMode(MODE_EAT_TYPE | MODE_FUNCTION_TYPE);
+
+                startElement(STYPE);
+            }
+        }
+
+        (options { greedy = true; } :
+            declaration_simple_specifier
+        )*
+
+        (
+            // as lead_type_identifier, except a name followed by "(", e.g., a call or a macro, is not matched
+            { LA(1) == NAME || LA(1) == VOID }?
+            compound_name |
+
+            declaration_simple_class_type
+        )
+
+        declaration_simple_type
+;
+
+/*
+  declaration_simple_specifier
+
+  A specifier before the type of a simple declaration.
+*/
+declaration_simple_specifier[] { ENTRY_DEBUG } :
+        {
+            LA(1) == STATIC
+            || LA(1) == EXTERN
+            || LA(1) == INLINE
+            || LA(1) == CONST
+            || LA(1) == VOLATILE
+            || LA(1) == REGISTER
+        }?
+        specifier
+;
+
+/*
+  declaration_simple_class_type
+
+  A struct, union, or enum type, e.g., "struct s *", as in variable_declaration_type and function_type.
+*/
+declaration_simple_class_type[] { bool is_compound = false; ENTRY_DEBUG } :
+        // not a C++ scoped enum, e.g., "enum class E", or a name in the global namespace, e.g., "struct ::s"
+        {
+            (
+                LA(1) == STRUCT
+                || LA(1) == UNION
+                || (LA(1) == ENUM && !class_tokens_set.member(next_token()))
+            )
+            && next_token() != DCOLON
+        }?
+        class_type_identifier[is_compound]
+
+        (options { greedy = true; } :
+            { !is_compound }?
+            multops
+        )*
+;
+
+/*
+  declaration_simple_type
+
+  The rest of the type in a simple declaration, which ends before the name, and the name.
+*/
+declaration_simple_type[] { ENTRY_DEBUG } :
+        // the name found by the syntactic predicate
+        { !inputState->guessing && LT(1).get() == declaration_simple_name_token }?
+        declaration_simple_end
+        declaration_simple_name |
+
+        (declaration_simple_check)=>
+        declaration_simple_end
+        declaration_simple_name |
+
+        (
+            {
+                LA(1) == STATIC
+                || LA(1) == CONST
+                || LA(1) == VOLATILE
+                || LA(1) == REGISTER
+            }?
+            specifier |
+
+            {
+                LA(1) == NAME
+                || LA(1) == VOID
+                || LA(1) == MULTOPS
+                || LA(1) == REFOPS
+                || LA(1) == RVALUEREF
+            }?
+            type_identifier
+        )
+        declaration_simple_type
+;
+
+/*
+  declaration_simple_check
+
+  The name of a simple declaration and what follows it, which determines the kind of declaration, which is recorded
+  with the name:
+  - a variable declaration, with any indexes, followed by ";", "=", ",", or for a C bit field ":"
+  - a function definition, with the parameter list followed by "{"
+  - a function declaration, with the parameter list followed by ";"
+*/
+declaration_simple_check[] {
+        declaration_simple_name_token = LT(1).get();
+
+        // "main" is only matched as the name of a function, not of a variable, e.g., "int main, second;"
+        bool ismain = LA(1) == MAIN;
+
+        ENTRY_DEBUG
+} :
+        // "error" is also a preprocessor keyword
+        (NAME | ERRORPREC | MAIN)
+
+        (
+            { !ismain }?
+            (options { greedy = true; } :
+                { next_token() != LBRACKET }?
+                declaration_simple_index
+            )*
+
+            (
+                TERMINATE | EQUAL | COMMA |
+
+                // a bit field, which in C++ is only in a class, so not here
+                { inLanguage(LANGUAGE_C) }?
+                COLON
+            )
+
+            set_int[declaration_simple_kind, VARIABLE] |
+
+            // a function is not in a function body, where it is a variable, nor where it may be a constructor
+            {
+                !inTransparentMode(MODE_TYPEDEF)
+                && !inMode(MODE_ENUM)
+                && !inTransparentMode(MODE_FRIEND)
+                && !inTransparentMode(MODE_FUNCTION_BODY)
+            }?
+            parameter_list
+
+            set_int[declaration_simple_kind, LA(1) == LCURLY ? FUNCTION : FUNCTION_DECL]
+
+            (LCURLY | TERMINATE)
+        ) |
+
+        // function pointer name, e.g. "(*setup)", only a name when unambiguously followed (after an optional macro
+        // annotation) by a parameter list, same as a plain name above
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_FUNCTION_BODY)
+        }?
+        (function_pointer_name_grammar eat_optional_macro_call LPAREN) =>
+        function_pointer_name_grammar
+        eat_optional_macro_call
+        parameter_list
+
+        set_int[declaration_simple_kind, LA(1) == LCURLY ? FUNCTION : FUNCTION_DECL]
+
+        (LCURLY | TERMINATE)
+;
+
+/*
+  declaration_simple_index
+
+  An index after the variable name of a simple variable declaration.
+*/
+declaration_simple_index[] { ENTRY_DEBUG } :
+        LBRACKET
+
+        (declaration_simple_index | ~(LBRACKET | RBRACKET))*
+
+        RBRACKET
+;
+
+/*
+  declaration_simple_end
+
+  Ends the type of a simple declaration.
+*/
+declaration_simple_end[] { ENTRY_DEBUG } :
+        // a destructor name in the type is not a declaration
+        { !isdestructor }?
+        {
+            if (declaration_simple_kind == VARIABLE) {
+
+                // as update_typecount
+                endMode();
+
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+
+            } else {
+
+                // as function_type
+                endMode(MODE_EAT_TYPE);
+
+                setMode(MODE_FUNCTION_NAME);
+            }
+        }
+;
+
+/*
+  declaration_simple_name
+
+  The name of a simple declaration, as in the modes for a variable or a function.
+*/
+declaration_simple_name[] { ENTRY_DEBUG } :
+        { declaration_simple_kind == VARIABLE }?
+        variable_declaration_nameinit |
+
+        function_header[0]
 ;
 
 /*
