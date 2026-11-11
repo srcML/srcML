@@ -1110,6 +1110,9 @@ public:
         return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA;
     }
 
+    // the element of a struct or union definition after specifiers, SSTRUCT or SUNION, found by the syntactic predicate
+    int type_definition_specifier_element = 0;
+
     // the kind of a general function, FUNCTION or FUNCTION_DECL, found by the syntactic predicate
     int function_general_kind = 0;
 
@@ -3080,6 +3083,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (declaration_paren_start)=>
         declaration_general |
 
+        // struct or union definition after specifiers, e.g., "static const struct { int a; } x[] = { ... };"
+        (type_definition_specifier_check)=>
+        type_definition_specifier |
+
         pattern_check_statements
 ;
 
@@ -3788,6 +3795,55 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  type_definition_specifier_check
+
+  The start of a C struct, union, or enum definition after specifiers, e.g., "static struct {",
+  "static const struct s {", or "static enum {".
+*/
+type_definition_specifier_check[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } : STATIC | CONST | VOLATILE)+
+
+        (
+            STRUCT
+            set_int[type_definition_specifier_element, SSTRUCT] |
+
+            UNION
+            set_int[type_definition_specifier_element, SUNION] |
+
+            ENUM
+            set_int[type_definition_specifier_element, 0]
+        )
+
+        (NAME)?
+
+        LCURLY
+;
+
+/*
+  type_definition_specifier
+
+  A C struct, union, or enum definition after specifiers.
+*/
+type_definition_specifier[] { ENTRY_DEBUG } :
+        { type_definition_specifier_element == 0 }?
+        enum_definition |
+
+        struct_union_definition[type_definition_specifier_element]
 ;
 
 /*
