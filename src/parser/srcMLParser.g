@@ -18073,6 +18073,18 @@ parameter_function_pointer_check[] {
 ;
 
 /*
+  parameter_enum_names
+
+  For parameter_simple_type, the names after an enum type, each after a ",", as for an enum declaration.
+*/
+parameter_enum_names[] { ENTRY_DEBUG } :
+        (COMMA variable_identifier)=>
+        COMMA
+        variable_identifier
+        parameter_enum_names |
+;
+
+/*
   parameter_simple_type
 
   For parameter_simple_check, the parts of the type and an optional name.
@@ -18090,7 +18102,8 @@ parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY
                 // name follows a ",", the rest is the next parameter.
                 { LA(1) == ENUM && declaration_general_type_parts == 0 && !class_tokens_set.member(next_token()) }?
                 ENUM
-                enum_class_header
+                variable_identifier
+                parameter_enum_names
                 set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
                 set_int[declaration_general_type_count, declaration_general_type_count + 1]
                 set_bool[enum_list, LA(1) == COMMA]
@@ -18111,13 +18124,12 @@ parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY
             // a name
             NAME |
 
-            // no name, so the last part is taken as the name, but not when the rest is only specifiers, and not a
-            // struct or union type without a pointer, e.g., "struct s". An enum type followed by "," is a type of one
-            // part.
-            { (LA(1) == COMMA || LA(1) == RPAREN) && !last_class }?
+            // no name, so the last part is taken as the name, but not when the rest is only specifiers. An enum type, or
+            // a struct or union type without a pointer, e.g., "struct s", followed by "," is a type of one part.
+            { LA(1) == COMMA || LA(1) == RPAREN }?
             set_int[
                 declaration_general_type_count,
-                enum_list ? 1
+                enum_list || (last_class && LA(1) == COMMA) ? 1
                 : declaration_general_type_count - 1 == declaration_general_specifiers
                 ? declaration_general_type_count : declaration_general_type_count - 1
             ]
