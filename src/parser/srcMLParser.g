@@ -992,6 +992,60 @@ public:
         }
     }
 
+    /*
+      scan_skip
+
+      For a check from the token buffer, the position of the first token at or after position i that is not skipped by
+      the parse, i.e., past whitespace, comments, and preprocessor lines.
+    */
+    unsigned int scan_skip(unsigned int i) {
+
+        while (true) {
+
+            if (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL) {
+                ++i;
+                continue;
+            }
+
+            // a preprocessor line, up to and including its end of line
+            if (LA(i) == PREPROC) {
+                ++i;
+                while (LA(i) != EOL && LA(i) != 1 /* EOF */)
+                    ++i;
+                continue;
+            }
+
+            return i;
+        }
+    }
+
+    // the number of parts of the type of a general declaration, and how many are not specifiers, found by the
+    // syntactic predicate
+    int declaration_general_type_count = 0;
+    int declaration_general_type_parts = 0;
+
+    /*
+      function_pointer_scan
+
+      For function_pointer_declaration_start, the check from the token buffer, without parsing, that the first "(" of
+      the statement, before a ";", "{", "=", or "}", may start a function pointer name, i.e., "(" followed by a name, a
+      "*", or a "(".
+    */
+    bool function_pointer_scan() {
+
+        // the first "("
+        unsigned int i = 1;
+        while (LA(i) != LPAREN) {
+            if (LA(i) == TERMINATE || LA(i) == LCURLY || LA(i) == RCURLY || LA(i) == EQUAL || LA(i) == 1 /* EOF */)
+                return false;
+            ++i;
+        }
+
+        i = scan_skip(i + 1);
+
+        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN;
+    }
+
     // the number of names in the type of a declaration with an attribute macro, found by the syntactic predicate
     int declaration_attribute_type_count = 0;
 
@@ -2905,6 +2959,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (expression_index_start)=>
         expression_statement_simple |
 
+        // function pointer declaration, e.g., "int (*fp)(int);"
+        (function_pointer_declaration_start)=>
+        function_pointer_declaration |
+
         // label named "error", e.g., "error:"
         (label_error_statement)=>
         label_error_statement |
@@ -3511,6 +3569,62 @@ macro_call_other_start[] {
 ;
 
 /*
+  declaration_general_part
+
+  A part of the type of a variable declaration.
+*/
+declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
+        // the C specifiers, and "_Atomic" without "(", which is a type
+        {
+            decl_specifier_tokens_set.member(LA(1))
+            || LA(1) == REGISTER
+            || LA(1) == CONST
+            || LA(1) == VOLATILE
+            || LA(1) == RESTRICT
+            || LA(1) == CRESTRICT
+            || LA(1) == NORETURN
+            || LA(1) == COMPLEX
+            || LA(1) == IMAGINARY
+            || LA(1) == THREAD_LOCAL
+            || LA(1) == BLOCK
+            || LA(1) == WEAK
+            || LA(1) == STRONG
+            || LA(1) == ALIGNAS
+            || (LA(1) == ATOMIC && next_token() != LPAREN)
+        }?
+        specifier |
+
+        // "_Atomic(...)", a type
+        { LA(1) == ATOMIC }?
+        atomic
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
+
+        (macro_type_detector)=>
+        macro_call_inner
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
+
+        // a struct, union, or enum is only the first part that is not a specifier
+        {
+            declaration_general_type_parts == 0
+            && (LA(1) == STRUCT || LA(1) == UNION || (LA(1) == ENUM && !class_tokens_set.member(next_token())))
+        }?
+        class_type_identifier[is_compound]
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+
+        // a struct, union, or enum name counts as two parts of the type
+        set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+        multops |
+
+        { next_token() != LPAREN }?
+        compound_name
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
+
+        VOID
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
   declaration_attribute_start
 
   The start of a C variable declaration with an attribute macro, e.g., "u32 type __aligned(8);",
@@ -3634,6 +3748,84 @@ label_error_statement[] {
             && next_token() == COLON
         }?
         label_statement
+;
+
+/*
+  function_pointer_declaration_start
+
+  The start of a C/C++ function pointer declaration, e.g., "int (*fp)(int);", "void (*fp)(void);",
+  "typedef int (*fp_t)(int);", or "int (*fp)(int) = f;". In C, the type may have parts before the last name, as for
+  declaration_general_start, e.g., "unsigned long (*fp)(unsigned long) = f;", and then in a function body, ";" ends a
+  variable, so it is not matched.
+*/
+function_pointer_declaration_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int type_count = 0;
+        int type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+
+            // in C++, a type of one name or void
+            && (
+                inLanguage(LANGUAGE_C)
+                ? function_pointer_scan()
+                : (LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN
+            )
+        }?
+        // in C, the parts of the type before the last name
+        (options { greedy = true; } :
+            {
+                inLanguage(LANGUAGE_C)
+                && !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN)
+            }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
+
+        { LA(1) == NAME || LA(1) == VOID }?
+        (NAME | VOID)
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+
+        // the parameters are parsed with the same counts, so keep the counts of the type
+        set_int[type_count, declaration_general_type_count]
+        set_int[type_parts, declaration_general_type_parts]
+
+        function_pointer_name_grammar
+
+        eat_optional_macro_call
+
+        parameter_list
+
+        set_int[declaration_general_type_count, type_count]
+
+        (
+            EQUAL |
+
+            { !(type_parts > 0 && inTransparentMode(MODE_FUNCTION_BODY)) }?
+            TERMINATE
+        )
+;
+
+/*
+  function_pointer_declaration
+
+  A C/C++ function pointer declaration.
+*/
+function_pointer_declaration[] { ENTRY_DEBUG } :
+        function_declaration[declaration_general_type_count]
 ;
 
 /*
