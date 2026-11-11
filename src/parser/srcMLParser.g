@@ -1283,7 +1283,7 @@ public:
       parameter_simple_name_scan
 
       For parameter_simple_check, the check from the token buffer, without parsing, that LA(1) is the name of the
-      parameter, i.e., a name or "main" followed by "," or ")".
+      parameter, i.e., a name or "main" followed by ",", ")", ";" (a K&R parameter), or "=" (a default argument).
     */
     bool parameter_simple_name_scan() {
 
@@ -1292,7 +1292,7 @@ public:
 
         unsigned int i = scan_skip(2);
 
-        return LA(i) == COMMA || LA(i) == RPAREN;
+        return LA(i) == COMMA || LA(i) == RPAREN || LA(i) == TERMINATE || LA(i) == EQUAL;
     }
 
     // the number of names in the type of a declaration with an attribute macro, found by the syntactic predicate
@@ -10088,7 +10088,15 @@ condition_declaration_check[] {
         ENTRY_DEBUG
 } :
         { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_declaration_scan() }?
-        condition_declaration_type
+
+        // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
+        (options { greedy = true; } :
+            { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == ENUM) }?
+            NAME
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )?
+
+        condition_declaration_type[false, false]
 ;
 
 /*
@@ -10096,19 +10104,35 @@ condition_declaration_check[] {
 
   The type of a C declaration in a condition, and its name. Each part of the type is a specifier, a struct, union, or
   enum name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier.
-  The name, with any indexes, is followed by "=".
+  The name, with any indexes, is followed by "=". With a struct, union, or enum type, the name is optional, and a
+  specifier as the last part is not part of the type.
 */
-condition_declaration_type[] { ENTRY_DEBUG } :
+condition_declaration_type[bool is_class, bool last_specifier] {
+        bool class_part = false;
+        int specifiers = declaration_general_specifiers;
+
+        ENTRY_DEBUG
+} :
         ((NAME | MAIN) (bracket_pair)* EQUAL)=>
         { declaration_general_type_parts > 0 }?
         (NAME | MAIN)
         (bracket_pair)*
         EQUAL |
 
+        // a struct, union, or enum type with no name, e.g., "struct s = 0"
+        { is_class }?
+        (bracket_pair)*
+        EQUAL
+        set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier ? 1 : 0)] |
+
         { !(LA(1) == NAME && next_token() == LPAREN) }?
+        set_bool[
+            class_part,
+            declaration_general_type_parts == 0 && (LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM)
+        ]
         declaration_general_part
         set_int[declaration_general_type_count, declaration_general_type_count + 1]
-        condition_declaration_type
+        condition_declaration_type[is_class || class_part, declaration_general_specifiers > specifiers]
 ;
 
 /*
@@ -17949,7 +17973,15 @@ declaration_index_attribute_start[] {
         ENTRY_DEBUG
 } :
         { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && !initialization_expression_scan() }?
-        declaration_index_attribute_type
+
+        // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
+        (options { greedy = true; } :
+            { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == ENUM) }?
+            NAME
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )?
+
+        declaration_index_attribute_type[false, false, false]
 ;
 
 /*
@@ -17957,9 +17989,17 @@ declaration_index_attribute_start[] {
 
   The type of a C variable declaration, and its name. Each part of the type is a specifier, a struct, union, or enum
   name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier. The
-  name, with any indexes and attributes, is followed by ";", ",", "=", or ":".
+  name, with any indexes and attributes, is followed by ";", ",", "=", or ":". When the type ends with a struct, union,
+  or enum type or a "*", with only specifiers after it, the name is optional before "=" or ":", and a specifier or a
+  "*" as the last part is not part of the type.
 */
-declaration_index_attribute_type[] { ENTRY_DEBUG } :
+declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_pointer] {
+        bool class_part = false;
+        bool pointer_part = false;
+        int specifiers = declaration_general_specifiers;
+
+        ENTRY_DEBUG
+} :
         ((NAME | MAIN) (bracket_pair)* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA | EQUAL | COLON))=>
         { declaration_general_type_parts > 0 }?
         (NAME | MAIN)
@@ -17967,10 +18007,25 @@ declaration_index_attribute_type[] { ENTRY_DEBUG } :
         (C_ATTRIBUTE paren_pair)*
         (TERMINATE | COMMA | EQUAL | COLON) |
 
+        // no name, e.g., "struct s = 0" or "int * = 0"
+        { no_name }?
+        (bracket_pair)*
+        (EQUAL | COLON)
+        set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier || last_pointer ? 1 : 0)] |
+
         { !(LA(1) == NAME && next_token() == LPAREN) }?
+        set_bool[
+            class_part,
+            declaration_general_type_parts == 0 && (LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM)
+        ]
+        set_bool[pointer_part, LA(1) == MULTOPS || (LA(1) == NAME && LA(scan_skip(2)) == MULTOPS)]
         declaration_general_part
         set_int[declaration_general_type_count, declaration_general_type_count + 1]
-        declaration_index_attribute_type
+        declaration_index_attribute_type[
+            class_part || pointer_part || (no_name && declaration_general_specifiers > specifiers),
+            declaration_general_specifiers > specifiers,
+            pointer_part
+        ]
 ;
 
 /*
@@ -18167,8 +18222,14 @@ parameter[] {
             (macro_call_check)*
             parameter_list |
 
+            // a C struct, union, or enum type with no name before ";", e.g., "struct s;" after a K&R parameter list
+            (parameter_class_check)=>
+            parameter_type_variable[1, STRUCT_DECL] |
+
+            // a function pointer parameter, except for C, which is checked above
             {
-                pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                && pattern_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
@@ -18201,30 +18262,40 @@ parameter_simple_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        // a type does not start with "*" or "&", e.g., "*p" or "&a->b" is an argument
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != MULTOPS && LA(1) != REFOPS }?
         (
-            // a single name
-            { parameter_simple_name_scan() }?
+            // a single name, but not before ";", e.g., "__noreturn;" after a function pointer
+            { parameter_simple_name_scan() && LA(scan_skip(2)) != TERMINATE }?
             (NAME | MAIN)
             set_int[declaration_general_type_count, 1] |
 
-            parameter_simple_type
+            // a name before a struct, union, or enum type, e.g., "__user" in "__user struct s *p", is one more part
+            (options { greedy = true; } :
+                { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == ENUM) }?
+                NAME
+                set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            )?
+
+            parameter_simple_type[declaration_general_type_count > 0]
         )
 
-        (COMMA | RPAREN)
+        (COMMA | RPAREN | TERMINATE | EQUAL)
 ;
 
 /*
   parameter_function_pointer_check
 
-  A C function pointer parameter, e.g., "void (*f)(int)", "T (*f)(int)", or "struct s *(*f)(void)". The parts of the
-  type are as for declaration_general_start, and the last part may be a name.
+  A C function pointer parameter, e.g., "void (*f)(int)", "T (*f)(int)", or "struct s *(*f)(void)", or a C function
+  parameter, e.g., "int f(void *p)". The parts of the type are as for declaration_general_start, and for a function
+  pointer the last part may be a name.
 */
 parameter_function_pointer_check[] {
         declaration_general_type_count = 0;
         declaration_general_type_parts = 0;
 
         int type_count = 0;
+        bool has_parts = false;
 
         ENTRY_DEBUG
 } :
@@ -18235,26 +18306,48 @@ parameter_function_pointer_check[] {
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )*
 
-        (
-            { LA(1) == NAME || LA(1) == VOID }?
-            (NAME | VOID)
-            set_int[declaration_general_type_count, declaration_general_type_count + 1] |
-
-            { declaration_general_type_parts > 0 }?
-        )
-
         // the parameters are parsed with the same counts, so keep the count of the type
         set_int[type_count, declaration_general_type_count]
+        set_bool[has_parts, declaration_general_type_parts > 0]
 
-        function_pointer_name_grammar
+        (
+            // a function, e.g., "int f(void *p)"
+            (NAME parameter_list)=>
+            { has_parts }?
+            NAME
+            parameter_list |
 
-        eat_optional_macro_call
+            (
+                { LA(1) == NAME || LA(1) == VOID }?
+                (NAME | VOID)
+                set_int[type_count, type_count + 1] |
 
-        parameter_list
+                { has_parts }?
+            )
+
+            function_pointer_name_grammar
+
+            eat_optional_macro_call
+
+            parameter_list
+        )
 
         set_int[declaration_general_type_count, type_count]
 
-        (COMMA | RPAREN)
+        (COMMA | RPAREN | TERMINATE | EQUAL)
+;
+
+/*
+  parameter_class_check
+
+  A C struct, union, or enum type with no name before ";", e.g., "struct s;" or "struct s *;".
+*/
+parameter_class_check[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (STRUCT | UNION | ENUM)
+        NAME
+        (MULTOPS)*
+        TERMINATE
 ;
 
 /*
@@ -18272,15 +18365,14 @@ parameter_enum_names[] { ENTRY_DEBUG } :
 /*
   parameter_simple_type
 
-  For parameter_simple_check, the parts of the type and an optional name.
+  For parameter_simple_check, the parts of the type and an optional name. With a name before a struct, union, or enum
+  type, a "," must follow a name.
 */
-parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY_DEBUG } :
+parameter_simple_type[bool name_before] { bool last_class = false; bool last_name = false; bool enum_list = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
-            // not the name of the parameter, unless only specifiers are before it, e.g., "u32" in "const u32", nor a
-            // member, e.g., "t->l", which is not part of a type
+            // not the name of the parameter, unless only specifiers are before it, e.g., "u32" in "const u32"
             {
-                (!parameter_simple_name_scan() || (LA(1) == NAME && declaration_general_type_count == declaration_general_specifiers))
-                && !(LA(1) == NAME && (next_token() == PERIOD || next_token() == TRETURN))
+                !parameter_simple_name_scan() || (LA(1) == NAME && declaration_general_type_count == declaration_general_specifiers)
             }?
             (
                 // an enum type, as for an enum declaration, with the names after it separated by ",", so it takes the
@@ -18293,33 +18385,52 @@ parameter_simple_type[] { bool last_class = false; bool enum_list = false; ENTRY
                 set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
                 set_int[declaration_general_type_count, declaration_general_type_count + 1]
                 set_bool[enum_list, LA(1) == COMMA]
-                set_bool[last_class, false] |
+                set_bool[last_class, false]
+                set_bool[last_name, false] |
 
                 // a struct or union type without a pointer, e.g., "struct s", but not "struct s *"
                 set_bool[
                     last_class,
                     (LA(1) == STRUCT || LA(1) == UNION) && LA(scan_skip(scan_skip(2) + 1)) != MULTOPS
                 ]
+                set_bool[last_name, LA(1) == NAME]
                 declaration_general_part
             )
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
         )+
 
-        { declaration_general_type_parts > 0 }?
         (
             // a name
-            { parameter_simple_name_scan() }?
+            { declaration_general_type_parts > 0 && parameter_simple_name_scan() }?
             (NAME | MAIN) |
 
             // no name, so the last part is taken as the name, but not when the rest is only specifiers. An enum type, or
-            // a struct or union type without a pointer, e.g., "struct s", followed by "," is a type of one part.
-            { LA(1) == COMMA || LA(1) == RPAREN }?
+            // a struct or union type without a pointer, e.g., "struct s", followed by "," is a type of one part. With a
+            // name before a struct, union, or enum type, the last part before "," must be a name, e.g., "tb[]".
+            {
+                declaration_general_type_parts > 0
+                && (
+                    (LA(1) == COMMA && (!name_before || last_name))
+                    || LA(1) == RPAREN
+                    || (LA(1) == TERMINATE && declaration_general_type_parts > 1)
+                )
+            }?
             set_int[
                 declaration_general_type_count,
                 enum_list || (last_class && LA(1) == COMMA) ? 1
                 : declaration_general_type_count - 1 == declaration_general_specifiers
                 ? declaration_general_type_count : declaration_general_type_count - 1
-            ]
+            ] |
+
+            // an empty index with no name, e.g., "struct s []" or "struct s *[]"
+            { declaration_general_type_parts > 0 && LA(1) == LBRACKET && next_token() == RBRACKET }?
+            LBRACKET
+            RBRACKET
+            set_int[declaration_general_type_count, last_class ? 1 : declaration_general_type_count] |
+
+            // only specifiers, e.g., "const", with the first one the type
+            { declaration_general_type_parts == 0 && (LA(1) == COMMA || LA(1) == RPAREN || LA(1) == TERMINATE) }?
+            set_int[declaration_general_type_count, 1]
         )
 ;
 
