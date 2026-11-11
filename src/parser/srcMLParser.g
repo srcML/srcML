@@ -1142,6 +1142,10 @@ public:
         }
     }
 
+    // the token after the first specifier of a statement of specifiers before call syntax, found by the syntactic
+    // predicate
+    int specifier_call_secondtoken = 0;
+
     // the element of a struct or union definition after specifiers, SSTRUCT or SUNION, found by the syntactic predicate
     int type_definition_specifier_element = 0;
 
@@ -3127,6 +3131,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (declaration_specifier_only_start)=>
         declaration_specifier_only |
 
+        // specifiers before call syntax, e.g., "static DEFINE_PER_CPU(T, x) = v;", which is not a declaration
+        (specifier_call_start)=>
+        specifier_call |
+
         pattern_check_statements
 ;
 
@@ -3835,6 +3843,97 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
 
         VOID
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  specifier_call_start
+
+  The start of a C statement of specifiers before a name and call syntax, e.g., "static DEFINE_PER_CPU(T, x) = v;",
+  "const ELF(Ehdr) *e = v;", or "static f(int a) {", or of specifiers before a name and a struct or union, e.g.,
+  "static __always_inline struct x *f(void) {". With no part of a type other than specifiers before a name, or a
+  struct or union after a name, it is not a declaration. Not a function pointer, e.g., "static int (*fp)(int);", nor a
+  macro in the type, i.e., call syntax followed by a name and then ";", "{", or "=", e.g., "static M(a) x;".
+*/
+specifier_call_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        // the token after the first specifier
+        set_int[specifier_call_secondtoken, next_token()]
+
+        // not "extern", which starts an extern definition
+        (options { greedy = true; } :
+            {
+                LA(1) == STATIC
+                || LA(1) == INLINE
+                || LA(1) == REGISTER
+                || LA(1) == CONST
+                || LA(1) == VOLATILE
+            }?
+            .
+        )+
+
+        (
+            // a macro in the type, e.g., "static M(a) x;"
+            (macro_type_detector)=>
+            NAME
+            throw_exception[true] |
+
+            { LA(1) == NAME && next_token() == LPAREN }?
+            NAME
+
+            (
+                // a function pointer, i.e., followed by the rest of a function
+                (function_pointer_name_grammar declaration_paren_function_rest)=>
+                function_pointer_name_grammar
+                throw_exception[true] |
+
+                paren_pair
+            ) |
+
+            // a name before a struct or union, which ends the type, e.g., "static __always_inline struct x *f(void) {"
+            // or "static __init const struct x *f(void) {"
+            { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == CONST) }?
+            NAME
+
+            (CONST)*
+
+            { LA(1) == STRUCT || LA(1) == UNION }?
+        )
+;
+
+/*
+  specifier_call
+
+  A C statement of specifiers before a name and call syntax, which is a macro call when perform_call_check() says so,
+  and otherwise an expression statement of the kind of call it finds.
+*/
+specifier_call[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, specifier_call_secondtoken)
+            && type == MACRO
+        }?
+        macro_call |
+
+        expression_statement[type, call_count]
 ;
 
 /*
