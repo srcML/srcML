@@ -17960,6 +17960,13 @@ parameter[] {
             (parameter_simple_check)=>
             parameter_type_variable[declaration_general_type_count, VARIABLE] |
 
+            // a C function pointer parameter, e.g., "void (*f)(int)" or "struct s *(*f)(void)"
+            (parameter_function_pointer_check)=>
+            function_declaration[declaration_general_type_count]
+            function_identifier
+            (macro_call_check)*
+            parameter_list |
+
             {
                 pattern_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
@@ -18003,6 +18010,49 @@ parameter_simple_check[] {
 
             parameter_simple_type
         )
+
+        (COMMA | RPAREN)
+;
+
+/*
+  parameter_function_pointer_check
+
+  A C function pointer parameter, e.g., "void (*f)(int)", "T (*f)(int)", or "struct s *(*f)(void)". The parts of the
+  type are as for declaration_general_start, and the last part may be a name.
+*/
+parameter_function_pointer_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int type_count = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (options { greedy = true; } :
+            { !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN) }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
+
+        (
+            { LA(1) == NAME || LA(1) == VOID }?
+            (NAME | VOID)
+            set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+            { declaration_general_type_parts > 0 }?
+        )
+
+        // the parameters are parsed with the same counts, so keep the count of the type
+        set_int[type_count, declaration_general_type_count]
+
+        function_pointer_name_grammar
+
+        eat_optional_macro_call
+
+        parameter_list
+
+        set_int[declaration_general_type_count, type_count]
 
         (COMMA | RPAREN)
 ;
