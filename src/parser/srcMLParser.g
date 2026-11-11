@@ -3076,6 +3076,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (function_general_start)=>
         function_general |
 
+        // variable declaration with a parenthesized list after the name, e.g., "int f(), x;" or "T t(a);" in a function body
+        (declaration_paren_start)=>
+        declaration_general |
+
         pattern_check_statements
 ;
 
@@ -3834,6 +3838,82 @@ function_general_start[] {
         // in a function body, a function declaration that ends with ";" is a variable
         { fla == LCURLY || fla == EQUAL || (fla == TERMINATE && !inTransparentMode(MODE_FUNCTION_BODY)) }?
         set_int[function_general_kind, fla == LCURLY ? FUNCTION : FUNCTION_DECL]
+;
+
+/*
+  declaration_paren_start
+
+  The start of a C variable declaration with a parenthesized list after the name, e.g., "int foo(), x;",
+  "a b(*c), d(*e);", "a b(c(d));", or in a function body, "T t(a, b);". The type is as for declaration_general_start.
+  It is a variable when the rest is that of a function followed by "," (a list of declarators), or by ";" in a function
+  body with a list that is not empty, or when it is not the rest of a function and the list is not empty, e.g.,
+  "__failure __msg(\"m\") int f(void) {".
+*/
+declaration_paren_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int fla = 0;
+        bool nonempty = false;
+        int type_count = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } :
+            { !((LA(1) == NAME || LA(1) == MAIN) && next_token() == LPAREN) }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )+
+
+        { declaration_general_type_parts > 0 }?
+        function_general_name
+
+        // whether the list after the name is not empty
+        set_bool[nonempty, next_token() != RPAREN]
+
+        // the parameters are parsed with the same counts, so keep the count of the type
+        set_int[type_count, declaration_general_type_count]
+
+        (
+            // in a function body, ";" ends a variable only when the list is not empty, e.g., "T t(a);", unlike
+            // "char *f();"
+            (declaration_paren_function_rest)=>
+            function_rest[fla]
+            set_int[declaration_general_type_count, type_count]
+            { fla == COMMA || (fla == TERMINATE && inTransparentMode(MODE_FUNCTION_BODY) && nonempty) }? |
+
+            // a function pointer, i.e., followed by the rest of a function, e.g., "void __noreturn (*f)(int);"
+            (function_pointer_name_grammar declaration_paren_function_rest)=>
+            function_pointer_name_grammar
+            throw_exception[true] |
+
+            // not the rest of a function, with a list that is not empty, whatever follows it except another list, e.g.,
+            // "const struct s (*p)[];", but not "f(x)(y)"
+            { nonempty }?
+            paren_pair
+            { LA(1) != LPAREN }?
+            set_int[declaration_general_type_count, type_count]
+        )
+;
+
+/*
+  declaration_paren_function_rest
+
+  The rest of a function, for declaration_paren_start.
+*/
+declaration_paren_function_rest[] { int fla = 0; ENTRY_DEBUG } :
+        function_rest[fla]
 ;
 
 /*
