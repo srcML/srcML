@@ -28,9 +28,9 @@ header "pre_include_cpp" {
 
 header {
     #include <algorithm>
+    #include <array>
     #include <string>
     #include <string_view>
-    #include <unordered_map>
     #include <Language.hpp>
     #include <UTF8CharBuffer.hpp>
     #include <ANTLRRuntime.hpp>
@@ -58,18 +58,12 @@ void KeywordLexer::changetotextlexer(int typeend, std::string delim) {
 
 int KeywordLexer::testLiteralsTable(int ttype) const {
 
-    const auto p = srcMLLiterals.find(text);
-    if (p != srcMLLiterals.end())
-        return p->second;
-    return ttype;
+    return findLiteral(text, ttype);
 }
 
 int KeywordLexer::testLiteralsTable(const std::string& txt, int ttype) const {
 
-    const auto p = srcMLLiterals.find(txt);
-    if (p != srcMLLiterals.end())
-        return p->second;
-    return ttype;
+    return findLiteral(txt, ttype);
 }
 
 }
@@ -1174,13 +1168,38 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     // fill up the literals for the language that we are parsing
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
         if (inLanguage(keyword_map[i].language)) {
-            srcMLLiterals[keyword_map[i].text] = keyword_map[i].token;
+            addLiteral(keyword_map[i].text, keyword_map[i].token);
         }
 }
 
 private:
     antlr::TokenStreamSelector* selector;
-    std::unordered_map<std::string_view, int> srcMLLiterals;
+
+    // keywords of the language in an open-addressed hash table, with an empty entry ending a probe
+    static constexpr std::size_t LITERAL_TABLE_SIZE = 1024;
+    struct Literal { std::string_view text; int token; };
+    std::array<Literal, LITERAL_TABLE_SIZE> literalTable{};
+
+    static std::size_t literalHash(std::string_view name) {
+        return (static_cast<unsigned char>(name[0]) * 31u + static_cast<unsigned char>(name[name.size() / 2]) * 7u
+              + static_cast<unsigned char>(name.back()) + name.size() * 131u) & (LITERAL_TABLE_SIZE - 1);
+    }
+
+    void addLiteral(std::string_view name, int token) {
+        std::size_t i = literalHash(name);
+        while (!literalTable[i].text.empty() && literalTable[i].text != name)
+            i = (i + 1) & (LITERAL_TABLE_SIZE - 1);
+        literalTable[i] = { name, token };
+    }
+
+    int findLiteral(std::string_view name, int ttype) const {
+        if (name.empty())
+            return ttype;
+        for (std::size_t i = literalHash(name); !literalTable[i].text.empty(); i = (i + 1) & (LITERAL_TABLE_SIZE - 1))
+            if (literalTable[i].text == name)
+                return literalTable[i].token;
+        return ttype;
+    }
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
         selector = selector_;
