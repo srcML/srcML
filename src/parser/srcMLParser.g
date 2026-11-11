@@ -2688,6 +2688,10 @@ pattern_statements[] { ENTRY_DEBUG } :
         (type_definition_simple_check)=>
         type_definition_simple |
 
+        // struct or union declaration
+        (type_declaration_simple_check)=>
+        type_declaration_simple |
+
         pattern_check_statements
 ;
 
@@ -2733,6 +2737,61 @@ type_definition_simple[] {
         struct_union_definition[SUNION] |
 
         enum_definition
+;
+
+/*
+  type_declaration_simple_check
+
+  A simple C/C++ struct, union, or enum declaration, e.g., "struct s;", "struct a, b;", "enum e;", or in C,
+  "_Atomic struct s;".
+*/
+type_declaration_simple_check[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (
+            (
+                { inLanguage(LANGUAGE_C) && next_token() != LPAREN }?
+                ATOMIC
+            )?
+
+            (STRUCT | UNION)
+
+            NAME
+
+            (COMMA NAME)* |
+
+            ENUM
+
+            NAME
+        )
+
+        TERMINATE
+;
+
+/*
+  type_declaration_simple
+
+  A simple C/C++ struct, union, or enum declaration.
+*/
+type_declaration_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        // a struct, possibly after "_Atomic"
+        { LA(1) == STRUCT || (LA(1) == ATOMIC && next_token() == STRUCT) }?
+        struct_declaration |
+
+        { LA(1) == ENUM }?
+        enum_declaration |
+
+        union_declaration
 ;
 
 /*
