@@ -811,7 +811,12 @@ private:
      */
     inline void flushSkip(std::deque<antlr::RefToken>& rf) {
 
-        rf.insert(rf.end(), std::make_move_iterator(skip().begin()), std::make_move_iterator(skip().end()));
+        // the skip buffer is most often empty
+        if (skip().empty())
+            return;
+
+        for (auto& token : skip())
+            rf.emplace_back(std::move(token));
         skip().clear();
     }
 
