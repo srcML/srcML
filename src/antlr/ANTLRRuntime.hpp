@@ -508,30 +508,30 @@ public:
 	const T& elementAt(size_t idx) const { return storage[idx + m_offset]; }
 	const T* data() const { return storage.data() + m_offset; }
 	void removeFirst() {
-		if (m_offset >= OFFSET_MAX_RESIZE) {
-			storage.erase(storage.begin(), storage.begin() + m_offset + 1);
-			m_offset = 0;
-		} else {
-			++m_offset;
-		}
+		if (++m_offset == storage.size())
+			clear();
 	}
 	void removeItems(size_t nb) {
 		if (nb > entries())
 			nb = entries();
-		if (m_offset >= OFFSET_MAX_RESIZE) {
-			storage.erase(storage.begin(), storage.begin() + m_offset + nb);
-			m_offset = 0;
-		} else {
-			m_offset += nb;
-		}
+		m_offset += nb;
+		if (m_offset == storage.size())
+			clear();
 	}
-	void append(const T& t) { storage.push_back(t); }
-	void append(T&& t) { storage.push_back(std::move(t)); }
+	// Capture the value before compaction, including when it refers to this queue.
+	void append(T t) { compactForAppend(); storage.push_back(std::move(t)); }
 	template <class It>
-	void append(It first, It last) { storage.insert(storage.end(), first, last); }
+	void append(It first, It last) { compactForAppend(); storage.insert(storage.end(), first, last); }
 	size_t entries() const { return storage.size() - m_offset; }
 
 private:
+	// Do not move a live tail while consuming it; compact only when adding more data.
+	void compactForAppend() {
+		if (m_offset >= OFFSET_MAX_RESIZE) {
+			storage.erase(storage.begin(), storage.begin() + m_offset);
+			m_offset = 0;
+		}
+	}
 	static const size_t OFFSET_MAX_RESIZE = 5000;
 	std::vector<T> storage;
 	size_t m_offset;
