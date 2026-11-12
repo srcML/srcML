@@ -34,6 +34,8 @@ public:
             const int c = LA(1);
             if (c >= 0 && c <= 0xFF && charClass()[c] == NAME_START)
                 return fastName();
+            if (c >= '0' && c <= '9')
+                return fastInteger();
             if ((c == ' ' || c == '\t') && !isoption(options, SRCML_PARSER_OPTION_EXPAND_TABS))
                 return fastWhitespace();
             switch (c) {
@@ -167,6 +169,52 @@ private:
         inputState->column += (int) n;
 
         _returnToken = makeToken(testLiteralsTable(NAME));
+        _returnToken->setText(text);
+        return _returnToken;
+#endif
+    }
+
+    // Unsuffixed integer digits; leave more complex literals and #line state to the grammar.
+    antlr::RefToken fastInteger() {
+        if (onpreprocline && isline)
+            return KeywordLexer::nextToken();
+
+        antlr::InputBuffer& input = inputState->getInput();
+        unsigned int n = 1;
+        for (;;) {
+            const unsigned int available = input.entries();
+            const int* chars = input.data();
+            while (n < available && chars[n] >= '0' && chars[n] <= '9')
+                ++n;
+            if (n < available)
+                break;
+            input.LA(n + 1);
+        }
+        const int* chars = input.data();
+        const int after = chars[n];
+        if (isNameChar(after) || after == '.' || after == '\'' || after == '"')
+            return KeywordLexer::nextToken();
+
+#ifdef SRCML_LEXER_SHADOW
+        std::string expectText;
+        expectText.reserve(n);
+        for (unsigned int i = 0; i < n; ++i)
+            expectText += static_cast<char>(chars[i]);
+        const int line = getLine(), column = getColumn();
+        const int three = lookaheadMinusThree, two = lookaheadMinusTwo, one = lookaheadMinusOne;
+        const int last = chars[n - 1];
+        auto token = KeywordLexer::nextToken();
+        shadowCompare(token, CONSTANTS, expectText, line, column, column + static_cast<int>(n),
+                      three, two, one, last, false);
+        return token;
+#else
+        resetText();
+        text.append(chars, n);
+        lastnonspacetoken = chars[n - 1];
+        input.consume(n);
+        inputState->column += static_cast<int>(n);
+        startline = false;
+        _returnToken = makeToken(CONSTANTS);
         _returnToken->setText(text);
         return _returnToken;
 #endif
