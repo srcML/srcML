@@ -3771,7 +3771,21 @@ cxx_pattern_statements[] { ENTRY_DEBUG } :
         (cxx_template_start)=>
         template_declaration |
 
+        // an attribute before a declaration that does not parse, e.g., "[[maybe_unused]]" before a name with a keyword
+        (cxx_attribute_start)=>
+        attribute_cpp |
+
         pattern_statements_simple
+;
+
+/*
+  cxx_attribute_start
+
+  The start of a C++ statement with an attribute, e.g., "[[maybe_unused]]".
+*/
+cxx_attribute_start[] { ENTRY_DEBUG } :
+        { LA(1) == LBRACKET && next_token() == LBRACKET }?
+        attribute_cpp
 ;
 
 /*
