@@ -5221,7 +5221,8 @@ expression_index_start[] { bool sawmain = false; ENTRY_DEBUG } :
 */
 expression_statement_start[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && !inMode(MODE_ACCESS_REGION)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -5252,6 +5253,10 @@ expression_statement_start[] { ENTRY_DEBUG } :
                 || LA(1) == LPAREN
                 || LA(1) == OPERATORS
             )
+
+            // not a template or scoped name, which is rarely assigned to, and costly to parse when it is a type, e.g.,
+            // "std::vector<int> v;"
+            && !(inLanguage(LANGUAGE_CXX) && LA(1) == NAME && (next_token() == TEMPOPS || next_token() == DCOLON))
         }?
         (
             MULTOPS | CONSTANTS | STRING_START | LPAREN | OPERATORS |
