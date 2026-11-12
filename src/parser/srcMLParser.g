@@ -3423,7 +3423,7 @@ label_statement_simple[] {
 */
 type_definition_simple_check[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
