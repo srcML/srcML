@@ -36,12 +36,51 @@ public:
                 return fastName();
             if ((c == ' ' || c == '\t') && !isoption(options, SRCML_PARSER_OPTION_EXPAND_TABS))
                 return fastWhitespace();
+            switch (c) {
+            case ';': return fastPunctuation(c, TERMINATE);
+            case ',': return fastPunctuation(c, COMMA);
+            case '(': return fastPunctuation(c, LPAREN);
+            case ')': return fastPunctuation(c, RPAREN);
+            case '{': return fastPunctuation(c, LCURLY);
+            case '}': return fastPunctuation(c, RCURLY);
+            }
         }
 
         return KeywordLexer::nextToken();
     }
 
 private:
+
+    // Single-character operators whose token types are fixed in C and C++.
+    antlr::RefToken fastPunctuation(int c, int type) {
+#ifdef SRCML_LEXER_SHADOW
+        const std::string expectText(1, static_cast<char>(c));
+        const int line = getLine();
+        const int column = getColumn();
+        const int three = lookaheadMinusTwo, two = lookaheadMinusOne;
+        auto token = KeywordLexer::nextToken();
+        shadowCompare(token, type, expectText, line, column, column + 1, three, two, c, c, false);
+        if (lastpos != column + 1 || prev != c)
+            fprintf(stderr, "LEXER-SHADOW operator state difference at %d:%d lastpos %d/%d prev %d/%d\n",
+                    line, column, lastpos, column + 1, prev, c);
+        return token;
+#else
+        resetText();
+        text += static_cast<char>(c);
+        lookaheadMinusThree = lookaheadMinusTwo;
+        lookaheadMinusTwo = lookaheadMinusOne;
+        lookaheadMinusOne = c;
+        lastnonspacetoken = c;
+        inputState->getInput().consume();
+        ++inputState->column;
+        startline = false;
+        lastpos = getColumn();
+        prev = c;
+        _returnToken = makeToken(type);
+        _returnToken->setText(text);
+        return _returnToken;
+#endif
+    }
 
     enum { OTHER = 0, NAME_START = 1, NAME_CHAR = 2 };
 
