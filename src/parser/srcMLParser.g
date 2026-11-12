@@ -1098,7 +1098,7 @@ public:
       pointer, if any, a parameter list, and a function tail, or 0 if it is not one. The token where the header ends or
       fails is in stop.
     */
-    int cxx_function_guess(bool function_pointer, int& stop) {
+    int cxx_function_guess(bool function_pointer, bool inparam, int& stop) {
 
         int fla = 0;
         int start = mark();
@@ -1109,7 +1109,7 @@ public:
                 function_pointer_name_grammar_impl();
             if (!failed) {
                 int end = 0;
-                function_rest_impl(end);
+                function_rest_impl(end, inparam);
                 if (!failed)
                     fla = end;
             }
@@ -1226,23 +1226,46 @@ public:
     }
 
     /*
+      declaration_check
+
+      The kind of declaration starting at LA(1), the token after its first part, the number of parts of its type, and
+      the token where it ends, by cxx_statement_start for C++, and by pattern_check for other languages. For C++, a
+      declaration where a part does not parse is NONE, with the parts before it. In a parameter, the type alone is a
+      declaration.
+    */
+    bool declaration_check(STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false) {
+
+        if (!inLanguage(LANGUAGE_CXX))
+            return pattern_check(type, token, type_count, after_token, inparam);
+
+        type = cxx_statement_guess(inparam) ? cxx_statement_kind : NONE;
+        token = cxx_statement_secondtoken;
+        type_count = cxx_statement_type_count;
+        after_token = cxx_statement_after_token;
+
+        return true;
+    }
+
+    /*
       cxx_statement_guess
 
-      For cxx_statement_kind_of, whether cxx_statement_start matches at LA(1), with its kind, the number of parts of
-      its type, and the token after its first part in cxx_statement_kind, cxx_statement_type_count, and
-      cxx_statement_secondtoken.
+      Whether cxx_statement_start matches at LA(1), with its kind, the number of parts of its type, the token after its
+      first part, and the token where it ends in cxx_statement_kind, cxx_statement_type_count,
+      cxx_statement_secondtoken, and cxx_statement_after_token. When it does not match, the parts before the one that
+      does not parse, the token after the first part, and the token where it stops.
     */
-    bool cxx_statement_guess() {
+    bool cxx_statement_guess(bool inparam) {
 
         bool matched = false;
         int start = mark();
         inputState->guessing++;
 
         try {
-            cxx_statement_start_impl();
+            cxx_statement_start_impl(inparam);
             matched = !failed;
         } catch (...) {}
         failed = false;
+        cxx_statement_after_token = LA(1);
 
         inputState->guessing--;
         rewind(start);
@@ -1262,13 +1285,15 @@ public:
     */
     bool cxx_statement_kind_of(STMT_TYPE found, bool ended, int endstop, int parts, int pack_position, int specifiers,
                                int attributes, int first, int secondtoken, bool isoperator, bool ismain,
-                               bool modifieroperator, bool sawtemplate, bool sawcontextual, bool sawdcolon) {
+                               bool modifieroperator, bool sawtemplate, bool sawcontextual, bool sawdcolon,
+                               bool inparam) {
 
         // found by a part, e.g., a class definition
         if (found != NONE) {
             cxx_statement_kind = found;
             cxx_statement_type_count = parts;
             cxx_statement_secondtoken = secondtoken;
+            cxx_statement_after_token = LA(1);
 
             return true;
         }
@@ -1324,6 +1349,20 @@ public:
             )
                 kind = VARIABLE;
 
+            // in a parameter, the type alone, e.g., "int" in "f(int)"
+            if (
+                inparam
+                && (
+                    LA(1) == RPAREN
+                    || LA(1) == COMMA
+                    || LA(1) == BAR
+                    || LA(1) == LBRACKET
+                    || LA(1) == EQUAL
+                    || LA(1) == IN
+                )
+            )
+                kind = VARIABLE;
+
             bool constructor = !isoperator
                 && !ismain
                 && !destructor
@@ -1343,7 +1382,7 @@ public:
 
             if (function_pointer || (LA(1) == LPAREN && (nonattributes > 0 || isoperator || ismain || destructor || constructor))) {
 
-                fla = cxx_function_guess(function_pointer, stop);
+                fla = cxx_function_guess(function_pointer, inparam, stop);
 
                 // in a function body, a function declaration is a variable, e.g., "T t();"
                 if (fla != 0 && !(inTransparentMode(MODE_FUNCTION_BODY) && kind == VARIABLE && fla == TERMINATE)) {
@@ -1391,7 +1430,7 @@ public:
             && (stop == CLASS || stop == CXX_CLASS || stop == STRUCT || stop == UNION)
         ) {
             // the statement that starts at the class, only when the parts end there
-            if (LA(1) != stop || !cxx_statement_guess())
+            if (LA(1) != stop || !cxx_statement_guess(inparam))
                 return false;
 
             kind = cxx_statement_kind;
@@ -1437,7 +1476,7 @@ public:
         )
             kind = EXPRESSION;
 
-        if ((kind == FUNCTION || kind == FUNCTION_DECL) && fla == COMMA)
+        if ((kind == FUNCTION || kind == FUNCTION_DECL) && fla == COMMA && !inparam)
             kind = VARIABLE;
 
         if (kind == VARIABLE && type_count == specifiers + attributes)
@@ -1467,6 +1506,7 @@ public:
         cxx_statement_kind = kind;
         cxx_statement_type_count = type_count;
         cxx_statement_secondtoken = secondtoken;
+        cxx_statement_after_token = stop;
 
         return true;
     }
@@ -1530,6 +1570,7 @@ public:
     STMT_TYPE cxx_statement_kind = NONE;
     int cxx_statement_type_count = 0;
     int cxx_statement_secondtoken = 0;
+    int cxx_statement_after_token = 0;
 
     /*
       declaration_general_name_scan
@@ -3722,7 +3763,7 @@ cxx_pattern_statements[] { ENTRY_DEBUG } :
         // a C++ declaration, definition, or other statement that starts with a type or a name, e.g.,
         // "typename T::type x;", "template <class T> void f(T t) {", "A(int a) : b(a) {", "struct A : B {",
         // "public:", "using namespace std;", or "f(x);"
-        (cxx_statement_start)=>
+        (cxx_statement_start[false])=>
         pattern_statement_kind[cxx_statement_kind, cxx_statement_type_count, cxx_statement_secondtoken] |
 
         // a template parameter list before a declaration that does not parse, e.g., a type with "sizeof...(T)" in a
@@ -3903,7 +3944,7 @@ pattern_statements_simple[] { ENTRY_DEBUG } :
   parts of its type, and the token after the first part are in cxx_statement_kind, cxx_statement_type_count, and
   cxx_statement_secondtoken.
 */
-cxx_statement_start[] {
+cxx_statement_start[bool inparam] {
         // all parts, including the name, and those that are specifiers or template parameter lists, or attributes
         int parts = 0;
         int specifiers = 0;
@@ -3941,6 +3982,9 @@ cxx_statement_start[] {
             inLanguage(LANGUAGE_CXX)
             && !(LA(1) == NAME && next_token() == TEMPLATE)
         }?
+        set_int[cxx_statement_type_count, 0]
+        set_int[cxx_statement_secondtoken, 0]
+
         (options { greedy = true; } :
             // an attribute, e.g., "[[nodiscard]]", but not "[" that starts other than the type, and not a class,
             // struct, or union after other parts, e.g., "struct" in "M struct A {", or the end of the input
@@ -4031,7 +4075,7 @@ cxx_statement_start[] {
                 set_bool[foundpure]
 
                 // a class, struct, or union type counts as two parts, and "..." after it as one
-                set_int[parts, parts + 1 + packs] |
+                set_int[parts, found == NONE ? parts + 1 + packs : parts] |
 
                 // an enum, which is a definition or a declaration, or is a type, e.g., "enum E e;"
                 { parts == specifiers + attributes }?
@@ -4041,7 +4085,7 @@ cxx_statement_start[] {
                 set_bool[foundpure]
 
                 // an enum type counts as two parts, and "..." after it as one
-                set_int[parts, parts + 1 + packs] |
+                set_int[parts, found == NONE ? parts + 1 + packs : parts] |
 
                 USING
                 set_type[found, USING_STMT] |
@@ -4090,10 +4134,15 @@ cxx_statement_start[] {
                 set_bool[ended, !foundpure]
             )
 
-            set_int[parts, ended ? parts : parts + 1]
+            // a part that ends the statement, or where the kind is found, is not counted
+            set_int[parts, ended || found != NONE ? parts : parts + 1]
 
             // the token after the first part
-            set_int[secondtoken, LA(1), parts == 1 && !ended]
+            set_int[secondtoken, LA(1), parts == 1 && !ended && found == NONE]
+
+            // the parts so far, for where a later part does not parse
+            set_int[cxx_statement_type_count, parts]
+            set_int[cxx_statement_secondtoken, secondtoken]
         )*
 
         // a class, struct, or union after other parts, or a part for other languages, e.g., "default" in Java or "|",
@@ -4138,7 +4187,8 @@ cxx_statement_start[] {
                 modifieroperator,
                 sawtemplate,
                 sawcontextual,
-                sawdcolon
+                sawdcolon,
+                inparam
             )
         }?
 ;
@@ -6824,7 +6874,7 @@ trailing_return[] { int type_count = 0; int secondtoken = 0; int after_token = 0
 
         (
             {
-                pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                declaration_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION
                     || stmt_type == FUNCTION_DECL
@@ -7643,7 +7693,7 @@ property_declaration[] { ENTRY_DEBUG } :
 property_declaration_post[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         (property_attribute_list)*
 
-        { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
+        { declaration_check(stmt_type, secondtoken, type_count, after_token) }?
         variable_declaration[type_count]
 ;
 
@@ -8375,7 +8425,7 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             // for C, which is checked above
             {
                 !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-                && pattern_check(stmt_type, secondtoken, type_count, after_token)
+                && declaration_check(stmt_type, secondtoken, type_count, after_token)
                 && stmt_type == VARIABLE
             }?
             control_initialization_variable_declaration[type_count] |
@@ -9198,7 +9248,7 @@ using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0;
 
         (
             {
-                pattern_check(stmt_type, secondtoken, type_count, after_token)
+                declaration_check(stmt_type, secondtoken, type_count, after_token)
                 && (
                     stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
@@ -10615,7 +10665,7 @@ statement_part[] {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
             && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-            && pattern_check(stmt_type, secondtoken, type_count, after_token)
+            && declaration_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
         }?
@@ -11163,7 +11213,7 @@ condition_inner[] {
 
         // a C condition is checked for a declaration by condition_declaration_check
         if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
-            pattern_check(stmt_type, secondtoken, type_count, after_token);
+            declaration_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
             startNewMode(MODE_INTERNAL_END_PAREN);
@@ -16352,7 +16402,7 @@ for_like_list_item[] {
         ENTRY_DEBUG
 } :
         // explicitly check for a variable declaration since it can easily be confused with an expression
-        { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+        { declaration_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
         control_initialization_variable_declaration[type_count] |
 
         {
@@ -16730,7 +16780,7 @@ generic_selection_association_type[] {
             (generic_selection_association_type_check)=>
             variable_declaration_type[declaration_general_type_count + 1] |
 
-            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
+            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && declaration_check(stmt_type, secondtoken, type_count, after_token, true) }?
             variable_declaration_type[type_count + 1] |
 
             generic_selection_association_default
@@ -19436,7 +19486,7 @@ parameter[] {
             // a function pointer parameter, except for C, which is checked above
             {
                 !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-                && pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                && declaration_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
@@ -19864,7 +19914,7 @@ parameter_type[] {
         }
 
         {
-            pattern_check(stmt_type, secondtoken, type_count, after_token)
+            declaration_check(stmt_type, secondtoken, type_count, after_token)
             && (type_count ? type_count : (type_count = 1))
         }?
         // match auto keyword first as a special case; do not warn about ambiguity
@@ -19992,7 +20042,7 @@ template_inner_full[] {
         template_in_parameter_list_full
 
         {
-            pattern_check(stmt_type, secondtoken, type_count, after_token)
+            declaration_check(stmt_type, secondtoken, type_count, after_token)
             && (type_count ? type_count : (type_count = 1))
         }?
         eat_type[type_count]
