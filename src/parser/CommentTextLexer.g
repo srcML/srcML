@@ -151,6 +151,41 @@ public:
         return c >= 0 && c <= 0xFF && plain[c];
     }
 
+    // Consume buffered spans without growing lookahead to the size of a long comment/string.
+    void consumePlainCharacters(int& three, int& two, int& one) {
+        antlr::InputBuffer& input = inputState->getInput();
+        do {
+            const unsigned int available = input.entries();
+            const int* chars = input.data();
+            unsigned int n = 0;
+            while (n < available && isPlainCharacter(chars[n]))
+                ++n;
+            if (n == 0)
+                break;
+
+            if (inputState->guessing == 0) {
+                if (saveConsumedInput)
+                    text.append(chars, n);
+                inputState->column += static_cast<int>(n);
+            }
+            if (n >= 3) {
+                three = chars[n - 3];
+                two = chars[n - 2];
+            } else if (n == 2) {
+                three = one;
+                two = chars[0];
+            } else {
+                three = two;
+                two = one;
+            }
+            one = chars[n - 1];
+            input.consume(n);
+            if (n < available)
+                break;
+            // consume() and refill may move the queue; reacquire its pointer on the next span.
+        } while (isPlainCharacter(input.LA(1)));
+    }
+
     // reinitialize comment lexer
     void init(int m, bool onpreproclinestate, bool nescape = false, std::string dstring = "", bool /* is_line */ = false, long /* lnumber */ = -1, OPTION_TYPE op = 0) {
 
@@ -532,12 +567,7 @@ COMMENT_TEXT {
         // same record of previous characters, and the check of the end after the last of them,
         // since the end can only occur before a newline or EOF
         if (_ttype == COMMENT_TEXT && isPlainCharacter(LA(1))) {
-            do {
-                lookaheadMinusThree = lookaheadMinusTwo;
-                lookaheadMinusTwo = lookaheadMinusOne;
-                lookaheadMinusOne = LA(1);
-                consume();
-            } while (isPlainCharacter(LA(1)));
+            consumePlainCharacters(lookaheadMinusThree, lookaheadMinusTwo, lookaheadMinusOne);
 
             endCheck();
         }
