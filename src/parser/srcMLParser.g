@@ -876,6 +876,571 @@ public:
     int ruledepth = 0;
 #endif
     bool is_qmark = false;
+
+    // the kind of a simple declaration, VARIABLE, FUNCTION, or FUNCTION_DECL, found by the syntactic predicate
+    int declaration_simple_kind = 0;
+
+    // the name token of a simple declaration, found by the syntactic predicate
+    const void* declaration_simple_name_token = nullptr;
+
+    /*
+      declaration_simple_scan
+
+      For declaration_simple, the check from the token buffer, without parsing, that the statement may be a simple
+      declaration. It is not when a name is followed by what cannot follow the first part of a type, e.g., "f(x);" in
+      a function body or "x = 0;", nor in a C++ class body, where it can only be a variable, when a "(", "{", or ":"
+      comes before the ";", "=", or "," after a variable name. Returns true when the check needs the parse.
+    */
+    bool declaration_simple_scan() {
+
+        // EOL is a token of a preprocessor line
+        if (inSkippedTokens())
+            return true;
+
+        if (LA(1) != NAME)
+            return true;
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        switch (LA(i)) {
+        case LPAREN:
+            // a function pointer name after the type, e.g., "int (*f)(void);", is not in a function body
+            return !inTransparentMode(MODE_FUNCTION_BODY);
+
+        case TERMINATE:
+        case COMMA:
+        case EQUAL:
+        case ASSIGNMENT:
+        case OPERATORS:
+        case PERIOD:
+        case TRETURN:
+        case LBRACKET:
+        case COLON:
+            return false;
+
+        default:
+            return true;
+        }
+    }
+
+    /*
+      macro_call_declarator_scan
+
+      For macro_call_statement_start in C, the check from the token buffer, without parsing, that the "(" after the
+      name LA(1) may start a declarator, e.g., "int (*fp) D(a) (int);", a function declaration.
+    */
+    bool macro_call_declarator_scan() {
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the token after the "("
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == MULTOPS || LA(i) == LPAREN;
+    }
+
+    /*
+      macro_call_name_scan
+
+      For macro_call_statement_start in C, the check from the token buffer, without parsing, that the name LA(1) after
+      the call syntax of a macro is a separate statement, e.g., "A(x) b = 1;" or
+      "A(x) B(y);", and not the name of a declaration with the macro as its type, "A(x) b;". Returns false when the
+      check needs the parse, e.g., for a preprocessor line after the name.
+    */
+    bool macro_call_name_scan() {
+
+        // EOL is a token of a preprocessor line
+        if (inSkippedTokens())
+            return false;
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        switch (LA(i)) {
+        case LPAREN:
+        case EQUAL:
+        case ASSIGNMENT:
+        case COMMA:
+        case LBRACKET:
+        case NAME:
+        case VOID:
+        case MULTOPS:
+        case REFOPS:
+        case COLON:
+        case PERIOD:
+        case TRETURN:
+        case OPERATORS:
+        case CONST:
+        case RCURLY:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    /*
+      scan_skip
+
+      For a check from the token buffer, the position of the first token at or after position i that is not skipped by
+      the parse, i.e., past whitespace, comments, and preprocessor lines.
+    */
+    unsigned int scan_skip(unsigned int i) {
+
+        while (true) {
+
+            if (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL) {
+                ++i;
+                continue;
+            }
+
+            // a preprocessor line, up to and including its end of line
+            if (LA(i) == PREPROC) {
+                ++i;
+                while (LA(i) != EOL && LA(i) != 1 /* EOF */)
+                    ++i;
+                continue;
+            }
+
+            return i;
+        }
+    }
+
+    /*
+      call_other_scan
+
+      For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
+      that does not start a declarator, i.e., not "(*", "((", or a parenthesized name, e.g., "guard(mvm)(mvm);", unless
+      an operator or arguments that are not parameters follow it, e.g., "f(a) + g(b);" or "guard(mutex)(&lock);".
+    */
+    bool call_other_scan() {
+
+        // the token after the name
+        unsigned int i = scan_skip(2);
+
+        // a CUDA kernel call, e.g., "f<<<1>>>()"
+        if (LA(i) == CUDA)
+            return true;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the token after the "("
+        i = scan_skip(i + 1);
+
+        if (LA(i) == MULTOPS || LA(i) == LPAREN)
+            return false;
+
+        if (LA(i) != NAME)
+            return true;
+
+        // the token after the name in the "("
+        i = scan_skip(i + 1);
+
+        if (LA(i) != RPAREN)
+            return true;
+
+        // after the parenthesized name
+        i = scan_skip(i + 1);
+
+        if (LA(i) == OPERATORS)
+            return true;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        i = scan_skip(i + 1);
+
+        return LA(i) == OPERATORS || LA(i) == REFOPS || LA(i) == CONSTANTS || LA(i) == STRING_START;
+    }
+
+    // the number of parts of the type of a general declaration, and how many are not specifiers, found by the
+    // syntactic predicate
+    int declaration_general_type_count = 0;
+    int declaration_general_type_parts = 0;
+    int declaration_general_specifiers = 0;
+
+    /*
+      declaration_general_name_scan
+
+      For declaration_general_start, the check from the token buffer, without parsing, that LA(1) is the name of the
+      variable, i.e., a name, or a word that is a name in C, e.g., "line", followed by "[", ";", "=", or ",".
+    */
+    bool declaration_general_name_scan() {
+
+        // a name, or a word that is a name in C, e.g., "line" or "define", or "__weak" or "__strong" as the last word
+        if (!c_name_token(LA(1)) || LA(1) == MAIN)
+            return false;
+
+        // the token after the name, past what is skipped
+        unsigned int i = scan_skip(2);
+
+        return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA || LA(i) == LCURLY
+            || LA(i) == 1 /* EOF */;
+    }
+
+    /*
+      index_token_scan
+
+      For declaration_index and single_macro_index_start, the check from the token buffer, without parsing, that the
+      index starting at LA(1) has the token inside it.
+    */
+    bool index_token_scan(int token) {
+
+        int depth = 0;
+        for (unsigned int i = 1; ; ++i) {
+            switch (LA(i)) {
+            case LBRACKET:
+                ++depth;
+                break;
+
+            case RBRACKET:
+                if (--depth == 0)
+                    return false;
+                break;
+
+            case TERMINATE:
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+
+            default:
+                if (LA(i) == token)
+                    return true;
+                break;
+            }
+        }
+    }
+
+    /*
+      index_struct_cast_scan
+
+      For single_macro_index_start, the check from the token buffer, without parsing, that the index starting at LA(1)
+      has a "(" followed by "struct" that is not after "sizeof", i.e., a cast, e.g., "[sizeof(((struct s *)0)->x)]".
+    */
+    bool index_struct_cast_scan() {
+
+        int depth = 0;
+        int previous = 0;
+        for (unsigned int i = 1; ; ++i) {
+            switch (LA(i)) {
+            case LBRACKET:
+                ++depth;
+                break;
+
+            case RBRACKET:
+                if (--depth == 0)
+                    return false;
+                break;
+
+            case STRUCT:
+                if (previous == LPAREN && LA(i - 2) != SIZEOF)
+                    return true;
+                break;
+
+            case TERMINATE:
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+
+            default:
+                break;
+            }
+
+            if (!whitespace_token_set.member((unsigned int) LA(i)))
+                previous = LA(i);
+        }
+    }
+
+    /*
+      c_name_token
+
+      Whether the token is a name in C: a name, "main", or a word that is a name in C, e.g., "line" or "define", or
+      "__weak" or "__strong".
+    */
+    bool c_name_token(int token) {
+
+        switch (token) {
+        case NAME:
+        case MAIN:
+        case WEAK:
+        case STRONG:
+        case INCLUDE:
+        case DEFINE:
+        case ELIF:
+        case ENDIF:
+        case ERRORPREC:
+        case IFDEF:
+        case IFNDEF:
+        case LINE:
+        case PRAGMA:
+        case UNDEF:
+        case WARNING:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    /*
+      expression_other_scan
+
+      For expression_other_start, whether the first token LA(1) of a C statement cannot start a type, e.g., "sizeof",
+      a character literal, or ".".
+    */
+    bool expression_other_scan() {
+
+        if (!inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_OBJECTIVE_C))
+            return false;
+
+        switch (LA(1)) {
+        case PERIOD:
+        case TRETURN:
+        case LCURLY:
+        case LBRACKET:
+        case EQUAL:
+        case REFOPS:
+        case DOTDOTDOT:
+        case CHAR_START:
+        case LITERAL_TRUE:
+        case LITERAL_FALSE:
+        case SIZEOF:
+        case ALIGNOF:
+        case GENERIC_SELECTION:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    // the token after the first specifier of a statement of specifiers before call syntax, found by the syntactic
+    // predicate
+    int specifier_call_secondtoken = 0;
+
+    // the element of a struct or union definition after specifiers, SSTRUCT or SUNION, found by the syntactic predicate
+    int type_definition_specifier_element = 0;
+
+    // the kind of a general function, FUNCTION or FUNCTION_DECL, found by the syntactic predicate
+    int function_general_kind = 0;
+
+    /*
+      function_pointer_scan
+
+      For function_pointer_declaration_start, the check from the token buffer, without parsing, that the first "(" of
+      the statement, before a ";", "{", "=", or "}", may start a function pointer name, i.e., "(" followed by a name, a
+      "*", a "(", or an attribute.
+    */
+    bool function_pointer_scan() {
+
+        // the first "("
+        unsigned int i = 1;
+        while (LA(i) != LPAREN) {
+            if (LA(i) == TERMINATE || LA(i) == LCURLY || LA(i) == RCURLY || LA(i) == EQUAL || LA(i) == 1 /* EOF */)
+                return false;
+            ++i;
+        }
+
+        i = scan_skip(i + 1);
+
+        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN || LA(i) == C_ATTRIBUTE;
+    }
+
+    /*
+      initialization_expression_scan
+
+      For a C "for" initialization, the check from the token buffer, without parsing, that it is an expression, e.g.,
+      "i = 0", "++i", or "(a)": it starts with an operator, "(", or a constant, or with a name followed by an
+      assignment, an operator, "(", ",", ";", or ")".
+    */
+    bool initialization_expression_scan() {
+
+        switch (LA(1)) {
+        case OPERATORS:
+        case LPAREN:
+        case CONSTANTS:
+            return true;
+
+        case NAME:
+            break;
+
+        default:
+            return false;
+        }
+
+        switch (LA(scan_skip(2))) {
+        case EQUAL:
+        case ASSIGNMENT:
+        case OPERATORS:
+        case LPAREN:
+        case COMMA:
+        case TERMINATE:
+        case RPAREN:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    /*
+      kr_parameter_guess
+
+      For C K&R parameters, whether kr_parameter_check matches, run only in a function tail.
+    */
+    bool kr_parameter_guess() {
+
+        bool matched = true;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            kr_parameter_check_impl();
+            if (failed) {
+                failed = false;
+                matched = false;
+            }
+        } catch (...) {
+            matched = false;
+        }
+
+        rewind(start);
+        inputState->guessing--;
+
+        return matched;
+    }
+
+    /*
+      condition_declaration_scan
+
+      For condition_declaration_check, the check from the token buffer, without parsing, that the condition has a "="
+      outside of any parentheses or brackets, which a declaration in a condition must have.
+    */
+    bool condition_declaration_scan() {
+
+        int depth = 0;
+        for (unsigned int i = 1; ; ++i) {
+            switch (LA(i)) {
+            case LPAREN:
+            case LBRACKET:
+                ++depth;
+                break;
+
+            case RPAREN:
+            case RBRACKET:
+                if (depth == 0)
+                    return false;
+                --depth;
+                break;
+
+            case EQUAL:
+                if (depth == 0)
+                    return true;
+                break;
+
+            case TERMINATE:
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+
+            default:
+                break;
+            }
+        }
+    }
+
+    /*
+      parameter_simple_name_scan
+
+      For parameter_simple_check, the check from the token buffer, without parsing, that LA(1) is the name of the
+      parameter, i.e., a name or "main" followed by ",", ")", ";" (a K&R parameter), or "=" (a default argument).
+    */
+    bool parameter_simple_name_scan() {
+
+        if (LA(1) != NAME && LA(1) != MAIN)
+            return false;
+
+        unsigned int i = scan_skip(2);
+
+        return LA(i) == COMMA || LA(i) == RPAREN || LA(i) == TERMINATE || LA(i) == EQUAL;
+    }
+
+    // the number of names in the type of a declaration with an attribute macro, found by the syntactic predicate
+    int declaration_attribute_type_count = 0;
+
+    /*
+      declaration_attribute_scan
+
+      For declaration_attribute_start, the check from the token buffer, without parsing, that the name LA(1) is
+      followed by an argument list that starts with a constant or a string, e.g., "__aligned(8)" or "SEC(\"license\")",
+      which is not a parameter list.
+    */
+    bool declaration_attribute_scan() {
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the token after the "("
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == CONSTANTS || LA(i) == STRING_START;
+    }
+
+    /*
+      declaration_attribute_kr_scan
+
+      For declaration_attribute_start, the check from the token buffer, without parsing, that the name LA(1) is
+      followed by a list of names, e.g., "(a, b)", as for a K&R function.
+    */
+    bool declaration_attribute_kr_scan() {
+
+        // the token after the name, past what is skipped
+        unsigned int i = 2;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != LPAREN)
+            return false;
+
+        // the first token in the "("
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        if (LA(i) != NAME)
+            return false;
+
+        // the token after the first name
+        ++i;
+        while (whitespace_token_set.member((unsigned int) LA(i)) || LA(i) == EOL)
+            ++i;
+
+        return LA(i) == COMMA || LA(i) == RPAREN;
+    }
     bool notdestructor = false;
     bool operatorname = false;
     std::stack<std::string> class_namestack;
@@ -2683,7 +3248,2140 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we do not know yet whether it starts an expression,
   function definition, function declaration, or even a label.
 */
-pattern_statements[] {
+pattern_statements[] { ENTRY_DEBUG } :
+        // struct, union, or enum definition
+        (type_definition_simple_check)=>
+        type_definition_simple |
+
+        // struct or union declaration
+        (type_declaration_simple_check)=>
+        type_declaration_simple |
+
+        // variable declaration, function definition, or function declaration
+        (declaration_simple)=>
+        declaration_simple |
+
+        // call
+        (call_statement_start)=>
+        call_statement |
+
+        // macro call
+        (macro_call_statement_start)=>
+        macro_call_statement |
+
+        // expression, e.g., an assignment
+        (expression_statement_start)=>
+        expression_statement_simple |
+
+        // a specifier followed by call syntax and nothing else, e.g. "static DEFINE_SPINLOCK(lock);", never a
+        // declaration (that needs a declarator name after the type, not "("), so an expression statement, with the
+        // specifier marked up as stray
+        (static_call_expression_start)=>
+        expression_statement_simple |
+
+        // label
+        (label_statement_simple)=>
+        label_statement_simple |
+
+        // enum constant, last since it is only in an enum
+        (enum_constant_simple_check)=>
+        enum_constant_simple |
+
+        // macro call with arguments that are not expressions, last since only what is left pays for the call check
+        (macro_call_other_start)=>
+        macro_call_statement |
+
+        // expression starting with an indexed name, e.g., "a[i]->b = c;"
+        (expression_index_start)=>
+        expression_statement_simple |
+
+        // function pointer declaration, e.g., "int (*fp)(int);"
+        (function_pointer_declaration_start)=>
+        function_pointer_declaration |
+
+        // label named "error", e.g., "error:"
+        (label_error_statement)=>
+        label_error_statement |
+
+        // call of a function named "error", e.g., "error(\"m\");"
+        (call_error_start)=>
+        call_statement |
+
+        // declaration with an attribute macro, e.g., "u32 type __aligned(8);"
+        (declaration_attribute_start)=>
+        declaration_attribute |
+
+        // call that is not only a name and call syntax, e.g., "guard(mutex)(&lock);"
+        (call_other_start)=>
+        call_other |
+
+        // variable declaration with a type of any parts, e.g., "static __iomem u32 *p;"
+        (declaration_general_start)=>
+        declaration_general |
+
+        // function declaration or definition with a type of any parts, e.g., "static void f(int x) __attr(a) {"
+        (function_general_start)=>
+        function_general |
+
+        // variable declaration with a parenthesized list after the name, e.g., "int f(), x;" or "T t(a);" in a function body
+        (declaration_paren_start)=>
+        declaration_general |
+
+        // struct or union definition after specifiers, e.g., "static const struct { int a; } x[] = { ... };"
+        (type_definition_specifier_check)=>
+        type_definition_specifier |
+
+        // statement that cannot start with a type, e.g., "sizeof(x);" or "'c';"
+        (expression_other_start)=>
+        expression_other |
+
+        // a specifier alone, e.g., "static;"
+        (declaration_specifier_only_start)=>
+        declaration_specifier_only |
+
+        // specifiers before call syntax, e.g., "static DEFINE_PER_CPU(T, x) = v;", which is not a declaration
+        (specifier_call_start)=>
+        specifier_call |
+
+        // a name or "asm" before "volatile", e.g., "asm_inline volatile (...)" or "__asm__ __volatile__ goto (...)"
+        (asm_volatile_start)=>
+        specifier_call |
+
+        // a name before a block, e.g., "BTREE_TYPE_HEAD { ... };", or before "const" and a struct or union, e.g.,
+        // "__bpf_kfunc const struct x *f(void) {"
+        (name_other_start)=>
+        specifier_call |
+
+        // extern block, e.g., "extern "C" { ... }"
+        (extern_block_start)=>
+        extern_definition |
+
+        // macro before a struct or union, e.g., "MACRO struct { } u;"
+        (macro_before_struct_start)=>
+        macro_call |
+
+        // a name before a struct or union type of a function or a variable, e.g., "noinstr struct x *f(void) {"
+        (name_before_struct_function_start)=>
+        name_before_struct_function |
+
+        (name_before_struct_variable_start)=>
+        name_before_struct_variable |
+
+        // a name and call syntax, with no type, e.g., "typeof(x) *p;" or "f(x)[i] = 1;"
+        (name_call_start)=>
+        name_call |
+
+        // a name before a keyword, e.g., "CASES return x;" or "asm goto (...)"
+        (single_macro_start)=>
+        macro_call |
+
+        // a macro as the type of a variable, e.g., "__aligned(64) x;"
+        (macro_type_variable_start)=>
+        variable_declaration_statement[1] |
+
+        // a name before a name with an index that has a union in it, e.g., "u8" in "u8 offs[sizeof(union u)];", or a
+        // struct in it that is not a complete expression, is a macro
+        (single_macro_index_start)=>
+        macro_call |
+
+        // a C variable declaration with an index of any expression, an attribute, or a bit-field after the name, e.g.,
+        // "u8 offs[N + 1];" or "unsigned int warning : 1;"
+        (declaration_index_attribute_start[false])=>
+        variable_declaration_statement[declaration_general_type_count] |
+
+        pattern_check_statements
+;
+
+/*
+  label_statement_simple
+
+  A C/C++ label, e.g., "out:".
+*/
+label_statement_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+        }?
+        label_statement
+;
+
+/*
+  type_definition_simple_check
+
+  The start of a simple C/C++ struct, union, or enum definition, e.g., "struct s {", "union {", or "enum e {".
+*/
+type_definition_simple_check[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (
+            // a macro before the name, e.g., "struct M A {" or "struct __aligned(8) A {", and the name may be a word
+            // that is a name in C, e.g., "line"
+            (STRUCT | UNION)
+            (identifier ((paren_pair)? identifier)?)? |
+
+            ENUM
+            (NAME)?
+        )
+
+        LCURLY
+;
+
+/*
+  type_definition_simple
+
+  A simple C/C++ struct, union, or enum definition.
+*/
+type_definition_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { LA(1) == STRUCT }?
+        struct_union_definition[SSTRUCT] |
+
+        { LA(1) == UNION }?
+        struct_union_definition[SUNION] |
+
+        enum_definition
+;
+
+/*
+  type_declaration_simple_check
+
+  A simple C/C++ struct, union, or enum declaration, e.g., "struct s;", "struct a, b;", "enum e;", or in C,
+  "_Atomic struct s;".
+*/
+type_declaration_simple_check[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (
+            (
+                { inLanguage(LANGUAGE_C) && next_token() != LPAREN }?
+                ATOMIC
+            )?
+
+            (STRUCT | UNION)
+
+            NAME
+
+            (COMMA NAME)* |
+
+            ENUM
+
+            NAME
+        )
+
+        TERMINATE
+;
+
+/*
+  type_declaration_simple
+
+  A simple C/C++ struct, union, or enum declaration.
+*/
+type_declaration_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        // a struct, possibly after "_Atomic"
+        { LA(1) == STRUCT || (LA(1) == ATOMIC && next_token() == STRUCT) }?
+        struct_declaration |
+
+        { LA(1) == ENUM }?
+        enum_declaration |
+
+        union_declaration
+;
+
+/*
+  enum_constant_simple_check
+
+  The start of a C/C++ enum constant, e.g., "A = 1," or "A,". A name followed by "}" is not matched, since it is a
+  macro.
+*/
+enum_constant_simple_check[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && inMode(MODE_ENUM)
+            && inMode(MODE_LIST)
+            && LA(1) == NAME
+        }?
+        NAME
+
+        (
+            EQUAL | COMMA |
+
+            // the last enum constant, e.g., "{ a }"
+            { inLanguage(LANGUAGE_C) }?
+            RCURLY
+        )
+;
+
+/*
+  enum_constant_simple
+
+  A C/C++ enum constant.
+*/
+enum_constant_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        enum_short_variable_declaration
+;
+
+/*
+  declaration_simple
+
+  A simple C/C++ declaration: a variable declaration, e.g.,
+  "static const int* x = 0;", a function definition, e.g., "static int* f(int x) {", or a function declaration, e.g.,
+  "int f(int x);". The syntactic predicate parses the specifiers, the type, and the name once, and records the kind of
+  declaration and the name. The type and the name are parsed here, and as for variable_declaration_statement,
+  function_definition, and function_declaration, the rest is parsed in the modes started here.
+*/
+declaration_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && declaration_simple_scan()
+        }?
+        {
+            if (declaration_simple_kind == VARIABLE) {
+
+                // as variable_declaration_statement and variable_declaration, no declaration elements in a typedef,
+                // except in a class
+                bool output_decl = !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL);
+
+                // as variable_declaration_statement
+                startNewMode(MODE_STATEMENT);
+
+                if (output_decl) {
+                    startElement(SDECLARATION_STATEMENT);
+
+                    pauseStream();
+                }
+
+                // as variable_declaration
+                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+                startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_INCLUDE_ATTRIBUTE);
+
+                if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
+                    setMode(MODE_LIST);
+
+                if (output_decl)
+                    startElement(SDECLARATION);
+
+                // as variable_declaration_type
+                startNewMode(MODE_EAT_TYPE);
+
+                startElement(STYPE);
+
+            } else {
+
+                // as function_definition and function_declaration
+                startNewMode(MODE_STATEMENT);
+
+                startElement(declaration_simple_kind == FUNCTION ? SFUNCTION_DEFINITION : SFUNCTION_DECLARATION);
+
+                // as function_type
+                startNewMode(MODE_EAT_TYPE | MODE_FUNCTION_TYPE);
+
+                startElement(STYPE);
+            }
+        }
+
+        (options { greedy = true; } :
+            declaration_simple_specifier
+        )*
+
+        (
+            // as lead_type_identifier, except a name followed by "(", e.g., a call or a macro, is not matched
+            { LA(1) == NAME || LA(1) == VOID }?
+            compound_name |
+
+            declaration_simple_class_type
+        )
+
+        declaration_simple_type
+;
+
+/*
+  declaration_simple_specifier
+
+  A specifier before the type of a simple declaration.
+*/
+declaration_simple_specifier[] { ENTRY_DEBUG } :
+        {
+            LA(1) == STATIC
+            || LA(1) == EXTERN
+            || LA(1) == INLINE
+            || LA(1) == CONST
+            || LA(1) == VOLATILE
+            || LA(1) == REGISTER
+        }?
+        specifier
+;
+
+/*
+  declaration_simple_class_type
+
+  A struct, union, or enum type, e.g., "struct s *", as in variable_declaration_type and function_type.
+*/
+declaration_simple_class_type[] { bool is_compound = false; ENTRY_DEBUG } :
+        // not a C++ scoped enum, e.g., "enum class E", or a name in the global namespace, e.g., "struct ::s"
+        {
+            (
+                LA(1) == STRUCT
+                || LA(1) == UNION
+                || (LA(1) == ENUM && !class_tokens_set.member(next_token()))
+            )
+            && next_token() != DCOLON
+        }?
+        class_type_identifier[is_compound]
+
+        (options { greedy = true; } :
+            { !is_compound }?
+            multops
+        )*
+;
+
+/*
+  declaration_simple_type
+
+  The rest of the type in a simple declaration, which ends before the name, and the name.
+*/
+declaration_simple_type[] { ENTRY_DEBUG } :
+        // the name found by the syntactic predicate
+        { !inputState->guessing && LT(1).get() == declaration_simple_name_token }?
+        declaration_simple_end
+        declaration_simple_name |
+
+        (declaration_simple_check)=>
+        declaration_simple_end
+        declaration_simple_name |
+
+        (
+            {
+                LA(1) == STATIC
+                || LA(1) == CONST
+                || LA(1) == VOLATILE
+                || LA(1) == REGISTER
+            }?
+            specifier |
+
+            {
+                LA(1) == NAME
+                || LA(1) == VOID
+                || LA(1) == MULTOPS
+                || LA(1) == REFOPS
+                || LA(1) == RVALUEREF
+            }?
+            type_identifier
+        )
+        declaration_simple_type
+;
+
+/*
+  declaration_simple_check
+
+  The name of a simple declaration and what follows it, which determines the kind of declaration, which is recorded
+  with the name:
+  - a variable declaration, with any indexes, followed by ";", "=", ",", or for a C bit field ":"
+  - a function definition, with the parameter list followed by "{"
+  - a function declaration, with the parameter list followed by ";"
+*/
+declaration_simple_check[] {
+        declaration_simple_name_token = LT(1).get();
+
+        // "main" is only matched as the name of a function, not of a variable, e.g., "int main, second;"
+        bool ismain = LA(1) == MAIN;
+
+        ENTRY_DEBUG
+} :
+        // "error" is also a preprocessor keyword
+        (NAME | ERRORPREC | MAIN)
+
+        (
+            { !ismain }?
+            (options { greedy = true; } :
+                { next_token() != LBRACKET }?
+                declaration_simple_index
+            )*
+
+            (
+                TERMINATE | EQUAL | COMMA |
+
+                // a bit field, which in C++ is only in a class, so not here
+                { inLanguage(LANGUAGE_C) }?
+                COLON
+            )
+
+            set_int[declaration_simple_kind, VARIABLE] |
+
+            // a function is not in a function body, where it is a variable, nor where it may be a constructor
+            {
+                !inTransparentMode(MODE_TYPEDEF)
+                && !inMode(MODE_ENUM)
+                && !inTransparentMode(MODE_FRIEND)
+                && !inTransparentMode(MODE_FUNCTION_BODY)
+            }?
+            parameter_list
+
+            set_int[declaration_simple_kind, LA(1) == LCURLY ? FUNCTION : FUNCTION_DECL]
+
+            (LCURLY | TERMINATE)
+        ) |
+
+        // function pointer name, e.g. "(*setup)", only a name when unambiguously followed (after an optional macro
+        // annotation) by a parameter list, same as a plain name above
+        {
+            inLanguage(LANGUAGE_C)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_FUNCTION_BODY)
+        }?
+        (function_pointer_name_grammar eat_optional_macro_call LPAREN) =>
+        function_pointer_name_grammar
+        eat_optional_macro_call
+        parameter_list
+
+        set_int[declaration_simple_kind, LA(1) == LCURLY ? FUNCTION : FUNCTION_DECL]
+
+        (LCURLY | TERMINATE)
+;
+
+/*
+  declaration_simple_index
+
+  An index after the variable name of a simple variable declaration.
+*/
+declaration_simple_index[] { ENTRY_DEBUG } :
+        LBRACKET
+
+        (declaration_simple_index | ~(LBRACKET | RBRACKET))*
+
+        RBRACKET
+;
+
+/*
+  declaration_simple_end
+
+  Ends the type of a simple declaration.
+*/
+declaration_simple_end[] { ENTRY_DEBUG } :
+        // a destructor name in the type is not a declaration
+        { !isdestructor }?
+        {
+            if (declaration_simple_kind == VARIABLE) {
+
+                // as update_typecount
+                endMode();
+
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+
+            } else {
+
+                // as function_type
+                endMode(MODE_EAT_TYPE);
+
+                setMode(MODE_FUNCTION_NAME);
+            }
+        }
+;
+
+/*
+  declaration_simple_name
+
+  The name of a simple declaration, as in the modes for a variable or a function.
+*/
+declaration_simple_name[] { ENTRY_DEBUG } :
+        { declaration_simple_kind == VARIABLE }?
+        variable_declaration_nameinit |
+
+        function_header[0]
+;
+
+/*
+  call_statement_start
+
+  The start of a C/C++ call statement, e.g., "f(x);", "a->f(x);", or "f(x)->y = 1;".
+*/
+call_statement_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && LA(1) == NAME
+        }?
+        NAME ((PERIOD | TRETURN) NAME)*
+
+        call_check_paren_pair[argumenttoken]
+
+        // the call syntax followed by any of these is a call, including the end of the file, e.g., "module_exit(f)"
+        (TERMINATE | TRETURN | PERIOD | EQUAL | ASSIGNMENT | EOF)
+;
+
+/*
+  call_statement
+
+  A C/C++ call statement.
+*/
+call_statement[] { ENTRY_DEBUG } :
+        expression_statement[CALL, 1]
+;
+
+/*
+  macro_call_statement_start
+
+  The start of a C/C++ macro call statement, e.g., "list_for_each(p, h) {" or "DEFINE_MUTEX(foo)\nstatic int x;". The
+  call syntax followed (with no separating ";") by any of these is not a real call, i.e., it is a macro.
+  Only for C, since in C++ the call syntax followed by "{" may be a constructor or a call with an initializer list,
+  and the other tokens are themselves ambiguous with a declaration (e.g., trailing "const" on a member function).
+*/
+macro_call_statement_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+            && LA(1) == NAME
+            && !macro_call_declarator_scan()
+        }?
+        NAME
+
+        call_check_paren_pair[argumenttoken]
+
+        {
+            // a name or void after the call syntax is a separate statement, e.g., consecutive
+            // macro calls "A(x) B(y)" or "A(x) b = 1;", except a name that ends a declaration with the macro as its
+            // type, "A(x) b;", and except in a typedef
+            (
+                (LA(1) == VOID || (LA(1) == NAME && macro_call_name_scan()))
+                && !inTransparentMode(MODE_TYPEDEF)
+            )
+            || keyword_token_set.member(LA(1))
+            || LA(1) == LCURLY
+            || LA(1) == RCURLY
+            || LA(1) == EXTERN
+            || LA(1) == STRUCT
+            || LA(1) == UNION
+            || LA(1) == STATIC
+            || LA(1) == CONST
+            || LA(1) == INLINE
+        }?
+;
+
+/*
+  macro_call_statement
+
+  A C/C++ macro call statement.
+*/
+macro_call_statement[] { ENTRY_DEBUG } :
+        macro_call
+;
+
+/*
+  macro_call_other_start
+
+  The start of a C macro call statement with arguments that are not expressions, e.g.,
+  "PP_ASSERT_WITH_CODE(x, \"m\", return r);", "DEFINE_PER_CPU(unsigned long *, p);", or "SYSCALL_DEFINE3(f, int, a) {",
+  when perform_call_check() says it is a macro, and as for macro_call_statement_start, what follows is not part of a
+  declaration.
+*/
+macro_call_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && LA(1) == NAME
+            && !macro_call_declarator_scan()
+            && perform_call_check(type, isempty, call_count, LPAREN)
+            && type == MACRO
+        }?
+        NAME
+
+        paren_pair
+
+        {
+            (LA(1) == VOID || (LA(1) == NAME && macro_call_name_scan()))
+            || keyword_token_set.member(LA(1))
+            || LA(1) == TERMINATE
+            || LA(1) == EQUAL
+            || LA(1) == LCURLY
+            || LA(1) == RCURLY
+            || LA(1) == EXTERN
+            || LA(1) == STRUCT
+            || LA(1) == UNION
+            || LA(1) == STATIC
+            || LA(1) == CONST
+            || LA(1) == INLINE
+        }?
+;
+
+/*
+  declaration_general_start
+
+  The start of a C variable declaration with a type of any parts, e.g., "static __iomem u32 *p;",
+  "DEFINE_MIN_HEAP(struct s, heap) heap;", or "register unsigned long r asm(\"r0\");". Each part of the type is a
+  specifier, a macro, a struct, union, or enum name (only as the first part that is not a specifier), a name, or a
+  "*", and at least one is not a specifier. The name is followed by an optional index of only names and constants, and
+  then ";", "=", ",", "{", or the end of the input. An attribute after the name with an argument list that starts with a constant or a string,
+  e.g., "asm(\"r0\")" or "__aligned(8)", is itself the name, with the name before it a part of the type.
+*/
+declaration_general_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        bool late_enum = false;
+        int enum_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } :
+            {
+                !declaration_general_name_scan()
+                && !((LA(1) == NAME || LA(1) == ASM) && declaration_attribute_scan())
+            }?
+            set_bool[late_enum, LA(1) == ENUM && declaration_general_type_parts > 0]
+            set_int[enum_parts, late_enum ? declaration_general_type_parts : enum_parts]
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )+
+
+        { declaration_general_type_parts > 0 }?
+        (
+            { declaration_general_name_scan() }?
+            .
+
+            // an index of only names and constants, e.g., "[]", "[16]", or "[ETH_ALEN]"
+            (options { greedy = true; } :
+                LBRACKET
+                (NAME | CONSTANTS)*
+                RBRACKET
+            )*
+
+            (
+                TERMINATE | EQUAL | COMMA |
+
+                // not in a function tail, where "{" starts the body
+                { !inMode(MODE_FUNCTION_TAIL) }?
+                LCURLY |
+
+                // the end of the input, e.g., after a list of macros
+                EOF
+            ) |
+
+            // an attribute with an argument list that starts with a constant or a string, e.g., "asm(\"r0\")", which is
+            // the name, with the name before it part of the type
+            { declaration_attribute_scan() }?
+            (NAME | ASM)
+
+            paren_pair
+
+            // any names after it, e.g., "__used"
+            (NAME)*
+
+            (TERMINATE | EQUAL) |
+
+            // an enum type after other parts, then its body, e.g., "static __initdata enum state {". After two or more
+            // parts, the enum name is the name of the variable, e.g., "e" in "A B enum e {".
+            { late_enum && !inMode(MODE_FUNCTION_TAIL) }?
+            LCURLY
+            set_int[declaration_general_type_count, declaration_general_type_count - (enum_parts >= 2 ? 1 : 0)]
+        )
+;
+
+/*
+  declaration_general_part
+
+  A part of the type of a variable declaration.
+*/
+declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
+        // the C specifiers, and "_Atomic" without "(", which is a type
+        {
+            decl_specifier_tokens_set.member(LA(1))
+            || LA(1) == REGISTER
+            || LA(1) == CONST
+            || LA(1) == VOLATILE
+            || LA(1) == RESTRICT
+            || LA(1) == CRESTRICT
+            || LA(1) == NORETURN
+            || LA(1) == COMPLEX
+            || LA(1) == IMAGINARY
+            || LA(1) == THREAD_LOCAL
+            || LA(1) == BLOCK
+            || LA(1) == WEAK
+            || LA(1) == STRONG
+            || LA(1) == ALIGNAS
+            || (LA(1) == ATOMIC && next_token() != LPAREN)
+        }?
+        specifier
+        set_int[declaration_general_specifiers, declaration_general_specifiers + 1] |
+
+        // "_Atomic(...)", a type
+        { LA(1) == ATOMIC }?
+        atomic
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
+
+        (macro_type_detector)=>
+        macro_call_inner
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
+
+        // a struct or union is only the first part that is not a specifier, and an enum may also follow other parts,
+        // e.g., "static __always_inline enum e f(void)"
+        {
+            (declaration_general_type_parts == 0 && (LA(1) == STRUCT || LA(1) == UNION))
+            || (LA(1) == ENUM && !class_tokens_set.member(next_token()))
+        }?
+        class_type_identifier[is_compound]
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+
+        // a struct, union, or enum name counts as two parts of the type
+        set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+        multops |
+
+        { next_token() != LPAREN }?
+        compound_name
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
+
+        VOID
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+;
+
+/*
+  name_before_struct_function_start
+
+  The start of a C function with a name before its struct or union type, e.g., "noinstr struct x *f(void) {". The name
+  is one more part of the type.
+*/
+name_before_struct_function_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION) }?
+        NAME
+
+        function_general_start
+;
+
+/*
+  name_before_struct_function
+
+  A C function with a name before its struct or union type.
+*/
+name_before_struct_function[] { ENTRY_DEBUG } :
+        { function_general_kind == FUNCTION }?
+        function_definition[declaration_general_type_count + 1] |
+
+        function_declaration[declaration_general_type_count + 1]
+;
+
+/*
+  name_before_struct_variable_start
+
+  The start of a C variable declaration with a name before its struct or union type, e.g., "__iomem struct x *p;".
+  The name is one more part of the type.
+*/
+name_before_struct_variable_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION) }?
+        NAME
+
+        declaration_general_start
+;
+
+/*
+  name_before_struct_variable
+
+  A C variable declaration with a name before its struct or union type.
+*/
+name_before_struct_variable[] { ENTRY_DEBUG } :
+        variable_declaration_statement[declaration_general_type_count + 1]
+;
+
+/*
+  macro_before_struct_start
+
+  The start of a C macro of only a name before a struct or union definition or declaration, e.g.,
+  "MACRO struct { } u;" or "MACRO struct s;". The macro is a statement of its own.
+*/
+macro_before_struct_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        NAME
+
+        (STRUCT | UNION)
+
+        (
+            NAME
+            (LCURLY | TERMINATE) |
+
+            LCURLY
+        )
+;
+
+/*
+  extern_block_start
+
+  The start of a C/C++ extern block with a linkage string, e.g., "extern "C" {", or in C, of "extern" before a name
+  and call syntax, e.g., "extern DECLARE_BITMAP(b, N);".
+*/
+extern_block_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+        }?
+        EXTERN
+
+        (
+            STRING_START |
+
+            // in C, a name and call syntax that is not a declarator, e.g., "extern DECLARE_BITMAP(b, N);"
+            { inLanguage(LANGUAGE_C) && LA(1) == NAME && next_token() == LPAREN && !macro_call_declarator_scan() }?
+            NAME
+        )
+;
+
+/*
+  specifier_call_start
+
+  The start of a C statement of specifiers before a name and call syntax, e.g., "static DEFINE_PER_CPU(T, x) = v;",
+  "const ELF(Ehdr) *e = v;", or "static f(int a) {", or of specifiers before a name and a struct or union, e.g.,
+  "static __always_inline struct x *f(void) {". With no part of a type other than specifiers before a name, or a
+  struct or union after a name, it is not a declaration. Not a function pointer, e.g., "static int (*fp)(int);", nor a
+  macro in the type, i.e., call syntax followed by a name and then ";", "{", or "=", e.g., "static M(a) x;".
+*/
+specifier_call_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        // the token after the first specifier
+        set_int[specifier_call_secondtoken, next_token()]
+
+        // not "extern", which starts an extern definition
+        (options { greedy = true; } :
+            {
+                LA(1) == STATIC
+                || LA(1) == INLINE
+                || LA(1) == REGISTER
+                || LA(1) == CONST
+                || LA(1) == VOLATILE
+            }?
+            .
+        )+
+
+        (
+            // a macro in the type, e.g., "static M(a) x;"
+            (macro_type_detector)=>
+            NAME
+            throw_exception[true] |
+
+            { LA(1) == NAME && next_token() == LPAREN }?
+            NAME
+
+            (
+                // a function pointer, i.e., followed by the rest of a function
+                (function_pointer_name_grammar declaration_paren_function_rest)=>
+                function_pointer_name_grammar
+                throw_exception[true] |
+
+                paren_pair
+            ) |
+
+            // a name before a struct or union, which ends the type, e.g., "static __always_inline struct x *f(void) {"
+            // or "static __init const struct x *f(void) {"
+            { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == CONST) }?
+            NAME
+
+            (CONST)*
+
+            { LA(1) == STRUCT || LA(1) == UNION }?
+        )
+;
+
+/*
+  asm_volatile_start
+
+  The start of a C statement of a name or "asm" before "volatile", e.g., "asm_inline volatile (...)" or
+  "__asm__ __volatile__ goto (...)", which is not a declaration.
+*/
+asm_volatile_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && (LA(1) == NAME || LA(1) == ASM)
+            && next_token() == VOLATILE
+        }?
+        // the token after the first part
+        set_int[specifier_call_secondtoken, next_token()]
+
+        .
+
+        VOLATILE
+;
+
+/*
+  name_other_start
+
+  The start of a C statement of a name before a block, e.g., "BTREE_TYPE_HEAD { ... };", or before "const" and a struct
+  or union, e.g., "__bpf_kfunc const struct x *f(void) {", which is not a declaration.
+*/
+name_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+            && (next_token() == LCURLY || next_token() == CONST)
+        }?
+        // the token after the first part
+        set_int[specifier_call_secondtoken, next_token()]
+
+        NAME
+
+        (
+            LCURLY |
+
+            (CONST)+
+            { LA(1) == STRUCT || LA(1) == UNION }?
+        )
+;
+
+/*
+  specifier_call
+
+  A C statement of specifiers before a name and call syntax, which is a macro call when perform_call_check() says so,
+  and otherwise an expression statement of the kind of call it finds.
+*/
+specifier_call[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, specifier_call_secondtoken)
+            && type == MACRO
+        }?
+        macro_call |
+
+        expression_statement[type, call_count]
+;
+
+/*
+  declaration_specifier_only_start
+
+  The start of a C declaration of a single specifier and nothing else, e.g., "static;" or "__weak;".
+*/
+declaration_specifier_only_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && next_token() == TERMINATE
+            && (
+                LA(1) == STATIC
+                || LA(1) == EXTERN
+                || LA(1) == INLINE
+                || LA(1) == REGISTER
+                || LA(1) == CONST
+                || LA(1) == VOLATILE
+                || LA(1) == RESTRICT
+                || LA(1) == NORETURN
+                || LA(1) == COMPLEX
+                || LA(1) == IMAGINARY
+                || LA(1) == THREAD_LOCAL
+                || LA(1) == BLOCK
+                || LA(1) == WEAK
+                || LA(1) == STRONG
+            )
+        }?
+        .
+
+        TERMINATE
+;
+
+/*
+  declaration_specifier_only
+
+  A C declaration of a single specifier and nothing else.
+*/
+declaration_specifier_only[] { ENTRY_DEBUG } :
+        variable_declaration_statement[1]
+;
+
+/*
+  expression_other_start
+
+  The start of a C statement whose first token cannot start a type, e.g., "sizeof(x);", "'c';", "_Generic(x, int: 1);",
+  or ".name = x,", so it is not a declaration.
+*/
+expression_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { expression_other_scan() }?
+        .
+;
+
+/*
+  expression_other
+
+  A C statement whose first token cannot start a type, which is a macro call when perform_call_check() says so, and
+  otherwise an expression statement of the kind of call it finds.
+*/
+expression_other[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, 0)
+            && type == MACRO
+        }?
+        macro_call |
+
+        expression_statement[type, call_count]
+;
+
+/*
+  type_definition_specifier_check
+
+  The start of a C struct, union, or enum definition after specifiers, e.g., "static struct {",
+  "static const struct s {", "extern struct s {", or "static enum {". The name is as for type_definition_simple_check.
+*/
+type_definition_specifier_check[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } : STATIC | CONST | VOLATILE | EXTERN | INLINE | REGISTER)+
+
+        (
+            STRUCT
+            set_int[type_definition_specifier_element, SSTRUCT] |
+
+            UNION
+            set_int[type_definition_specifier_element, SUNION] |
+
+            ENUM
+            set_int[type_definition_specifier_element, 0]
+        )
+
+        (identifier ((paren_pair)? identifier)?)?
+
+        LCURLY
+;
+
+/*
+  type_definition_specifier
+
+  A C struct, union, or enum definition after specifiers.
+*/
+type_definition_specifier[] { ENTRY_DEBUG } :
+        { type_definition_specifier_element == 0 }?
+        enum_definition |
+
+        struct_union_definition[type_definition_specifier_element]
+;
+
+/*
+  function_general_start
+
+  The start of a C function declaration or definition with a type of any parts, e.g., "static void f(int x) {" or
+  "static void f(int x) __attr(a);". The type is as for declaration_general_start, and the name is followed by the rest
+  of a function: an optional macro, the parameter list, what follows it, e.g., macros, and then "{", ";", or "=". In a
+  function body, one that ends with ";" is a variable, so it is not matched.
+*/
+function_general_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int fla = 0;
+        int type_count = 0;
+        bool is_main = false;
+        bool empty = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } :
+            { !((c_name_token(LA(1)) || LA(1) == ASM) && next_token() == LPAREN) }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
+
+        // a type with at least one part that is not a specifier, except for "main" with no type at all, e.g., "main() {"
+        { declaration_general_type_parts > 0 || (LA(1) == MAIN && declaration_general_type_count == 0) }?
+        set_bool[is_main, LA(1) == MAIN]
+        function_general_name
+        set_bool[empty, next_token() == RPAREN]
+
+        // the parameters are parsed with the same counts, so keep the count of the type
+        set_int[type_count, declaration_general_type_count]
+
+        function_rest[fla]
+
+        set_int[declaration_general_type_count, type_count]
+
+        // in a function body, a function declaration that ends with ";" is a variable, unless the parameter list is
+        // empty or it is "main"
+        {
+            fla == LCURLY
+            || fla == EQUAL
+            || (fla == TERMINATE && (!inTransparentMode(MODE_FUNCTION_BODY) || empty || is_main))
+        }?
+        set_int[function_general_kind, fla == LCURLY ? FUNCTION : FUNCTION_DECL]
+;
+
+/*
+  declaration_paren_start
+
+  The start of a C variable declaration with a parenthesized list after the name, e.g., "int foo(), x;",
+  "a b(*c), d(*e);", "a b(c(d));", or in a function body, "T t(a, b);". The type is as for declaration_general_start.
+  It is a variable when the rest is that of a function followed by "," (a list of declarators), or by ";" in a function
+  body with a list that is not empty, or when it is not the rest of a function and the list is not empty, e.g.,
+  "__failure __msg(\"m\") int f(void) {".
+*/
+declaration_paren_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+        declaration_general_specifiers = 0;
+
+        int type_count = 0;
+        int type_parts = 0;
+        int specifiers = 0;
+        bool last_specifier = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (options { greedy = true; } :
+            { !((c_name_token(LA(1)) || LA(1) == ASM) && next_token() == LPAREN) }?
+            set_int[specifiers, declaration_general_specifiers]
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            set_bool[last_specifier, declaration_general_specifiers > specifiers]
+        )*
+
+        // the name and the rest are checked with the same counts, so keep the counts of the type
+        set_int[type_count, declaration_general_type_count]
+        set_int[type_parts, declaration_general_type_parts]
+        set_int[specifiers, declaration_general_specifiers]
+
+        (
+            (declaration_paren_name_check)=>
+            declaration_paren_name_rest |
+
+            (declaration_paren_lists[type_count, type_parts, specifiers, last_specifier])=>
+            declaration_paren_lists[type_count, type_parts, specifiers, last_specifier] |
+
+            set_int[declaration_general_type_count, type_count]
+            set_int[declaration_general_type_parts, type_parts]
+            set_int[declaration_general_specifiers, specifiers]
+
+            // a function pointer in a list of declarators, e.g., "int (*f)(void), i;"
+            (options { greedy = true; } :
+                { LA(1) == NAME || LA(1) == VOID }?
+                (NAME | VOID)
+                set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            )?
+            { declaration_general_type_count > declaration_general_specifiers }?
+            set_int[type_count, declaration_general_type_count]
+            function_pointer_name_grammar
+            parameter_list
+            set_int[declaration_general_type_count, type_count]
+            COMMA
+        )
+;
+
+/*
+  declaration_paren_lists
+
+  For declaration_paren_start, with the counts of the type so far, no name before the lists, a type of at least two
+  parts other than specifiers, with the last part maybe a name before the lists, and lists that are not the rest of a
+  function, e.g., "const struct s (*p)[];" or "unsigned int (*f)(unsigned int (*g)(int));", but not "s8 (*p)[2];". A
+  specifier as the last part is not part of the type.
+*/
+declaration_paren_lists[int type_count, int type_parts, int specifiers, bool last_specifier] {
+        declaration_general_type_count = type_count;
+        declaration_general_type_parts = type_parts;
+        declaration_general_specifiers = specifiers;
+
+        ENTRY_DEBUG
+} :
+        (options { greedy = true; } :
+            { c_name_token(LA(1)) && next_token() == LPAREN }?
+            .
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            set_bool[last_specifier, false]
+        )?
+
+        {
+            declaration_general_type_count - declaration_general_specifiers >= 2
+            && LA(1) == LPAREN
+            && next_token() != RPAREN
+        }?
+        set_int[type_count, declaration_general_type_count - (last_specifier ? 1 : 0)]
+
+        (options { greedy = true; } : paren_pair)+
+
+        set_int[declaration_general_type_count, type_count]
+;
+
+/*
+  declaration_paren_name_check
+
+  For declaration_paren_start, a type with a part that is not a specifier, then the name and the rest after it.
+*/
+declaration_paren_name_check[] { ENTRY_DEBUG } :
+        { declaration_general_type_parts > 0 }?
+        declaration_paren_name_rest
+;
+
+/*
+  declaration_paren_name_rest
+
+  For declaration_paren_start, the name and the rest after it.
+*/
+declaration_paren_name_rest[] {
+        int fla = 0;
+        bool nonempty = false;
+        int type_count = 0;
+
+        ENTRY_DEBUG
+} :
+        function_general_name
+
+        // whether the list after the name is not empty
+        set_bool[nonempty, next_token() != RPAREN]
+
+        // the parameters are parsed with the same counts, so keep the count of the type
+        set_int[type_count, declaration_general_type_count]
+
+        (
+            // a list that is not a parenthesized name or a function pointer name, then other lists, e.g.,
+            // "void M(2)(int a) {", "int CONCAT(a, b)(void);", "int __printf(1, 0) (*f)(const char *fmt);", or
+            // "unsigned int (*f(u64 m))(int x) {"
+            (declaration_paren_lists_check)=>
+            paren_pair
+            set_int[declaration_general_type_count, type_count] |
+
+            // in a function body, ";" ends a variable only when the list is not empty, e.g., "T t(a);", unlike
+            // "char *f();"
+            (declaration_paren_function_rest)=>
+            function_rest[fla]
+            set_int[declaration_general_type_count, type_count]
+            { fla == COMMA || (fla == TERMINATE && inTransparentMode(MODE_FUNCTION_BODY) && nonempty) }? |
+
+            // a function pointer, i.e., followed by the rest of a function, e.g., "void __noreturn (*f)(int);"
+            (function_pointer_name_grammar declaration_paren_function_rest)=>
+            function_pointer_name_grammar
+            throw_exception[true] |
+
+            // not the rest of a function, with a list that is not empty, whatever follows it except another list, e.g.,
+            // "const struct s (*p)[];", but not "f(x)(y)"
+            { nonempty }?
+            paren_pair
+            { LA(1) != LPAREN }?
+            set_int[declaration_general_type_count, type_count]
+        )
+;
+
+/*
+  declaration_paren_lists_check
+
+  For declaration_paren_name_rest, a list that is not a parenthesized name or a function pointer name, then other lists.
+*/
+declaration_paren_lists_check[] { ENTRY_DEBUG } :
+        (function_pointer_name_grammar)=>
+        function_pointer_name_grammar
+        throw_exception[true] |
+
+        {
+            next_token() != RPAREN
+            && !(LA(scan_skip(2)) == NAME && LA(scan_skip(scan_skip(2) + 1)) == RPAREN)
+        }?
+        paren_pair
+        (paren_pair)+
+        (TERMINATE | LCURLY | EQUAL | COMMA)
+;
+
+/*
+  declaration_paren_function_rest
+
+  The rest of a function, for declaration_paren_start.
+*/
+declaration_paren_function_rest[] { int fla = 0; ENTRY_DEBUG } :
+        function_rest[fla]
+;
+
+/*
+  function_general_name
+
+  The name of a general function. Not a name that starts a macro in the type, i.e., call syntax followed by a name and
+  then ";", "{", or "=", e.g., "f(int x) M {", where "M" is the name of a variable.
+*/
+function_general_name[] { ENTRY_DEBUG } :
+        (macro_type_detector)=>
+        NAME
+        throw_exception[true] |
+
+        declaration_index_attribute_name |
+
+        // "asm" with an argument list that is not a string, e.g., "register void *p asm(REG);"
+        ASM
+;
+
+/*
+  function_general
+
+  A C function declaration or definition with a type of any parts.
+*/
+function_general[] { ENTRY_DEBUG } :
+        { function_general_kind == FUNCTION }?
+        function_definition[declaration_general_type_count] |
+
+        function_declaration[declaration_general_type_count]
+;
+
+/*
+  declaration_general
+
+  A C variable declaration with a type of any parts.
+*/
+declaration_general[] { ENTRY_DEBUG } :
+        variable_declaration_statement[declaration_general_type_count]
+;
+
+/*
+  call_other_start
+
+  The start of a C statement with a call that call_statement_start does not match, e.g., "guard(mutex)(&lock);",
+  "this_cpu_ptr(x)[i].a = 1;", or "f(0), f(1);", when perform_call_check() says it is a call. Not a "(*" or a
+  parenthesized name, e.g., "guard(mvm)(mvm);", which may be a declarator.
+*/
+call_other_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        // without the preprocessor option, there is no call check, and it is an expression statement
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && LA(1) == NAME
+            && call_other_scan()
+            && (
+                !isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+                || (perform_call_check(type, isempty, call_count, LPAREN) && type == CALL)
+            )
+        }?
+        NAME
+;
+
+/*
+  call_other
+
+  A C statement with a call that call_statement_start does not match.
+*/
+call_other[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, LPAREN)
+        }?
+        expression_statement[type, call_count] |
+
+        expression_statement
+;
+
+/*
+  declaration_attribute_start
+
+  The start of a C variable declaration with an attribute macro, e.g., "u32 type __aligned(8);",
+  "char _license[] SEC(\"license\") = \"GPL\";", or "int f(int a) __weak;". The name before the argument list is the
+  name of the variable, and the names before it, each with an optional index without parentheses, are its type. Either
+  the argument list starts with a constant or a string, so it is not a parameter list, or names follow it, and it is
+  not the list of names of a K&R function, e.g., "int f(a, b) int a; int b; {".
+*/
+declaration_attribute_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_attribute_type_count = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+        }?
+        (options { greedy = true; } :
+            { next_token() != LPAREN }?
+            NAME
+
+            // an index without parentheses, e.g., "[]" or "[16]"
+            (options { greedy = true; } :
+                LBRACKET
+                (~(LBRACKET | RBRACKET | LPAREN | RPAREN))*
+                RBRACKET
+            )*
+
+            set_int[declaration_attribute_type_count, declaration_attribute_type_count + 1]
+        )+
+
+        (
+            { declaration_attribute_scan() }?
+            NAME
+
+            paren_pair
+
+            (TERMINATE | EQUAL) |
+
+            // names after the argument list, e.g., "int f(int a) __weak;", but not a K&R function
+            { !declaration_attribute_kr_scan() }?
+            NAME
+
+            paren_pair
+
+            // names, or the keywords "__weak" and "__strong"
+            (options { greedy = true; } : NAME | WEAK | STRONG)+
+
+            TERMINATE
+        )
+;
+
+/*
+  declaration_attribute
+
+  A C variable declaration with an attribute macro.
+*/
+declaration_attribute[] { ENTRY_DEBUG } :
+        variable_declaration_statement[declaration_attribute_type_count]
+;
+
+/*
+  call_error_start
+
+  The start of a C/C++ call statement of a function named "error", e.g., "error(\"m\");", where "error" is also a
+  preprocessor keyword.
+*/
+call_error_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && LA(1) == ERRORPREC
+        }?
+        ERRORPREC
+
+        call_check_paren_pair[argumenttoken]
+
+        // the call syntax followed by any of these is a call
+        (TERMINATE | TRETURN | PERIOD | EQUAL | ASSIGNMENT)
+;
+
+/*
+  label_error_statement
+
+  A C/C++ label named "error", e.g., "error:", where "error" is also a preprocessor keyword.
+*/
+label_error_statement[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == ERRORPREC
+            && next_token() == COLON
+        }?
+        label_statement
+;
+
+/*
+  function_pointer_declaration_start
+
+  The start of a C/C++ function pointer declaration, e.g., "int (*fp)(int);", "void (*fp)(void);",
+  "typedef int (*fp_t)(int);", or "int (*fp)(int) = f;". In C, the type may have parts before the last name, as for
+  declaration_general_start, e.g., "unsigned long (*fp)(unsigned long) = f;", or may end with other parts, e.g.,
+  "struct s *(*fp)(void);". With parts before a last name, or with a struct, union, or enum, in a function body ";"
+  ends a variable, so it is not matched.
+*/
+function_pointer_declaration_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int type_count = 0;
+        int type_parts = 0;
+        bool last_name = false;
+        bool has_class = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_ARGUMENT)
+
+            // in C++, a type of one name or void
+            && (
+                inLanguage(LANGUAGE_C)
+                ? function_pointer_scan()
+                : (LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN
+            )
+        }?
+        // in C, the parts of the type before the last name
+        (options { greedy = true; } :
+            {
+                inLanguage(LANGUAGE_C)
+                && !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN)
+            }?
+            set_bool[has_class, has_class || LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM]
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
+
+        // the last part of the type, a name or "void", unless there are other parts, e.g., "struct s *(*fp)(void)"
+        (
+            { LA(1) == NAME || LA(1) == VOID }?
+            (NAME | VOID)
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            set_bool[last_name, true] |
+
+            { inLanguage(LANGUAGE_C) && declaration_general_type_parts > 0 }?
+        )
+
+        // the parameters are parsed with the same counts, so keep the counts of the type
+        set_int[type_count, declaration_general_type_count]
+        set_int[type_parts, declaration_general_type_parts]
+
+        function_pointer_attribute_name
+
+        eat_optional_macro_call
+
+        parameter_list
+
+        set_int[declaration_general_type_count, type_count]
+
+        // in C, macro calls after the parameter list, e.g., "__printf(2, 3)"
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_C) && next_token() == LPAREN }?
+            NAME
+            paren_pair
+        )*
+
+        (
+            EQUAL |
+
+            { !(((type_parts > 0 && last_name) || has_class) && inTransparentMode(MODE_FUNCTION_BODY)) }?
+            TERMINATE
+        )
+;
+
+/*
+  function_pointer_attribute_name
+
+  For function_pointer_declaration_start, the function pointer name, which in C may start with an attribute, e.g.,
+  "(__attribute__((nocf_check)) *f)".
+*/
+function_pointer_attribute_name[] { ENTRY_DEBUG } :
+        (LPAREN C_ATTRIBUTE)=>
+        { inLanguage(LANGUAGE_C) }?
+        LPAREN
+        C_ATTRIBUTE
+        paren_pair
+        function_pointer_name_base
+        RPAREN |
+
+        function_pointer_name_grammar
+;
+
+/*
+  function_pointer_declaration
+
+  A C/C++ function pointer declaration.
+*/
+function_pointer_declaration[] { ENTRY_DEBUG } :
+        function_declaration[declaration_general_type_count]
+;
+
+/*
+  expression_index_start
+
+  The start of a C/C++ expression statement that starts with an indexed name or a member, e.g., "a[i]->b = c;",
+  "a[i].b++;", "a->b[i]->c = d;", "a[N - sizeof(x)];", or "p->main.x = y;". A name, or a member of it, followed by an
+  index cannot start a declaration.
+*/
+expression_index_start[] { bool sawmain = false; ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && LA(1) == NAME
+        }?
+        NAME
+
+        // "main" may be a member, e.g., "p->main.x = y;"
+        (options { greedy = true; } :
+            (TRETURN | PERIOD)
+            (
+                NAME |
+
+                MAIN
+                set_bool[sawmain, true]
+            )
+        )*
+
+        (
+            // an index, which in C may also end the statement, e.g., "a[N - sizeof(x)];"
+            (options { greedy = true; } : bracket_pair)+
+            (
+                TRETURN | PERIOD | EQUAL | ASSIGNMENT | OPERATORS | LPAREN |
+
+                { inLanguage(LANGUAGE_C) }?
+                TERMINATE
+            ) |
+
+            // no index, after a "main" member
+            { sawmain }?
+            (TRETURN | PERIOD | EQUAL | ASSIGNMENT | OPERATORS | LPAREN)
+        )
+;
+
+/*
+  expression_statement_start
+
+  The start of a C/C++ expression statement which is not a call, e.g., "x = 0;", "x->y += 1;", "x++;", "a.b = c;",
+  "*p = 0;", "5;", "(void)x;", "++x;", "\"str\";", "x ? a : b;", "x, y;", or a name alone, e.g., the Linux
+  "fallthrough;" or "asm;". A leading constant, "(", or operator is unambiguously an expression, since none of those can start a
+  declaration, label, or call.
+*/
+expression_statement_start[] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_FRIEND)
+            && !inTransparentMode(MODE_CONDITION)
+            && (
+                LA(1) == NAME
+                || LA(1) == ERRORPREC
+                || (LA(1) == ASM && next_token() == TERMINATE)
+
+                // a word that is a name in C, e.g., "line"
+                || (
+                    inLanguage(LANGUAGE_C)
+                    && (
+                        LA(1) == LINE
+                        || LA(1) == DEFINE
+                        || LA(1) == INCLUDE
+                        || LA(1) == PRAGMA
+                        || LA(1) == UNDEF
+                        || LA(1) == IFDEF
+                        || LA(1) == IFNDEF
+                        || LA(1) == ELIF
+                        || LA(1) == ENDIF
+                        || LA(1) == WARNING
+                    )
+                )
+                || LA(1) == MULTOPS
+                || LA(1) == CONSTANTS
+                || LA(1) == STRING_START
+                || LA(1) == LPAREN
+                || LA(1) == OPERATORS
+            )
+        }?
+        (
+            MULTOPS | CONSTANTS | STRING_START | LPAREN | OPERATORS |
+
+            // "error" is also a preprocessor keyword
+            compound_name
+
+            (
+                EQUAL | ASSIGNMENT | OPERATORS | PERIOD | TERMINATE | QMARK | COMMA | RCURLY | EOF |
+
+                // in C++, "<" after a name may start a declaration
+                { inLanguage(LANGUAGE_C) }?
+                (TEMPOPS | TEMPOPE) |
+
+                // "&" followed by a name is a declaration, e.g., "a & b;", but not by "~" or a constant
+                { inLanguage(LANGUAGE_C) }?
+                REFOPS
+                { LA(1) == DESTOP || LA(1) == CONSTANTS }?
+            )
+        )
+;
+
+/*
+  static_call_expression_start
+
+  The start of a C/C++ statement with a leading "static" or "static const" followed by call syntax and nothing else,
+  e.g., "static DEFINE_SPINLOCK(lock);" or "static const BIN_ATTR(f, 0);" (macros) or even "static int (*fp);" (not a
+  macro, but still not a declaration, since a declaration needs a declarator name after the type, not "("). Either
+  way it is an expression statement, with the specifiers marked up as stray.
+*/
+static_call_expression_start[] {
+        int argumenttoken = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && LA(1) == STATIC
+            && (next_token() == NAME || next_token() == CONST)
+        }?
+        STATIC
+
+        (CONST)?
+
+        NAME
+
+        (
+            // in C, any arguments, e.g., "static DEFINE_PER_CPU(unsigned long, x);"
+            { inLanguage(LANGUAGE_C) }?
+            paren_pair |
+
+            call_check_paren_pair[argumenttoken]
+        )
+
+        TERMINATE
+;
+
+/*
+  expression_statement_simple
+
+  A C/C++ expression statement which is not a call.
+*/
+expression_statement_simple[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        expression_statement
+;
+
+/*
+  single_macro_start
+
+  The start of a C statement of a macro of only a name before a keyword, e.g., "CASES return x;" or "asm goto (...)",
+  or before parts of a type and then "default", e.g., "A B default:".
+*/
+single_macro_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+        }?
+        (NAME | ASM)
+
+        (
+            { keyword_token_set.member(LA(1)) }? |
+
+            (paren_pair)?
+
+            (options { greedy = true; } : declaration_general_part)+
+
+            DEFAULT
+        )
+;
+
+/*
+  name_call_start
+
+  The start of a C statement of a name and call syntax, e.g., "typeof(x) *p;", "f(x)[i] = 1;", or "X(a) ? b : c;".
+  The name is the only part before the call syntax, so it is not the type of a declaration, unless it is a function
+  pointer, i.e., followed by the rest of a function, e.g., "int (*f)(int);", or a macro in the type, e.g., "M(a) x;".
+  Not a macro label, e.g., "M(x):".
+*/
+name_call_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !inMode(MODE_ENUM)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inTransparentMode(MODE_TYPEDEF)
+            && !inTransparentMode(MODE_ARGUMENT)
+            && LA(1) == NAME
+            && next_token() == LPAREN
+        }?
+        (
+            (macro_type_detector)=>
+            NAME
+            throw_exception[true] |
+
+            NAME
+
+            (
+                // a function pointer, i.e., followed by the rest of a function
+                (function_pointer_name_grammar declaration_paren_function_rest)=>
+                function_pointer_name_grammar
+                throw_exception[true] |
+
+                paren_pair
+
+                { LA(1) != COLON }?
+            )
+        )
+;
+
+/*
+  name_call
+
+  A C statement of a name and call syntax, which is a macro call when perform_call_check() says so, and otherwise an
+  expression statement of the kind of call it finds.
+*/
+name_call[] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 1;
+
+        ENTRY_DEBUG
+} :
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, LPAREN)
+            && type == MACRO
+        }?
+        macro_call |
+
+        expression_statement[type, call_count]
+;
+
+/*
+  pattern_check_statements
+
+  Statements, declarations, and definitions that must be matched by pattern_check().
+*/
+pattern_check_statements[] {
         int secondtoken = 0;
         int type_count = 0;
         int after_token = 0;
@@ -2692,9 +5390,12 @@ pattern_statements[] {
         STMT_TYPE stmt_type = NONE;
         CALL_TYPE type = NOCALL;
 
-        // detect the declaration/definition type for non-declarative languages
-        if (!inLanguage(LANGUAGE_PYTHON))
+        // detect the declaration/definition type for non-declarative languages, except for C, which is checked by the
+        // statement rules before this
+        if (!inLanguage(LANGUAGE_PYTHON) && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
+        else if (inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            secondtoken = next_token();
 
         ENTRY_DEBUG
 } :
@@ -4851,9 +7552,30 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
         control_initialization_action
 
         (
-            // explicitly check for a variable declaration since it can easily be confused with an expression
-            { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+            // a C variable declaration with a type of any parts, e.g., "int i = 0" or "struct s *p = h"
+            (declaration_general_start)=>
+            control_initialization_variable_declaration[declaration_general_type_count] |
+
+            // a C variable declaration with an index of any expression or an attribute, e.g., "int a[N + 1] = {}"
+            (declaration_index_attribute_start[true])=>
+            control_initialization_variable_declaration[declaration_general_type_count] |
+
+            // explicitly check for a variable declaration since it can easily be confused with an expression, except
+            // for C, which is checked above
+            {
+                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                && pattern_check(stmt_type, secondtoken, type_count, after_token)
+                && stmt_type == VARIABLE
+            }?
             control_initialization_variable_declaration[type_count] |
+
+            // a C initialization of one part of a type followed by ":", e.g., "for (a : b)", is a range
+            (control_initialization_range_check)=>
+            {
+                setMode(MODE_RANGED_FOR);
+            }
+
+            expression |
 
             { if (secondtoken == COLON)
                 setMode(MODE_RANGED_FOR);
@@ -4861,6 +7583,26 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
 
             expression
         )
+;
+
+/*
+  control_initialization_range_check
+
+  A C "for" initialization of one part of a type followed by ":", e.g., "a : b" or "struct s : x".
+*/
+control_initialization_range_check[] {
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && !initialization_expression_scan()
+        }?
+        declaration_general_part
+
+        COLON
 ;
 
 /*
@@ -7048,10 +9790,20 @@ statement_part[] {
         }?
         macro_call |
 
+        // C K&R function parameters, e.g., "int a;" in "int f(a) int a; {"
+        {
+            inLanguage(LANGUAGE_C)
+            && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            && inMode(MODE_FUNCTION_TAIL)
+            && kr_parameter_guess()
+        }?
+        kr_parameter[declaration_general_type_count] |
+
         // K&R function parameters
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
+            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
             && pattern_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
@@ -7598,12 +10350,21 @@ condition_inner[] {
         int after_token = 0;
         STMT_TYPE stmt_type = NONE;
 
-        pattern_check(stmt_type, secondtoken, type_count, after_token);
+        // a C condition is checked for a declaration by condition_declaration_check
+        if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
+            pattern_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
             startNewMode(MODE_INTERNAL_END_PAREN);
         }
 } :
+        // a C declaration, e.g., "if (int a = 0)"
+        (condition_declaration_check)=>
+        {
+            startNewMode(MODE_INTERNAL_END_PAREN);
+        }
+        control_initialization_variable_declaration[declaration_general_type_count] |
+
         { stmt_type == VARIABLE }?
         control_initialization_variable_declaration[type_count] |
 
@@ -7611,6 +10372,65 @@ condition_inner[] {
         expression |
 
         rparen[false]
+;
+
+/*
+  condition_declaration_check
+
+  A C declaration in a condition, e.g., "if (int a = 0)" or "while (struct s *p = f())".
+*/
+condition_declaration_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_declaration_scan() }?
+
+        // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
+        (options { greedy = true; } :
+            { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == ENUM) }?
+            NAME
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )?
+
+        condition_declaration_type[false, false]
+;
+
+/*
+  condition_declaration_type
+
+  The type of a C declaration in a condition, and its name. Each part of the type is a specifier, a struct, union, or
+  enum name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier.
+  The name, with any indexes, is followed by "=". With a struct, union, or enum type, the name is optional, and a
+  specifier as the last part is not part of the type.
+*/
+condition_declaration_type[bool is_class, bool last_specifier] {
+        bool class_part = false;
+        int specifiers = declaration_general_specifiers;
+
+        ENTRY_DEBUG
+} :
+        ((NAME | MAIN) (declaration_index[false])* EQUAL)=>
+        { declaration_general_type_parts > 0 }?
+        (NAME | MAIN)
+        (declaration_index[false])*
+        EQUAL |
+
+        // a struct, union, or enum type with no name, e.g., "struct s = 0"
+        { is_class }?
+        (declaration_index[false])*
+        EQUAL
+        set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier ? 1 : 0)] |
+
+        { !(LA(1) == NAME && next_token() == LPAREN) }?
+        set_bool[
+            class_part,
+            declaration_general_type_parts == 0 && (LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM)
+        ]
+        declaration_general_part
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        condition_declaration_type[is_class || class_part, declaration_general_specifiers > specifiers]
 ;
 
 /*
@@ -13095,7 +15915,11 @@ generic_selection_association_type[] {
         }
 
         (
-            { pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
+            // in C, a type, e.g., "struct s *"
+            (generic_selection_association_type_check)=>
+            variable_declaration_type[declaration_general_type_count + 1] |
+
+            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
             variable_declaration_type[type_count + 1] |
 
             generic_selection_association_default
@@ -13104,6 +15928,25 @@ generic_selection_association_type[] {
         {
             clearMode(MODE_ASSOCIATION_TYPE);
         }
+;
+
+/*
+  generic_selection_association_type_check
+
+  For a C generic selection association, e.g., "struct s *" in "_Generic(x, struct s *: f)", the count of the parts of
+  the type as for declaration_general_start. Any association, including "default", is a type.
+*/
+generic_selection_association_type_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (options { greedy = true; } :
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
 ;
 
 /*
@@ -15425,6 +18268,163 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
 ;
 
 /*
+  kr_parameter_check
+
+  A C K&R parameter declaration after the parameter list of a function, e.g., "int a;" in "int f(a) int a; {".
+*/
+kr_parameter_check[] { ENTRY_DEBUG } :
+        (
+            (declaration_general_start)=>
+            declaration_general_start |
+
+            declaration_index_attribute_start[false]
+        )
+;
+
+/*
+  declaration_index_attribute_start
+
+  The start of a C variable declaration with an index of any expression or an attribute after the name, e.g.,
+  "int a[N + 1];" or "int a __attribute__((x)) = 0".
+*/
+declaration_index_attribute_start[bool index_union] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && !initialization_expression_scan() }?
+
+        // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
+        (options { greedy = true; } :
+            { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == ENUM) }?
+            NAME
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )?
+
+        declaration_index_attribute_type[false, false, false, index_union]
+;
+
+/*
+  declaration_index_attribute_type
+
+  The type of a C variable declaration, and its name. Each part of the type is a specifier, a struct, union, or enum
+  name (only as the first part that is not a specifier), a name, or a "*", and at least one is not a specifier. The
+  name, which may be a member, e.g., "b.c", with any indexes and attributes, is followed by ";", ",", "=", or ":". When the type ends with a struct, union,
+  or enum type or a "*", with only specifiers after it, the name is optional before "=" or ":", and a specifier or a
+  "*" as the last part is not part of the type.
+*/
+declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_pointer, bool index_union] {
+        bool class_part = false;
+        bool pointer_part = false;
+        int specifiers = declaration_general_specifiers;
+
+        ENTRY_DEBUG
+} :
+        (declaration_member_name (declaration_index[index_union])* (C_ATTRIBUTE paren_pair)* (TERMINATE | COMMA | EQUAL | COLON))=>
+        { declaration_general_type_parts > 0 }?
+        declaration_member_name
+        (declaration_index[index_union])*
+        (C_ATTRIBUTE paren_pair)*
+        (TERMINATE | COMMA | EQUAL | COLON) |
+
+        // no name, e.g., "struct s = 0" or "int * = 0"
+        { no_name }?
+        (declaration_index[index_union])*
+        (EQUAL | COLON)
+        set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier || last_pointer ? 1 : 0)] |
+
+        { !(LA(1) == NAME && next_token() == LPAREN) }?
+        set_bool[
+            class_part,
+            declaration_general_type_parts == 0 && (LA(1) == STRUCT || LA(1) == UNION || LA(1) == ENUM)
+        ]
+        set_bool[pointer_part, LA(1) == MULTOPS || (LA(1) == NAME && LA(scan_skip(2)) == MULTOPS)]
+        declaration_general_part
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        declaration_index_attribute_type[
+            class_part || pointer_part || (no_name && declaration_general_specifiers > specifiers),
+            declaration_general_specifiers > specifiers,
+            pointer_part,
+            index_union
+        ]
+;
+
+/*
+  declaration_index
+
+  An index after the name of a C variable declaration, e.g., "[N + 1]", that is a complete expression. A union inside
+  it, e.g., "[sizeof(union u)]", is only in a for initialization.
+*/
+declaration_index[bool index_union] { bool is_complex = false; ENTRY_DEBUG } :
+        { index_union || !index_token_scan(UNION) }?
+        variable_identifier_array_grammar_sub[is_complex]
+;
+
+/*
+  macro_type_variable_start
+
+  The start of a C variable declaration with a macro as its type, e.g., "__aligned(64) x;".
+*/
+macro_type_variable_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        NAME
+
+        paren_pair
+
+        NAME
+
+        TERMINATE
+;
+
+/*
+  single_macro_index_start
+
+  The start of a C statement of a name, then a name with an index that has a union in it, e.g.,
+  "u8 offs[sizeof(union u)];", or a cast to a struct in it, e.g., "char d[sizeof(((struct s *)0)->x)];", where the
+  first name is a macro.
+*/
+single_macro_index_start[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        NAME
+
+        (MULTOPS)*
+
+        NAME
+
+        (
+            { index_token_scan(UNION) }?
+            LBRACKET |
+
+            { index_struct_cast_scan() }?
+            LBRACKET
+        )
+;
+
+/*
+  declaration_index_attribute_name
+
+  For declaration_index_attribute_type, the name, including "main" and the words that are names in C, e.g., "line".
+*/
+declaration_index_attribute_name[] { ENTRY_DEBUG } :
+        NAME | MAIN | LINE | WARNING | ERRORPREC | INCLUDE | DEFINE | ELIF | ENDIF | IFDEF | IFNDEF | PRAGMA | UNDEF | WEAK | STRONG
+;
+
+/*
+  declaration_member_name
+
+  For declaration_index_attribute_type, the name, which may be a member, e.g., "b.c" or "p->x".
+*/
+declaration_member_name[] { ENTRY_DEBUG } :
+        declaration_index_attribute_name
+
+        (options { greedy = true; } :
+            (PERIOD | TRETURN)
+            declaration_index_attribute_name
+        )*
+;
+
+/*
   kr_parameter_type
 
   Handles a parameter type in K&R syntax (C).
@@ -15607,8 +18607,25 @@ parameter[] {
         }
 
         (
+            // a C parameter of a type and an optional name, e.g., "const char *s" or "int"
+            (parameter_simple_check)=>
+            parameter_type_variable[declaration_general_type_count, VARIABLE] |
+
+            // a C function pointer parameter, e.g., "void (*f)(int)" or "struct s *(*f)(void)"
+            (parameter_function_pointer_check)=>
+            function_declaration[declaration_general_type_count]
+            function_identifier
+            (macro_call_check)*
+            parameter_list |
+
+            // a C struct, union, or enum type with no name before ";", e.g., "struct s;" after a K&R parameter list
+            (parameter_class_check)=>
+            parameter_type_variable[1, STRUCT_DECL] |
+
+            // a function pointer parameter, except for C, which is checked above
             {
-                pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                && pattern_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
@@ -15623,6 +18640,193 @@ parameter[] {
             parameter_list |
 
             parameter_type_variable[type_count, stmt_type]
+        )
+;
+
+/*
+  parameter_simple_check
+
+  A C parameter of a type and an optional name, e.g., "const char *s", "struct x *p", "int", or "void". The parts of
+  the type are as for declaration_general_start. With a name, the type is all of the parts before it. With no name,
+  the last part is taken as the name, unless the rest of the type is only specifiers. A single name, e.g., "u32" or
+  the name in a K&R function, is a type.
+*/
+parameter_simple_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+        declaration_general_specifiers = 0;
+
+        ENTRY_DEBUG
+} :
+        // a type does not start with "*" or "&", e.g., "*p" or "&a->b" is an argument
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != MULTOPS && LA(1) != REFOPS }?
+        (
+            // a single name, but not before ";", e.g., "__noreturn;" after a function pointer
+            { parameter_simple_name_scan() && LA(scan_skip(2)) != TERMINATE }?
+            (NAME | MAIN)
+            set_int[declaration_general_type_count, 1] |
+
+            // a name before a struct, union, or enum type, e.g., "__user" in "__user struct s *p", is one more part
+            (options { greedy = true; } :
+                { LA(1) == NAME && (next_token() == STRUCT || next_token() == UNION || next_token() == ENUM) }?
+                NAME
+                set_int[declaration_general_type_count, declaration_general_type_count + 1]
+            )?
+
+            parameter_simple_type[declaration_general_type_count > 0]
+        )
+
+        (COMMA | RPAREN | TERMINATE | EQUAL)
+;
+
+/*
+  parameter_function_pointer_check
+
+  A C function pointer parameter, e.g., "void (*f)(int)", "T (*f)(int)", or "struct s *(*f)(void)", or a C function
+  parameter, e.g., "int f(void *p)". The parts of the type are as for declaration_general_start, and for a function
+  pointer the last part may be a name.
+*/
+parameter_function_pointer_check[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        int type_count = 0;
+        bool has_parts = false;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (options { greedy = true; } :
+            { !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN) }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
+
+        // the parameters are parsed with the same counts, so keep the count of the type
+        set_int[type_count, declaration_general_type_count]
+        set_bool[has_parts, declaration_general_type_parts > 0]
+
+        (
+            // a function, e.g., "int f(void *p)"
+            (NAME parameter_list)=>
+            { has_parts }?
+            NAME
+            parameter_list |
+
+            (
+                { LA(1) == NAME || LA(1) == VOID }?
+                (NAME | VOID)
+                set_int[type_count, type_count + 1] |
+
+                { has_parts }?
+            )
+
+            function_pointer_name_grammar
+
+            eat_optional_macro_call
+
+            parameter_list
+        )
+
+        set_int[declaration_general_type_count, type_count]
+
+        (COMMA | RPAREN | TERMINATE | EQUAL)
+;
+
+/*
+  parameter_class_check
+
+  A C struct, union, or enum type with no name before ";", e.g., "struct s;" or "struct s *;".
+*/
+parameter_class_check[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        (STRUCT | UNION | ENUM)
+        NAME
+        (MULTOPS)*
+        TERMINATE
+;
+
+/*
+  parameter_enum_names
+
+  For parameter_simple_type, the names after an enum type, each after a ",", as for an enum declaration.
+*/
+parameter_enum_names[] { ENTRY_DEBUG } :
+        (COMMA variable_identifier)=>
+        COMMA
+        variable_identifier
+        parameter_enum_names |
+;
+
+/*
+  parameter_simple_type
+
+  For parameter_simple_check, the parts of the type and an optional name. With a name before a struct, union, or enum
+  type, a "," must follow a name.
+*/
+parameter_simple_type[bool name_before] { bool last_class = false; bool last_name = false; bool enum_list = false; ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            // not the name of the parameter, unless only specifiers are before it, e.g., "u32" in "const u32"
+            {
+                !parameter_simple_name_scan() || (LA(1) == NAME && declaration_general_type_count == declaration_general_specifiers)
+            }?
+            (
+                // an enum type, as for an enum declaration, with the names after it separated by ",", so it takes the
+                // first name of the next parameter, e.g., "int" in "enum e, int v", and counts as two parts. When no
+                // name follows a ",", the rest is the next parameter.
+                { LA(1) == ENUM && declaration_general_type_parts == 0 && !class_tokens_set.member(next_token()) }?
+                ENUM
+                variable_identifier
+                parameter_enum_names
+                set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+                set_int[declaration_general_type_count, declaration_general_type_count + 1]
+                set_bool[enum_list, LA(1) == COMMA]
+                set_bool[last_class, false]
+                set_bool[last_name, false] |
+
+                // a struct or union type without a pointer, e.g., "struct s", but not "struct s *"
+                set_bool[
+                    last_class,
+                    (LA(1) == STRUCT || LA(1) == UNION) && LA(scan_skip(scan_skip(2) + 1)) != MULTOPS
+                ]
+                set_bool[last_name, LA(1) == NAME]
+                declaration_general_part
+            )
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )+
+
+        (
+            // a name
+            { declaration_general_type_parts > 0 && parameter_simple_name_scan() }?
+            (NAME | MAIN) |
+
+            // no name, so the last part is taken as the name, but not when the rest is only specifiers. An enum type, or
+            // a struct or union type without a pointer, e.g., "struct s", followed by "," is a type of one part. With a
+            // name before a struct, union, or enum type, the last part before "," must be a name, e.g., "tb[]".
+            {
+                declaration_general_type_parts > 0
+                && (
+                    (LA(1) == COMMA && (!name_before || last_name))
+                    || LA(1) == RPAREN
+                    || (LA(1) == TERMINATE && declaration_general_type_parts > 1)
+                )
+            }?
+            set_int[
+                declaration_general_type_count,
+                enum_list || (last_class && LA(1) == COMMA) ? 1
+                : declaration_general_type_count - 1 == declaration_general_specifiers
+                ? declaration_general_type_count : declaration_general_type_count - 1
+            ] |
+
+            // an empty index with no name, e.g., "struct s []" or "struct s *[]"
+            { declaration_general_type_parts > 0 && LA(1) == LBRACKET && next_token() == RBRACKET }?
+            LBRACKET
+            RBRACKET
+            set_int[declaration_general_type_count, last_class ? 1 : declaration_general_type_count] |
+
+            // only specifiers, e.g., "const", with the first one the type
+            { declaration_general_type_parts == 0 && (LA(1) == COMMA || LA(1) == RPAREN || LA(1) == TERMINATE) }?
+            set_int[declaration_general_type_count, 1]
         )
 ;
 
