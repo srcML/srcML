@@ -4273,7 +4273,7 @@ extern_block_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inLanguage(LANGUAGE_OBJECTIVE_C)
         }?
         EXTERN
