@@ -3469,7 +3469,7 @@ type_definition_simple[] {
 */
 type_declaration_simple_check[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
             && !inTransparentMode(MODE_ARGUMENT)
