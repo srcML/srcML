@@ -1118,6 +1118,92 @@ public:
     }
 
     /*
+      cxx_function_guess
+
+      For cxx_declaration_kind_of, the token that ends a function header starting with the "(" at LA(1), i.e., a
+      parameter list and a function tail, 0 if it is not one, or -1 if it is the name of a function pointer, e.g.,
+      "(*f)(int)".
+    */
+    int cxx_function_guess() {
+
+        int fla = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        // the name of a function pointer, then its parameter list
+        try {
+            function_pointer_name_grammar_impl();
+            if (!failed)
+                eat_optional_macro_call_impl();
+            if (!failed && LA(1) == LPAREN)
+                fla = -1;
+        } catch (...) {}
+        failed = false;
+        rewind(start);
+
+        // a parameter list and a function tail
+        if (fla == 0) {
+            start = mark();
+            try {
+                int end = 0;
+                function_rest_impl(end);
+                if (!failed)
+                    fla = end;
+            } catch (...) {}
+            failed = false;
+            rewind(start);
+        }
+
+        inputState->guessing--;
+
+        return fla;
+    }
+
+    /*
+      cxx_declaration_kind_of
+
+      For cxx_declaration_start, the kind of C++ declaration from what follows the name at LA(1), or NONE if it is not
+      a variable, a function, an operator function, or a macro before a constructor.
+    */
+    STMT_TYPE cxx_declaration_kind_of(bool isoperator) {
+
+        // the end of a variable
+        if (LA(1) == TERMINATE || LA(1) == EQUAL || LA(1) == COMMA || LA(1) == LCURLY || LA(1) == COLON)
+            return VARIABLE;
+
+        if (LA(1) != LPAREN)
+            return NONE;
+
+        // a "(" starts the arguments of a variable, except for "()" in a class
+        bool variable = !inMode(MODE_ACCESS_REGION) || next_token() != RPAREN;
+
+        int fla = cxx_function_guess();
+
+        // a function pointer, or a parameter list that ends with ")"
+        if (fla == -1 || fla == RPAREN)
+            return NONE;
+
+        if (fla == 0)
+            return variable ? VARIABLE : NONE;
+
+        // in a function body, a function declaration is a variable, e.g., "T t();"
+        if (inTransparentMode(MODE_FUNCTION_BODY) && variable && fla == TERMINATE)
+            return VARIABLE;
+
+        if (!isoperator && fla == COMMA)
+            return VARIABLE;
+
+        // a macro before a constructor, e.g., "M A() : x() {"
+        if (!isoperator && fla == COLON)
+            return SINGLE_MACRO;
+
+        if (fla == TERMINATE || fla == COMMA || fla == EQUAL)
+            return isoperator ? OPERATOR_FUNCTION_DECL : FUNCTION_DECL;
+
+        return isoperator ? OPERATOR_FUNCTION : FUNCTION;
+    }
+
+    /*
       call_other_scan
 
       For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
@@ -1173,6 +1259,11 @@ public:
 
     // the kind of C++ class, struct, or union definition or declaration found by the syntactic predicate
     STMT_TYPE cxx_class_type = NONE;
+
+    // the kind of C++ variable or function declaration or definition, and the number of parts of its type, found by
+    // the syntactic predicate
+    STMT_TYPE cxx_declaration_kind = NONE;
+    int cxx_declaration_type_count = 0;
 
     /*
       declaration_general_name_scan
@@ -3500,6 +3591,11 @@ pattern_statements[] { ENTRY_DEBUG } :
         (cxx_class_start)=>
         cxx_class_statement |
 
+        // a C++ variable declaration, or function declaration or definition, with a type of at least one part that is
+        // not a specifier, e.g., "typename T::type x;" or "template <class T> void f(T t) {"
+        (cxx_declaration_start)=>
+        cxx_declaration |
+
         pattern_check_statements
 ;
 
@@ -3630,6 +3726,208 @@ cxx_class_statement[] { ENTRY_DEBUG } :
         union_declaration |
 
         using_namespace_statement
+;
+
+/*
+  cxx_declaration_start
+
+  The start of a C++ variable declaration, or function declaration or definition, with a type of at least one part
+  that is not a specifier, e.g., "typename T::type x;", "std::vector<int> v = f();", or
+  "template <class T> inline void f(T t) {". The parts are matched as for a declaration of any kind, and the last part
+  is the name. A "(" after the name starts a function when a parameter list and a function tail follow, and otherwise
+  the arguments of a variable. The kind found is in cxx_declaration_kind, and the number of parts of the type in
+  cxx_declaration_type_count.
+*/
+cxx_declaration_start[] {
+        // all parts, including the name, and those that are specifiers or template parameter lists
+        int parts = 0;
+        int specifiers = 0;
+
+        // a part that can lead a type was found, so "*" can follow
+        bool foundpure = false;
+        bool isoperator = false;
+        bool lcurly = false;
+        int first = LA(1);
+
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_CXX)
+            && !inTransparentMode(MODE_CONDITION)
+            && !inMode(MODE_USING)
+            && !(LA(1) == NAME && next_token() == TEMPLATE)
+        }?
+        (options { greedy = true; } :
+            // not an attribute, e.g., "[[nodiscard]]"
+            { LA(1) != LBRACKET }?
+            set_bool[isoperator, isoperator || LA(1) == OPERATOR]
+
+            // the first part that matches is taken, so a word that may be a name, e.g., "final", is a name
+            (options { generateAmbigWarnings = false; } :
+                // specifiers, but not an access specifier
+                {
+                    argument_token_set.member(LA(1))
+                    && LA(1) != OVERRIDE
+                    && LA(1) != PUBLIC
+                    && LA(1) != PRIVATE
+                    && LA(1) != PROTECTED
+                    && LA(1) != SIGNAL
+                    && (LA(1) != TEMPLATE || next_token() != TEMPOPS)
+                    && (LA(1) != ATOMIC || next_token() != LPAREN)
+                }?
+                set_bool[foundpure, foundpure || LA(1) == CONST || LA(1) == TYPENAME]
+
+                (options { generateAmbigWarnings = false; } :
+                    EXTERN
+
+                    (options { greedy = true; } :
+                        ALIAS
+                        set_int[specifiers, specifiers + 1]
+                    )* |
+
+                    { LA(1) != NEW }?
+                    specifier |
+
+                    template_specifier
+                )
+
+                set_int[specifiers, specifiers + 1] |
+
+                { LA(1) == TEMPLATE }?
+                template_declaration_full
+                set_int[specifiers, specifiers + 1] |
+
+                // a class, struct, or union type, e.g., "struct A *p;", but not a definition or declaration of one
+                {
+                    parts == specifiers
+                    && (
+                        !keyword_name_token_set.member(next_token())
+                        || (next_token() == LBRACKET && next_token_two() == LBRACKET)
+                    )
+                }?
+                (CXX_CLASS | STRUCT | UNION)
+
+                set_bool[lcurly, LA(1) == LCURLY]
+
+                (options { greedy = true; } :
+                    { next_token() == LBRACKET }?
+                    attribute_cpp
+                )*
+
+                { LA(1) != DOTDOTDOT }?
+                class_post
+                (class_header | LCURLY)
+
+                { !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly) }?
+                set_bool[foundpure]
+
+                // a class, struct, or union type counts as two parts
+                set_int[parts, parts + 1] |
+
+                // an enum type, e.g., "enum E e;", but not a definition or declaration of one
+                { parts == specifiers }?
+                ENUM
+
+                set_bool[lcurly, LA(1) == LCURLY]
+
+                (options { greedy = true; } :
+                    { next_token() == LBRACKET }?
+                    attribute_cpp
+                )*
+
+                { LA(1) != DOTDOTDOT }?
+                (enum_class_header | LCURLY)
+
+                { !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly) }?
+                set_bool[foundpure]
+
+                // an enum type counts as two parts
+                set_int[parts, parts + 1] |
+
+                // macros in types
+                (macro_type_detector)=>
+                macro_call_inner |
+
+                // a name, which may be an operator
+                set_bool[operatorname, false]
+                compound_name
+                set_bool[foundpure]
+                set_bool[isoperator, isoperator || operatorname]
+                set_bool[operatorname, false] |
+
+                auto_keyword[false] |
+
+                MAIN |
+
+                { keyword_name_token_set.member(next_token()) }?
+                keyword_name |
+
+                // type parts that can occur before other type parts
+                {
+                    LA(1) != CLASS
+                    && LA(1) != CXX_CLASS
+                    && LA(1) != STRUCT
+                    && LA(1) != UNION
+                }?
+                (
+                    { LA(1) == DECLTYPE }?
+                    type_specifier_call |
+
+                    { next_token() == LPAREN }?
+                    atomic |
+
+                    pure_lead_type_identifier_no_specifiers
+                )
+                set_bool[foundpure] |
+
+                // type parts that only occur after other type parts, but not "...", e.g., "T... t"
+                { LA(1) != DOTDOTDOT }?
+                non_lead_type_identifier
+                throw_exception[!foundpure]
+            )
+
+            set_int[parts, parts + 1]
+        )+
+
+        // at least one part of the type, other than the name, is not a specifier, and the name is not a destructor
+        { parts - 1 - specifiers > 0 && !isdestructor }?
+
+        set_type[cxx_declaration_kind, cxx_declaration_kind_of(isoperator)]
+
+        // a macro before a constructor starts with its name
+        { cxx_declaration_kind != NONE && (cxx_declaration_kind != SINGLE_MACRO || first == NAME) }?
+
+        set_int[cxx_declaration_type_count, parts - 1]
+;
+
+/*
+  cxx_declaration
+
+  A C++ variable declaration, or function declaration or definition, or a macro before a constructor, of the kind found
+  by cxx_declaration_start.
+*/
+cxx_declaration[] { ENTRY_DEBUG } :
+        { cxx_declaration_kind == FUNCTION }?
+        function_definition[cxx_declaration_type_count] |
+
+        { cxx_declaration_kind == FUNCTION_DECL }?
+        function_declaration[cxx_declaration_type_count] |
+
+        { cxx_declaration_kind == OPERATOR_FUNCTION }?
+        function_definition[cxx_declaration_type_count, SOPERATOR_FUNCTION] |
+
+        { cxx_declaration_kind == OPERATOR_FUNCTION_DECL }?
+        function_declaration[cxx_declaration_type_count, SOPERATOR_FUNCTION_DECL] |
+
+        // a macro before a constructor
+        { cxx_declaration_kind == SINGLE_MACRO }?
+        macro_call |
+
+        variable_declaration_statement[cxx_declaration_type_count]
 ;
 
 /*
