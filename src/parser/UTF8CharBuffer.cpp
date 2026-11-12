@@ -619,7 +619,7 @@ void UTF8CharBuffer::fill(unsigned int amount) {
     // characters already decoded, with the same processing as getChar(),
     // added in runs up to the next carriage return
     const unsigned char* data = reinterpret_cast<const unsigned char*>((trivial ? raw : cooked).data());
-    const size_t end = std::min(insize, pos + 1024);
+    const size_t end = std::min(insize, pos + 16384);
     while (pos < end) {
 
         // skip the '\n' of "\r\n", as the '\r' was already converted to a '\n'
