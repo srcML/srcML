@@ -897,6 +897,53 @@ public:
         if (inSkippedTokens())
             return true;
 
+        if (inLanguage(LANGUAGE_CXX) && inMode(MODE_ACCESS_REGION)) {
+
+            unsigned int i = 1;
+            while (LA(i) != TERMINATE && LA(i) != EQUAL && LA(i) != COMMA
+                && LA(i) != LPAREN && LA(i) != LCURLY && LA(i) != RCURLY && LA(i) != COLON && LA(i) != 1 /* EOF */)
+                ++i;
+
+            if (LA(i) != TERMINATE && LA(i) != EQUAL && LA(i) != COMMA)
+                return false;
+        }
+
+        // in a C++ lambda body, a pointer or reference to a struct, union, or enum keeps the markup of its name in the
+        // type, e.g., "static struct s *p = nullptr;"
+        if (inLanguage(LANGUAGE_CXX) && inTransparentMode(MODE_ANONYMOUS)) {
+
+            unsigned int i = scan_skip(1);
+            while (LA(i) == STATIC || LA(i) == CONST || LA(i) == VOLATILE || LA(i) == REGISTER)
+                i = scan_skip(i + 1);
+
+            if (LA(i) == STRUCT || LA(i) == UNION || LA(i) == ENUM) {
+
+                i = scan_skip(i + 1);
+                if (LA(i) == NAME) {
+
+                    i = scan_skip(i + 1);
+                    if (LA(i) == MULTOPS || LA(i) == REFOPS)
+                        return false;
+                }
+            }
+        }
+
+        // in C++, a "?" in a template argument list, which ends the list at the ":", keeps the markup of the statement,
+        // e.g., "T<decltype(a ? b : c)> v;"
+        if (inLanguage(LANGUAGE_CXX)) {
+
+            int templates = 0;
+            for (unsigned int i = 1; LA(i) != TERMINATE && LA(i) != LCURLY && LA(i) != RCURLY && LA(i) != 1 /* EOF */; ++i) {
+
+                if (LA(i) == TEMPOPS)
+                    ++templates;
+                else if (LA(i) == TEMPOPE && templates > 0)
+                    --templates;
+                else if (LA(i) == QMARK && templates > 0)
+                    return false;
+            }
+        }
+
         if (LA(1) != NAME)
             return true;
 
@@ -3572,7 +3619,7 @@ declaration_simple[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
             && declaration_simple_scan()
@@ -3754,6 +3801,8 @@ declaration_simple_check[] {
             // a function is not in a function body, where it is a variable, nor where it may be a constructor
             {
                 !inTransparentMode(MODE_TYPEDEF)
+                && !inMode(MODE_ACCESS_REGION)
+                && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
                 && !inMode(MODE_ENUM)
                 && !inTransparentMode(MODE_FRIEND)
                 && !inTransparentMode(MODE_FUNCTION_BODY)
@@ -3768,8 +3817,10 @@ declaration_simple_check[] {
         // function pointer name, e.g. "(*setup)", only a name when unambiguously followed (after an optional macro
         // annotation) by a parameter list, same as a plain name above
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_TYPEDEF)
+            && !inMode(MODE_ACCESS_REGION)
+            && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_FUNCTION_BODY)
