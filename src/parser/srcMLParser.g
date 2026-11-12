@@ -5293,7 +5293,7 @@ static_call_expression_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
