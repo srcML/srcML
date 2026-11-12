@@ -628,11 +628,17 @@ private:
             pskiptb = &skippretb;
 
             // parse preprocessor statement stopping at EOL
+            const auto modes = srcMLParser::size();
             try {
 
                 srcMLParser::preprocessor();
 
-            } catch(...) {}
+            } catch(...) {
+
+                // a preprocessor statement that does not parse leaves its modes, e.g., during a guess
+                while (srcMLParser::size() > modes)
+                    srcMLParser::endMode();
+            }
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
             pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
