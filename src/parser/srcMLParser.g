@@ -1067,6 +1067,57 @@ public:
     }
 
     /*
+      template_prefix_scan
+
+      For the C++ statements that may be in a template, the token from the token buffer, without parsing, after any
+      template parameter lists starting at LA(1), e.g., "struct" in "template <class T> struct A {", which is LA(1) when
+      there are none, or 0 if a list does not end before the end of the statement.
+    */
+    int template_prefix_scan() {
+
+        unsigned int i = 1;
+        while (LA(i) == TEMPLATE && LA(scan_skip(i + 1)) == TEMPOPS) {
+
+            int depth = 0;
+            int parens = 0;
+            i = scan_skip(i + 1);
+            do {
+                switch (LA(i)) {
+                case TEMPOPS:
+                    if (parens == 0)
+                        ++depth;
+                    break;
+
+                case TEMPOPE:
+                    if (parens == 0)
+                        --depth;
+                    break;
+
+                case LPAREN:
+                    ++parens;
+                    break;
+
+                case RPAREN:
+                    --parens;
+                    break;
+
+                case TERMINATE:
+                case LCURLY:
+                case RCURLY:
+                case 1 /* EOF */:
+                    return 0;
+
+                default:
+                    break;
+                }
+                i = scan_skip(i + 1);
+            } while (depth > 0);
+        }
+
+        return LA(i);
+    }
+
+    /*
       call_other_scan
 
       For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
@@ -1119,6 +1170,9 @@ public:
     int declaration_general_type_count = 0;
     int declaration_general_type_parts = 0;
     int declaration_general_specifiers = 0;
+
+    // the kind of C++ class, struct, or union definition or declaration found by the syntactic predicate
+    STMT_TYPE cxx_class_type = NONE;
 
     /*
       declaration_general_name_scan
@@ -3436,7 +3490,146 @@ pattern_statements[] { ENTRY_DEBUG } :
         (declaration_index_attribute_start[false])=>
         variable_declaration_statement[declaration_general_type_count] |
 
+        // a C++ access specifier region, e.g., "public:" or "public slots:"
+        (cxx_access_region_start)=>
+        access_specifier_region |
+
+        // a C++ class, struct, or union definition or declaration, e.g., "template <class T> struct A : B {" or
+        // "class A;", or a using declaration or directive, e.g., "using namespace std;" or
+        // "template <class T> using A = B<T>;"
+        (cxx_class_start)=>
+        cxx_class_statement |
+
         pattern_check_statements
+;
+
+/*
+  cxx_access_region_start
+
+  The start of a C++ access specifier region, e.g., "public:", "public slots:", or "signals:".
+*/
+cxx_access_region_start[] {
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_CXX) }?
+        (
+            (PUBLIC | PRIVATE | PROTECTED)
+            (NAME | VOID)* |
+
+            SIGNAL
+        )
+
+        COLON
+;
+
+/*
+  cxx_class_start
+
+  The start of a C++ class, struct, or union definition or declaration, which may be in a template, e.g.,
+  "template <class T> struct A : B {", "struct {", or "class A;", or of a using declaration or directive, e.g.,
+  "using namespace std;" or "template <class T> using A = B<T>;". The kind found is in cxx_class_type.
+*/
+cxx_class_start[] {
+        // the class, struct, union, or using, after any template parameter lists
+        int after_template = inLanguage(LANGUAGE_CXX) ? template_prefix_scan() : 0;
+
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_CXX)
+            && (
+                after_template == CXX_CLASS
+                || after_template == STRUCT
+                || after_template == UNION
+                || after_template == USING
+            )
+        }?
+        (template_declaration_full)*
+
+        (
+            USING
+            set_type[cxx_class_type, USING_STMT] |
+
+            (
+                CXX_CLASS
+                set_type[cxx_class_type, CLASS_DECL] |
+
+                STRUCT
+                set_type[cxx_class_type, STRUCT_DECL] |
+
+                UNION
+                set_type[cxx_class_type, UNION_DECL]
+            )
+
+            cxx_class_start_rest
+        )
+;
+
+/*
+  cxx_class_start_rest
+
+  For cxx_class_start, the rest of a class, struct, or union definition or declaration after the keyword, which is a
+  definition when it has a block, and otherwise must end.
+*/
+cxx_class_start_rest[] { bool lcurly = false; bool definition = false; ENTRY_DEBUG } :
+        // the name, an attribute, or a block, not an operator or punctuation, e.g., "struct A::B *p" is not a class
+        { !keyword_name_token_set.member(LA(1)) || (LA(1) == LBRACKET && next_token() == LBRACKET) }?
+
+        set_bool[lcurly, LA(1) == LCURLY]
+
+        (options { greedy = true; } :
+            { next_token() == LBRACKET }?
+            attribute_cpp
+        )*
+
+        (DOTDOTDOT)*
+
+        class_post
+        (class_header | LCURLY)
+
+        // a definition has a block, and a declaration ends
+        set_bool[definition, LA(1) == LCURLY || lcurly]
+        { definition || LA(1) == TERMINATE || LA(1) == COMMA }?
+
+        set_type[cxx_class_type, CLASS_DEFN, definition && cxx_class_type == CLASS_DECL]
+        set_type[cxx_class_type, STRUCT_DEFN, definition && cxx_class_type == STRUCT_DECL]
+        set_type[cxx_class_type, UNION_DEFN, definition && cxx_class_type == UNION_DECL]
+;
+
+/*
+  cxx_class_statement
+
+  A C++ class, struct, or union definition or declaration, or a using declaration or directive, of the kind found by
+  cxx_class_start.
+*/
+cxx_class_statement[] { ENTRY_DEBUG } :
+        { cxx_class_type == CLASS_DEFN }?
+        class_definition |
+
+        { cxx_class_type == CLASS_DECL }?
+        class_declaration |
+
+        { cxx_class_type == STRUCT_DEFN }?
+        struct_union_definition[SSTRUCT] |
+
+        { cxx_class_type == STRUCT_DECL }?
+        struct_declaration |
+
+        { cxx_class_type == UNION_DEFN }?
+        struct_union_definition[SUNION] |
+
+        { cxx_class_type == UNION_DECL }?
+        union_declaration |
+
+        using_namespace_statement
 ;
 
 /*
