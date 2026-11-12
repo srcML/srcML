@@ -1067,44 +1067,58 @@ public:
     }
 
     /*
+      cxx_function_pointer_scan
+
+      For cxx_statement_kind_of, whether the "(" at LA(1) starts the name of a function pointer, e.g., "(*f)(int)".
+    */
+    bool cxx_function_pointer_scan() {
+
+        bool function_pointer = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            function_pointer_name_grammar_impl();
+            if (!failed)
+                eat_optional_macro_call_impl();
+            function_pointer = !failed && LA(1) == LPAREN;
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        return function_pointer;
+    }
+
+    /*
       cxx_function_guess
 
-      For cxx_statement_kind_of, the token that ends a function header starting with the "(" at LA(1), i.e., a
-      parameter list and a function tail, 0 if it is not one, or -1 if it is the name of a function pointer, e.g.,
-      "(*f)(int)". The token where the header ends or fails is in stop.
+      For cxx_statement_kind_of, the token that ends a function header starting at LA(1), i.e., the name of a function
+      pointer, if any, a parameter list, and a function tail, or 0 if it is not one. The token where the header ends or
+      fails is in stop.
     */
-    int cxx_function_guess(int& stop) {
+    int cxx_function_guess(bool function_pointer, int& stop) {
 
         int fla = 0;
         int start = mark();
         inputState->guessing++;
 
-        // the name of a function pointer, then its parameter list
         try {
-            function_pointer_name_grammar_impl();
-            if (!failed)
-                eat_optional_macro_call_impl();
-            if (!failed && LA(1) == LPAREN)
-                fla = -1;
-        } catch (...) {}
-        failed = false;
-        rewind(start);
-
-        // a parameter list and a function tail
-        if (fla == 0) {
-            start = mark();
-            try {
+            if (function_pointer)
+                function_pointer_name_grammar_impl();
+            if (!failed) {
                 int end = 0;
                 function_rest_impl(end);
                 if (!failed)
                     fla = end;
-            } catch (...) {}
-            failed = false;
-            stop = LA(1);
-            rewind(start);
-        }
+            }
+        } catch (...) {}
+        failed = false;
+        stop = LA(1);
 
         inputState->guessing--;
+        rewind(start);
 
         return fla;
     }
@@ -1169,9 +1183,9 @@ public:
       pattern_check(): the name of a function pointer, a macro before a class, and when the statement ends on its own
       at a template or contextual keyword.
     */
-    bool cxx_statement_kind_of(STMT_TYPE found, int parts, int specifiers, int attributes, int first, int secondtoken,
-                               bool isoperator, bool ismain, bool modifieroperator, bool sawtemplate, bool sawcontextual,
-                               bool sawdcolon) {
+    bool cxx_statement_kind_of(STMT_TYPE found, bool ended, int parts, int specifiers, int attributes, int first,
+                               int secondtoken, bool isoperator, bool ismain, bool modifieroperator, bool sawtemplate,
+                               bool sawcontextual, bool sawdcolon) {
 
         // found by a part, e.g., a class definition
         if (found != NONE) {
@@ -1182,8 +1196,9 @@ public:
             return true;
         }
 
-        // the name is not part of the type, except in a using declaration
-        int type_count = inMode(MODE_USING) ? parts : parts - 1;
+        // the name is not part of the type, except in a using declaration, and all parts count when the statement
+        // ends at a part
+        int type_count = inMode(MODE_USING) || ended ? parts : parts - 1;
         if (type_count < 1)
             type_count = 0;
 
@@ -1200,8 +1215,9 @@ public:
 
         bool destructor = isdestructor;
 
-        // a destructor name after a type or an operator, e.g., "a * ~b", is not a declaration
-        if (!(destructor && (modifieroperator || nonattributes >= 1))) {
+        // a destructor name after a type or an operator, e.g., "a * ~b", is not a declaration, and there is no
+        // declaration when the statement ends at a part, or there are no parts
+        if (!ended && parts > 0 && !(destructor && (modifieroperator || nonattributes >= 1))) {
 
             if (
                 types > 0
@@ -1234,13 +1250,16 @@ public:
                     || (namestack[0] != "" && namestack[0] == namestack[1])
                 );
 
-            if (LA(1) == LPAREN && (nonattributes > 0 || isoperator || ismain || destructor || constructor)) {
+            // the name of a function pointer, e.g., "(*f)(int)", is part of the type
+            bool function_pointer = LA(1) == LPAREN && cxx_function_pointer_scan();
+            if (function_pointer) {
+                ++type_count;
+                constructor = false;
+            }
 
-                fla = cxx_function_guess(stop);
+            if (function_pointer || (LA(1) == LPAREN && (nonattributes > 0 || isoperator || ismain || destructor || constructor))) {
 
-                // the name of a function pointer
-                if (fla == -1)
-                    return false;
+                fla = cxx_function_guess(function_pointer, stop);
 
                 // in a function body, a function declaration is a variable, e.g., "T t();"
                 if (fla != 0 && !(inTransparentMode(MODE_FUNCTION_BODY) && kind == VARIABLE && fla == TERMINATE)) {
@@ -1252,31 +1271,17 @@ public:
                     else
                         kind = isoperator ? OPERATOR_FUNCTION : FUNCTION;
                 }
-            } else if (LA(1) == LPAREN) {
-
-                // the name of a function pointer
-                int place = mark();
-                inputState->guessing++;
-                bool function_pointer = false;
-                try {
-                    function_pointer_name_grammar_impl();
-                    if (!failed)
-                        eat_optional_macro_call_impl();
-                    function_pointer = !failed && LA(1) == LPAREN;
-                } catch (...) {}
-                failed = false;
-                inputState->guessing--;
-                rewind(place);
-
-                if (function_pointer)
-                    return false;
             }
+        } else if (!ended && parts == 0 && LA(1) == LPAREN) {
+
+            // a constructor with no parts depends on the names of an earlier statement
+            return false;
         }
 
         if (kind == VARIABLE && inTransparentMode(MODE_CONDITION) && stop != EQUAL)
             kind = NONE;
 
-        // ends on its own at a template or contextual keyword
+        // a template or contextual keyword in the type is a variable, e.g., "mutable a b;"
         if (
             kind == NONE
             && (sawtemplate || (sawcontextual && type_count > 0))
@@ -1289,7 +1294,7 @@ public:
                 || stop == RECORD
             )
         )
-            return false;
+            kind = VARIABLE;
 
         if (kind == NONE && type_count == 0 && keyword_token_set.member(stop))
             kind = SINGLE_MACRO;
@@ -3794,8 +3799,9 @@ cxx_statement_start[] {
         bool sawcontextual = false;
         bool sawdcolon = false;
 
-        // the kind found by a part, e.g., a class definition
+        // the kind found by a part, e.g., a class definition, or a part that ends the statement
         STMT_TYPE found = NONE;
+        bool ended = false;
 
         // a new statement, so no "?" or destructor seen yet
         is_qmark = false;
@@ -3809,7 +3815,7 @@ cxx_statement_start[] {
         }?
         (options { greedy = true; } :
             // an attribute, e.g., "[[nodiscard]]", but not "[" that starts other than the type
-            { found == NONE && (parts == 0 || LA(1) != LBRACKET || next_token() == LBRACKET) }?
+            { found == NONE && !ended && (parts == 0 || LA(1) != LBRACKET || next_token() == LBRACKET) }?
             set_bool[isoperator, isoperator || LA(1) == OPERATOR]
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
@@ -3951,23 +3957,26 @@ cxx_statement_start[] {
                 )
                 set_bool[foundpure] |
 
-                // type parts that only occur after other type parts, but not "...", e.g., "T... t"
+                // type parts that only occur after other type parts, but not "...", e.g., "T... t", which end the
+                // statement when they are first, e.g., "auto& r = s;"
                 { LA(1) != DOTDOTDOT }?
                 non_lead_type_identifier
-                throw_exception[!foundpure]
+                set_bool[ended, !foundpure]
             )
 
-            set_int[parts, parts + 1]
+            set_int[parts, ended ? parts : parts + 1]
 
             // the token after the first part
-            set_int[secondtoken, LA(1), parts == 1]
+            set_int[secondtoken, LA(1), parts == 1 && !ended]
         )*
 
-        // at least one part, and not stopped by a part only for other languages, e.g., "default" in Java
+        // not stopped by a part only for other languages, e.g., "default" in Java, and nothing first that is only
+        // Objective-C
         {
             found != NONE
+            || ended
             || (
-                parts > 0
+                (parts > 0 || (LA(1) != CSPEC && LA(1) != MSPEC))
                 && LA(1) != DEFAULT
                 && LA(1) != BAR
                 && LA(1) != EVENT
@@ -3980,6 +3989,7 @@ cxx_statement_start[] {
         {
             cxx_statement_kind_of(
                 found,
+                ended,
                 parts,
                 specifiers,
                 attributes,
