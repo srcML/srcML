@@ -3901,8 +3901,10 @@ call_statement_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ACCESS_REGION)
+            && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
