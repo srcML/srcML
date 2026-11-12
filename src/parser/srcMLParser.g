@@ -1128,13 +1128,13 @@ public:
 
       For cxx_statement_start, after the keyword of a class, struct, union, or enum, a definition when a block follows
       the head, a declaration when the head ends or does not parse, and otherwise NONE, i.e., the type of a declaration,
-      e.g., "struct A *p;". The declaration kind is the argument.
+      e.g., "struct A *p;", where the head is matched, with the number of "..." in packs. The declaration kind is the
+      argument.
     */
-    STMT_TYPE cxx_type_head_kind(STMT_TYPE declaration) {
+    STMT_TYPE cxx_type_head_kind(STMT_TYPE declaration, int& packs) {
 
         STMT_TYPE kind = declaration;
         bool lcurly = LA(1) == LCURLY;
-        int packs = 0;
 
         int start = mark();
         inputState->guessing++;
@@ -1170,7 +1170,84 @@ public:
         inputState->guessing--;
         rewind(start);
 
+        // the type of a declaration continues after its head
+        packs = 0;
+        if (kind == NONE)
+            cxx_type_head_rest_impl(declaration == ENUM_DECL, packs);
+
         return kind;
+    }
+
+    /*
+      cxx_class_after_parts
+
+      For cxx_statement_start, whether LA(1) is a class, struct, or union that is not a part of the type, i.e., after
+      other parts (the argument is false), and "class" is not a name, which a keyword before "(", "=", ";", etc. is.
+    */
+    bool cxx_class_after_parts(bool only_specifiers) {
+
+        if (LA(1) == CXX_CLASS)
+            return !only_specifiers && !keyword_name_token_set.member(next_token());
+
+        if (LA(1) == STRUCT || LA(1) == UNION)
+            return !only_specifiers;
+
+        return false;
+    }
+
+    /*
+      cxx_template_part
+
+      For cxx_statement_start, which only guesses, matches a template parameter list, e.g., "template <class T>", or if
+      it does not parse, false with the token where it fails in stop.
+    */
+    bool cxx_template_part(int& stop) {
+
+        bool matched = false;
+        int start = mark();
+
+        try {
+            template_declaration_full_impl();
+            matched = !failed;
+        } catch (...) {}
+        failed = false;
+        stop = LA(1);
+
+        // keep the position after the list by rewinding to it, which releases both marks
+        if (matched) {
+            int here = mark();
+            rewind(here);
+            rewind(here);
+        } else {
+            rewind(start);
+        }
+
+        return matched;
+    }
+
+    /*
+      cxx_statement_guess
+
+      For cxx_statement_kind_of, whether cxx_statement_start matches at LA(1), with its kind, the number of parts of
+      its type, and the token after its first part in cxx_statement_kind, cxx_statement_type_count, and
+      cxx_statement_secondtoken.
+    */
+    bool cxx_statement_guess() {
+
+        bool matched = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            cxx_statement_start_impl();
+            matched = !failed;
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        return matched;
     }
 
     /*
@@ -1183,9 +1260,9 @@ public:
       pattern_check(): the name of a function pointer, a macro before a class, and when the statement ends on its own
       at a template or contextual keyword.
     */
-    bool cxx_statement_kind_of(STMT_TYPE found, bool ended, int parts, int specifiers, int attributes, int first,
-                               int secondtoken, bool isoperator, bool ismain, bool modifieroperator, bool sawtemplate,
-                               bool sawcontextual, bool sawdcolon) {
+    bool cxx_statement_kind_of(STMT_TYPE found, bool ended, int endstop, int parts, int pack_position, int specifiers,
+                               int attributes, int first, int secondtoken, bool isoperator, bool ismain,
+                               bool modifieroperator, bool sawtemplate, bool sawcontextual, bool sawdcolon) {
 
         // found by a part, e.g., a class definition
         if (found != NONE) {
@@ -1196,11 +1273,18 @@ public:
             return true;
         }
 
-        // the name is not part of the type, except in a using declaration, and all parts count when the statement
-        // ends at a part
-        int type_count = inMode(MODE_USING) || ended ? parts : parts - 1;
-        if (type_count < 1)
-            type_count = 0;
+        // all parts count when the statement ends at a part, and otherwise the name is not part of the type, except in
+        // a using declaration or after "...", e.g., "Args... args"
+        int type_count = parts;
+        if (!ended) {
+            if (inMode(MODE_USING))
+                ++type_count;
+
+            if (type_count > 1 && pack_position >= 0 && pack_position == type_count - 1)
+                ++type_count;
+
+            type_count = type_count > 1 ? type_count - 1 : 0;
+        }
 
         // the parts of the type that are not specifiers or template parameter lists, and also not attributes
         int types = type_count - specifiers;
@@ -1211,7 +1295,7 @@ public:
         int fla = 0;
 
         // where the statement ends when it is not a function
-        int stop = LA(1);
+        int stop = endstop ? endstop : LA(1);
 
         bool destructor = isdestructor;
 
@@ -1299,13 +1383,36 @@ public:
         if (kind == NONE && type_count == 0 && keyword_token_set.member(stop))
             kind = SINGLE_MACRO;
 
-        // a macro before a class
+        // a name before a class, struct, or union is a macro, e.g., "M struct A {", unless what starts at the class is
+        // something else, which then has the name as part of its type, e.g., "M struct A *f();"
         else if (
             kind == NONE
             && type_count == 1
             && (stop == CLASS || stop == CXX_CLASS || stop == STRUCT || stop == UNION)
-        )
-            return false;
+        ) {
+            // the statement that starts at the class, only when the parts end there
+            if (LA(1) != stop || !cxx_statement_guess())
+                return false;
+
+            kind = cxx_statement_kind;
+            type_count = cxx_statement_type_count + 1;
+            secondtoken = cxx_statement_secondtoken;
+
+            if (
+                kind == CLASS_DECL
+                || kind == CLASS_DEFN
+                || kind == UNION_DECL
+                || kind == UNION_DEFN
+                || kind == STRUCT_DECL
+                || kind == STRUCT_DEFN
+                || kind == ENUM_DECL
+                || kind == ENUM_DEFN
+                || kind == NONE
+            ) {
+                kind = SINGLE_MACRO;
+                type_count = 1;
+            }
+        }
 
         else if (kind == CONSTRUCTOR && fla == TERMINATE)
             kind = CONSTRUCTOR_DECL;
@@ -3618,7 +3725,22 @@ cxx_pattern_statements[] { ENTRY_DEBUG } :
         (cxx_statement_start)=>
         pattern_statement_kind[cxx_statement_kind, cxx_statement_type_count, cxx_statement_secondtoken] |
 
+        // a template parameter list before a declaration that does not parse, e.g., a type with "sizeof...(T)" in a
+        // template argument
+        (cxx_template_start)=>
+        template_declaration |
+
         pattern_statements_simple
+;
+
+/*
+  cxx_template_start
+
+  The start of a C++ template declaration, i.e., a template parameter list.
+*/
+cxx_template_start[] { ENTRY_DEBUG } :
+        { LA(1) == TEMPLATE }?
+        template_declaration_full
 ;
 
 /*
@@ -3788,7 +3910,13 @@ cxx_statement_start[] {
         int attributes = 0;
         int secondtoken = 0;
         int first = LA(1);
+
+        // the number of "..." after a class, struct, union, or enum type, and the part that is "...", if any
         int packs = 0;
+        int pack_position = -1;
+
+        // where a part that does not parse ends the statement, if not at LA(1)
+        int endstop = 0;
 
         // a part that can lead a type was found, so "*" can follow
         bool foundpure = false;
@@ -3814,11 +3942,19 @@ cxx_statement_start[] {
             && !(LA(1) == NAME && next_token() == TEMPLATE)
         }?
         (options { greedy = true; } :
-            // an attribute, e.g., "[[nodiscard]]", but not "[" that starts other than the type
-            { found == NONE && !ended && (parts == 0 || LA(1) != LBRACKET || next_token() == LBRACKET) }?
+            // an attribute, e.g., "[[nodiscard]]", but not "[" that starts other than the type, and not a class,
+            // struct, or union after other parts, e.g., "struct" in "M struct A {", or the end of the input
+            {
+                found == NONE
+                && !ended
+                && LA(1) != 1 /* EOF */
+                && (LA(1) != LBRACKET || next_token() == LBRACKET)
+                && !cxx_class_after_parts(parts == specifiers + attributes)
+            }?
             set_bool[isoperator, isoperator || LA(1) == OPERATOR]
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
+            set_int[pack_position, LA(1) == DOTDOTDOT ? parts : pack_position]
 
             // the first part that matches is taken, so a word that may be a name, e.g., "final", is a name
             (options { generateAmbigWarnings = false; } :
@@ -3860,9 +3996,10 @@ cxx_statement_start[] {
                     && look_past_two(NAME, VOID) == COLON
                 ] |
 
+                // a template parameter list, which ends the statement where it does not parse, e.g., a macro in it
                 { LA(1) == TEMPLATE }?
-                template_declaration_full
-                set_int[specifiers, specifiers + 1] |
+                set_bool[ended, !cxx_template_part(endstop)]
+                set_int[specifiers, ended ? specifiers : specifiers + 1] |
 
                 { next_token() == LBRACKET }?
                 LBRACKET
@@ -3882,19 +4019,14 @@ cxx_statement_start[] {
                 }?
                 (
                     CXX_CLASS
-                    set_type[found, cxx_type_head_kind(CLASS_DECL)] |
+                    set_type[found, cxx_type_head_kind(CLASS_DECL, packs)] |
 
                     STRUCT
-                    set_type[found, cxx_type_head_kind(STRUCT_DECL)] |
+                    set_type[found, cxx_type_head_kind(STRUCT_DECL, packs)] |
 
                     UNION
-                    set_type[found, cxx_type_head_kind(UNION_DECL)]
+                    set_type[found, cxx_type_head_kind(UNION_DECL, packs)]
                 )
-
-                (options { greedy = true; } :
-                    { found == NONE }?
-                    cxx_type_head_rest[false, packs]
-                )?
 
                 set_bool[foundpure]
 
@@ -3904,12 +4036,7 @@ cxx_statement_start[] {
                 // an enum, which is a definition or a declaration, or is a type, e.g., "enum E e;"
                 { parts == specifiers + attributes }?
                 ENUM
-                set_type[found, cxx_type_head_kind(ENUM_DECL)]
-
-                (options { greedy = true; } :
-                    { found == NONE }?
-                    cxx_type_head_rest[true, packs]
-                )?
+                set_type[found, cxx_type_head_kind(ENUM_DECL, packs)]
 
                 set_bool[foundpure]
 
@@ -3957,9 +4084,8 @@ cxx_statement_start[] {
                 )
                 set_bool[foundpure] |
 
-                // type parts that only occur after other type parts, but not "...", e.g., "T... t", which end the
-                // statement when they are first, e.g., "auto& r = s;"
-                { LA(1) != DOTDOTDOT }?
+                // type parts that only occur after other type parts, e.g., "*" or "...", which end the statement when
+                // they are first, e.g., "auto& r = s;"
                 non_lead_type_identifier
                 set_bool[ended, !foundpure]
             )
@@ -3970,15 +4096,25 @@ cxx_statement_start[] {
             set_int[secondtoken, LA(1), parts == 1 && !ended]
         )*
 
-        // not stopped by a part only for other languages, e.g., "default" in Java, and nothing first that is only
+        // a class, struct, or union after other parts, or a part for other languages, e.g., "default" in Java or "|",
+        // ends the statement there
+        set_int[secondtoken, LA(1), found == NONE && !ended && LA(1) == DEFAULT]
+        set_bool[
+            ended,
+            ended
+            || (
+                found == NONE
+                && (LA(1) == DEFAULT || LA(1) == BAR || cxx_class_after_parts(parts == specifiers + attributes))
+            )
+        ]
+
+        // not stopped by a part only for other languages, e.g., "interface", and nothing first that is only
         // Objective-C
         {
             found != NONE
             || ended
             || (
                 (parts > 0 || (LA(1) != CSPEC && LA(1) != MSPEC))
-                && LA(1) != DEFAULT
-                && LA(1) != BAR
                 && LA(1) != EVENT
                 && LA(1) != INTERFACE
                 && LA(1) != ATREQUIRED
@@ -3990,7 +4126,9 @@ cxx_statement_start[] {
             cxx_statement_kind_of(
                 found,
                 ended,
+                endstop,
                 parts,
+                pack_position,
                 specifiers,
                 attributes,
                 first,
@@ -6043,11 +6181,15 @@ pattern_check_statements[] {
         int after_token = 0;
         STMT_TYPE stmt_type = NONE;
 
-        // detect the declaration/definition type for non-declarative languages, except for C, which is checked by the
-        // statement rules before this
-        if (!inLanguage(LANGUAGE_PYTHON) && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
+        // detect the declaration/definition type for non-declarative languages, except for C and C++, which are
+        // checked by the statement rules before this
+        if (
+            !inLanguage(LANGUAGE_PYTHON)
+            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            && !inLanguage(LANGUAGE_CXX)
+        )
             pattern_check(stmt_type, secondtoken, type_count, after_token);
-        else if (inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+        else if ((inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) || inLanguage(LANGUAGE_CXX))
             secondtoken = next_token();
 
         ENTRY_DEBUG
