@@ -3572,7 +3572,7 @@ type_declaration_simple[] {
 */
 enum_constant_simple_check[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_ENUM)
             && inMode(MODE_LIST)
             && LA(1) == NAME
