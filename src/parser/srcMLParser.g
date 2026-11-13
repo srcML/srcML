@@ -9675,7 +9675,7 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             // explicitly check for a variable declaration since it can easily be confused with an expression, except
             // for C, which is checked above
             {
-                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                !inLanguage(LANGUAGE_C)
                 && declaration_check(stmt_type, secondtoken, type_count, after_token)
                 && stmt_type == VARIABLE
             }?
@@ -9709,7 +9709,6 @@ control_initialization_range_check[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !initialization_expression_scan()
         }?
         declaration_general_part
@@ -20439,7 +20438,7 @@ declaration_index_attribute_start[bool index_union] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && !initialization_expression_scan() }?
+        { inLanguage(LANGUAGE_C) && !initialization_expression_scan() }?
 
         // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
         (options { greedy = true; } :
