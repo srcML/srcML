@@ -1512,6 +1512,300 @@ public:
     }
 
     /*
+      java_function_guess
+
+      For java_statement_kind_of, the token that ends a function header starting at LA(1), i.e., a parameter list and a
+      function tail, or 0 if it is not one. The token where the header ends or fails is in stop.
+    */
+    int java_function_guess(bool inparam, int& stop) {
+
+        int fla = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            int end = 0;
+            function_rest_impl(end, inparam);
+            if (!failed)
+                fla = end;
+        } catch (...) {}
+        failed = false;
+        stop = LA(1);
+
+        inputState->guessing--;
+        rewind(start);
+
+        return fla;
+    }
+
+    /*
+      java_type_head_kind
+
+      For java_statement_start, after the keyword of a class, record, interface, annotation, or enum, a definition when
+      a block follows the head, a declaration when the head ends or does not parse, and otherwise NONE, i.e., the type
+      of a declaration, where the head is matched. The declaration kind is the argument, and a record is only a
+      definition.
+    */
+    STMT_TYPE java_type_head_kind(STMT_TYPE declaration, bool is_enum, bool is_record) {
+
+        STMT_TYPE kind = declaration;
+        bool lcurly = LA(1) == LCURLY;
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            java_type_head_rest_impl(is_enum);
+            if (!failed) {
+                if (LA(1) == LCURLY || lcurly) {
+                    switch (declaration) {
+                    case CLASS_DECL:
+                        kind = CLASS_DEFN;
+                        break;
+
+                    case INTERFACE_DECL:
+                        kind = INTERFACE_DEFN;
+                        break;
+
+                    case ENUM_DECL:
+                        kind = ENUM_DEFN;
+                        break;
+
+                    default:
+                        break;
+                    }
+                } else if ((LA(1) != TERMINATE && LA(1) != COMMA) || is_record) {
+                    kind = NONE;
+                }
+            }
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        // the type of a declaration continues after its head
+        if (kind == NONE)
+            java_type_head_rest_impl(is_enum);
+
+        return kind;
+    }
+
+    /*
+      java_statement_guess
+
+      Whether java_statement_start matches at LA(1), with its kind, the number of parts of its type, the token after
+      its first part, and the token where it ends in java_statement_kind, java_statement_type_count,
+      java_statement_secondtoken, and java_statement_after_token. When a part does not parse, the statement ends there,
+      with the parts before it.
+    */
+    bool java_statement_guess(bool inparam) {
+
+        int first = LA(1);
+        bool matched = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            java_statement_start_impl(inparam);
+            matched = !failed;
+        } catch (...) {}
+        failed = false;
+
+        if (!matched)
+            java_statement_kind_of(NONE, true, java_statement_parts, java_statement_specifiers,
+                                   java_statement_attributes, first, java_statement_secondtoken, false, false,
+                                   java_statement_sawcontextual, inparam);
+
+        inputState->guessing--;
+        rewind(start);
+
+        return matched;
+    }
+
+    /*
+      java_statement_kind_of
+
+      For java_statement_start, after the parts, the kind of Java statement, the number of parts of its type, the token
+      after its first part, and the token where it ends, in java_statement_kind, java_statement_type_count,
+      java_statement_secondtoken, and java_statement_after_token. A "(" after the name is a function when a parameter
+      list and a function tail follow. A name with only specifiers and annotations before it is a constructor in the
+      block of a class, or with a specifier. When the statement ends at a part, all parts count.
+    */
+    bool java_statement_kind_of(STMT_TYPE found, bool ended, int parts, int specifiers, int attributes, int first,
+                                int secondtoken, bool endbracket, bool modifieroperator, bool sawcontextual,
+                                bool inparam) {
+
+        STMT_TYPE kind = found;
+        int type_count = parts;
+        int fla = 0;
+
+        // where the statement ends when it is not a function
+        int stop = LA(1);
+
+        if (found == NONE && !ended) {
+
+            // a "[]" after the name is not part of the type, and the name is not part of the type
+            if (endbracket)
+                --type_count;
+
+            type_count = type_count > 1 ? type_count - 1 : 0;
+
+            // the parts of the type that are not specifiers, and also not annotations
+            int types = type_count - specifiers;
+            int nonattributes = types - attributes;
+
+            bool destructor = isdestructor;
+
+            // a destructor name after a type or an operator is not a declaration
+            if (!(destructor && (modifieroperator || nonattributes >= 1))) {
+
+                if (
+                    types > 0
+                    && LA(1) != OPERATORS
+                    && LA(1) != CSPEC
+                    && LA(1) != MSPEC
+                    && (
+                        LA(1) == 1 /* EOF */
+                        || LA(1) == TERMINATE
+                        || LA(1) == COMMA
+                        || LA(1) == BAR
+                        || LA(1) == LBRACKET
+                        || (LA(1) == LPAREN && next_token() != RPAREN)
+                        || LA(1) == LCURLY
+                        || LA(1) == EQUAL
+                        || (LA(1) == COLON && inTransparentMode(MODE_CONTROL_CONDITION))
+                    )
+                )
+                    kind = VARIABLE;
+
+                // in a parameter, the type alone, e.g., "int" in "f(int)"
+                if (
+                    inparam
+                    && (
+                        LA(1) == RPAREN
+                        || LA(1) == COMMA
+                        || LA(1) == BAR
+                        || LA(1) == LBRACKET
+                        || LA(1) == EQUAL
+                    )
+                )
+                    kind = VARIABLE;
+
+                bool constructor = !destructor
+                    && type_count == specifiers + attributes
+                    && (inPrevMode(MODE_CLASS) || specifiers > 0);
+
+                if (LA(1) == LPAREN && (nonattributes > 0 || destructor || constructor)) {
+
+                    fla = java_function_guess(inparam, stop);
+
+                    // in a function body, a function declaration is a variable, and in an enum, a name with arguments
+                    // is an enum constant
+                    if (
+                        fla != 0
+                        && !(inTransparentMode(MODE_FUNCTION_BODY) && kind == VARIABLE && fla == TERMINATE)
+                        && !(inMode(MODE_ENUM) && nonattributes == 0 && (fla == COMMA || fla == TERMINATE))
+                    ) {
+                        if (destructor)
+                            kind = DESTRUCTOR;
+                        else if (constructor)
+                            kind = CONSTRUCTOR;
+                        else
+                            kind = FUNCTION;
+                    }
+                }
+            }
+        }
+
+        if (kind == VARIABLE && type_count == 0)
+            type_count = 1;
+
+        if (kind == VARIABLE && inTransparentMode(MODE_CONDITION) && stop != EQUAL)
+            kind = NONE;
+
+        // a record in the type is a variable
+        if (
+            kind == NONE
+            && sawcontextual
+            && type_count > 0
+            && (
+                !keyword_name_token_set.member(stop)
+                || stop == MULTOPS
+                || stop == REFOPS
+                || stop == TERMINATE
+            )
+        )
+            kind = VARIABLE;
+
+        if (kind == NONE && type_count == 0 && keyword_token_set.member(stop))
+            kind = SINGLE_MACRO;
+
+        // a name before a class is a macro, unless what starts at the class is something else, which then has the name as
+        // part of its type
+        else if (kind == NONE && type_count == 1 && stop == CLASS) {
+
+            if (LA(1) == stop) {
+                java_statement_guess(inparam);
+
+                kind = java_statement_kind;
+                type_count = java_statement_type_count + 1;
+                secondtoken = java_statement_secondtoken;
+
+                if (
+                    kind == CLASS_DECL
+                    || kind == CLASS_DEFN
+                    || kind == ENUM_DECL
+                    || kind == ENUM_DEFN
+                    || kind == NONE
+                ) {
+                    kind = SINGLE_MACRO;
+                    type_count = 1;
+                }
+            }
+        }
+
+        // "~" before a name, which is not a destructor
+        else if (kind == DESTRUCTOR)
+            kind = NULLOPERATOR;
+
+        else if (kind == CONSTRUCTOR && fla == TERMINATE)
+            kind = CONSTRUCTOR_DECL;
+
+        else if (kind == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            kind = FUNCTION_DECL;
+
+        // a macro before a constructor
+        else if (kind == FUNCTION && fla == COLON)
+            kind = SINGLE_MACRO;
+
+        if ((kind == FUNCTION || kind == FUNCTION_DECL) && fla == COMMA && !inparam)
+            kind = VARIABLE;
+
+        if (kind == VARIABLE && type_count == specifiers + attributes)
+            ++type_count;
+
+        // specifiers alone, e.g., "static;"
+        if (
+            !inMode(MODE_FUNCTION_TAIL)
+            && kind == NONE
+            && type_count == 0
+            && enum_preprocessing_token_set.member(first)
+            && stop == TERMINATE
+        ) {
+            kind = VARIABLE;
+            type_count = 1;
+        }
+
+        java_statement_kind = kind;
+        java_statement_type_count = type_count;
+        java_statement_secondtoken = secondtoken;
+        java_statement_after_token = stop;
+
+        return true;
+    }
+
+    /*
       call_other_scan
 
       For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
@@ -1571,6 +1865,19 @@ public:
     int cxx_statement_type_count = 0;
     int cxx_statement_secondtoken = 0;
     int cxx_statement_after_token = 0;
+
+    // the kind of Java statement, the number of parts of its type, the token after its first part, and the token where
+    // it ends, found by the syntactic predicate
+    STMT_TYPE java_statement_kind = NONE;
+    int java_statement_type_count = 0;
+    int java_statement_secondtoken = 0;
+    int java_statement_after_token = 0;
+
+    // the parts of a Java statement before the one being matched, for when that part does not parse
+    int java_statement_parts = 0;
+    int java_statement_specifiers = 0;
+    int java_statement_attributes = 0;
+    bool java_statement_sawcontextual = false;
 
     /*
       declaration_general_name_scan
@@ -3751,7 +4058,24 @@ pattern_statements[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX) }?
         cxx_pattern_statements |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        java_pattern_statements |
+
         pattern_statements_simple
+;
+
+/*
+  java_pattern_statements
+
+  Java statements, declarations, and definitions that must be matched by pattern.
+*/
+java_pattern_statements[] { ENTRY_DEBUG } :
+        // a Java declaration, definition, or other statement that starts with a type or a name, e.g.,
+        // "public static void main(String[] args) {", "List<String> a = b;", "class A extends B {", or "f(x);"
+        (java_statement_matched)=>
+        pattern_statement_kind[java_statement_kind, java_statement_type_count, java_statement_secondtoken] |
+
+        pattern_check_statements
 ;
 
 /*
@@ -4231,6 +4555,193 @@ cxx_type_head_rest[bool is_enum, int& packs] { ENTRY_DEBUG } :
             class_post
             (class_header | LCURLY)
         )
+;
+
+/*
+  java_statement_start
+
+  The start of a Java declaration, definition, or other statement that starts with a type or a name, e.g.,
+  "public static void main(String[] args) {", "List<String> a = b;", "A(int a) {", "class A extends B {",
+  "@interface A {", or "f(x);". The parts are matched as for a declaration of any kind, and the last part is the
+  name. A class, record, interface, annotation, or enum definition or declaration is found by its part. The kind
+  found, the number of parts of its type, and the token after the first part are in java_statement_kind,
+  java_statement_type_count, and java_statement_secondtoken.
+*/
+java_statement_start[bool inparam] {
+        // all parts, including the name, and those that are specifiers or generic argument lists, or annotations
+        int parts = 0;
+        int specifiers = 0;
+        int attributes = 0;
+        int secondtoken = 0;
+        int first = LA(1);
+
+        // a part that can lead a type was found, so "[]" or "..." can follow
+        bool foundpure = false;
+        bool endbracket = false;
+        bool modifieroperator = false;
+        bool sawcontextual = false;
+
+        // the kind found by a part, e.g., a class definition, or a part that ends the statement
+        STMT_TYPE found = NONE;
+        bool ended = false;
+
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_JAVA) }?
+        set_int[java_statement_parts, 0]
+        set_int[java_statement_specifiers, 0]
+        set_int[java_statement_attributes, 0]
+        set_int[java_statement_secondtoken, 0]
+        set_bool[java_statement_sawcontextual, false]
+
+        (options { greedy = true; } :
+            { found == NONE && !ended }?
+            // a "[]" that is the last part is after the name
+            set_bool[endbracket, LA(1) == LBRACKET]
+            set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
+
+            // the first part that matches is taken
+            (options { generateAmbigWarnings = false; } :
+                // specifiers, e.g., "public" or "default"
+                { argument_token_set.member(LA(1)) }?
+                set_int[secondtoken, LA(1)]
+                set_int[java_statement_secondtoken, secondtoken]
+                set_bool[foundpure, foundpure || LA(1) == CONST]
+
+                (options { generateAmbigWarnings = false; } :
+                    { LA(1) != NEW }?
+                    specifier |
+
+                    default_specifier
+                )
+
+                set_int[specifiers, specifiers + 1] |
+
+                // a class, record, interface, or annotation, which is a definition or a declaration, or is a type
+                {
+                    parts == specifiers + attributes
+                    && (LA(1) != ATSIGN || next_token() == INTERFACE)
+                }?
+                (
+                    CLASS
+                    set_type[found, java_type_head_kind(CLASS_DECL, false, false)] |
+
+                    RECORD
+                    set_bool[sawcontextual, true]
+                    set_type[found, java_type_head_kind(CLASS_DECL, false, true)] |
+
+                    INTERFACE
+                    set_type[found, java_type_head_kind(INTERFACE_DECL, false, false)] |
+
+                    ATSIGN
+                    INTERFACE
+                    set_type[found, java_type_head_kind(ANNOTATION_DEFN, false, false)]
+                )
+
+                set_bool[foundpure] |
+
+                // an enum, which is a definition or a declaration, or is a type
+                { parts == specifiers + attributes }?
+                ENUM
+                set_type[found, java_type_head_kind(ENUM_DECL, true, false)]
+
+                set_bool[foundpure] |
+
+                // a generic argument list counts as a specifier
+                generic_argument_list
+                set_int[specifiers, specifiers + 1] |
+
+                annotation
+                set_int[attributes, attributes + 1] |
+
+                compound_name
+                set_bool[foundpure] |
+
+                { keyword_name_token_set.member(next_token()) }?
+                keyword_name |
+
+                // the "|" of the types of a multi-catch parameter
+                { inMode(MODE_PARAMETER) }?
+                bar |
+
+                // type parts that can occur before other type parts, e.g., an enum after other parts
+                { LA(1) != LBRACKET && LA(1) != CLASS }?
+                pure_lead_type_identifier_no_specifiers
+                set_bool[foundpure] |
+
+                // type parts that only occur after other type parts, e.g., "[]" or "...", which end the statement when
+                // they are first
+                non_lead_type_identifier
+                set_bool[ended, !foundpure]
+            )
+
+            // a part that ends the statement, or where the kind is found, is not counted
+            set_int[parts, ended || found != NONE ? parts : parts + 1]
+
+            // the token after the first part
+            set_int[secondtoken, LA(1), parts == 1 && !ended && found == NONE]
+
+            // the parts so far, for where a later part does not parse
+            set_int[java_statement_parts, parts]
+            set_int[java_statement_specifiers, specifiers]
+            set_int[java_statement_attributes, attributes]
+            set_int[java_statement_secondtoken, secondtoken]
+            set_bool[java_statement_sawcontextual, sawcontextual]
+        )*
+
+        {
+            java_statement_kind_of(
+                found,
+                ended,
+                parts,
+                specifiers,
+                attributes,
+                first,
+                secondtoken,
+                endbracket,
+                modifieroperator,
+                sawcontextual,
+                inparam
+            )
+        }?
+;
+
+/*
+  java_statement_matched
+
+  A Java statement matched by java_statement_start that is a type definition or declaration, i.e., of a class, record,
+  interface, annotation, or enum.
+*/
+java_statement_matched[] { ENTRY_DEBUG } :
+        java_statement_start[false]
+
+        {
+            java_statement_kind == CLASS_DECL
+            || java_statement_kind == CLASS_DEFN
+            || java_statement_kind == INTERFACE_DECL
+            || java_statement_kind == INTERFACE_DEFN
+            || java_statement_kind == ANNOTATION_DEFN
+            || java_statement_kind == ENUM_DECL
+            || java_statement_kind == ENUM_DEFN
+        }?
+;
+
+/*
+  java_type_head_rest
+
+  For java_statement_start, the rest of a class, record, interface, annotation, or enum type after its keyword, e.g.,
+  "A extends B" in "class A extends B {".
+*/
+java_type_head_rest[bool is_enum] { ENTRY_DEBUG } :
+        { is_enum }?
+        (class_header | LCURLY) |
+
+        class_post
+        (class_header | LCURLY)
 ;
 
 /*
