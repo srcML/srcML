@@ -5301,8 +5301,8 @@ csharp_statement_start[bool inparam] {
 /*
   csharp_statement_matched
 
-  A C# statement matched by csharp_statement_start that is a type definition or declaration, or a variable
-  declaration.
+  A C# statement matched by csharp_statement_start that is a type definition or declaration, a variable declaration,
+  or a function definition or declaration.
 */
 csharp_statement_matched[] { ENTRY_DEBUG } :
         csharp_statement_start[false]
@@ -5317,6 +5317,10 @@ csharp_statement_matched[] { ENTRY_DEBUG } :
             || csharp_statement_kind == ENUM_DECL
             || csharp_statement_kind == ENUM_DEFN
             || csharp_statement_kind == VARIABLE
+            || csharp_statement_kind == FUNCTION
+            || csharp_statement_kind == FUNCTION_DECL
+            || csharp_statement_kind == OPERATOR_FUNCTION
+            || csharp_statement_kind == OPERATOR_FUNCTION_DECL
         }?
 ;
 
