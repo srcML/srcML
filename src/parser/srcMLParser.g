@@ -2353,13 +2353,14 @@ public:
       c_name_token
 
       Whether the token is a name in C: a name, "main", or a word that is a name in C, e.g., "line" or "define", or
-      "__weak" or "__strong".
+      "__weak" or "__strong", or in Objective-C, "import".
     */
     bool c_name_token(int token) {
 
         switch (token) {
         case NAME:
         case MAIN:
+        case IMPORT:
         case WEAK:
         case STRONG:
         case INCLUDE:
