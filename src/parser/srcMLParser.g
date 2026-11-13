@@ -6695,7 +6695,6 @@ declaration_paren_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
