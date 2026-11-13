@@ -2269,8 +2269,9 @@ public:
         // the token after the name, past what is skipped
         unsigned int i = scan_skip(2);
 
+        // in Objective-C, the name may be before the "in" of a "for", e.g., "for (int p in a)"
         return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA || LA(i) == LCURLY
-            || LA(i) == 1 /* EOF */;
+            || LA(i) == 1 /* EOF */ || (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(i) == IN);
     }
 
     /*
@@ -6087,6 +6088,9 @@ declaration_general_start[] {
 
             (
                 TERMINATE | EQUAL | COMMA |
+
+                { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+                IN |
 
                 // not in a function tail, where "{" starts the body
                 { !inMode(MODE_FUNCTION_TAIL) }?
