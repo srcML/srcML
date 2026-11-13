@@ -12459,7 +12459,7 @@ condition_inner[] {
         STMT_TYPE stmt_type = NONE;
 
         // a C condition is checked for a declaration by condition_declaration_check
-        if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
+        if (!inLanguage(LANGUAGE_C))
             declaration_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
@@ -12493,7 +12493,7 @@ condition_declaration_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_declaration_scan() }?
+        { inLanguage(LANGUAGE_C) && condition_declaration_scan() }?
 
         // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
         (options { greedy = true; } :
