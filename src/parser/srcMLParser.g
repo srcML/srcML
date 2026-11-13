@@ -2387,7 +2387,7 @@ public:
     */
     bool expression_other_scan() {
 
-        if (!inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_OBJECTIVE_C))
+        if (!inLanguage(LANGUAGE_C))
             return false;
 
         switch (LA(1)) {
