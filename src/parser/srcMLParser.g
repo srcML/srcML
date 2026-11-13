@@ -6280,7 +6280,6 @@ extern_block_start[] {
 } :
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
         }?
         EXTERN
 
