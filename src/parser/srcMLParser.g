@@ -1230,8 +1230,9 @@ public:
 
       The kind of declaration starting at LA(1), the token after its first part, the number of parts of its type, and
       the token where it ends, by cxx_statement_start for C++, by java_statement_start for Java, by
-      csharp_statement_start for a C# parameter, and by pattern_check for other languages. For C++, a declaration
-      where a part does not parse is NONE, with the parts before it. In a parameter, the type alone is a declaration.
+      csharp_statement_start for a C# parameter or condition, and by pattern_check for other languages. For C++, a
+      declaration where a part does not parse is NONE, with the parts before it. In a parameter, the type alone is a
+      declaration.
     */
     bool declaration_check(STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false) {
 
@@ -1245,7 +1246,7 @@ public:
             return true;
         }
 
-        if (inLanguage(LANGUAGE_CSHARP) && inparam) {
+        if (inLanguage(LANGUAGE_CSHARP) && (inparam || inMode(MODE_CONDITION))) {
             csharp_statement_guess(inparam);
             type = csharp_statement_kind;
             token = csharp_statement_secondtoken;
