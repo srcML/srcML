@@ -4075,7 +4075,9 @@ java_pattern_statements[] { ENTRY_DEBUG } :
         (java_statement_start[false])=>
         pattern_statement_kind[java_statement_kind, java_statement_type_count, java_statement_secondtoken] |
 
-        pattern_check_statements
+        // a statement where a part of the type does not parse, which ends there, e.g., "a[i] = b;"
+        { !java_statement_guess(false) }?
+        pattern_statement_kind[java_statement_kind, java_statement_type_count, java_statement_secondtoken]
 ;
 
 /*
