@@ -6562,7 +6562,6 @@ type_definition_specifier_check[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
