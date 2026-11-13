@@ -11901,7 +11901,6 @@ statement_part[] {
         // C K&R function parameters, e.g., "int a;" in "int f(a) int a; {"
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && inMode(MODE_FUNCTION_TAIL)
             && kr_parameter_guess()
         }?
@@ -11911,7 +11910,7 @@ statement_part[] {
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
-            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            && !inLanguage(LANGUAGE_C)
             && declaration_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
