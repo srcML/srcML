@@ -4432,7 +4432,7 @@ pattern_statements[] { ENTRY_DEBUG } :
 csharp_pattern_statements[] { ENTRY_DEBUG } :
         // a C# declaration, definition, or other statement that starts with a type or a name, e.g.,
         // "public static void Main(string[] args) {", "List<int> a = b;", "class A : B {", "int P { get; }", or "f(x);"
-        (csharp_statement_matched)=>
+        (csharp_statement_start[false])=>
         pattern_statement_kind[csharp_statement_kind, csharp_statement_type_count, csharp_statement_secondtoken] |
 
         pattern_check_statements
@@ -5295,45 +5295,6 @@ csharp_statement_start[bool inparam] {
                 sawdcolon,
                 inparam
             )
-        }?
-;
-
-/*
-  csharp_statement_matched
-
-  A C# statement matched by csharp_statement_start that is a type definition or declaration, a variable declaration, a
-  function definition or declaration, a constructor or destructor definition or declaration, a property, a property
-  accessor, or an event, a delegate type, a global attribute or a using directive, or a macro.
-*/
-csharp_statement_matched[] { ENTRY_DEBUG } :
-        csharp_statement_start[false]
-
-        {
-            csharp_statement_kind == CLASS_DECL
-            || csharp_statement_kind == CLASS_DEFN
-            || csharp_statement_kind == STRUCT_DECL
-            || csharp_statement_kind == STRUCT_DEFN
-            || csharp_statement_kind == INTERFACE_DECL
-            || csharp_statement_kind == INTERFACE_DEFN
-            || csharp_statement_kind == ENUM_DECL
-            || csharp_statement_kind == ENUM_DEFN
-            || csharp_statement_kind == VARIABLE
-            || csharp_statement_kind == FUNCTION
-            || csharp_statement_kind == FUNCTION_DECL
-            || csharp_statement_kind == OPERATOR_FUNCTION
-            || csharp_statement_kind == OPERATOR_FUNCTION_DECL
-            || csharp_statement_kind == CONSTRUCTOR
-            || csharp_statement_kind == CONSTRUCTOR_DECL
-            || csharp_statement_kind == DESTRUCTOR
-            || csharp_statement_kind == DESTRUCTOR_DECL
-            || csharp_statement_kind == PROPERTY_STMT
-            || csharp_statement_kind == PROPERTY_ACCESSOR
-            || csharp_statement_kind == PROPERTY_ACCESSOR_DECL
-            || csharp_statement_kind == EVENT_STMT
-            || csharp_statement_kind == DELEGATE_TYPE
-            || csharp_statement_kind == GLOBAL_ATTRIBUTE
-            || csharp_statement_kind == USING_STMT
-            || csharp_statement_kind == SINGLE_MACRO
         }?
 ;
 
