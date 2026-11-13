@@ -4713,8 +4713,8 @@ java_statement_start[bool inparam] {
 /*
   java_statement_matched
 
-  A Java statement matched by java_statement_start that is a type definition or declaration, i.e., of a class, record,
-  interface, annotation, or enum.
+  A Java statement matched by java_statement_start that is a type definition or declaration, or a variable
+  declaration.
 */
 java_statement_matched[] { ENTRY_DEBUG } :
         java_statement_start[false]
@@ -4727,6 +4727,7 @@ java_statement_matched[] { ENTRY_DEBUG } :
             || java_statement_kind == ANNOTATION_DEFN
             || java_statement_kind == ENUM_DECL
             || java_statement_kind == ENUM_DEFN
+            || java_statement_kind == VARIABLE
         }?
 ;
 
