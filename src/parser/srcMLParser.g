@@ -7413,7 +7413,6 @@ name_call_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
