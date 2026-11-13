@@ -5302,7 +5302,8 @@ csharp_statement_start[bool inparam] {
   csharp_statement_matched
 
   A C# statement matched by csharp_statement_start that is a type definition or declaration, a variable declaration, a
-  function definition or declaration, or a constructor or destructor definition or declaration.
+  function definition or declaration, a constructor or destructor definition or declaration, or a property, a property
+  accessor, or an event.
 */
 csharp_statement_matched[] { ENTRY_DEBUG } :
         csharp_statement_start[false]
@@ -5325,6 +5326,10 @@ csharp_statement_matched[] { ENTRY_DEBUG } :
             || csharp_statement_kind == CONSTRUCTOR_DECL
             || csharp_statement_kind == DESTRUCTOR
             || csharp_statement_kind == DESTRUCTOR_DECL
+            || csharp_statement_kind == PROPERTY_STMT
+            || csharp_statement_kind == PROPERTY_ACCESSOR
+            || csharp_statement_kind == PROPERTY_ACCESSOR_DECL
+            || csharp_statement_kind == EVENT_STMT
         }?
 ;
 
