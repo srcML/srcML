@@ -4714,7 +4714,7 @@ java_statement_start[bool inparam] {
   java_statement_matched
 
   A Java statement matched by java_statement_start that is a type definition or declaration, a variable declaration, a
-  function definition or declaration, or a constructor definition or declaration.
+  function definition or declaration, a constructor definition or declaration, or a macro.
 */
 java_statement_matched[] { ENTRY_DEBUG } :
         java_statement_start[false]
@@ -4732,6 +4732,7 @@ java_statement_matched[] { ENTRY_DEBUG } :
             || java_statement_kind == FUNCTION_DECL
             || java_statement_kind == CONSTRUCTOR
             || java_statement_kind == CONSTRUCTOR_DECL
+            || java_statement_kind == SINGLE_MACRO
         }?
 ;
 
