@@ -4072,7 +4072,7 @@ pattern_statements[] { ENTRY_DEBUG } :
 java_pattern_statements[] { ENTRY_DEBUG } :
         // a Java declaration, definition, or other statement that starts with a type or a name, e.g.,
         // "public static void main(String[] args) {", "List<String> a = b;", "class A extends B {", or "f(x);"
-        (java_statement_matched)=>
+        (java_statement_start[false])=>
         pattern_statement_kind[java_statement_kind, java_statement_type_count, java_statement_secondtoken] |
 
         pattern_check_statements
@@ -4707,32 +4707,6 @@ java_statement_start[bool inparam] {
                 sawcontextual,
                 inparam
             )
-        }?
-;
-
-/*
-  java_statement_matched
-
-  A Java statement matched by java_statement_start that is a type definition or declaration, a variable declaration, a
-  function definition or declaration, a constructor definition or declaration, or a macro.
-*/
-java_statement_matched[] { ENTRY_DEBUG } :
-        java_statement_start[false]
-
-        {
-            java_statement_kind == CLASS_DECL
-            || java_statement_kind == CLASS_DEFN
-            || java_statement_kind == INTERFACE_DECL
-            || java_statement_kind == INTERFACE_DEFN
-            || java_statement_kind == ANNOTATION_DEFN
-            || java_statement_kind == ENUM_DECL
-            || java_statement_kind == ENUM_DEFN
-            || java_statement_kind == VARIABLE
-            || java_statement_kind == FUNCTION
-            || java_statement_kind == FUNCTION_DECL
-            || java_statement_kind == CONSTRUCTOR
-            || java_statement_kind == CONSTRUCTOR_DECL
-            || java_statement_kind == SINGLE_MACRO
         }?
 ;
 
