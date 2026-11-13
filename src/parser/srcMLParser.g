@@ -5301,8 +5301,8 @@ csharp_statement_start[bool inparam] {
 /*
   csharp_statement_matched
 
-  A C# statement matched by csharp_statement_start that is a type definition or declaration, i.e., of a class, struct,
-  interface, or enum.
+  A C# statement matched by csharp_statement_start that is a type definition or declaration, or a variable
+  declaration.
 */
 csharp_statement_matched[] { ENTRY_DEBUG } :
         csharp_statement_start[false]
@@ -5316,6 +5316,7 @@ csharp_statement_matched[] { ENTRY_DEBUG } :
             || csharp_statement_kind == INTERFACE_DEFN
             || csharp_statement_kind == ENUM_DECL
             || csharp_statement_kind == ENUM_DEFN
+            || csharp_statement_kind == VARIABLE
         }?
 ;
 
