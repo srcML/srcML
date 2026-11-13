@@ -1816,6 +1816,340 @@ public:
     }
 
     /*
+      csharp_function_guess
+
+      For csharp_statement_kind_of, the token that ends a function header starting at LA(1), i.e., a parameter list and
+      a function tail, or 0 if it is not one. The token where the header ends or fails is in stop.
+    */
+    int csharp_function_guess(bool inparam, int& stop) {
+
+        int fla = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            int end = 0;
+            function_rest_impl(end, inparam);
+            if (!failed)
+                fla = end;
+        } catch (...) {}
+        failed = false;
+        stop = LA(1);
+
+        inputState->guessing--;
+        rewind(start);
+
+        return fla;
+    }
+
+    /*
+      csharp_type_head_kind
+
+      For csharp_statement_start, after the keyword of a class, struct, interface, or enum, a definition when a block
+      follows the head, a declaration when the head ends or does not parse, and otherwise NONE, i.e., the type of a
+      declaration, where the head is matched. The declaration kind is the argument.
+    */
+    STMT_TYPE csharp_type_head_kind(STMT_TYPE declaration) {
+
+        STMT_TYPE kind = declaration;
+        bool lcurly = LA(1) == LCURLY;
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            csharp_type_head_rest_impl(declaration == ENUM_DECL);
+            if (!failed) {
+                if (LA(1) == LCURLY || lcurly) {
+                    switch (declaration) {
+                    case CLASS_DECL:
+                        kind = CLASS_DEFN;
+                        break;
+
+                    case STRUCT_DECL:
+                        kind = STRUCT_DEFN;
+                        break;
+
+                    case INTERFACE_DECL:
+                        kind = INTERFACE_DEFN;
+                        break;
+
+                    default:
+                        kind = ENUM_DEFN;
+                        break;
+                    }
+                } else if (LA(1) != TERMINATE && LA(1) != COMMA) {
+                    kind = NONE;
+                }
+            }
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        // the type of a declaration continues after its head
+        if (kind == NONE)
+            csharp_type_head_rest_impl(declaration == ENUM_DECL);
+
+        return kind;
+    }
+
+    /*
+      csharp_statement_guess
+
+      Whether csharp_statement_start matches at LA(1), with its kind, the number of parts of its type, the token after
+      its first part, and the token where it ends in csharp_statement_kind, csharp_statement_type_count,
+      csharp_statement_secondtoken, and csharp_statement_after_token. When a part does not parse, the statement ends
+      there, with the parts before it.
+    */
+    bool csharp_statement_guess(bool inparam) {
+
+        int first = LA(1);
+        bool matched = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            csharp_statement_start_impl(inparam);
+            matched = !failed;
+        } catch (...) {}
+        failed = false;
+
+        if (!matched)
+            csharp_statement_kind_of(NONE, true, csharp_statement_parts, csharp_statement_specifiers,
+                                     csharp_statement_attributes, first, csharp_statement_secondtoken, 0,
+                                     csharp_statement_accessor, false, false, false, false, false, inparam);
+
+        inputState->guessing--;
+        rewind(start);
+
+        return matched;
+    }
+
+    /*
+      csharp_statement_kind_of
+
+      For csharp_statement_start, after the parts, the kind of C# statement, the number of parts of its type, the token
+      after its first part, and the token where it ends, in csharp_statement_kind, csharp_statement_type_count,
+      csharp_statement_secondtoken, and csharp_statement_after_token. A property accessor, an event, and a property are
+      found after the parts. A "(" after the name is a function when a parameter list and a function tail follow. A
+      name with only specifiers and attributes before it is a constructor in the block of a class, with a specifier, or
+      when it is the same as the name before "::". When the statement ends at a part, all parts count.
+    */
+    bool csharp_statement_kind_of(STMT_TYPE found, bool ended, int parts, int specifiers, int attributes, int first,
+                                  int secondtoken, int posin, bool accessor, bool isoperator, bool ismain,
+                                  bool isevent, bool modifieroperator, bool sawdcolon, bool inparam) {
+
+        STMT_TYPE kind = found;
+        int type_count = parts;
+        int fla = 0;
+
+        // where the statement ends when it is not a function
+        int stop = LA(1);
+
+        // a property accessor, e.g., "get {" or "set;", after only specifiers and attributes
+        if (found == NONE && accessor) {
+            if (ended || (parts == attributes + specifiers + 1 && LA(1) == LCURLY))
+                kind = PROPERTY_ACCESSOR;
+            else if (parts == attributes + specifiers + 1 && LA(1) == TERMINATE)
+                kind = PROPERTY_ACCESSOR_DECL;
+        }
+
+        // a ":" after a "?" is a ternary operator
+        if (found == NONE && kind == NONE && !ended && !(LA(1) == COLON && is_qmark)) {
+
+            // "async" used as a name is not a specifier
+            if (secondtoken == ASYNC)
+                --specifiers;
+
+            // the name is not part of the type, except in a using declaration
+            if (inMode(MODE_USING))
+                ++type_count;
+
+            type_count = type_count > 1 ? type_count - 1 : 0;
+
+            // the parts of the type that are not specifiers, and also not attributes
+            int types = type_count - specifiers;
+            int nonattributes = types - attributes;
+
+            bool destructor = isdestructor;
+
+            // a destructor name after a type or an operator is not a declaration
+            if (destructor && (modifieroperator || nonattributes >= 1)) {
+                kind = NONE;
+
+            } else if (isevent) {
+                kind = EVENT_STMT;
+
+            // a property, e.g., "int A {"
+            } else if (types > 0 && LA(1) == LCURLY) {
+                kind = PROPERTY_STMT;
+
+            } else {
+                if (
+                    types > 0
+                    && LA(1) != OPERATORS
+                    && (
+                        LA(1) == 1 /* EOF */
+                        || LA(1) == TERMINATE
+                        || LA(1) == COMMA
+                        || LA(1) == LBRACKET
+                        || (LA(1) == LPAREN && next_token() != RPAREN)
+                        || LA(1) == LCURLY
+                        || LA(1) == EQUAL
+                        || LA(1) == IN
+                        || (LA(1) == COLON && inTransparentMode(MODE_CONTROL_CONDITION))
+                        || LA(1) == RBRACKET
+                    )
+                )
+                    kind = VARIABLE;
+
+                // in a parameter, the type alone, e.g., "int" in "f(int)"
+                if (
+                    inparam
+                    && (
+                        LA(1) == RPAREN
+                        || LA(1) == COMMA
+                        || LA(1) == LBRACKET
+                        || LA(1) == EQUAL
+                        || LA(1) == IN
+                        || LA(1) == RBRACKET
+                    )
+                )
+                    kind = VARIABLE;
+
+                bool constructor = !isoperator
+                    && !ismain
+                    && !destructor
+                    && type_count == specifiers + attributes
+                    && (
+                        inPrevMode(MODE_CLASS)
+                        || specifiers > 0
+                        || (namestack[0] != "" && namestack[0] == namestack[1])
+                    );
+
+                if (LA(1) == LPAREN && (nonattributes > 0 || isoperator || ismain || destructor || constructor)) {
+
+                    fla = csharp_function_guess(inparam, stop);
+
+                    // in a function body, a function declaration is a variable
+                    if (fla != 0 && !(inTransparentMode(MODE_FUNCTION_BODY) && kind == VARIABLE && fla == TERMINATE)) {
+
+                        if (destructor)
+                            kind = DESTRUCTOR;
+                        else if (constructor)
+                            kind = CONSTRUCTOR;
+                        else
+                            kind = isoperator ? OPERATOR_FUNCTION : FUNCTION;
+                    }
+                }
+            }
+        }
+
+        if (kind == VARIABLE && type_count == 0)
+            type_count = 1;
+
+        if (kind == VARIABLE && inTransparentMode(MODE_CONDITION) && stop != EQUAL)
+            kind = NONE;
+
+        // the type before an "in", e.g., "x" in "f(int x in a)"
+        if (kind == VARIABLE && posin)
+            type_count = posin - 1;
+
+        else if (kind == NONE && type_count == 0 && keyword_token_set.member(stop))
+            kind = SINGLE_MACRO;
+
+        // a name before a class or struct is a macro, unless what starts at the class is something else, which then has
+        // the name as part of its type
+        else if (kind == NONE && type_count == 1 && (stop == CLASS || stop == STRUCT)) {
+
+            if (LA(1) == stop) {
+                csharp_statement_guess(inparam);
+
+                kind = csharp_statement_kind;
+                type_count = csharp_statement_type_count + 1;
+                secondtoken = csharp_statement_secondtoken;
+
+                if (
+                    kind == CLASS_DECL
+                    || kind == CLASS_DEFN
+                    || kind == STRUCT_DECL
+                    || kind == STRUCT_DEFN
+                    || kind == ENUM_DECL
+                    || kind == ENUM_DEFN
+                    || kind == NONE
+                ) {
+                    kind = SINGLE_MACRO;
+                    type_count = 1;
+                }
+            }
+        }
+
+        else if (kind == CONSTRUCTOR && fla == TERMINATE)
+            kind = CONSTRUCTOR_DECL;
+
+        else if (kind == DESTRUCTOR && fla == TERMINATE)
+            kind = DESTRUCTOR_DECL;
+
+        else if (kind == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            kind = FUNCTION_DECL;
+
+        else if (kind == OPERATOR_FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            kind = OPERATOR_FUNCTION_DECL;
+
+        // a macro before a constructor
+        else if (kind == FUNCTION && fla == COLON)
+            kind = SINGLE_MACRO;
+
+        // not really a destructor
+        if (
+            kind == DESTRUCTOR_DECL
+            && ((!inTransparentMode(MODE_CLASS) && !sawdcolon) || inTransparentMode(MODE_FUNCTION_TAIL))
+        )
+            kind = EXPRESSION;
+
+        if ((kind == FUNCTION || kind == FUNCTION_DECL) && fla == COMMA && !inparam)
+            kind = VARIABLE;
+
+        if (kind == VARIABLE && type_count == specifiers + attributes)
+            ++type_count;
+
+        // specifiers alone, e.g., "static;"
+        if (
+            !inMode(MODE_FUNCTION_TAIL)
+            && kind == NONE
+            && type_count == 0
+            && enum_preprocessing_token_set.member(first)
+            && stop == TERMINATE
+        ) {
+            kind = VARIABLE;
+            type_count = 1;
+        }
+
+        // a delegate type, e.g., "delegate void D(int a);" or "public delegate void D(int a);"
+        if (kind == FUNCTION_DECL && fla == TERMINATE && first == DELEGATE) {
+            type_count -= 1;
+            kind = DELEGATE_TYPE;
+        } else if (
+            kind == FUNCTION_DECL
+            && fla == TERMINATE
+            && secondtoken == DELEGATE
+            && (first == PUBLIC || first == PRIVATE || first == PROTECTED)
+        ) {
+            type_count -= 2;
+            kind = DELEGATE_TYPE;
+        }
+
+        csharp_statement_kind = kind;
+        csharp_statement_type_count = type_count;
+        csharp_statement_secondtoken = secondtoken;
+        csharp_statement_after_token = stop;
+
+        return true;
+    }
+
+    /*
       call_other_scan
 
       For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
@@ -1888,6 +2222,19 @@ public:
     int java_statement_specifiers = 0;
     int java_statement_attributes = 0;
     bool java_statement_sawcontextual = false;
+
+    // the kind of C# statement, the number of parts of its type, the token after its first part, and the token where
+    // it ends, found by the syntactic predicate
+    STMT_TYPE csharp_statement_kind = NONE;
+    int csharp_statement_type_count = 0;
+    int csharp_statement_secondtoken = 0;
+    int csharp_statement_after_token = 0;
+
+    // the parts of a C# statement before the one being matched, for when that part does not parse
+    int csharp_statement_parts = 0;
+    int csharp_statement_specifiers = 0;
+    int csharp_statement_attributes = 0;
+    bool csharp_statement_accessor = false;
 
     /*
       declaration_general_name_scan
@@ -4071,7 +4418,24 @@ pattern_statements[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA) }?
         java_pattern_statements |
 
+        { inLanguage(LANGUAGE_CSHARP) }?
+        csharp_pattern_statements |
+
         pattern_statements_simple
+;
+
+/*
+  csharp_pattern_statements
+
+  C# statements, declarations, and definitions that must be matched by pattern.
+*/
+csharp_pattern_statements[] { ENTRY_DEBUG } :
+        // a C# declaration, definition, or other statement that starts with a type or a name, e.g.,
+        // "public static void Main(string[] args) {", "List<int> a = b;", "class A : B {", "int P { get; }", or "f(x);"
+        (csharp_statement_matched)=>
+        pattern_statement_kind[csharp_statement_kind, csharp_statement_type_count, csharp_statement_secondtoken] |
+
+        pattern_check_statements
 ;
 
 /*
@@ -4731,6 +5095,246 @@ java_statement_start[bool inparam] {
 java_type_head_rest[bool is_enum] { ENTRY_DEBUG } :
         { is_enum }?
         (class_header | LCURLY) |
+
+        class_post
+        (class_header | LCURLY)
+;
+
+/*
+  csharp_statement_start
+
+  The start of a C# declaration, definition, or other statement that starts with a type or a name, e.g.,
+  "public static void Main(string[] args) {", "List<int> a = b;", "A(int a) : base(a) {", "class A : B {",
+  "[Serializable]", "int P { get; }", "get {", "event E e;", or "f(x);". The parts are matched as for a declaration
+  of any kind, and the last part is the name. A class, struct, interface, or enum definition or declaration, a global
+  attribute, and a using directive are found by their part. The kind found, the number of parts of its type, and the
+  token after the first part are in csharp_statement_kind, csharp_statement_type_count, and
+  csharp_statement_secondtoken.
+*/
+csharp_statement_start[bool inparam] {
+        // all parts, including the name, and those that are specifiers, or attributes
+        int parts = 0;
+        int specifiers = 0;
+        int attributes = 0;
+        int secondtoken = 0;
+        int first = LA(1);
+
+        // the part that is "in", if any
+        int posin = 0;
+
+        // a part that can lead a type was found, so "*" or "..." can follow
+        bool foundpure = false;
+        bool isoperator = false;
+        bool ismain = false;
+        bool isevent = false;
+        bool accessor = false;
+        bool modifieroperator = false;
+        bool sawdcolon = false;
+
+        // the kind found by a part, e.g., a class definition, or a part that ends the statement
+        STMT_TYPE found = NONE;
+        bool ended = false;
+
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        { inLanguage(LANGUAGE_CSHARP) }?
+        set_int[csharp_statement_parts, 0]
+        set_int[csharp_statement_specifiers, 0]
+        set_int[csharp_statement_attributes, 0]
+        set_int[csharp_statement_secondtoken, 0]
+        set_bool[csharp_statement_accessor, false]
+
+        (options { greedy = true; } :
+            // not an "in" in a control condition, e.g., the "in" of a "foreach"
+            {
+                found == NONE
+                && !ended
+                && (LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION))
+            }?
+            set_bool[is_qmark, is_qmark || LA(1) == QMARK]
+            set_int[posin, LA(1) == IN ? parts : posin]
+            set_bool[isoperator, isoperator || LA(1) == OPERATOR]
+            set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
+
+            // the first part that matches is taken
+            (options { generateAmbigWarnings = false; } :
+                // specifiers, e.g., "public", "extern alias", or "new" in a class or after a specifier
+                { argument_token_set.member(LA(1)) }?
+                set_int[secondtoken, LA(1)]
+                set_int[csharp_statement_secondtoken, secondtoken]
+                set_bool[foundpure, foundpure || LA(1) == CONST]
+
+                (options { generateAmbigWarnings = false; } :
+                    EXTERN
+
+                    (options { greedy = true; } :
+                        ALIAS
+                        set_int[specifiers, specifiers + 1]
+                    )* |
+
+                    { LA(1) != NEW || inPrevMode(MODE_CLASS) || specifiers > 0 }?
+                    specifier
+                )
+
+                set_int[specifiers, specifiers + 1] |
+
+                // an attribute, e.g., "[Serializable]", or a global attribute, e.g., "[assembly: A]", which is the
+                // statement
+                LBRACKET
+
+                // suppress warning
+                (options { greedy = true; } : COMMA)*
+
+                set_type[found, GLOBAL_ATTRIBUTE, LA(1) != RETURN && LA(1) != EVENT && check_global_attribute()]
+
+                (
+                    { found == NONE }?
+                    // ~RBRACKET matches these as well
+                    // suppress warning
+                    (options { warnWhenFollowAmbig = false; } : RETURN | EVENT | identifier)?
+
+                    (~(RBRACKET))*
+
+                    RBRACKET
+
+                    set_int[attributes, attributes + 1]
+                )? |
+
+                // a property accessor, e.g., "get" or "set"
+                { parts == specifiers + attributes }?
+                property_method_name
+                set_bool[accessor, true] |
+
+                // a class, struct, or interface, which is a definition or a declaration, or is a type
+                { parts == specifiers + attributes }?
+                (
+                    CLASS
+                    set_type[found, csharp_type_head_kind(CLASS_DECL)] |
+
+                    STRUCT
+                    set_type[found, csharp_type_head_kind(STRUCT_DECL)] |
+
+                    INTERFACE
+                    set_type[found, csharp_type_head_kind(INTERFACE_DECL)]
+                )
+
+                set_bool[foundpure] |
+
+                // an enum, which is a definition or a declaration, or is a type
+                { parts == specifiers + attributes }?
+                ENUM
+                set_type[found, csharp_type_head_kind(ENUM_DECL)]
+
+                set_bool[foundpure] |
+
+                USING
+                set_type[found, USING_STMT] |
+
+                // a name, which may be an operator
+                { LA(1) != ASYNC }?
+                set_bool[operatorname, false]
+                set_bool[sawdcolon, LA(2) == DCOLON]
+                compound_name
+                set_bool[foundpure]
+                set_bool[isoperator, isoperator || operatorname]
+                set_bool[operatorname, false] |
+
+                EVENT
+                set_bool[isevent] |
+
+                MAIN
+                set_bool[ismain, parts == 0] |
+
+                { keyword_name_token_set.member(next_token()) }?
+                keyword_name |
+
+                // type parts that can occur before other type parts, e.g., an enum after other parts
+                { LA(1) != LBRACKET && LA(1) != CLASS && LA(1) != STRUCT }?
+                pure_lead_type_identifier_no_specifiers
+                set_bool[foundpure] |
+
+                // type parts that only occur after other type parts, e.g., "*" or "...", which end the statement when
+                // they are first
+                non_lead_type_identifier
+                set_bool[ended, !foundpure]
+            )
+
+            // a part that ends the statement, or where the kind is found, is not counted
+            set_int[parts, ended || found != NONE ? parts : parts + 1]
+
+            // the token after the first part
+            set_int[secondtoken, LA(1), parts == 1 && !ended && found == NONE]
+
+            // the parts so far, for where a later part does not parse
+            set_int[csharp_statement_parts, parts]
+            set_int[csharp_statement_specifiers, specifiers]
+            set_int[csharp_statement_attributes, attributes]
+            set_int[csharp_statement_secondtoken, secondtoken]
+            set_bool[csharp_statement_accessor, accessor]
+        )*
+
+        {
+            csharp_statement_kind_of(
+                found,
+                ended,
+                parts,
+                specifiers,
+                attributes,
+                first,
+                secondtoken,
+                posin,
+                accessor,
+                isoperator,
+                ismain,
+                isevent,
+                modifieroperator,
+                sawdcolon,
+                inparam
+            )
+        }?
+;
+
+/*
+  csharp_statement_matched
+
+  A C# statement matched by csharp_statement_start that is a type definition or declaration, i.e., of a class, struct,
+  interface, or enum.
+*/
+csharp_statement_matched[] { ENTRY_DEBUG } :
+        csharp_statement_start[false]
+
+        {
+            csharp_statement_kind == CLASS_DECL
+            || csharp_statement_kind == CLASS_DEFN
+            || csharp_statement_kind == STRUCT_DECL
+            || csharp_statement_kind == STRUCT_DEFN
+            || csharp_statement_kind == INTERFACE_DECL
+            || csharp_statement_kind == INTERFACE_DEFN
+            || csharp_statement_kind == ENUM_DECL
+            || csharp_statement_kind == ENUM_DEFN
+        }?
+;
+
+/*
+  csharp_type_head_rest
+
+  For csharp_statement_start, the rest of a class, struct, interface, or enum type after its keyword, e.g., "A : B" in
+  "class A : B {".
+*/
+csharp_type_head_rest[bool is_enum] { ENTRY_DEBUG } :
+        { is_enum }?
+        (options { generateAmbigWarnings = false; } :
+            variable_identifier
+            (derived_list)* |
+
+            enum_class_header |
+
+            LCURLY
+        ) |
 
         class_post
         (class_header | LCURLY)
