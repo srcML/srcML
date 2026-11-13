@@ -18029,7 +18029,7 @@ generic_selection_association_type[] {
             (generic_selection_association_type_check)=>
             variable_declaration_type[declaration_general_type_count + 1] |
 
-            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && declaration_check(stmt_type, secondtoken, type_count, after_token, true) }?
+            { !inLanguage(LANGUAGE_C) && declaration_check(stmt_type, secondtoken, type_count, after_token, true) }?
             variable_declaration_type[type_count + 1] |
 
             generic_selection_association_default
@@ -18052,7 +18052,7 @@ generic_selection_association_type_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         (options { greedy = true; } :
             declaration_general_part
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
@@ -20519,7 +20519,7 @@ declaration_index[bool index_union] { bool is_complex = false; ENTRY_DEBUG } :
   The start of a C variable declaration with a macro as its type, e.g., "__aligned(64) x;".
 */
 macro_type_variable_start[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         NAME
 
         paren_pair
@@ -20537,7 +20537,7 @@ macro_type_variable_start[] { ENTRY_DEBUG } :
   first name is a macro.
 */
 single_macro_index_start[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         NAME
 
         (MULTOPS)*
