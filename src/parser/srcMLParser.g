@@ -5303,7 +5303,7 @@ csharp_statement_start[bool inparam] {
 
   A C# statement matched by csharp_statement_start that is a type definition or declaration, a variable declaration, a
   function definition or declaration, a constructor or destructor definition or declaration, a property, a property
-  accessor, or an event, or a delegate type.
+  accessor, or an event, a delegate type, or a global attribute or a using directive.
 */
 csharp_statement_matched[] { ENTRY_DEBUG } :
         csharp_statement_start[false]
@@ -5331,6 +5331,8 @@ csharp_statement_matched[] { ENTRY_DEBUG } :
             || csharp_statement_kind == PROPERTY_ACCESSOR_DECL
             || csharp_statement_kind == EVENT_STMT
             || csharp_statement_kind == DELEGATE_TYPE
+            || csharp_statement_kind == GLOBAL_ATTRIBUTE
+            || csharp_statement_kind == USING_STMT
         }?
 ;
 
