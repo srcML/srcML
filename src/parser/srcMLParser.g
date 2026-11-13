@@ -7483,11 +7483,11 @@ pattern_check_statements[] {
         if (
             !inLanguage(LANGUAGE_PYTHON)
             && !inLanguage(LANGUAGE_JAVASCRIPT)
-            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            && !inLanguage(LANGUAGE_C)
             && !inLanguage(LANGUAGE_CXX)
         )
             pattern_check(stmt_type, secondtoken, type_count, after_token);
-        else if ((inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) || inLanguage(LANGUAGE_CXX))
+        else if (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             secondtoken = next_token();
 
         ENTRY_DEBUG
