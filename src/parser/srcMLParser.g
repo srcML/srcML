@@ -897,6 +897,53 @@ public:
         if (inSkippedTokens())
             return true;
 
+        if (inLanguage(LANGUAGE_CXX) && inMode(MODE_ACCESS_REGION)) {
+
+            unsigned int i = 1;
+            while (LA(i) != TERMINATE && LA(i) != EQUAL && LA(i) != COMMA
+                && LA(i) != LPAREN && LA(i) != LCURLY && LA(i) != RCURLY && LA(i) != COLON && LA(i) != 1 /* EOF */)
+                ++i;
+
+            if (LA(i) != TERMINATE && LA(i) != EQUAL && LA(i) != COMMA)
+                return false;
+        }
+
+        // in a C++ lambda body, a pointer or reference to a struct, union, or enum keeps the markup of its name in the
+        // type, e.g., "static struct s *p = nullptr;"
+        if (inLanguage(LANGUAGE_CXX) && inTransparentMode(MODE_ANONYMOUS)) {
+
+            unsigned int i = scan_skip(1);
+            while (LA(i) == STATIC || LA(i) == CONST || LA(i) == VOLATILE || LA(i) == REGISTER)
+                i = scan_skip(i + 1);
+
+            if (LA(i) == STRUCT || LA(i) == UNION || LA(i) == ENUM) {
+
+                i = scan_skip(i + 1);
+                if (LA(i) == NAME) {
+
+                    i = scan_skip(i + 1);
+                    if (LA(i) == MULTOPS || LA(i) == REFOPS)
+                        return false;
+                }
+            }
+        }
+
+        // in C++, a "?" in a template argument list, which ends the list at the ":", keeps the markup of the statement,
+        // e.g., "T<decltype(a ? b : c)> v;"
+        if (inLanguage(LANGUAGE_CXX)) {
+
+            int templates = 0;
+            for (unsigned int i = 1; LA(i) != TERMINATE && LA(i) != LCURLY && LA(i) != RCURLY && LA(i) != 1 /* EOF */; ++i) {
+
+                if (LA(i) == TEMPOPS)
+                    ++templates;
+                else if (LA(i) == TEMPOPE && templates > 0)
+                    --templates;
+                else if (LA(i) == QMARK && templates > 0)
+                    return false;
+            }
+        }
+
         if (LA(1) != NAME)
             return true;
 
@@ -1020,6 +1067,451 @@ public:
     }
 
     /*
+      cxx_function_pointer_scan
+
+      For cxx_statement_kind_of, whether the "(" at LA(1) starts the name of a function pointer, e.g., "(*f)(int)".
+    */
+    bool cxx_function_pointer_scan() {
+
+        bool function_pointer = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            function_pointer_name_grammar_impl();
+            if (!failed)
+                eat_optional_macro_call_impl();
+            function_pointer = !failed && LA(1) == LPAREN;
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        return function_pointer;
+    }
+
+    /*
+      cxx_function_guess
+
+      For cxx_statement_kind_of, the token that ends a function header starting at LA(1), i.e., the name of a function
+      pointer, if any, a parameter list, and a function tail, or 0 if it is not one. The token where the header ends or
+      fails is in stop.
+    */
+    int cxx_function_guess(bool function_pointer, bool inparam, int& stop) {
+
+        int fla = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (function_pointer)
+                function_pointer_name_grammar_impl();
+            if (!failed) {
+                int end = 0;
+                function_rest_impl(end, inparam);
+                if (!failed)
+                    fla = end;
+            }
+        } catch (...) {}
+        failed = false;
+        stop = LA(1);
+
+        inputState->guessing--;
+        rewind(start);
+
+        return fla;
+    }
+
+    /*
+      cxx_type_head_kind
+
+      For cxx_statement_start, after the keyword of a class, struct, union, or enum, a definition when a block follows
+      the head, a declaration when the head ends or does not parse, and otherwise NONE, i.e., the type of a declaration,
+      e.g., "struct A *p;", where the head is matched, with the number of "..." in packs. The declaration kind is the
+      argument.
+    */
+    STMT_TYPE cxx_type_head_kind(STMT_TYPE declaration, int& packs) {
+
+        STMT_TYPE kind = declaration;
+        bool lcurly = LA(1) == LCURLY;
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            cxx_type_head_rest_impl(declaration == ENUM_DECL, packs);
+            if (!failed) {
+                if (LA(1) == LCURLY || lcurly) {
+                    switch (declaration) {
+                    case CLASS_DECL:
+                        kind = CLASS_DEFN;
+                        break;
+
+                    case STRUCT_DECL:
+                        kind = STRUCT_DEFN;
+                        break;
+
+                    case UNION_DECL:
+                        kind = UNION_DEFN;
+                        break;
+
+                    default:
+                        kind = ENUM_DEFN;
+                        break;
+                    }
+                } else if (LA(1) != TERMINATE && LA(1) != COMMA) {
+                    kind = NONE;
+                }
+            }
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        // the type of a declaration continues after its head
+        packs = 0;
+        if (kind == NONE)
+            cxx_type_head_rest_impl(declaration == ENUM_DECL, packs);
+
+        return kind;
+    }
+
+    /*
+      cxx_class_after_parts
+
+      For cxx_statement_start, whether LA(1) is a class, struct, or union that is not a part of the type, i.e., after
+      other parts (the argument is false), and "class" is not a name, which a keyword before "(", "=", ";", etc. is.
+    */
+    bool cxx_class_after_parts(bool only_specifiers) {
+
+        if (LA(1) == CXX_CLASS)
+            return !only_specifiers && !keyword_name_token_set.member(next_token());
+
+        if (LA(1) == STRUCT || LA(1) == UNION)
+            return !only_specifiers;
+
+        return false;
+    }
+
+    /*
+      cxx_template_part
+
+      For cxx_statement_start, which only guesses, matches a template parameter list, e.g., "template <class T>", or if
+      it does not parse, false with the token where it fails in stop.
+    */
+    bool cxx_template_part(int& stop) {
+
+        bool matched = false;
+        int start = mark();
+
+        try {
+            template_declaration_full_impl();
+            matched = !failed;
+        } catch (...) {}
+        failed = false;
+        stop = LA(1);
+
+        // keep the position after the list by rewinding to it, which releases both marks
+        if (matched) {
+            int here = mark();
+            rewind(here);
+            rewind(here);
+        } else {
+            rewind(start);
+        }
+
+        return matched;
+    }
+
+    /*
+      declaration_check
+
+      The kind of declaration starting at LA(1), the token after its first part, the number of parts of its type, and
+      the token where it ends, by cxx_statement_start for C++, and by pattern_check for other languages. For C++, a
+      declaration where a part does not parse is NONE, with the parts before it. In a parameter, the type alone is a
+      declaration.
+    */
+    bool declaration_check(STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false) {
+
+        if (!inLanguage(LANGUAGE_CXX))
+            return pattern_check(type, token, type_count, after_token, inparam);
+
+        type = cxx_statement_guess(inparam) ? cxx_statement_kind : NONE;
+        token = cxx_statement_secondtoken;
+        type_count = cxx_statement_type_count;
+        after_token = cxx_statement_after_token;
+
+        return true;
+    }
+
+    /*
+      cxx_statement_guess
+
+      Whether cxx_statement_start matches at LA(1), with its kind, the number of parts of its type, the token after its
+      first part, and the token where it ends in cxx_statement_kind, cxx_statement_type_count,
+      cxx_statement_secondtoken, and cxx_statement_after_token. When it does not match, the parts before the one that
+      does not parse, the token after the first part, and the token where it stops.
+    */
+    bool cxx_statement_guess(bool inparam) {
+
+        bool matched = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            cxx_statement_start_impl(inparam);
+            matched = !failed;
+        } catch (...) {}
+        failed = false;
+        cxx_statement_after_token = LA(1);
+
+        inputState->guessing--;
+        rewind(start);
+
+        return matched;
+    }
+
+    /*
+      cxx_statement_kind_of
+
+      For cxx_statement_start, after the parts, the kind of C++ statement, the number of parts of its type, and the
+      token after its first part, in cxx_statement_kind, cxx_statement_type_count, and cxx_statement_secondtoken. A
+      "(" after the name is a function when a parameter list and a function tail follow. A name is a constructor in
+      its class, or when it is the same as the name before "::", and a destructor has a "~". False for what is left to
+      pattern_check(): the name of a function pointer, a macro before a class, and when the statement ends on its own
+      at a template or contextual keyword.
+    */
+    bool cxx_statement_kind_of(STMT_TYPE found, bool ended, int endstop, int parts, int pack_position, int specifiers,
+                               int attributes, int first, int secondtoken, bool isoperator, bool ismain,
+                               bool modifieroperator, bool sawtemplate, bool sawcontextual, bool sawdcolon,
+                               bool inparam) {
+
+        // found by a part, e.g., a class definition
+        if (found != NONE) {
+            cxx_statement_kind = found;
+            cxx_statement_type_count = parts;
+            cxx_statement_secondtoken = secondtoken;
+            cxx_statement_after_token = LA(1);
+
+            return true;
+        }
+
+        // all parts count when the statement ends at a part, and otherwise the name is not part of the type, except in
+        // a using declaration or after "...", e.g., "Args... args"
+        int type_count = parts;
+        if (!ended) {
+            if (inMode(MODE_USING))
+                ++type_count;
+
+            if (type_count > 1 && pack_position >= 0 && pack_position == type_count - 1)
+                ++type_count;
+
+            type_count = type_count > 1 ? type_count - 1 : 0;
+        }
+
+        // the parts of the type that are not specifiers or template parameter lists, and also not attributes
+        int types = type_count - specifiers;
+        int nonattributes = types - attributes;
+
+        // an attribute, e.g., "[[nodiscard]]", is the statement unless it is a declaration
+        STMT_TYPE kind = attributes > 0 ? GLOBAL_ATTRIBUTE : NONE;
+        int fla = 0;
+
+        // where the statement ends when it is not a function
+        int stop = endstop ? endstop : LA(1);
+
+        bool destructor = isdestructor;
+
+        // a destructor name after a type or an operator, e.g., "a * ~b", is not a declaration, and there is no
+        // declaration when the statement ends at a part, or there are no parts
+        if (!ended && parts > 0 && !(destructor && (modifieroperator || nonattributes >= 1))) {
+
+            if (
+                types > 0
+                && LA(1) != OPERATORS
+                && LA(1) != CSPEC
+                && LA(1) != MSPEC
+                && (
+                    !inMode(MODE_ACCESS_REGION)
+                    || LA(1) == 1 /* EOF */
+                    || LA(1) == TERMINATE
+                    || LA(1) == COMMA
+                    || LA(1) == BAR
+                    || LA(1) == LBRACKET
+                    || (LA(1) == LPAREN && next_token() != RPAREN)
+                    || LA(1) == LCURLY
+                    || LA(1) == EQUAL
+                    || LA(1) == IN
+                    || LA(1) == COLON
+                )
+            )
+                kind = VARIABLE;
+
+            // in a parameter, the type alone, e.g., "int" in "f(int)"
+            if (
+                inparam
+                && (
+                    LA(1) == RPAREN
+                    || LA(1) == COMMA
+                    || LA(1) == BAR
+                    || LA(1) == LBRACKET
+                    || LA(1) == EQUAL
+                    || LA(1) == IN
+                )
+            )
+                kind = VARIABLE;
+
+            bool constructor = !isoperator
+                && !ismain
+                && !destructor
+                && type_count == specifiers + attributes
+                && (
+                    (inMode(MODE_ACCESS_REGION) && !class_namestack.empty() && class_namestack.top() == namestack[0])
+                    || (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
+                    || (namestack[0] != "" && namestack[0] == namestack[1])
+                );
+
+            // the name of a function pointer, e.g., "(*f)(int)", is part of the type
+            bool function_pointer = LA(1) == LPAREN && cxx_function_pointer_scan();
+            if (function_pointer) {
+                ++type_count;
+                constructor = false;
+            }
+
+            if (function_pointer || (LA(1) == LPAREN && (nonattributes > 0 || isoperator || ismain || destructor || constructor))) {
+
+                fla = cxx_function_guess(function_pointer, inparam, stop);
+
+                // in a function body, a function declaration is a variable, e.g., "T t();"
+                if (fla != 0 && !(inTransparentMode(MODE_FUNCTION_BODY) && kind == VARIABLE && fla == TERMINATE)) {
+
+                    if (destructor)
+                        kind = DESTRUCTOR;
+                    else if (constructor && !isoperator && !ismain)
+                        kind = CONSTRUCTOR;
+                    else
+                        kind = isoperator ? OPERATOR_FUNCTION : FUNCTION;
+                }
+            }
+        } else if (!ended && parts == 0 && LA(1) == LPAREN) {
+
+            // a constructor with no parts depends on the names of an earlier statement
+            return false;
+        }
+
+        if (kind == VARIABLE && inTransparentMode(MODE_CONDITION) && stop != EQUAL)
+            kind = NONE;
+
+        // a template or contextual keyword in the type is a variable, e.g., "mutable a b;"
+        if (
+            kind == NONE
+            && (sawtemplate || (sawcontextual && type_count > 0))
+            && (
+                !keyword_name_token_set.member(stop)
+                || stop == MULTOPS
+                || stop == REFOPS
+                || stop == RVALUEREF
+                || stop == TERMINATE
+                || stop == RECORD
+            )
+        )
+            kind = VARIABLE;
+
+        if (kind == NONE && type_count == 0 && keyword_token_set.member(stop))
+            kind = SINGLE_MACRO;
+
+        // a name before a class, struct, or union is a macro, e.g., "M struct A {", unless what starts at the class is
+        // something else, which then has the name as part of its type, e.g., "M struct A *f();"
+        else if (
+            kind == NONE
+            && type_count == 1
+            && (stop == CLASS || stop == CXX_CLASS || stop == STRUCT || stop == UNION)
+        ) {
+            // the statement that starts at the class, only when the parts end there
+            if (LA(1) != stop || !cxx_statement_guess(inparam))
+                return false;
+
+            kind = cxx_statement_kind;
+            type_count = cxx_statement_type_count + 1;
+            secondtoken = cxx_statement_secondtoken;
+
+            if (
+                kind == CLASS_DECL
+                || kind == CLASS_DEFN
+                || kind == UNION_DECL
+                || kind == UNION_DEFN
+                || kind == STRUCT_DECL
+                || kind == STRUCT_DEFN
+                || kind == ENUM_DECL
+                || kind == ENUM_DEFN
+                || kind == NONE
+            ) {
+                kind = SINGLE_MACRO;
+                type_count = 1;
+            }
+        }
+
+        else if (kind == CONSTRUCTOR && fla == TERMINATE)
+            kind = CONSTRUCTOR_DECL;
+
+        else if (kind == DESTRUCTOR && fla == TERMINATE)
+            kind = DESTRUCTOR_DECL;
+
+        else if (kind == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            kind = FUNCTION_DECL;
+
+        else if (kind == OPERATOR_FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            kind = OPERATOR_FUNCTION_DECL;
+
+        // a macro before a constructor
+        else if (kind == FUNCTION && fla == COLON)
+            kind = SINGLE_MACRO;
+
+        // not really a destructor
+        if (
+            kind == DESTRUCTOR_DECL
+            && ((!inTransparentMode(MODE_CLASS) && !sawdcolon) || inTransparentMode(MODE_FUNCTION_TAIL))
+        )
+            kind = EXPRESSION;
+
+        if ((kind == FUNCTION || kind == FUNCTION_DECL) && fla == COMMA && !inparam)
+            kind = VARIABLE;
+
+        if (kind == VARIABLE && type_count == specifiers + attributes)
+            ++type_count;
+
+        // specifiers alone, e.g., "static;"
+        if (
+            !inMode(MODE_FUNCTION_TAIL)
+            && kind == NONE
+            && type_count == 0
+            && (enum_preprocessing_token_set.member(first) || first == DECLTYPE)
+            && first != FINAL
+            && first != OVERRIDE
+            && stop == TERMINATE
+        ) {
+            kind = VARIABLE;
+            type_count = 1;
+        }
+
+        if (kind == NONE && first == TEMPLATE)
+            kind = GLOBAL_TEMPLATE;
+
+        // a macro before a constructor starts with its name
+        if (kind == SINGLE_MACRO && first != NAME)
+            return false;
+
+        cxx_statement_kind = kind;
+        cxx_statement_type_count = type_count;
+        cxx_statement_secondtoken = secondtoken;
+        cxx_statement_after_token = stop;
+
+        return true;
+    }
+
+    /*
       call_other_scan
 
       For call_other_start, the check from the token buffer, without parsing, that the name LA(1) is followed by a "("
@@ -1072,6 +1564,13 @@ public:
     int declaration_general_type_count = 0;
     int declaration_general_type_parts = 0;
     int declaration_general_specifiers = 0;
+
+    // the kind of C++ statement, the number of parts of its type, and the token after its first part, found by the
+    // syntactic predicate
+    STMT_TYPE cxx_statement_kind = NONE;
+    int cxx_statement_type_count = 0;
+    int cxx_statement_secondtoken = 0;
+    int cxx_statement_after_token = 0;
 
     /*
       declaration_general_name_scan
@@ -3249,6 +3748,62 @@ keyword_statements[] { ENTRY_DEBUG } :
   function definition, function declaration, or even a label.
 */
 pattern_statements[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_CXX) }?
+        cxx_pattern_statements |
+
+        pattern_statements_simple
+;
+
+/*
+  cxx_pattern_statements
+
+  C++ statements, declarations, and definitions that must be matched by pattern.
+*/
+cxx_pattern_statements[] { ENTRY_DEBUG } :
+        // a C++ declaration, definition, or other statement that starts with a type or a name, e.g.,
+        // "typename T::type x;", "template <class T> void f(T t) {", "A(int a) : b(a) {", "struct A : B {",
+        // "public:", "using namespace std;", or "f(x);"
+        (cxx_statement_start[false])=>
+        pattern_statement_kind[cxx_statement_kind, cxx_statement_type_count, cxx_statement_secondtoken] |
+
+        // a template parameter list before a declaration that does not parse, e.g., a type with "sizeof...(T)" in a
+        // template argument
+        (cxx_template_start)=>
+        template_declaration |
+
+        // an attribute before a declaration that does not parse, e.g., "[[maybe_unused]]" before a name with a keyword
+        (cxx_attribute_start)=>
+        attribute_cpp |
+
+        pattern_statements_simple
+;
+
+/*
+  cxx_attribute_start
+
+  The start of a C++ statement with an attribute, e.g., "[[maybe_unused]]".
+*/
+cxx_attribute_start[] { ENTRY_DEBUG } :
+        { LA(1) == LBRACKET && next_token() == LBRACKET }?
+        attribute_cpp
+;
+
+/*
+  cxx_template_start
+
+  The start of a C++ template declaration, i.e., a template parameter list.
+*/
+cxx_template_start[] { ENTRY_DEBUG } :
+        { LA(1) == TEMPLATE }?
+        template_declaration_full
+;
+
+/*
+  pattern_statements_simple
+
+  Statements, declarations, and definitions that must be matched by pattern, by syntactic predicates for each kind.
+*/
+pattern_statements_simple[] { ENTRY_DEBUG } :
         // struct, union, or enum definition
         (type_definition_simple_check)=>
         type_definition_simple |
@@ -3393,6 +3948,292 @@ pattern_statements[] { ENTRY_DEBUG } :
 ;
 
 /*
+  cxx_statement_start
+
+  The start of a C++ declaration, definition, or other statement that starts with a type or a name, e.g.,
+  "typename T::type x;", "template <class T> inline void f(T t) {", "A(int a) : b(a) {", "~A();",
+  "template <class T> struct A : B {", "public:", "using namespace std;", or "f(x);". The parts are matched as for a
+  declaration of any kind, and the last part is the name. A class, struct, union, or enum definition or declaration,
+  an access specifier, and a using declaration or directive are found by their part. The kind found, the number of
+  parts of its type, and the token after the first part are in cxx_statement_kind, cxx_statement_type_count, and
+  cxx_statement_secondtoken.
+*/
+cxx_statement_start[bool inparam] {
+        // all parts, including the name, and those that are specifiers or template parameter lists, or attributes
+        int parts = 0;
+        int specifiers = 0;
+        int attributes = 0;
+        int secondtoken = 0;
+        int first = LA(1);
+
+        // the number of "..." after a class, struct, union, or enum type, and the part that is "...", if any
+        int packs = 0;
+        int pack_position = -1;
+
+        // where a part that does not parse ends the statement, if not at LA(1)
+        int endstop = 0;
+
+        // a part that can lead a type was found, so "*" can follow
+        bool foundpure = false;
+        bool isoperator = false;
+        bool ismain = false;
+        bool modifieroperator = false;
+        bool sawtemplate = false;
+        bool sawcontextual = false;
+        bool sawdcolon = false;
+
+        // the kind found by a part, e.g., a class definition, or a part that ends the statement
+        STMT_TYPE found = NONE;
+        bool ended = false;
+
+        // a new statement, so no "?" or destructor seen yet
+        is_qmark = false;
+        isdestructor = false;
+
+        ENTRY_DEBUG
+} :
+        {
+            inLanguage(LANGUAGE_CXX)
+            && !(LA(1) == NAME && next_token() == TEMPLATE)
+        }?
+        set_int[cxx_statement_type_count, 0]
+        set_int[cxx_statement_secondtoken, 0]
+
+        (options { greedy = true; } :
+            // an attribute, e.g., "[[nodiscard]]", but not "[" that starts other than the type, and not a class,
+            // struct, or union after other parts, e.g., "struct" in "M struct A {", or the end of the input
+            {
+                found == NONE
+                && !ended
+                && LA(1) != 1 /* EOF */
+                && (LA(1) != LBRACKET || next_token() == LBRACKET)
+                && !cxx_class_after_parts(parts == specifiers + attributes)
+            }?
+            set_bool[isoperator, isoperator || LA(1) == OPERATOR]
+            set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
+            set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
+            set_int[pack_position, LA(1) == DOTDOTDOT ? parts : pack_position]
+
+            // the first part that matches is taken, so a word that may be a name, e.g., "final", is a name
+            (options { generateAmbigWarnings = false; } :
+                // specifiers, and an access specifier, e.g., "public:" or "public slots:"
+                {
+                    argument_token_set.member(LA(1))
+                    && (LA(1) != SIGNAL || look_past(SIGNAL) == COLON)
+                    && LA(1) != OVERRIDE
+                    && (LA(1) != TEMPLATE || next_token() != TEMPOPS)
+                    && (LA(1) != ATOMIC || next_token() != LPAREN)
+                }?
+                set_int[secondtoken, LA(1)]
+                set_bool[foundpure, foundpure || LA(1) == CONST || LA(1) == TYPENAME]
+
+                (options { generateAmbigWarnings = false; } :
+                    EXTERN
+
+                    (options { greedy = true; } :
+                        ALIAS
+                        set_int[specifiers, specifiers + 1]
+                    )* |
+
+                    { LA(1) != NEW }?
+                    specifier |
+
+                    template_specifier
+                    set_bool[sawtemplate, true] |
+
+                    { next_token() == COLON }?
+                    SIGNAL
+                )
+
+                set_int[specifiers, specifiers + 1]
+
+                set_type[
+                    found,
+                    ACCESS_REGION,
+                    (secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED || secondtoken == SIGNAL)
+                    && look_past_two(NAME, VOID) == COLON
+                ] |
+
+                // a template parameter list, which ends the statement where it does not parse, e.g., a macro in it
+                { LA(1) == TEMPLATE }?
+                set_bool[ended, !cxx_template_part(endstop)]
+                set_int[specifiers, ended ? specifiers : specifiers + 1] |
+
+                { next_token() == LBRACKET }?
+                LBRACKET
+                LBRACKET
+                (~(RBRACKET))*
+                RBRACKET
+                RBRACKET
+                set_int[attributes, attributes + 1] |
+
+                // a class, struct, or union, which is a definition or a declaration, or is a type, e.g., "struct A *p;"
+                {
+                    parts == specifiers + attributes
+                    && (
+                        !keyword_name_token_set.member(next_token())
+                        || (next_token() == LBRACKET && next_token_two() == LBRACKET)
+                    )
+                }?
+                (
+                    CXX_CLASS
+                    set_type[found, cxx_type_head_kind(CLASS_DECL, packs)] |
+
+                    STRUCT
+                    set_type[found, cxx_type_head_kind(STRUCT_DECL, packs)] |
+
+                    UNION
+                    set_type[found, cxx_type_head_kind(UNION_DECL, packs)]
+                )
+
+                set_bool[foundpure]
+
+                // a class, struct, or union type counts as two parts, and "..." after it as one
+                set_int[parts, found == NONE ? parts + 1 + packs : parts] |
+
+                // an enum, which is a definition or a declaration, or is a type, e.g., "enum E e;"
+                { parts == specifiers + attributes }?
+                ENUM
+                set_type[found, cxx_type_head_kind(ENUM_DECL, packs)]
+
+                set_bool[foundpure]
+
+                // an enum type counts as two parts, and "..." after it as one
+                set_int[parts, found == NONE ? parts + 1 + packs : parts] |
+
+                USING
+                set_type[found, USING_STMT] |
+
+                // macros in types
+                (macro_type_detector)=>
+                macro_call_inner |
+
+                // a name, which may be an operator
+                set_bool[operatorname, false]
+                set_bool[sawdcolon, LA(2) == DCOLON]
+                compound_name
+                set_bool[foundpure]
+                set_bool[isoperator, isoperator || operatorname]
+                set_bool[operatorname, false] |
+
+                auto_keyword[false] |
+
+                MAIN
+                set_bool[ismain, parts == 0] |
+
+                { keyword_name_token_set.member(next_token()) }?
+                keyword_name |
+
+                // type parts that can occur before other type parts
+                {
+                    LA(1) != CLASS
+                    && LA(1) != CXX_CLASS
+                    && LA(1) != STRUCT
+                    && LA(1) != UNION
+                }?
+                (
+                    { LA(1) == DECLTYPE }?
+                    type_specifier_call |
+
+                    { next_token() == LPAREN }?
+                    atomic |
+
+                    pure_lead_type_identifier_no_specifiers
+                )
+                set_bool[foundpure] |
+
+                // type parts that only occur after other type parts, e.g., "*" or "...", which end the statement when
+                // they are first, e.g., "auto& r = s;"
+                non_lead_type_identifier
+                set_bool[ended, !foundpure]
+            )
+
+            // a part that ends the statement, or where the kind is found, is not counted
+            set_int[parts, ended || found != NONE ? parts : parts + 1]
+
+            // the token after the first part
+            set_int[secondtoken, LA(1), parts == 1 && !ended && found == NONE]
+
+            // the parts so far, for where a later part does not parse
+            set_int[cxx_statement_type_count, parts]
+            set_int[cxx_statement_secondtoken, secondtoken]
+        )*
+
+        // a class, struct, or union after other parts, or a part for other languages, e.g., "default" in Java or "|",
+        // ends the statement there
+        set_int[secondtoken, LA(1), found == NONE && !ended && LA(1) == DEFAULT]
+        set_bool[
+            ended,
+            ended
+            || (
+                found == NONE
+                && (LA(1) == DEFAULT || LA(1) == BAR || cxx_class_after_parts(parts == specifiers + attributes))
+            )
+        ]
+
+        // not stopped by a part only for other languages, e.g., "interface", and nothing first that is only
+        // Objective-C
+        {
+            found != NONE
+            || ended
+            || (
+                (parts > 0 || (LA(1) != CSPEC && LA(1) != MSPEC))
+                && LA(1) != EVENT
+                && LA(1) != INTERFACE
+                && LA(1) != ATREQUIRED
+                && LA(1) != ATOPTIONAL
+            )
+        }?
+
+        {
+            cxx_statement_kind_of(
+                found,
+                ended,
+                endstop,
+                parts,
+                pack_position,
+                specifiers,
+                attributes,
+                first,
+                secondtoken,
+                isoperator,
+                ismain,
+                modifieroperator,
+                sawtemplate,
+                sawcontextual,
+                sawdcolon,
+                inparam
+            )
+        }?
+;
+
+/*
+  cxx_type_head_rest
+
+  For cxx_statement_start, the rest of a class, struct, union, or enum type after its keyword, with the number of
+  "..." in packs, e.g., "A : B" in "struct A : B {".
+*/
+cxx_type_head_rest[bool is_enum, int& packs] { ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            { next_token() == LBRACKET }?
+            attribute_cpp
+        )*
+
+        (
+            DOTDOTDOT
+            set_int[packs, packs + 1]
+        )*
+
+        (
+            { is_enum }?
+            (enum_class_header | LCURLY) |
+
+            class_post
+            (class_header | LCURLY)
+        )
+;
+
+/*
   label_statement_simple
 
   A C/C++ label, e.g., "out:".
@@ -3405,7 +4246,8 @@ label_statement_simple[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && !inMode(MODE_ACCESS_REGION)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -3423,7 +4265,7 @@ label_statement_simple[] {
 */
 type_definition_simple_check[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
@@ -3469,7 +4311,7 @@ type_definition_simple[] {
 */
 type_declaration_simple_check[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
             && !inTransparentMode(MODE_ARGUMENT)
@@ -3524,7 +4366,7 @@ type_declaration_simple[] {
 */
 enum_constant_simple_check[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_ENUM)
             && inMode(MODE_LIST)
             && LA(1) == NAME
@@ -3572,7 +4414,7 @@ declaration_simple[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
             && declaration_simple_scan()
@@ -3754,6 +4596,8 @@ declaration_simple_check[] {
             // a function is not in a function body, where it is a variable, nor where it may be a constructor
             {
                 !inTransparentMode(MODE_TYPEDEF)
+                && !inMode(MODE_ACCESS_REGION)
+                && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
                 && !inMode(MODE_ENUM)
                 && !inTransparentMode(MODE_FRIEND)
                 && !inTransparentMode(MODE_FUNCTION_BODY)
@@ -3768,8 +4612,10 @@ declaration_simple_check[] {
         // function pointer name, e.g. "(*setup)", only a name when unambiguously followed (after an optional macro
         // annotation) by a parameter list, same as a plain name above
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_TYPEDEF)
+            && !inMode(MODE_ACCESS_REGION)
+            && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_FUNCTION_BODY)
@@ -3850,8 +4696,10 @@ call_statement_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ACCESS_REGION)
+            && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -4219,7 +5067,7 @@ extern_block_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inLanguage(LANGUAGE_OBJECTIVE_C)
         }?
         EXTERN
@@ -4961,8 +5809,10 @@ call_error_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && !inMode(MODE_ACCESS_REGION)
+            && !(inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -4989,7 +5839,8 @@ label_error_statement[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && !inMode(MODE_ACCESS_REGION)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -5026,7 +5877,8 @@ function_pointer_declaration_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && !inMode(MODE_ACCESS_REGION)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -5123,7 +5975,8 @@ function_pointer_declaration[] { ENTRY_DEBUG } :
 */
 expression_index_start[] { bool sawmain = false; ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && !inMode(MODE_ACCESS_REGION)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -5168,7 +6021,8 @@ expression_index_start[] { bool sawmain = false; ENTRY_DEBUG } :
 */
 expression_statement_start[] { ENTRY_DEBUG } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && !inMode(MODE_ACCESS_REGION)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_FRIEND)
             && !inTransparentMode(MODE_CONDITION)
@@ -5199,6 +6053,10 @@ expression_statement_start[] { ENTRY_DEBUG } :
                 || LA(1) == LPAREN
                 || LA(1) == OPERATORS
             )
+
+            // not a template or scoped name, which is rarely assigned to, and costly to parse when it is a type, e.g.,
+            // "std::vector<int> v;"
+            && !(inLanguage(LANGUAGE_CXX) && LA(1) == NAME && (next_token() == TEMPOPS || next_token() == DCOLON))
         }?
         (
             MULTOPS | CONSTANTS | STRING_START | LPAREN | OPERATORS |
@@ -5235,7 +6093,7 @@ static_call_expression_start[] {
         ENTRY_DEBUG
 } :
         {
-            inLanguage(LANGUAGE_C)
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -5385,17 +6243,34 @@ pattern_check_statements[] {
         int secondtoken = 0;
         int type_count = 0;
         int after_token = 0;
+        STMT_TYPE stmt_type = NONE;
+
+        // detect the declaration/definition type for non-declarative languages, except for C and C++, which are
+        // checked by the statement rules before this
+        if (
+            !inLanguage(LANGUAGE_PYTHON)
+            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            && !inLanguage(LANGUAGE_CXX)
+        )
+            pattern_check(stmt_type, secondtoken, type_count, after_token);
+        else if ((inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) || inLanguage(LANGUAGE_CXX))
+            secondtoken = next_token();
+
+        ENTRY_DEBUG
+} :
+        pattern_statement_kind[stmt_type, type_count, secondtoken]
+;
+
+/*
+  pattern_statement_kind
+
+  The statement, declaration, or definition of a kind, with the number of parts of its type and the token after its
+  first part.
+*/
+pattern_statement_kind[STMT_TYPE stmt_type, int type_count, int secondtoken] {
         bool isempty = false;
         int call_count = 1;
-        STMT_TYPE stmt_type = NONE;
         CALL_TYPE type = NOCALL;
-
-        // detect the declaration/definition type for non-declarative languages, except for C, which is checked by the
-        // statement rules before this
-        if (!inLanguage(LANGUAGE_PYTHON) && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
-            pattern_check(stmt_type, secondtoken, type_count, after_token);
-        else if (inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-            secondtoken = next_token();
 
         ENTRY_DEBUG
 } :
@@ -6013,7 +6888,7 @@ trailing_return[] { int type_count = 0; int secondtoken = 0; int after_token = 0
 
         (
             {
-                pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                declaration_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION
                     || stmt_type == FUNCTION_DECL
@@ -6832,7 +7707,7 @@ property_declaration[] { ENTRY_DEBUG } :
 property_declaration_post[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         (property_attribute_list)*
 
-        { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
+        { declaration_check(stmt_type, secondtoken, type_count, after_token) }?
         variable_declaration[type_count]
 ;
 
@@ -7564,7 +8439,7 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             // for C, which is checked above
             {
                 !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-                && pattern_check(stmt_type, secondtoken, type_count, after_token)
+                && declaration_check(stmt_type, secondtoken, type_count, after_token)
                 && stmt_type == VARIABLE
             }?
             control_initialization_variable_declaration[type_count] |
@@ -8387,7 +9262,7 @@ using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0;
 
         (
             {
-                pattern_check(stmt_type, secondtoken, type_count, after_token)
+                declaration_check(stmt_type, secondtoken, type_count, after_token)
                 && (
                     stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
@@ -9804,7 +10679,7 @@ statement_part[] {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
             && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-            && pattern_check(stmt_type, secondtoken, type_count, after_token)
+            && declaration_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
         }?
@@ -10352,7 +11227,7 @@ condition_inner[] {
 
         // a C condition is checked for a declaration by condition_declaration_check
         if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
-            pattern_check(stmt_type, secondtoken, type_count, after_token);
+            declaration_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
             startNewMode(MODE_INTERNAL_END_PAREN);
@@ -15541,7 +16416,7 @@ for_like_list_item[] {
         ENTRY_DEBUG
 } :
         // explicitly check for a variable declaration since it can easily be confused with an expression
-        { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+        { declaration_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
         control_initialization_variable_declaration[type_count] |
 
         {
@@ -15919,7 +16794,7 @@ generic_selection_association_type[] {
             (generic_selection_association_type_check)=>
             variable_declaration_type[declaration_general_type_count + 1] |
 
-            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
+            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && declaration_check(stmt_type, secondtoken, type_count, after_token, true) }?
             variable_declaration_type[type_count + 1] |
 
             generic_selection_association_default
@@ -18625,7 +19500,7 @@ parameter[] {
             // a function pointer parameter, except for C, which is checked above
             {
                 !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
-                && pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                && declaration_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
@@ -19053,7 +19928,7 @@ parameter_type[] {
         }
 
         {
-            pattern_check(stmt_type, secondtoken, type_count, after_token)
+            declaration_check(stmt_type, secondtoken, type_count, after_token)
             && (type_count ? type_count : (type_count = 1))
         }?
         // match auto keyword first as a special case; do not warn about ambiguity
@@ -19181,7 +20056,7 @@ template_inner_full[] {
         template_in_parameter_list_full
 
         {
-            pattern_check(stmt_type, secondtoken, type_count, after_token)
+            declaration_check(stmt_type, secondtoken, type_count, after_token)
             && (type_count ? type_count : (type_count = 1))
         }?
         eat_type[type_count]
