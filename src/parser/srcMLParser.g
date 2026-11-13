@@ -4578,6 +4578,19 @@ cxx_template_start[] { ENTRY_DEBUG } :
   Statements, declarations, and definitions that must be matched by pattern, by syntactic predicates for each kind.
 */
 pattern_statements_simple[] { ENTRY_DEBUG } :
+        // an Objective-C access specifier or protocol section, e.g., "@private" or "@optional"
+        {
+            inLanguage(LANGUAGE_OBJECTIVE_C)
+            && (
+                LA(1) == PUBLIC
+                || LA(1) == PRIVATE
+                || LA(1) == PROTECTED
+                || LA(1) == ATREQUIRED
+                || LA(1) == ATOPTIONAL
+            )
+        }?
+        access_specifier_region |
+
         // struct, union, or enum definition
         (type_definition_simple_check)=>
         type_definition_simple |
