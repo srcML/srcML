@@ -20845,7 +20845,7 @@ parameter_function_pointer_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         (options { greedy = true; } :
             { !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN) }?
             declaration_general_part
