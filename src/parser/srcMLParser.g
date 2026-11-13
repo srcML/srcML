@@ -20776,7 +20776,7 @@ parameter[] {
 
             // a function pointer parameter, except for C, which is checked above
             {
-                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                !inLanguage(LANGUAGE_C)
                 && declaration_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION_DECL
@@ -20811,7 +20811,7 @@ parameter_simple_check[] {
         ENTRY_DEBUG
 } :
         // a type does not start with "*" or "&", e.g., "*p" or "&a->b" is an argument
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != MULTOPS && LA(1) != REFOPS }?
+        { inLanguage(LANGUAGE_C) && LA(1) != MULTOPS && LA(1) != REFOPS }?
         (
             // a single name, but not before ";", e.g., "__noreturn;" after a function pointer
             { parameter_simple_name_scan() && LA(scan_skip(2)) != TERMINATE }?
@@ -20891,7 +20891,7 @@ parameter_function_pointer_check[] {
   A C struct, union, or enum type with no name before ";", e.g., "struct s;" or "struct s *;".
 */
 parameter_class_check[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         (STRUCT | UNION | ENUM)
         NAME
         (MULTOPS)*
