@@ -29156,7 +29156,7 @@ cmake_expression[] { ENTRY_DEBUG
             }
             consume();
         }
-        if (LA(1) != RPAREN) {
+        if (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
             ++token_count;
             if (starting_token != LA(1)) {
                 mark_as_plaintext_string = true;

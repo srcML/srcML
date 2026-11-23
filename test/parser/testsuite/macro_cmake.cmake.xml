@@ -27,4 +27,7 @@
 </block>endmacro()</macro_defn>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<macro_defn>macro(<expr><name>f</name></expr> <parameter><expr><name>a</name></expr></parameter><block/></macro_defn></unit>
+
 </unit>
