@@ -2335,6 +2335,10 @@ cmake_statement_level[] { ENTRY_DEBUG
                 if (rule.elementToken) {
                     processRule(rule);
                 }
+                else {
+                    // consume to be safe
+                    consume();
+                }
             }
             else {
                 // consume to be safe

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="statement_level">
+
+<unit revision="1.0.0" language="CMake">
+((
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+)(
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+1(
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+1 (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+"<command><name>x</name></command>"(
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+"<command><name>x</name></command>" (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+"<command><name>x</name></command>"
+(
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+${<command><name>a</name></command>} (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+$ENV{<command><name>a</name></command>} (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+[[<command><name>a</name></command>]] (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+TRUE (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+IN (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+PROPAGATE (
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></command>)(
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></command> "<command><name>x</name></command>" (<command><name>b</name></command>)
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+"<command><name>x</name></command>" (
+<command><name>set</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><name>a</name></expr>)</condition><block>
+"<command><name>x</name></command>" (<command><name>b</name></command>)
+</block></if>endif()</if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><name>a</name></expr>)</condition><block>
+1 (
+</block></if><else>else<condition>()</condition><block>
+2 (
+</block></else>endif()</if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>f</name></expr>)<block>
+((
+</block>endfunction()</function>
+</unit>
+
+</unit>
