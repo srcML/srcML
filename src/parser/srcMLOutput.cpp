@@ -462,13 +462,13 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if (isoption(options, SRCML_PARSER_OPTION_CPP_MARKUP_IF0)) {
         if (!soptions.empty())
             soptions += ',';
-        soptions = "CPP_MARKUP_IF0";
+        soptions += "CPP_MARKUP_IF0";
     }
 
     if (isoption(options, SRCML_OPTION_LINE)) {
         if (!soptions.empty())
             soptions += ',';
-        soptions = "LINE";
+        soptions += "LINE";
     }
 
     // revision standard attribute
