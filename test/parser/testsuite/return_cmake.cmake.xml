@@ -28,4 +28,7 @@
 <return>return(<propagate>PROPAGATE <expr><name><expr type="name">${<name>result_var1</name>}</expr></name></expr> <expr><name><expr type="name">${<name>result_var2</name>}</expr></name></expr></propagate>)</return>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<return>return(<propagate>PROPAGATE <expr><name>a</name></expr></propagate></return></unit>
+
 </unit>

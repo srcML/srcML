@@ -39,4 +39,7 @@
 </block>endfunction()</function>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<function>function(<expr><name>f</name></expr> <parameter><expr><name>a</name></expr></parameter><block/></function></unit>
+
 </unit>
