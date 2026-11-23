@@ -85,6 +85,8 @@ private :
 
     /** has reached end of parsing*/
     bool is_done = false;
+    /** root element is not a unit */
+    bool invalid_root = false;
     /** has passed root*/
     bool read_root = false;
     /** stop after collecting unit attribute*/
@@ -184,6 +186,7 @@ public :
      */
     void done() {
 
+        std::unique_lock<std::mutex> lock(mutex);
         is_done = true;
 
         cond.notify_one();
@@ -232,13 +235,20 @@ public :
      *
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
-    virtual void startRoot(const char* /* localname */, const char* /* prefix */, const char* /* URI */,
+    virtual void startRoot(const char* localname, const char* /* prefix */, const char* /* URI */,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+        // the root must be a unit to be srcML
+        if (std::string_view(localname) != "unit"sv) {
+            invalid_root = true;
+            srcSAXHandler::stop_parser();
+            return;
+        }
 
         if (!is_archive)
             archive->options &= ~SRCML_OPTION_ARCHIVE;

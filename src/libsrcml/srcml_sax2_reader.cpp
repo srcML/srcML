@@ -26,13 +26,10 @@ static void* start_routine(thread_args* args) {
         if (!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END || error.error_code == XML_ERR_USER_STOP)) {
 
             fprintf(stderr, "Error Parsing: %s\n", error.message.data());
-
-            args->handler->done();
         }
-
-        // might have to release a lock here or set is_done
     }
 
+    args->handler->done();
     return 0;
 }
 
@@ -52,6 +49,12 @@ srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xml
     thread = std::thread(start_routine, &args);
 
     handler.wait();
+
+    // not srcML
+    if (handler.invalid_root) {
+        thread.join();
+        throw SAXError { "Input root is not a unit", XML_ERR_DOCUMENT_START };
+    }
 }
 
 /**
