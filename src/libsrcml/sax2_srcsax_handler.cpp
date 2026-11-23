@@ -249,6 +249,13 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state == nullptr)
         return;
 
+    // a root that is not a unit does not need to be delayed
+    if (strcmp((const char*) localname, "unit") != 0) {
+        state->context->handler->start_root(state->context, (const char*) localname,
+            (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
+        return;
+    }
+
     update_ctx(ctx);
 
     SRCSAX_DEBUG_START(localname);
