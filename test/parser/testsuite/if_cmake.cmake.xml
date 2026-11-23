@@ -30,4 +30,23 @@
 </block></else>endif()</if_stmt>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><name>a</name></expr></condition><block/></if></if_stmt></unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><name>a</name> <name>b</name></expr></condition><block/></if></if_stmt></unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><operator>(</operator><name>a</name></expr></condition><block/></if></if_stmt></unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr></condition><block/></if></if_stmt></unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><name><expr type="name">${<name>a</name>}</expr></name></expr></condition><block/></if></if_stmt></unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><name>a</name></expr>)</condition><block>
+</block></if><if type="elseif">elseif<condition>(<expr><name>b</name></expr></condition><block/></if></if_stmt></unit>
+
 </unit>
