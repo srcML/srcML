@@ -133,4 +133,22 @@
 <command><name>foo</name><argument_list>(<argument><expr><literal type="string">HE-L\^LO\ HOW\ ARE\ YOU</literal></expr></argument>)</argument_list></command>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>a</name></expr></argument></argument_list></command></unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>a</name></expr></argument> <argument><expr><name>b</name></expr></argument></argument_list></command></unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument></argument_list></command></unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name><expr type="name">${<name>a</name>}</expr></name></expr></argument></argument_list></command></unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><literal type="string">a-b</literal></expr></argument></argument_list></command></unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>a</name></expr></argument></argument_list></command></unit>
+
 </unit>

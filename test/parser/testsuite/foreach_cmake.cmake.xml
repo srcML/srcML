@@ -136,4 +136,7 @@
 </block>endforeach()</foreach>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach<control>(<expr><name>a</name></expr> <range type="in">IN <list type="list">LISTS <expr><name>b</name></expr></list></range></control><block/></foreach></unit>
+
 </unit>

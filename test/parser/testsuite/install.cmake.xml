@@ -750,4 +750,7 @@
 <command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>a</name></expr></argument></option></argument_list></command>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>a</name></expr></argument></option></argument_list></command></unit>
+
 </unit>
