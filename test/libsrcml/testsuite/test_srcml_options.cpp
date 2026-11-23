@@ -11,6 +11,7 @@
 #include <srcml.h>
 #include <dassert.hpp>
 #include <string>
+#include <cstdlib>
 
 struct Pair {
     std::string source;
@@ -410,6 +411,222 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+    }
+
+    /*
+      options attribute output
+    */
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=") == std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_TEXT_ELSE);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_TEXT_ELSE\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_MARKUP_IF0);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_MARKUP_IF0\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_TEXT_ELSE);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_MARKUP_IF0);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_TEXT_ELSE,CPP_MARKUP_IF0\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_MARKUP_IF0);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_TEXT_ELSE);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_TEXT_ELSE,CPP_MARKUP_IF0\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_disable_solitary_unit(archive);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=") == std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_disable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_TEXT_ELSE);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_TEXT_ELSE\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_disable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_MARKUP_IF0);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_MARKUP_IF0\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_disable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_TEXT_ELSE);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_MARKUP_IF0);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_TEXT_ELSE,CPP_MARKUP_IF0\"") != std::string::npos), true);
+
+        free(s);
+    }
+
+    {
+        char* s = nullptr;
+        size_t size = 0;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_disable_solitary_unit(archive);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_MARKUP_IF0);
+        srcml_archive_enable_option(archive, SRCML_OPTION_CPP_TEXT_ELSE);
+        dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        dassert(srcml_unit_parse_memory(unit, "a;", 2), SRCML_STATUS_OK);
+        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        const std::string xml(s, size);
+        dassert((xml.find("options=\"CPP_TEXT_ELSE,CPP_MARKUP_IF0\"") != std::string::npos), true);
+
+        free(s);
     }
 
     srcml_cleanup_globals();
