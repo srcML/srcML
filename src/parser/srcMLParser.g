@@ -28668,7 +28668,7 @@ cmake_condition_expression[] { ENTRY_DEBUG
 
         // Need to look ahead and count how many tokens appear without a delimiter
         try {
-            while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN && LA(1) != LPAREN) {
+            while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN && LA(1) != LPAREN && LA(1) != antlr::Token::EOF_TYPE) {
                 ++token_count;
                 if (starting_token != LA(1)) {
                     mark_as_plaintext_string = true;
@@ -28678,7 +28678,7 @@ cmake_condition_expression[] { ENTRY_DEBUG
                 }
                 consume();
             }
-            if (LA(1) != RPAREN) {
+            if (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
                 ++token_count;
                 if (starting_token != LA(1)) {
                     mark_as_plaintext_string = true;
@@ -29440,7 +29440,7 @@ builtin_command_cmake[] { ENTRY_DEBUG
                     }
                 }
                 else {
-                    while(true) {
+                    while(LA(1) != antlr::Token::EOF_TYPE) {
                         std::string next_value = LT(1)->getText();
 
                         if (next_value == ")")

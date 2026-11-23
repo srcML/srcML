@@ -16,4 +16,7 @@
 </block>endwhile()</while>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<while>while<condition>(<expr><name>a</name></expr></condition><block/></while></unit>
+
 </unit>
