@@ -743,4 +743,11 @@
 <command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>PROJECT</name> <argument><expr><name>project</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.4.3.0</literal></expr></argument></option> <option><name>LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option> <option><name>DESCRIPTION</name> <argument><expr><literal type="string">"details"</literal></expr></argument></option> <option><name>HOMEPAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option> <option><name>PACKAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option> <option><name>FORMAT</name> <argument><expr><literal type="string">"format"</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name></option></argument_list></command></unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>a</name></expr></argument></option></argument_list></command>
+</unit>
+
 </unit>
