@@ -265,3 +265,47 @@ STDOUT
 
 srcml -l C++ --text= sub/f1.cpp
 check "$emptytextfilesrcml"
+
+# a backslash at the end of the text is not an escape
+# note: check expands the escapes in the expected output, so each pair is one backslash
+srcml -l C++ --text='\' | srcml
+check '\\'
+
+srcml -l C++ --text='a\' | srcml
+check 'a\\'
+
+srcml -l C++ -t 'a\' | srcml
+check 'a\\'
+
+srcml -l C++ --text='a\\' | srcml
+check 'a\\\\'
+
+srcml -l C++ --text='a\\\' | srcml
+check 'a\\\\\\'
+
+# after an escape
+srcml -l C++ --text='a\tb\' | srcml
+check "a	b\\\\"
+
+defineXML backslashsrcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr><name>a</name><operator>\\</operator></expr></unit>
+STDOUT
+
+srcml -l C++ --text='a\'
+check "$backslashsrcml"
+
+# after a NUL, in a separate unit
+defineXML nulbackslashsrcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="REVISION" language="C++" hash="08534f33c201a45017b502e90a800f1b708ebcb3"><expr><operator>\\</operator></expr></unit>
+
+	</unit>
+STDOUT
+
+srcml -l C++ --text='a;\0\'
+check "$nulbackslashsrcml"
