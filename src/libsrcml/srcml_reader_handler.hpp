@@ -272,10 +272,9 @@ public :
                 std::size_t prevCommaPos = 0;
                 while(prevCommaPos < value.size()) {
 
-                    commaPos = value.find(",", commaPos);
-                    std::string_view option(&value[prevCommaPos], commaPos - prevCommaPos);
-                    prevCommaPos = commaPos;
-                    ++prevCommaPos;
+                    commaPos = value.find(",", prevCommaPos);
+                    std::string_view option(std::string_view(value).substr(prevCommaPos, commaPos - prevCommaPos));
+                    prevCommaPos = commaPos == std::string::npos ? value.size() : commaPos + 1;
 
                     if (option == "XMLDECL"sv)
                         archive->options |= SRCML_OPTION_NO_XML_DECL;

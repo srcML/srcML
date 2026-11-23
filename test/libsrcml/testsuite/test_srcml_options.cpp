@@ -84,6 +84,334 @@ int main(int, char* argv[]) {
         }
     }
 
+    /*
+      options attribute
+      LINE and NAMESPACEDECL are for internal options, which are not in the result of srcml_archive_get_options()
+    */
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options=""><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), 0);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="XMLDECL"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_NO_XML_DECL);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="NAMESPACEDECL"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), 0);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_TEXT_ELSE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP_TEXT_ELSE);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_MARKUP_IF0"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP_MARKUP_IF0);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="LINE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), 0);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="UNKNOWN"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), 0);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_TEXT_ELSE,CPP_MARKUP_IF0"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP_TEXT_ELSE | SRCML_OPTION_CPP_MARKUP_IF0));
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_MARKUP_IF0,CPP_TEXT_ELSE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP_TEXT_ELSE | SRCML_OPTION_CPP_MARKUP_IF0));
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="LINE,CPP_TEXT_ELSE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP_TEXT_ELSE);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_TEXT_ELSE,LINE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP_TEXT_ELSE);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="UNKNOWN,XMLDECL"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_NO_XML_DECL);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="XMLDECL,NAMESPACEDECL,CPP_TEXT_ELSE,CPP_MARKUP_IF0,LINE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_CPP_TEXT_ELSE | SRCML_OPTION_CPP_MARKUP_IF0));
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options=","><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), 0);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_TEXT_ELSE,"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP_TEXT_ELSE);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options=",CPP_TEXT_ELSE"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP_TEXT_ELSE);
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        const std::string srcml_options = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" options="CPP_TEXT_ELSE,,CPP_MARKUP_IF0"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        dassert(srcml_archive_read_open_memory(archive, srcml_options.data(), srcml_options.size()), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP_TEXT_ELSE | SRCML_OPTION_CPP_MARKUP_IF0));
+
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        dassert(!unit, 0);
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
     srcml_cleanup_globals();
 
     return 0;
