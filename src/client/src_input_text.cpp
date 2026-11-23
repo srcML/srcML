@@ -89,6 +89,14 @@ int src_input_text(ParseQueue& queue,
 
                 // append the special character
                 ++escapePosition;
+
+                // a backslash at the end of the text is not an escape
+                if (escapePosition == raw_text.end()) {
+                    prequest->buffer.push_back('\\');
+                    pCurrentChar = raw_text.end();
+                    break;
+                }
+
                 switch (*escapePosition) {
                 case 'n':
                     prequest->buffer.push_back('\n');
