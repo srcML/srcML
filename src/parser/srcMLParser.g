@@ -1255,6 +1255,14 @@ public:
             return true;
         }
 
+        if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+            type = NONE;
+            token = 0;
+            type_count = 0;
+            after_token = 0;
+            return true;
+        }
+
         if (!inLanguage(LANGUAGE_CXX))
             return pattern_check(type, token, type_count, after_token, inparam);
 
@@ -7468,6 +7476,7 @@ pattern_check_statements[] {
         // checked by the statement rules before this
         if (
             !inLanguage(LANGUAGE_PYTHON)
+            && !inLanguage(LANGUAGE_JAVASCRIPT)
             && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
             && !inLanguage(LANGUAGE_CXX)
         )
