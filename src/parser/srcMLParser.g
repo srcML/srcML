@@ -2275,6 +2275,66 @@ public:
     }
 
     /*
+      property_type_guess
+
+      For an Objective-C property declaration, the number of parts of the type by property_type_start, in
+      declaration_general_type_count. Where a part does not parse, the parts before it.
+    */
+    bool property_type_guess() {
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            property_type_start_impl();
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        return true;
+    }
+
+    /*
+      property_name_scan
+
+      For property_type_start, the check from the token buffer, without parsing, that LA(1) is the name of the property,
+      i.e., a name followed by what may be after the name in a declaration.
+    */
+    bool property_name_scan() {
+
+        if (!c_name_token(LA(1)))
+            return false;
+
+        // the token after the name, past what is skipped
+        unsigned int i = scan_skip(2);
+
+        return LA(i) == LPAREN || LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA
+            || LA(i) == COLON || LA(i) == LCURLY || LA(i) == C_ATTRIBUTE || LA(i) == 1 /* EOF */;
+    }
+
+    /*
+      property_pointer_scan
+
+      For property_type_start, the check from the token buffer, without parsing, that LA(1) is a name before a block or
+      function pointer, e.g., "T" in "T (^handler)(int);".
+    */
+    bool property_pointer_scan() {
+
+        if (LA(1) != NAME)
+            return false;
+
+        unsigned int i = scan_skip(2);
+        if (LA(i) != LPAREN)
+            return false;
+
+        i = scan_skip(i + 1);
+
+        return LA(i) == MULTOPS || LA(i) == BLOCKOP;
+    }
+
+    /*
       index_token_scan
 
       For declaration_index and single_macro_index_start, the check from the token buffer, without parsing, that the
@@ -8942,11 +9002,40 @@ property_declaration[] { ENTRY_DEBUG } :
 
   Handles the final portion of an Objective-C property declaration.
 */
-property_declaration_post[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+property_declaration_post[] { ENTRY_DEBUG } :
         (property_attribute_list)*
 
-        { declaration_check(stmt_type, secondtoken, type_count, after_token) }?
-        variable_declaration[type_count]
+        { property_type_guess() }?
+        variable_declaration[declaration_general_type_count]
+;
+
+/*
+  property_type_start
+
+  The type of an Objective-C property declaration, with the number of its parts in declaration_general_type_count. The
+  name is the last name, e.g., "x" in "T x;", or a macro after it, e.g., "API_AVAILABLE" in "T x API_AVAILABLE(m);".
+*/
+property_type_start[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        (options { greedy = true; } :
+            { !property_name_scan() }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+            // a macro call before the last name, e.g., "NS_AVAILABLE(10_11)" in "T x NS_AVAILABLE(10_11) M;"
+            (macro_type_detector)=>
+            macro_call_inner
+            set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+            // the last name of the type before a block or function pointer, e.g., "T" in "T (^handler)(int);"
+            { property_pointer_scan() }?
+            NAME
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
 ;
 
 /*
