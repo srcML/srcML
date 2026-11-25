@@ -6481,7 +6481,15 @@ type_definition_specifier_check[] {
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
-        (options { greedy = true; } : STATIC | CONST | VOLATILE | EXTERN | INLINE | REGISTER)+
+        (options { greedy = true; } :
+            STATIC | CONST | VOLATILE | EXTERN | INLINE | REGISTER | THREAD_LOCAL |
+
+            { next_token() != LPAREN }?
+            ATOMIC |
+
+            ALIGNAS
+            paren_pair
+        )+
 
         (
             STRUCT
