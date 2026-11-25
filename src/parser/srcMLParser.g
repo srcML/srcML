@@ -2432,7 +2432,8 @@ public:
 
         i = scan_skip(i + 1);
 
-        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN || LA(i) == C_ATTRIBUTE;
+        // a block pointer name starts with a "^", e.g., "void (^handler)(int);"
+        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == BLOCKOP || LA(i) == LPAREN || LA(i) == C_ATTRIBUTE;
     }
 
     /*
