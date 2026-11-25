@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C" url="macro type attribute" filename="macro_type_attribute_c">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><specifier>extern</specifier> <specifier>const</specifier> <macro><name>M</name><argument_list>(<argument>T</argument>)</argument_list></macro></type> <name>e</name> <attribute>__attribute__((<expr><name>x</name></expr>))</attribute></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><specifier>extern</specifier> <macro><name>M</name><argument_list>(<argument>T</argument>)</argument_list></macro></type> <name>e</name> <attribute>__attribute__((<expr><name>x</name></expr>))</attribute></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><specifier>const</specifier> <macro><name>M</name><argument_list>(<argument>T</argument>)</argument_list></macro></type> <name>e</name> <attribute>__attribute__((<expr><name>x</name></expr>))</attribute></decl>;</decl_stmt>
+</unit>
+
+</unit>

@@ -2432,7 +2432,57 @@ public:
 
         i = scan_skip(i + 1);
 
-        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == LPAREN || LA(i) == C_ATTRIBUTE;
+        // a block pointer name starts with a "^", e.g., "void (^handler)(int);"
+        return LA(i) == NAME || LA(i) == MULTOPS || LA(i) == BLOCKOP || LA(i) == LPAREN || LA(i) == C_ATTRIBUTE;
+    }
+
+    /*
+      function_pointer_list_scan
+
+      For function_pointer_declaration_start, the check from the token buffer, without parsing, that all declarators after
+      the "," LA(1) are function pointers or functions, e.g., ", (*g)(char)", ", *(*g)(char)", or ", g(char)".
+    */
+    bool function_pointer_list_scan() {
+
+        if (LA(1) != COMMA)
+            return false;
+
+        int depth = 0;
+        for (unsigned int i = 1; ; i = scan_skip(i + 1)) {
+            switch (LA(i)) {
+            case LPAREN:
+                ++depth;
+                break;
+
+            case RPAREN:
+                --depth;
+                break;
+
+            case COMMA:
+                {
+                    if (depth > 0)
+                        break;
+
+                    unsigned int next = scan_skip(i + 1);
+                    while (LA(next) == MULTOPS)
+                        next = scan_skip(next + 1);
+                    if (LA(next) == NAME)
+                        next = scan_skip(next + 1);
+                    if (LA(next) != LPAREN)
+                        return false;
+                }
+                break;
+
+            case TERMINATE:
+            case EQUAL:
+                return true;
+
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+            }
+        }
     }
 
     /*
@@ -5429,7 +5479,10 @@ type_declaration_simple_check[] { ENTRY_DEBUG } :
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         (
-            { !inTransparentMode(MODE_TYPEDEF) }?
+            {
+                !inTransparentMode(MODE_TYPEDEF)
+                || (inLanguage(LANGUAGE_C) && inTransparentMode(MODE_INNER_DECL))
+            }?
             (
                 { inLanguage(LANGUAGE_C) && next_token() != LPAREN }?
                 ATOMIC
@@ -5447,7 +5500,10 @@ type_declaration_simple_check[] { ENTRY_DEBUG } :
 
             (
                 // an enum may have an underlying type, e.g., "enum e : unsigned int;"
-                { !inTransparentMode(MODE_TYPEDEF) }?
+                {
+                    !inTransparentMode(MODE_TYPEDEF)
+                    || (inLanguage(LANGUAGE_C) && inTransparentMode(MODE_INNER_DECL))
+                }?
                 NAME
 
                 (enum_underlying_type)?
@@ -6072,6 +6128,13 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
         atomic
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
 
+        // "auto", a specifier before a type, e.g., "auto int x;", or a type, e.g., "auto x = 1;"
+        auto_keyword[false]
+        set_int[
+            declaration_general_type_parts,
+            declaration_general_type_parts + (class_tokens_set.member(LA(1)) ? 0 : 1)
+        ] |
+
         (macro_type_detector)=>
         macro_call_inner
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
@@ -6163,7 +6226,6 @@ macro_before_struct_start[] {
             && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
-            && !inTransparentMode(MODE_TYPEDEF)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         NAME
@@ -6172,7 +6234,12 @@ macro_before_struct_start[] {
 
         (
             NAME
-            (LCURLY | TERMINATE) |
+            (
+                LCURLY | NAME LCURLY |
+
+                { !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_INNER_DECL) }?
+                TERMINATE
+            ) |
 
             LCURLY
         )
@@ -6199,6 +6266,11 @@ extern_block_start[] {
 
         (
             STRING_START |
+
+            // in C, a macro as the type of a variable is a declaration, e.g., "extern M(T) x __attribute__((a));"
+            (macro_type_detector)=>
+            NAME
+            throw_exception[true] |
 
             // in C, a name and call syntax that is not a declarator, e.g., "extern DECLARE_BITMAP(b, N);"
             { inLanguage(LANGUAGE_C) && LA(1) == NAME && next_token() == LPAREN && !macro_call_declarator_scan() }?
@@ -6474,7 +6546,15 @@ type_definition_specifier_check[] {
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
-        (options { greedy = true; } : STATIC | CONST | VOLATILE | EXTERN | INLINE | REGISTER)+
+        (options { greedy = true; } :
+            STATIC | CONST | VOLATILE | EXTERN | INLINE | REGISTER | THREAD_LOCAL |
+
+            { next_token() != LPAREN }?
+            ATOMIC |
+
+            ALIGNAS
+            paren_pair
+        )+
 
         (
             STRUCT
@@ -7064,6 +7144,14 @@ function_pointer_declaration_start[] {
 
         (
             EQUAL |
+
+            // in C, a list of function pointers, e.g., "typedef int (*f)(int), (*g)(char);"
+            {
+                inLanguage(LANGUAGE_C)
+                && !(((type_parts > 0 && last_name) || has_class) && inTransparentMode(MODE_FUNCTION_BODY))
+                && function_pointer_list_scan()
+            }?
+            COMMA |
 
             { !(((type_parts > 0 && last_name) || has_class) && inTransparentMode(MODE_FUNCTION_BODY)) }?
             TERMINATE
@@ -7956,6 +8044,10 @@ function_tail[] { ENTRY_DEBUG } :
 
                 { look_past_two(NAME, VOID) == LCURLY }?
                 simple_identifier |
+
+                // another function head, e.g., "int f(a)" in "int f(int a) int f(a) int a; {" for an "#else"
+                (kr_function_head_check)=>
+                kr_function_head |
 
                 parameter
                 (MULTOPS | simple_identifier | COMMA)*
@@ -20274,6 +20366,41 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
 ;
 
 /*
+  kr_function_head
+
+  For function_tail, a C function head before K&R function parameters, e.g., "int f(a)" in
+  "int f(int a) int f(a) int a; {", where the heads are in an "#if" and an "#else".
+*/
+kr_function_head[] { ENTRY_DEBUG } :
+        (options { greedy = true; } : STATIC | EXTERN | INLINE | CONST)*
+
+        (STRUCT | UNION | ENUM)?
+
+        (options { greedy = true; } : NAME | VOID)+
+
+        (options { greedy = true; } : MULTOPS (NAME)?)*
+
+        paren_pair
+;
+
+/*
+  kr_function_head_check
+
+  A C function head, then K&R function parameters and the start of the body.
+*/
+kr_function_head_check[] { ENTRY_DEBUG } :
+        kr_function_head
+
+        (
+            parameter
+            (MULTOPS | simple_identifier | COMMA)*
+            TERMINATE
+        )+
+
+        LCURLY
+;
+
+/*
   kr_parameter_check
 
   A C K&R parameter declaration after the parameter list of a function, e.g., "int a;" in "int f(a) int a; {".
@@ -20339,6 +20466,13 @@ declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_po
         (declaration_index[index_union])*
         (EQUAL | COLON)
         set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier || last_pointer ? 1 : 0)] |
+
+        // a macro call as the type, e.g., "extern M(T) x __attribute__((a));"
+        (macro_type_detector)=>
+        macro_call_inner
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        declaration_index_attribute_type[false, false, false, index_union] |
 
         { !(LA(1) == NAME && next_token() == LPAREN) }?
         set_bool[

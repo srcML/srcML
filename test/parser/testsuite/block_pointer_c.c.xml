@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C" url="block pointer" filename="block_pointer_c">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<typedef>typedef <function_decl><type><name>void</name></type> (<modifier>^</modifier><name>h</name>)<parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<typedef>typedef <function_decl><type><name>T</name></type> (<modifier>^</modifier><name>h</name>)<parameter_list>(<parameter><decl><type><name>T</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<typedef>typedef <function_decl><type><name>unsigned</name> <name>int</name></type> (<modifier>^</modifier><name>h</name>)<parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<typedef>typedef <function_decl><type><name><name>struct</name> <name>s</name></name> <modifier>*</modifier></type>(<modifier>^</modifier><name>h</name>)<parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<function_decl><type><name>void</name></type> (<modifier>^</modifier><name>h</name>)<parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<struct>struct <name>s</name> <block>{ <function_decl><type><name>int</name></type> (<modifier>^</modifier><name>f</name>)<parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list>;</function_decl> }</block>;</struct>
+</unit>
+
+</unit>
