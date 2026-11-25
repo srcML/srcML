@@ -5377,11 +5377,22 @@ type_definition_simple_check[] { ENTRY_DEBUG } :
             (STRUCT | UNION)
             (identifier ((paren_pair)? identifier)?)? |
 
+            // an enum may have an underlying type after its name, e.g., "enum e : unsigned int {"
             ENUM
-            (NAME)?
+            (NAME (enum_underlying_type)?)?
         )
 
         LCURLY
+;
+
+/*
+  enum_underlying_type
+
+  The underlying type of an enum, e.g., ": unsigned int" in "enum e : unsigned int {".
+*/
+enum_underlying_type[] { ENTRY_DEBUG } :
+        COLON
+        (NAME | CONST | VOLATILE | ATOMIC)+
 ;
 
 /*
@@ -5415,10 +5426,10 @@ type_declaration_simple_check[] { ENTRY_DEBUG } :
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && !inTransparentMode(MODE_CONDITION)
-            && !inTransparentMode(MODE_TYPEDEF)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         (
+            { !inTransparentMode(MODE_TYPEDEF) }?
             (
                 { inLanguage(LANGUAGE_C) && next_token() != LPAREN }?
                 ATOMIC
@@ -5428,14 +5439,26 @@ type_declaration_simple_check[] { ENTRY_DEBUG } :
 
             NAME
 
-            (COMMA NAME)* |
+            (COMMA NAME)*
+
+            TERMINATE |
 
             ENUM
 
-            NAME
-        )
+            (
+                // an enum may have an underlying type, e.g., "enum e : unsigned int;"
+                { !inTransparentMode(MODE_TYPEDEF) }?
+                NAME
 
-        TERMINATE
+                (enum_underlying_type)?
+
+                TERMINATE |
+
+                // an enum without a name with an underlying type is a declaration, also in a typedef, e.g.,
+                // "enum : unsigned int {"
+                COLON
+            )
+        )
 ;
 
 /*
@@ -6465,6 +6488,12 @@ type_definition_specifier_check[] {
         )
 
         (identifier ((paren_pair)? identifier)?)?
+
+        // an enum may have an underlying type, e.g., "const enum e : unsigned int {"
+        (
+            { type_definition_specifier_element == 0 }?
+            enum_underlying_type
+        )?
 
         LCURLY
 ;
