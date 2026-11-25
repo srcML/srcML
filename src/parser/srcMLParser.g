@@ -2269,8 +2269,69 @@ public:
         // the token after the name, past what is skipped
         unsigned int i = scan_skip(2);
 
+        // in Objective-C, the name may be before the "in" of a "for", e.g., "for (int p in a)"
         return LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA || LA(i) == LCURLY
-            || LA(i) == 1 /* EOF */;
+            || LA(i) == 1 /* EOF */ || (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(i) == IN);
+    }
+
+    /*
+      property_type_guess
+
+      For an Objective-C property declaration, the number of parts of the type by property_type_start, in
+      declaration_general_type_count. Where a part does not parse, the parts before it.
+    */
+    bool property_type_guess() {
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            property_type_start_impl();
+        } catch (...) {}
+        failed = false;
+
+        inputState->guessing--;
+        rewind(start);
+
+        return true;
+    }
+
+    /*
+      property_name_scan
+
+      For property_type_start, the check from the token buffer, without parsing, that LA(1) is the name of the property,
+      i.e., a name followed by what may be after the name in a declaration.
+    */
+    bool property_name_scan() {
+
+        if (!c_name_token(LA(1)))
+            return false;
+
+        // the token after the name, past what is skipped
+        unsigned int i = scan_skip(2);
+
+        return LA(i) == LPAREN || LA(i) == LBRACKET || LA(i) == TERMINATE || LA(i) == EQUAL || LA(i) == COMMA
+            || LA(i) == COLON || LA(i) == LCURLY || LA(i) == C_ATTRIBUTE || LA(i) == 1 /* EOF */;
+    }
+
+    /*
+      property_pointer_scan
+
+      For property_type_start, the check from the token buffer, without parsing, that LA(1) is a name before a block or
+      function pointer, e.g., "T" in "T (^handler)(int);".
+    */
+    bool property_pointer_scan() {
+
+        if (LA(1) != NAME)
+            return false;
+
+        unsigned int i = scan_skip(2);
+        if (LA(i) != LPAREN)
+            return false;
+
+        i = scan_skip(i + 1);
+
+        return LA(i) == MULTOPS || LA(i) == BLOCKOP;
     }
 
     /*
@@ -2352,13 +2413,14 @@ public:
       c_name_token
 
       Whether the token is a name in C: a name, "main", or a word that is a name in C, e.g., "line" or "define", or
-      "__weak" or "__strong".
+      "__weak" or "__strong", or in Objective-C, "import".
     */
     bool c_name_token(int token) {
 
         switch (token) {
         case NAME:
         case MAIN:
+        case IMPORT:
         case WEAK:
         case STRONG:
         case INCLUDE:
@@ -2387,7 +2449,7 @@ public:
     */
     bool expression_other_scan() {
 
-        if (!inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_OBJECTIVE_C))
+        if (!inLanguage(LANGUAGE_C))
             return false;
 
         switch (LA(1)) {
@@ -4578,6 +4640,19 @@ cxx_template_start[] { ENTRY_DEBUG } :
   Statements, declarations, and definitions that must be matched by pattern, by syntactic predicates for each kind.
 */
 pattern_statements_simple[] { ENTRY_DEBUG } :
+        // an Objective-C access specifier or protocol section, e.g., "@private" or "@optional"
+        {
+            inLanguage(LANGUAGE_OBJECTIVE_C)
+            && (
+                LA(1) == PUBLIC
+                || LA(1) == PRIVATE
+                || LA(1) == PROTECTED
+                || LA(1) == ATREQUIRED
+                || LA(1) == ATOPTIONAL
+            )
+        }?
+        access_specifier_region |
+
         // struct, union, or enum definition
         (type_definition_simple_check)=>
         type_definition_simple |
@@ -6045,7 +6120,6 @@ declaration_general_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
@@ -6075,6 +6149,9 @@ declaration_general_start[] {
 
             (
                 TERMINATE | EQUAL | COMMA |
+
+                { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+                IN |
 
                 // not in a function tail, where "{" starts the body
                 { !inMode(MODE_FUNCTION_TAIL) }?
@@ -6231,7 +6308,6 @@ macro_before_struct_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
@@ -6268,7 +6344,6 @@ extern_block_start[] {
 } :
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
         }?
         EXTERN
 
@@ -6304,7 +6379,6 @@ specifier_call_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -6369,7 +6443,6 @@ asm_volatile_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -6400,7 +6473,6 @@ name_other_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -6458,7 +6530,6 @@ declaration_specifier_only_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -6550,7 +6621,6 @@ type_definition_specifier_check[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
@@ -6623,7 +6693,6 @@ function_general_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
@@ -6684,7 +6753,6 @@ declaration_paren_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
@@ -7374,7 +7442,6 @@ single_macro_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -7410,7 +7477,6 @@ name_call_start[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
             && !inTransparentMode(MODE_TYPEDEF)
@@ -7477,11 +7543,11 @@ pattern_check_statements[] {
         if (
             !inLanguage(LANGUAGE_PYTHON)
             && !inLanguage(LANGUAGE_JAVASCRIPT)
-            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            && !inLanguage(LANGUAGE_C)
             && !inLanguage(LANGUAGE_CXX)
         )
             pattern_check(stmt_type, secondtoken, type_count, after_token);
-        else if ((inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) || inLanguage(LANGUAGE_CXX))
+        else if (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             secondtoken = next_token();
 
         ENTRY_DEBUG
@@ -8936,11 +9002,40 @@ property_declaration[] { ENTRY_DEBUG } :
 
   Handles the final portion of an Objective-C property declaration.
 */
-property_declaration_post[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+property_declaration_post[] { ENTRY_DEBUG } :
         (property_attribute_list)*
 
-        { declaration_check(stmt_type, secondtoken, type_count, after_token) }?
-        variable_declaration[type_count]
+        { property_type_guess() }?
+        variable_declaration[declaration_general_type_count]
+;
+
+/*
+  property_type_start
+
+  The type of an Objective-C property declaration, with the number of its parts in declaration_general_type_count. The
+  name is the last name, e.g., "x" in "T x;", or a macro after it, e.g., "API_AVAILABLE" in "T x API_AVAILABLE(m);".
+*/
+property_type_start[] {
+        declaration_general_type_count = 0;
+        declaration_general_type_parts = 0;
+
+        ENTRY_DEBUG
+} :
+        (options { greedy = true; } :
+            { !property_name_scan() }?
+            declaration_general_part
+            set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+            // a macro call before the last name, e.g., "NS_AVAILABLE(10_11)" in "T x NS_AVAILABLE(10_11) M;"
+            (macro_type_detector)=>
+            macro_call_inner
+            set_int[declaration_general_type_count, declaration_general_type_count + 1] |
+
+            // the last name of the type before a block or function pointer, e.g., "T" in "T (^handler)(int);"
+            { property_pointer_scan() }?
+            NAME
+            set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        )*
 ;
 
 /*
@@ -9670,7 +9765,7 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             // explicitly check for a variable declaration since it can easily be confused with an expression, except
             // for C, which is checked above
             {
-                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                !inLanguage(LANGUAGE_C)
                 && declaration_check(stmt_type, secondtoken, type_count, after_token)
                 && stmt_type == VARIABLE
             }?
@@ -9704,7 +9799,6 @@ control_initialization_range_check[] {
 } :
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !initialization_expression_scan()
         }?
         declaration_general_part
@@ -11900,7 +11994,6 @@ statement_part[] {
         // C K&R function parameters, e.g., "int a;" in "int f(a) int a; {"
         {
             inLanguage(LANGUAGE_C)
-            && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && inMode(MODE_FUNCTION_TAIL)
             && kr_parameter_guess()
         }?
@@ -11910,7 +12003,7 @@ statement_part[] {
         {
             (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
-            && !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+            && !inLanguage(LANGUAGE_C)
             && declaration_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
             && after_token != LCURLY
@@ -12458,7 +12551,7 @@ condition_inner[] {
         STMT_TYPE stmt_type = NONE;
 
         // a C condition is checked for a declaration by condition_declaration_check
-        if (!(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)))
+        if (!inLanguage(LANGUAGE_C))
             declaration_check(stmt_type, secondtoken, type_count, after_token);
 
         if (stmt_type == VARIABLE) {
@@ -12492,7 +12585,7 @@ condition_declaration_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && condition_declaration_scan() }?
+        { inLanguage(LANGUAGE_C) && condition_declaration_scan() }?
 
         // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
         (options { greedy = true; } :
@@ -17647,8 +17740,21 @@ for_like_list_item[] {
 
         ENTRY_DEBUG
 } :
-        // explicitly check for a variable declaration since it can easily be confused with an expression
-        { declaration_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+        // an Objective-C variable declaration with a type of any parts, e.g., "T *p = q"
+        (declaration_general_start)=>
+        control_initialization_variable_declaration[declaration_general_type_count] |
+
+        // an Objective-C variable declaration with an index of any expression or an attribute, e.g., "T a[N + 1] = {}"
+        (declaration_index_attribute_start[true])=>
+        control_initialization_variable_declaration[declaration_general_type_count] |
+
+        // explicitly check for a variable declaration since it can easily be confused with an expression, except for
+        // Objective-C, which is checked above
+        {
+            !inLanguage(LANGUAGE_C)
+            && declaration_check(stmt_type, secondtoken, type_count, after_token)
+            && stmt_type == VARIABLE
+        }?
         control_initialization_variable_declaration[type_count] |
 
         {
@@ -18026,7 +18132,7 @@ generic_selection_association_type[] {
             (generic_selection_association_type_check)=>
             variable_declaration_type[declaration_general_type_count + 1] |
 
-            { !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C)) && declaration_check(stmt_type, secondtoken, type_count, after_token, true) }?
+            { !inLanguage(LANGUAGE_C) && declaration_check(stmt_type, secondtoken, type_count, after_token, true) }?
             variable_declaration_type[type_count + 1] |
 
             generic_selection_association_default
@@ -18049,7 +18155,7 @@ generic_selection_association_type_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         (options { greedy = true; } :
             declaration_general_part
             set_int[declaration_general_type_count, declaration_general_type_count + 1]
@@ -20435,7 +20541,7 @@ declaration_index_attribute_start[bool index_union] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && !initialization_expression_scan() }?
+        { inLanguage(LANGUAGE_C) && !initialization_expression_scan() }?
 
         // a name before a struct, union, or enum type, e.g., "__iomem" in "__iomem struct s *p", is one more part
         (options { greedy = true; } :
@@ -20516,7 +20622,7 @@ declaration_index[bool index_union] { bool is_complex = false; ENTRY_DEBUG } :
   The start of a C variable declaration with a macro as its type, e.g., "__aligned(64) x;".
 */
 macro_type_variable_start[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         NAME
 
         paren_pair
@@ -20534,7 +20640,7 @@ macro_type_variable_start[] { ENTRY_DEBUG } :
   first name is a macro.
 */
 single_macro_index_start[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         NAME
 
         (MULTOPS)*
@@ -20773,7 +20879,7 @@ parameter[] {
 
             // a function pointer parameter, except for C, which is checked above
             {
-                !(inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C))
+                !inLanguage(LANGUAGE_C)
                 && declaration_check(stmt_type, secondtoken, type_count, after_token, true)
                 && (
                     stmt_type == FUNCTION_DECL
@@ -20808,7 +20914,7 @@ parameter_simple_check[] {
         ENTRY_DEBUG
 } :
         // a type does not start with "*" or "&", e.g., "*p" or "&a->b" is an argument
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != MULTOPS && LA(1) != REFOPS }?
+        { inLanguage(LANGUAGE_C) && LA(1) != MULTOPS && LA(1) != REFOPS }?
         (
             // a single name, but not before ";", e.g., "__noreturn;" after a function pointer
             { parameter_simple_name_scan() && LA(scan_skip(2)) != TERMINATE }?
@@ -20844,7 +20950,7 @@ parameter_function_pointer_check[] {
 
         ENTRY_DEBUG
 } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         (options { greedy = true; } :
             { !((LA(1) == NAME || LA(1) == VOID) && next_token() == LPAREN) }?
             declaration_general_part
@@ -20888,7 +20994,7 @@ parameter_function_pointer_check[] {
   A C struct, union, or enum type with no name before ";", e.g., "struct s;" or "struct s *;".
 */
 parameter_class_check[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_C) }?
         (STRUCT | UNION | ENUM)
         NAME
         (MULTOPS)*
