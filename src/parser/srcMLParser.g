@@ -6235,7 +6235,7 @@ macro_before_struct_start[] {
         (
             NAME
             (
-                LCURLY |
+                LCURLY | NAME LCURLY |
 
                 { !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_INNER_DECL) }?
                 TERMINATE

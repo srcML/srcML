@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C" url="macro before struct" filename="macro_before_struct_c">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<macro><name>M</name></macro> <struct>struct <macro><name>N</name></macro> <name>s</name> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block>;</struct>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<macro><name>M</name></macro> <union>union <macro><name>N</name></macro> <name>s</name> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block>;</union>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<macro><name>M</name></macro> <struct>struct <macro><name>N</name></macro> <name>s</name> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block> <decl><name>x</name></decl>;</struct>
+</unit>
+
+</unit>
