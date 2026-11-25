@@ -6072,6 +6072,13 @@ declaration_general_part[] { bool is_compound = false; ENTRY_DEBUG } :
         atomic
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
 
+        // "auto", a specifier before a type, e.g., "auto int x;", or a type, e.g., "auto x = 1;"
+        auto_keyword[false]
+        set_int[
+            declaration_general_type_parts,
+            declaration_general_type_parts + (class_tokens_set.member(LA(1)) ? 0 : 1)
+        ] |
+
         (macro_type_detector)=>
         macro_call_inner
         set_int[declaration_general_type_parts, declaration_general_type_parts + 1] |
