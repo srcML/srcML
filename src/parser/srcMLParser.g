@@ -5478,7 +5478,10 @@ type_declaration_simple_check[] { ENTRY_DEBUG } :
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         (
-            { !inTransparentMode(MODE_TYPEDEF) }?
+            {
+                !inTransparentMode(MODE_TYPEDEF)
+                || (inLanguage(LANGUAGE_C) && inTransparentMode(MODE_INNER_DECL))
+            }?
             (
                 { inLanguage(LANGUAGE_C) && next_token() != LPAREN }?
                 ATOMIC
@@ -5496,7 +5499,10 @@ type_declaration_simple_check[] { ENTRY_DEBUG } :
 
             (
                 // an enum may have an underlying type, e.g., "enum e : unsigned int;"
-                { !inTransparentMode(MODE_TYPEDEF) }?
+                {
+                    !inTransparentMode(MODE_TYPEDEF)
+                    || (inLanguage(LANGUAGE_C) && inTransparentMode(MODE_INNER_DECL))
+                }?
                 NAME
 
                 (enum_underlying_type)?
@@ -6219,7 +6225,6 @@ macro_before_struct_start[] {
             && !inLanguage(LANGUAGE_OBJECTIVE_C)
             && !inMode(MODE_ENUM)
             && !inTransparentMode(MODE_CONDITION)
-            && !inTransparentMode(MODE_TYPEDEF)
             && !inTransparentMode(MODE_ARGUMENT)
         }?
         NAME
@@ -6228,7 +6233,12 @@ macro_before_struct_start[] {
 
         (
             NAME
-            (LCURLY | TERMINATE) |
+            (
+                LCURLY |
+
+                { !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_INNER_DECL) }?
+                TERMINATE
+            ) |
 
             LCURLY
         )
