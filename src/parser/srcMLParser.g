@@ -2436,6 +2436,55 @@ public:
     }
 
     /*
+      function_pointer_list_scan
+
+      For function_pointer_declaration_start, the check from the token buffer, without parsing, that all declarators after
+      the "," LA(1) are function pointers or functions, e.g., ", (*g)(char)", ", *(*g)(char)", or ", g(char)".
+    */
+    bool function_pointer_list_scan() {
+
+        if (LA(1) != COMMA)
+            return false;
+
+        int depth = 0;
+        for (unsigned int i = 1; ; i = scan_skip(i + 1)) {
+            switch (LA(i)) {
+            case LPAREN:
+                ++depth;
+                break;
+
+            case RPAREN:
+                --depth;
+                break;
+
+            case COMMA:
+                {
+                    if (depth > 0)
+                        break;
+
+                    unsigned int next = scan_skip(i + 1);
+                    while (LA(next) == MULTOPS)
+                        next = scan_skip(next + 1);
+                    if (LA(next) == NAME)
+                        next = scan_skip(next + 1);
+                    if (LA(next) != LPAREN)
+                        return false;
+                }
+                break;
+
+            case TERMINATE:
+            case EQUAL:
+                return true;
+
+            case LCURLY:
+            case RCURLY:
+            case 1 /* EOF */:
+                return false;
+            }
+        }
+    }
+
+    /*
       initialization_expression_scan
 
       For a C "for" initialization, the check from the token buffer, without parsing, that it is an expression, e.g.,
@@ -7079,6 +7128,14 @@ function_pointer_declaration_start[] {
 
         (
             EQUAL |
+
+            // in C, a list of function pointers, e.g., "typedef int (*f)(int), (*g)(char);"
+            {
+                inLanguage(LANGUAGE_C)
+                && !(((type_parts > 0 && last_name) || has_class) && inTransparentMode(MODE_FUNCTION_BODY))
+                && function_pointer_list_scan()
+            }?
+            COMMA |
 
             { !(((type_parts > 0 && last_name) || has_class) && inTransparentMode(MODE_FUNCTION_BODY)) }?
             TERMINATE
