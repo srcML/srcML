@@ -6266,6 +6266,11 @@ extern_block_start[] {
         (
             STRING_START |
 
+            // in C, a macro as the type of a variable is a declaration, e.g., "extern M(T) x __attribute__((a));"
+            (macro_type_detector)=>
+            NAME
+            throw_exception[true] |
+
             // in C, a name and call syntax that is not a declarator, e.g., "extern DECLARE_BITMAP(b, N);"
             { inLanguage(LANGUAGE_C) && LA(1) == NAME && next_token() == LPAREN && !macro_call_declarator_scan() }?
             NAME
@@ -20421,6 +20426,13 @@ declaration_index_attribute_type[bool no_name, bool last_specifier, bool last_po
         (declaration_index[index_union])*
         (EQUAL | COLON)
         set_int[declaration_general_type_count, declaration_general_type_count - (last_specifier || last_pointer ? 1 : 0)] |
+
+        // a macro call as the type, e.g., "extern M(T) x __attribute__((a));"
+        (macro_type_detector)=>
+        macro_call_inner
+        set_int[declaration_general_type_parts, declaration_general_type_parts + 1]
+        set_int[declaration_general_type_count, declaration_general_type_count + 1]
+        declaration_index_attribute_type[false, false, false, index_union] |
 
         { !(LA(1) == NAME && next_token() == LPAREN) }?
         set_bool[
