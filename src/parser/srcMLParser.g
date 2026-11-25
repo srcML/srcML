@@ -8045,6 +8045,10 @@ function_tail[] { ENTRY_DEBUG } :
                 { look_past_two(NAME, VOID) == LCURLY }?
                 simple_identifier |
 
+                // another function head, e.g., "int f(a)" in "int f(int a) int f(a) int a; {" for an "#else"
+                (kr_function_head_check)=>
+                kr_function_head |
+
                 parameter
                 (MULTOPS | simple_identifier | COMMA)*
                 TERMINATE
@@ -20359,6 +20363,41 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
         kr_parameter_terminate
 
         /* Commented-out code: complete_parameter terminate_pre terminate_token */
+;
+
+/*
+  kr_function_head
+
+  For function_tail, a C function head before K&R function parameters, e.g., "int f(a)" in
+  "int f(int a) int f(a) int a; {", where the heads are in an "#if" and an "#else".
+*/
+kr_function_head[] { ENTRY_DEBUG } :
+        (options { greedy = true; } : STATIC | EXTERN | INLINE | CONST)*
+
+        (STRUCT | UNION | ENUM)?
+
+        (options { greedy = true; } : NAME | VOID)+
+
+        (options { greedy = true; } : MULTOPS (NAME)?)*
+
+        paren_pair
+;
+
+/*
+  kr_function_head_check
+
+  A C function head, then K&R function parameters and the start of the body.
+*/
+kr_function_head_check[] { ENTRY_DEBUG } :
+        kr_function_head
+
+        (
+            parameter
+            (MULTOPS | simple_identifier | COMMA)*
+            TERMINATE
+        )+
+
+        LCURLY
 ;
 
 /*
