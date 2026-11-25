@@ -17740,8 +17740,21 @@ for_like_list_item[] {
 
         ENTRY_DEBUG
 } :
-        // explicitly check for a variable declaration since it can easily be confused with an expression
-        { declaration_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+        // an Objective-C variable declaration with a type of any parts, e.g., "T *p = q"
+        (declaration_general_start)=>
+        control_initialization_variable_declaration[declaration_general_type_count] |
+
+        // an Objective-C variable declaration with an index of any expression or an attribute, e.g., "T a[N + 1] = {}"
+        (declaration_index_attribute_start[true])=>
+        control_initialization_variable_declaration[declaration_general_type_count] |
+
+        // explicitly check for a variable declaration since it can easily be confused with an expression, except for
+        // Objective-C, which is checked above
+        {
+            !inLanguage(LANGUAGE_C)
+            && declaration_check(stmt_type, secondtoken, type_count, after_token)
+            && stmt_type == VARIABLE
+        }?
         control_initialization_variable_declaration[type_count] |
 
         {
