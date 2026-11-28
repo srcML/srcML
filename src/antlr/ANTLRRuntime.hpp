@@ -380,7 +380,7 @@ private:
 	template <class T>
 	friend class TokenRefCount;
 	unsigned int refCount = 0;
-	int type = INVALID_TYPE;
+	int16_t type = INVALID_TYPE;
 
 public:
 	/** token category */
