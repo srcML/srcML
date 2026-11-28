@@ -339,13 +339,13 @@ public:
 	}
 
 	/** memory of deleted tokens, per thread */
-	typedef BlockPool<Token, 4096> FreeTokens;
+	typedef BlockPool<Token, 65536> FreeTokens;
 
 	// reuse the memory of deleted tokens, since tokens are created and deleted constantly
 	static void* operator new(std::size_t size) {
 		if (void* p = FreeTokens::take())
 			return p;
-		return ::operator new(size);
+		return allocate();
 	}
 	static void operator delete(void* p) {
 		if (!FreeTokens::give(p))
@@ -357,14 +357,28 @@ public:
 	static Token* create(FreeTokens::List& pool, Args&&... args) {
 		void* p = FreeTokens::take(pool);
 		if (!p)
-			p = ::operator new(sizeof(Token));
+			p = allocate();
 		Token* token = ::new (p) Token(std::forward<Args>(args)...);
 		token->pool = &pool;
 		return token;
 	}
 
+	// memory for a token when its pool has none
+	ANTLR_NOINLINE ANTLR_PRESERVE_MOST static void* allocate() { return ::operator new(sizeof(Token)); }
+
 	// delete the token, to its pool when known
 	static void destroy(Token* token) {
+		FreeTokens::List* p = token->pool;
+		if (!p) {
+			delete token;
+			return;
+		}
+		token->~Token();
+		if (!FreeTokens::give(*p, token))
+			::operator delete(token);
+	}
+
+	ANTLR_ALWAYS_INLINE static void destroyInline(Token* token) {
 		FreeTokens::List* p = token->pool;
 		if (!p) {
 			delete token;
