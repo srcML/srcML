@@ -12,53 +12,7 @@
 
 #include <TokenParser.hpp>
 #include <srcMLState.hpp>
-#include <BlockPool.hpp>
-#include <list>
-
-/**
- * ModeAllocator
- *
- * Allocator for the mode stack that reuses the memory of popped modes, per thread,
- * since modes are pushed and popped constantly.
- */
-template <typename T>
-struct ModeAllocator {
-
-    using value_type = T;
-
-    ModeAllocator() = default;
-
-    template <typename U>
-    ModeAllocator(const ModeAllocator<U>&) {}
-
-    T* allocate(std::size_t n) {
-        if (n == 1) {
-            if (void* p = FreeBlocks::take())
-                return static_cast<T*>(p);
-        }
-        return static_cast<T*>(::operator new(n * sizeof(T)));
-    }
-
-    void deallocate(T* p, std::size_t n) {
-        if (n == 1 && FreeBlocks::give(p))
-            return;
-        ::operator delete(p);
-    }
-
-    template <typename U>
-    bool operator==(const ModeAllocator<U>&) const { return true; }
-
-    template <typename U>
-    bool operator!=(const ModeAllocator<U>&) const { return false; }
-
-private:
-
-    /** maximum number of blocks kept for reuse */
-    static constexpr std::size_t MAX_FREE_BLOCKS = 1024;
-
-    /** memory of popped modes, per thread */
-    typedef BlockPool<T, MAX_FREE_BLOCKS> FreeBlocks;
-};
+#include <vector>
 
 /**
  * ModeStack
@@ -78,24 +32,52 @@ public:
      *
      * Constructor.  Create mode stack from TokenParser and current language.
      */
-    ModeStack()
-    {}
+    ModeStack() {
+
+        // the stack rarely grows past this, so the states are not copied as it grows, with the storage of the stacks of
+        // the last unit of the thread
+        antlr::SpareStorage<srcMLState>::take(st, 64);
+        antlr::SpareStorage<int, ModeStack>::take(elements, 256);
+    }
 
     /**
      * ~ModeStack
      *
      * Destructor
      */
-    ~ModeStack() {}
+    ~ModeStack() {
+        antlr::SpareStorage<srcMLState>::give(st);
+        antlr::SpareStorage<int, ModeStack>::give(elements);
+    }
 
      /** token parser */
     TokenParser* parser;
 
     /** list of states/modes */
-    typedef std::list<srcMLState, ModeAllocator<srcMLState>> StateList;
+    typedef std::vector<srcMLState> StateList;
 
     /** stack of states/modes */
     StateList st;
+
+    /** open elements of all the modes, where each mode has the elements from its start */
+    std::vector<int> elements;
+
+    // the modes and transparent modes of the top state, or none without a state, so a mode test is one load from the
+    // parser instead of from the top of the stack, after a check for an empty stack
+    srcMLState::MODE_TYPE topMode;
+    srcMLState::MODE_TYPE topTransparentMode;
+
+    // the modes of the top state, after the stack changes other than as the mode operations here change it
+    void syncTopModes() {
+        if (st.empty()) {
+            topMode = 0;
+            topTransparentMode = 0;
+            return;
+        }
+
+        topMode = st.back().getMode();
+        topTransparentMode = st.back().getTransparentMode();
+    }
 
 protected:
 
@@ -133,10 +115,38 @@ protected:
      *
      * Delegate to create a new mode and place it on top of stack.
      */
-    void startNewMode(const srcMLState::MODE_TYPE& m) {
+    ANTLR_FLATTEN void startNewMode(const srcMLState::MODE_TYPE& m) {
 
-        // prepare for the new stack
-        st.push_back(srcMLState(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
+        // almost always, the stack has room, so the new state is built in place from the modes of the current one, where
+        // the room is checked as emplace_back() checks it, so its growth is left out
+        const unsigned int start = (unsigned int) elements.size();
+        if (!st.empty() && st.data() + st.size() < st.data() + st.capacity()) {
+            st.emplace_back(m, topTransparentMode);
+            st.back().elementsStart = start;
+            topMode = m;
+            topTransparentMode |= m;
+            return;
+        }
+
+        startNewModeSlow(m, start);
+    }
+
+    // the first state, or a state that grows the stack
+    ANTLR_NOINLINE void startNewModeSlow(const srcMLState::MODE_TYPE& m, unsigned int start) {
+
+        // the new state is built in place, from the modes of the current one, which are copied first since the stack may
+        // move its states as it grows
+        if (st.empty()) {
+            st.emplace_back(m);
+            st.back().elementsStart = start;
+            syncTopModes();
+            return;
+        }
+
+        const srcMLState::MODE_TYPE transparent = st.back().getTransparentMode();
+        st.emplace_back(m, transparent);
+        st.back().elementsStart = start;
+        syncTopModes();
     }
 
     /**
@@ -191,19 +201,7 @@ protected:
      */
     srcMLState::MODE_TYPE getMode() const {
 
-        return !st.empty() ? st.back().getMode() : 0;
-    }
-
-    /**
-     * getPrevMode
-     *
-     * Delegate to get the previousmode from stack (top of stack).
-     *
-     * @returns the previous mode.
-     */
-    srcMLState::MODE_TYPE getPrevMode() const {
-
-        return !st.empty() ? st.back().getMode() : 0;
+        return topMode;
     }
 
     /**
@@ -215,7 +213,7 @@ protected:
      */
     srcMLState::MODE_TYPE getTransparentMode() const {
 
-        return !st.empty() ? st.back().getTransparentMode() : 0;
+        return topTransparentMode;
     }
 
     /**
@@ -249,6 +247,8 @@ protected:
             throw Segmentation_Fault();
 
         st.back().setMode(m);
+        topMode |= m;
+        topTransparentMode |= m;
     }
 
     /**
@@ -262,6 +262,8 @@ protected:
             throw Segmentation_Fault();
 
         st.back().clearMode(m);
+        topMode &= ~m;
+        topTransparentMode &= ~m;
     }
 
     /**
@@ -270,11 +272,11 @@ protected:
      *
      * Delegate to add the open element id to the top of the open element of the current mode.
      */
-    void push(int id) {
+    ANTLR_ALWAYS_INLINE void push(int id) {
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.back().push(id);
+        elements.push_back(id);
     }
 
     /**
@@ -282,11 +284,42 @@ protected:
      *
      * Delegate to remove the top open element form the current mode.
      */
-     void pop() {
-        if (st.empty())
+    ANTLR_ALWAYS_INLINE void pop() {
+        if (st.empty() || elements.size() <= st.back().elementsStart)
             throw Segmentation_Fault();
 
-        st.back().pop();
+        elements.pop_back();
+    }
+
+    /**
+     * elementCount
+     *
+     * Get the number of open elements of the current mode.
+     *
+     * @returns the number of open elements.
+     */
+    ANTLR_ALWAYS_INLINE int elementCount() const {
+        return (int) (elements.size() - currentState().elementsStart);
+    }
+
+    /**
+     * topElement
+     *
+     * Get the last open element of the current mode.
+     *
+     * @returns the open element.
+     */
+    ANTLR_ALWAYS_INLINE int topElement() const {
+        return elements.back();
+    }
+
+    /**
+     * canPush
+     *
+     * Whether an element can be pushed without growing the open elements.
+     */
+    ANTLR_ALWAYS_INLINE bool canPush() const {
+        return !st.empty() && elements.data() + elements.size() < elements.data() + elements.capacity();
     }
 
     /**
@@ -321,9 +354,9 @@ protected:
      *
      * @returns if in mode m.
      */
-    bool inMode(const srcMLState::MODE_TYPE& m) const {
+    ANTLR_ALWAYS_INLINE bool inMode(const srcMLState::MODE_TYPE& m) const {
 
-        return !st.empty() ? st.back().inMode(m) : false;
+        return (topMode & m) == m;
     }
 
     /**
@@ -334,9 +367,10 @@ protected:
      *
      * @returns if in previous mode m.
      */
-    bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
+    ANTLR_ALWAYS_INLINE bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
 
-        return st.size() > 1 ? st.back().inPrevMode(m) : false;
+        // the modes of the state below, which do not change while it is below
+        return st.size() > 1 ? (st[st.size() - 2].getMode() & m) == m : false;
     }
 
      /**
@@ -347,9 +381,9 @@ protected:
      *
      * @returns if in transparent mode m.
      */
-    bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
+    ANTLR_ALWAYS_INLINE bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
 
-        return !st.empty() ? st.back().inTransparentMode(m) : false;
+        return (topTransparentMode & m) == m;
     }
 
     /**
@@ -493,11 +527,12 @@ protected:
             throw Segmentation_Fault();
 
         // close all open elements
-        while (!st.empty() && !st.back().openelements.empty()) {
-            endElement(st.back().openelements.top());
+        while (!st.empty() && elements.size() > st.back().elementsStart) {
+            endElement(elements.back());
         }
 
         st.pop_back();
+        syncTopModes();
     }
 
     /**
@@ -522,80 +557,6 @@ protected:
 
         clearMode(oldm);
         setMode(newm);
-    }
-
-    /**
-     * dupMode
-     *
-     * Duplicate mode on top of stack for cppif.
-     */
-    void dupMode(const srcMLState::OpenElements & open_elements) {
-
-        srcMLState dup = st.back();
-        st.back().setMode(MODE_TOP | MODE_END_AT_ENDIF);
-
-        dup.openelements = open_elements;
-        dup.setMode(MODE_ISSUE_EMPTY_AT_POP);
-        st.push_back(dup);
-    }
-
-    /**
-     * insertModeAfter
-     * @param m mode to stop on
-     * @param new_m mode to insert
-     * @param open_elements open elements for new_m
-     *
-     * Insert a new mode (new_m) with open_elements after first occurence of m
-     */
-    void insertModeAfter(const srcMLState::MODE_TYPE& m, const srcMLState::MODE_TYPE& new_m, const srcMLState::OpenElements & open_elements) {
-
-        StateList alist;
-        while((st.back().getMode() & m) != m) {
-
-            alist.push_front(st.back());
-            st.pop_back();
-
-        }
-
-        st.push_back(new_m);
-        st.back().openelements = open_elements;
-
-       for(StateList::iterator i = alist.begin(); i != alist.end(); ++i)
-            st.push_back(*i);
-
-    }
-
-    /**
-     * dupDownOverMode
-     * @param m mode to stop on
-     *
-     * Duplicate modes on stack down to and including m.
-     */
-    void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
-
-        StateList alist;
-        while((st.back().getMode() & m).none()) {
-
-            alist.push_front(st.back());
-            st.pop_back();
-
-        }
-
-        alist.push_front(st.back());
-        st.pop_back();
-
-        alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
-        for(StateList::iterator i = alist.begin(); i != alist.end(); ++i) {
-            i->setMode(MODE_END_AT_ENDIF);
-            st.push_back(*i);
-        }
-
-        alist.front().openelements = srcMLState::OpenElements();
-        for(StateList::iterator i = alist.begin(); i != alist.end(); ++i) {
-            i->setMode(MODE_ISSUE_EMPTY_AT_POP);
-            st.push_back(*i);
-
-        }
     }
 
     /**
