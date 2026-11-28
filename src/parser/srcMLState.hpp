@@ -109,53 +109,6 @@ public:
     typedef ModeSet MODE_TYPE;
 
     /**
-     * stack of open elements
-     * Inline storage for shallow stacks avoids an allocation for each new stack.
-     * Elements are accessed by position, since pointers to them do not stay valid.
-     */
-    class OpenElements {
-    public:
-        bool empty() const { return count == 0; }
-        size_t size() const { return count; }
-        int& top() { return data()[count - 1]; }
-        int& operator[](size_t pos) { return data()[pos]; }
-
-        void push(int id) {
-            if (count < INLINE_SIZE) {
-                local[count] = id;
-            } else {
-                // move inline elements to the heap when first needed
-                if (count == INLINE_SIZE)
-                    heap.assign(local, local + INLINE_SIZE);
-                heap.push_back(id);
-            }
-            ++count;
-        }
-
-        void pop() {
-            --count;
-            if (count >= INLINE_SIZE) {
-                heap.pop_back();
-
-                // back to inline elements
-                if (count == INLINE_SIZE) {
-                    std::copy(heap.begin(), heap.end(), local);
-                    heap.clear();
-                }
-            }
-        }
-
-    private:
-        static constexpr size_t INLINE_SIZE = 4;
-
-        int* data() { return count > INLINE_SIZE ? heap.data() : local; }
-
-        size_t count = 0;
-        int local[INLINE_SIZE] = {};
-        std::vector<int> heap;
-    };
-
-    /**
      * srcMLState
      * @param mode current mode to create
      * @param transmode the transparent mode
@@ -164,7 +117,7 @@ public:
      * Constructor.  Create a new mode with the perscribed mode, transparent mode, and previous mode.
      */
     srcMLState(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0, const MODE_TYPE& prevmode = 0)
-        : flags(mode), flags_prev(prevmode), flags_all(transmode | mode), parencount(0), curlycount(0), typecount(0)
+        : flags(mode), flags_prev(prevmode), flags_all(transmode | mode), elementsStart(0), parencount(0), curlycount(0), typecount(0)
     {}
 
     // copy constructor
@@ -172,39 +125,6 @@ public:
 
     // copy assignment
     srcMLState& operator=(const srcMLState&) = default;
-
-    /**
-     * size
-     *
-     * Get number of open elements.
-     *
-     * @returns the number of open elements.
-     */
-    int size() const {
-        return (int)openelements.size();
-    }
-
-    /**
-     * push
-     * @param id number of tag to add to open elements
-     *
-     * Add open element to stack.
-     */
-    void push(int id) {
-        openelements.push(id);
-    }
-
-    /**
-     * pop
-     *
-     * Remove an open element from stack.
-     */
-    void pop() {
-        if (openelements.empty())
-            throw Segmentation_Fault();
-
-        openelements.pop();
-    }
 
     // mode methods
 
@@ -409,8 +329,8 @@ public:
     /** transparent (all) modes */
     MODE_TYPE flags_all;
 
-    /** stack of open elements */
-    OpenElements openelements;
+    /** the start of the open elements of this mode in the open elements of all the modes */
+    unsigned int elementsStart;
 
 private:
 

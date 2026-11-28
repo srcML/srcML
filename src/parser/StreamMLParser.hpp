@@ -72,7 +72,7 @@ public:
     */
     void startElement(int id) final {
 
-        srcMLParser::currentState().push(id);
+        srcMLParser::push(id);
         pushSTokenFlush(id);
     }
 
@@ -85,7 +85,7 @@ public:
      */
     void startNoSkipElement(int id) final {
 
-        srcMLParser::currentState().push(id);
+        srcMLParser::push(id);
         pushSToken(id);
     }
 
@@ -121,7 +121,7 @@ public:
         }
 
         pushEToken(id);
-        srcMLParser::currentState().pop();
+        srcMLParser::pop();
     }
 
     /**
@@ -146,7 +146,7 @@ public:
      */
     void addElement(int id) final {
 
-        srcMLParser::currentState().push(id);
+        srcMLParser::push(id);
     }
 
     /**

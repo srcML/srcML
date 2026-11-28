@@ -199,22 +199,29 @@ enum CALL_TYPE {
 // position in output stream
 struct TokenPosition {
     TokenPosition()
-        : token(0), elements(0), pos(0) {}
+        : token(0), states(0), elements(0), depth(0), pos(0) {}
 
     // sets a particular token in the output token stream
     void setType(int type) {
         // set the inner name token to type
         (*token)->setType(type);
 
-        // set this position in the element stack to type
-        if (pos < elements->size())
-            (*elements)[pos] = type;
+        // set this position in the open elements of the state to type, where the state has the elements up to the start
+        // of the next state
+        if (depth < states->size()) {
+            const size_t start = (*states)[depth].elementsStart;
+            const size_t end = depth + 1 < states->size() ? (*states)[depth + 1].elementsStart : elements->size();
+            if (pos < end - start)
+                (*elements)[start + pos] = type;
+        }
     }
 
     ~TokenPosition() {}
 
     antlr::RefToken* token;
-    srcMLState::OpenElements* elements;
+    std::vector<srcMLState>* states;
+    std::vector<int>* elements;
+    size_t depth;
     size_t pos;
 };
 
@@ -297,8 +304,6 @@ public:
         if (parent->inputState->guessing)
             return;
 
-        ++parent->number_finishing_elements;
-
         start_size = parent->size();
     }
 
@@ -311,17 +316,6 @@ public:
         int n = parent->size() - start_size;
         for (int i = 0; i < n; ++i) {
             parent->endMode();
-        }
-
-        --parent->number_finishing_elements;
-
-        if (parent->number_finishing_elements == 0) {
-            for (auto& citr : parent->finish_elements_add) {
-                parent->startNewMode(citr.first);
-                parent->currentState().openelements = citr.second;
-            }
-
-            parent->finish_elements_add.clear();
         }
     }
 
@@ -339,9 +333,7 @@ public:
         if (parent->inputState->guessing)
             return;
 
-        start_size = parent->currentState().size();
-
-        ++parent->number_finishing_elements;
+        start_size = parent->elementCount();
     }
 
     ~LightweightElement() {
@@ -350,19 +342,8 @@ public:
             return;
 
         // close all elements opened by the rule in this mode
-        while (start_size < parent->currentState().size())
-            parent->endElement(parent->currentState().openelements.top());
-
-        --parent->number_finishing_elements;
-
-        if (parent->number_finishing_elements == 0) {
-            for (auto& citr : parent->finish_elements_add) {
-                parent->startNewMode(citr.first);
-                parent->currentState().openelements = citr.second;
-            }
-
-            parent->finish_elements_add.clear();
-        }
+        while (start_size < parent->elementCount())
+            parent->endElement(parent->topElement());
     }
 
 private:
@@ -382,8 +363,8 @@ public:
             return;
 
         // end last opened element
-        if (!parent->currentState().openelements.empty())
-            parent->endElement(parent->currentState().openelements.top());
+        if (parent->elementCount() > 0)
+            parent->endElement(parent->topElement());
     }
 
 private:
@@ -3017,9 +2998,6 @@ public:
         return 0;
     }
     bool wait_terminate_post = false;
-    bool cppif_duplicate = false;
-    size_t number_finishing_elements = 0;
-    std::vector<std::pair<srcMLState::MODE_TYPE, srcMLState::OpenElements>> finish_elements_add;
     std::deque<char> lparen_types_py;
     std::deque<char> lparen_types_js;
     std::deque<char> lcurly_types_js;
@@ -3102,8 +3080,10 @@ public:
     // sets to the current token in the output token stream
     void setTokenPosition(TokenPosition& tp) {
         tp.token = CurrentToken();
-        tp.elements = &currentState().openelements;
-        tp.pos = currentState().openelements.size() - 1;
+        tp.states = &st;
+        tp.elements = &elements;
+        tp.depth = st.size() - 1;
+        tp.pos = elementCount() - 1;
     }
 
     void endAllModes();
@@ -7867,6 +7847,7 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inmode = false;
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -7892,6 +7873,8 @@ look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 /*
@@ -7902,6 +7885,7 @@ look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
 look_back_three_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inmode = false;
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -7933,6 +7917,8 @@ look_back_three_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 /* functions */
@@ -19003,19 +18989,6 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         startNoSkipElement(SCONTENT);
                     }
 
-                    if (cppif_duplicate) {
-                        srcMLState::OpenElements open_elements;
-
-                        // Commented-out code
-                        // open_elements.push(STHEN);
-
-                        if (LA(1) != LCURLY && LA(1) != INDENT)
-                            open_elements.push(SPSEUDO_BLOCK);
-
-                        dupMode(open_elements);
-                    }
-
-                    cppif_duplicate = false;
                 }
 
                 // end while condition, etc. and output pseudo block
@@ -19031,16 +19004,6 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         startNoSkipElement(SCONTENT);
                     }
 
-                    if (cppif_duplicate) {
-                        srcMLState::OpenElements open_elements;
-
-                        if (LA(1) != LCURLY && LA(1) != INDENT)
-                            open_elements.push(SPSEUDO_BLOCK);
-
-                        dupMode(open_elements);
-                    }
-
-                    cppif_duplicate = false;
                 // end control group and output pseudo block
                 } else if (end_control_incr) {
                     if (inMode(MODE_LIST))
@@ -19050,17 +19013,6 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         startNoSkipElement(SPSEUDO_BLOCK);
                         startNoSkipElement(SCONTENT);
                     }
-
-                    if (cppif_duplicate) {
-                        srcMLState::OpenElements open_elements;
-
-                        if (LA(1) != LCURLY && LA(1) != INDENT)
-                            open_elements.push(SPSEUDO_BLOCK);
-
-                        dupMode(open_elements);
-                    }
-
-                    cppif_duplicate = false;
                 } else if (inMode(MODE_LIST | MODE_CONTROL_CONDITION)) {
                     endMode(MODE_CONTROL_CONDITION);
 
@@ -19068,17 +19020,6 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         startNoSkipElement(SPSEUDO_BLOCK);
                         startNoSkipElement(SCONTENT);
                     }
-
-                    if (cppif_duplicate) {
-                        srcMLState::OpenElements open_elements;
-
-                        if (LA(1) != LCURLY && LA(1) != INDENT)
-                            open_elements.push(SPSEUDO_BLOCK);
-
-                        dupMode(open_elements);
-                    }
-
-                    cppif_duplicate = false;
                 } else {
                 // end the single mode that started the list; do not end more than one since they may be nested
                 if (inMode(MODE_LIST))
@@ -22769,121 +22710,6 @@ eol[int directive_token, bool markblockzero] {
 ;
 
 /*
-  cppendif_skip
-*/
-cppendif_skip[] {
-        int prev = -1;
-        int endif_count = 1;
-
-        while (endif_count && LA(1) != 1 /* EOF */) {
-            if (
-                (
-                    prev == PREPROC
-                    && LA(1) == IF
-                )
-                || LA(1) == IFDEF
-                || LA(1) == IFNDEF
-            )
-                ++endif_count;
-
-            if (LA(1) == ENDIF)
-                --endif_count;
-
-            prev = LA(1);
-            consume();
-        }
-} :;
-
-/*
-  cppif_end_count_check
-*/
-cppif_end_count_check[] returns [std::list<int> end_order] {
-        int start = mark();
-        std::list<int> op_stack;
-        ++inputState->guessing;
-
-        std::list<int>::size_type save_size = 0;
-
-        int prev = -1;
-
-        while (
-            LA(1) != ENDIF
-            && !(
-                prev == PREPROC
-                && LA(1) == ELSE
-            )
-            && LA(1) != 1 /* EOF */
-        ) {
-            if (
-                (
-                    prev == PREPROC
-                    && LA(1) == IF
-                )
-                || LA(1) == IFDEF
-                || LA(1) == IFNDEF
-            ) {
-                cppendif_skip();
-                continue;
-            }
-
-            if (LA(1) == ELIF)
-                save_size = end_order.size();
-
-            if (LA(1) == LPAREN)
-                op_stack.push_back(LPAREN);
-
-            if (LA(1) == RPAREN) {
-                if (!op_stack.empty() && op_stack.back() == LPAREN)
-                    op_stack.pop_back();
-                else
-                    end_order.push_back(RPAREN);
-            }
-
-            if (LA(1) == LCURLY)
-                op_stack.push_back(LCURLY);
-
-            if (LA(1) == RCURLY) {
-                if (!op_stack.empty() && op_stack.back() == LCURLY)
-                    op_stack.pop_back();
-                else
-                    end_order.push_back(RCURLY);
-            }
-
-            if (
-                LA(1) == TERMINATE
-                && !wait_terminate_post
-                && (
-                    inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)
-                    || inMode(MODE_END_CONTROL)
-                )
-            ) {
-                end_order.push_back(TERMINATE);
-            }
-
-            prev = LA(1);
-            consume();
-        }
-
-        if (LA(1) == 1 /* EOF */) {
-            end_order.clear();
-        }
-
-        if (LA(1) == ENDIF)
-            end_order.resize(save_size);
-
-        while (!op_stack.empty() && !end_order.empty()) {
-            op_stack.pop_front();
-            end_order.pop_front();
-        }
-
-        --inputState->guessing;
-
-        rewind(start);
-
-        ENTRY_DEBUG
-} :;
-
-/*
   eol_post
 
   Handles post-processing for EOL.
@@ -22898,60 +22724,6 @@ eol_post[int directive_token, bool markblockzero] {
             case IFDEF :
 
             case IFNDEF :
-                // should work unless also creates a dangling lcurly or lparen, in which case may need to run on everything except else
-                // leaving off for now, with no option; test thoroughly, and then turn on by default
-                #ifdef _MSC_VER
-                #pragma warning (push, 0)
-                #endif
-
-                if (false && !inputState->guessing) {
-                    #ifdef _MSC_VER
-                    #pragma warning (pop)
-                    #endif
-
-                    for (auto& item : cppif_end_count_check()) {
-                        if (item == RCURLY) {
-                            setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
-
-                            startNewMode(getMode() | MODE_ISSUE_EMPTY_AT_POP);
-
-                            addElement(SBLOCK);
-                        }
-
-                        if (inTransparentMode(MODE_CONDITION) && item == RPAREN) {
-                            srcMLState::OpenElements open_elements;
-                            open_elements.push(SCONDITION);
-
-                            if (number_finishing_elements) {
-                                finish_elements_add.push_back(
-                                    std::make_pair(
-                                        MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
-                                        open_elements
-                                    )
-                                );
-                            } else {
-                                insertModeAfter(
-                                    MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT,
-                                    MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
-                                    open_elements
-                                );
-                            }
-                        }
-
-                        if (item == TERMINATE) {
-                            if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
-                                cppif_duplicate = true;
-                            } else if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
-                                cppif_duplicate = true;
-                            } else if (inMode(MODE_END_CONTROL) || inMode(MODE_LIST | MODE_CONTROL_CONDITION)) {
-                                cppif_duplicate = true;
-                            } else {
-                                dupDownOverMode(MODE_STATEMENT);
-                            }
-                        }
-                    }
-                }
-
                 // start a new blank mode for the new zeroed blocks
                 if (!cpp_zeromode && markblockzero) {
                     // start a new blank mode for if
@@ -32743,6 +32515,7 @@ perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [boo
             return false;
 
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -32761,6 +32534,8 @@ perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [boo
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 
@@ -32772,6 +32547,7 @@ perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [boo
 perform_in_class_block_check_js[] returns [bool inclass] {
         inclass = false;
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -32783,7 +32559,7 @@ perform_in_class_block_check_js[] returns [bool inclass] {
 
             // check if the prior mode was a class (or similar)
             if (
-                inMode(MODE_CLASS) 
+                inMode(MODE_CLASS)
                 || inMode(MODE_CLASS_EXPRESSION_JS)
                 || inMode(MODE_ENUM)
                 || inMode(MODE_INTERFACE_TS)
@@ -32796,6 +32572,8 @@ perform_in_class_block_check_js[] returns [bool inclass] {
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 /*
@@ -32810,6 +32588,7 @@ perform_statement_has_block_check_js[] returns [bool hasblock] {
         hasblock = false;
         last_consumed_guessing_mode = -1;
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -32827,6 +32606,8 @@ perform_statement_has_block_check_js[] returns [bool hasblock] {
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 /*
@@ -32841,6 +32622,7 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
         skipterminate = false;
         last_consumed_guessing_mode = -1;
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -32858,6 +32640,8 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 /*
@@ -33649,14 +33433,13 @@ perform_mode_before_mode_statement_check[srcMLState::MODE_TYPE m] returns [bool 
         inputState->guessing++;
 
         try {
-            const auto real_state = std::find_if(st.crbegin(), st.crend(), [](const auto& temp_state){
-                if (temp_state.inPrevMode(MODE_STATEMENT))
-                    return true;
-                return false;
-            });
-
-            if (real_state->inMode(m))
-                inmode = true;
+            // from the top, the first state whose previous state, the state below it, is a statement
+            for (size_t i = st.size() - 1; i > 0; --i) {
+                if (st[i - 1].inMode(MODE_STATEMENT)) {
+                    inmode = st[i].inMode(m);
+                    break;
+                }
+            }
         }
         catch (...) {}
 
@@ -33687,6 +33470,7 @@ perform_top_level_class_check_js[] returns [bool istop] {
         istop = false;
         last_consumed_guessing_mode = -1;
         StateList temp_st = st;
+        std::vector<int> temp_elements = elements;
         int start = mark();
         inputState->guessing++;
 
@@ -33708,6 +33492,8 @@ perform_top_level_class_check_js[] returns [bool istop] {
         inputState->guessing--;
         rewind(start);
         st = temp_st;
+        syncTopModes();
+        elements = temp_elements;
 } :;
 
 /*

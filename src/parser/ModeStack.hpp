@@ -51,6 +51,11 @@ public:
     /** stack of states/modes */
     StateList st;
 
+    /** open elements of all the modes, where each mode has the elements from its start */
+    std::vector<int> elements;
+
+    void syncTopModes() {}
+
 protected:
 
     /**
@@ -89,8 +94,10 @@ protected:
      */
     void startNewMode(const srcMLState::MODE_TYPE& m) {
 
-        // prepare for the new stack
+        const unsigned int start = (unsigned int) elements.size();
         st.push_back(srcMLState(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
+        st.back().elementsStart = start;
+        syncTopModes();
     }
 
     /**
@@ -228,7 +235,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.back().push(id);
+        elements.push_back(id);
     }
 
     /**
@@ -237,10 +244,41 @@ protected:
      * Delegate to remove the top open element form the current mode.
      */
      void pop() {
-        if (st.empty())
+        if (st.empty() || elements.size() <= st.back().elementsStart)
             throw Segmentation_Fault();
 
-        st.back().pop();
+        elements.pop_back();
+    }
+
+    /**
+     * elementCount
+     *
+     * Get the number of open elements of the current mode.
+     *
+     * @returns the number of open elements.
+     */
+    int elementCount() const {
+        return (int) (elements.size() - currentState().elementsStart);
+    }
+
+    /**
+     * topElement
+     *
+     * Get the last open element of the current mode.
+     *
+     * @returns the open element.
+     */
+    int topElement() const {
+        return elements.back();
+    }
+
+    /**
+     * canPush
+     *
+     * Whether an element can be pushed without growing the open elements.
+     */
+    bool canPush() const {
+        return !st.empty() && elements.data() + elements.size() < elements.data() + elements.capacity();
     }
 
     /**
@@ -447,11 +485,12 @@ protected:
             throw Segmentation_Fault();
 
         // close all open elements
-        while (!st.empty() && !st.back().openelements.empty()) {
-            endElement(st.back().openelements.top());
+        while (!st.empty() && elements.size() > st.back().elementsStart) {
+            endElement(elements.back());
         }
 
         st.pop_back();
+        syncTopModes();
     }
 
     /**
@@ -476,80 +515,6 @@ protected:
 
         clearMode(oldm);
         setMode(newm);
-    }
-
-    /**
-     * dupMode
-     *
-     * Duplicate mode on top of stack for cppif.
-     */
-    void dupMode(const srcMLState::OpenElements & open_elements) {
-
-        srcMLState dup = st.back();
-        st.back().setMode(MODE_TOP | MODE_END_AT_ENDIF);
-
-        dup.openelements = open_elements;
-        dup.setMode(MODE_ISSUE_EMPTY_AT_POP);
-        st.push_back(dup);
-    }
-
-    /**
-     * insertModeAfter
-     * @param m mode to stop on
-     * @param new_m mode to insert
-     * @param open_elements open elements for new_m
-     *
-     * Insert a new mode (new_m) with open_elements after first occurence of m
-     */
-    void insertModeAfter(const srcMLState::MODE_TYPE& m, const srcMLState::MODE_TYPE& new_m, const srcMLState::OpenElements & open_elements) {
-
-        StateList alist;
-        while((st.back().getMode() & m) != m) {
-
-            alist.insert(alist.begin(), st.back());
-            st.pop_back();
-
-        }
-
-        st.push_back(new_m);
-        st.back().openelements = open_elements;
-
-       for(StateList::iterator i = alist.begin(); i != alist.end(); ++i)
-            st.push_back(*i);
-
-    }
-
-    /**
-     * dupDownOverMode
-     * @param m mode to stop on
-     *
-     * Duplicate modes on stack down to and including m.
-     */
-    void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
-
-        StateList alist;
-        while((st.back().getMode() & m).none()) {
-
-            alist.insert(alist.begin(), st.back());
-            st.pop_back();
-
-        }
-
-        alist.insert(alist.begin(), st.back());
-        st.pop_back();
-
-        alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
-        for(StateList::iterator i = alist.begin(); i != alist.end(); ++i) {
-            i->setMode(MODE_END_AT_ENDIF);
-            st.push_back(*i);
-        }
-
-        alist.front().openelements = srcMLState::OpenElements();
-        for(StateList::iterator i = alist.begin(); i != alist.end(); ++i) {
-            i->setMode(MODE_ISSUE_EMPTY_AT_POP);
-            st.push_back(*i);
-
-        }
     }
 
     /**
