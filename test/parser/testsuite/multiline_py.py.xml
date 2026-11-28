@@ -1150,4 +1150,18 @@ ligula a lectus maximus mollis."</literal></expr></expr_stmt>
 </block_content></block></function>
 </unit>
 
+<unit revision="1.0.0" language="Python">
+<function>def <name>f</name><parameter_list>(<parameter><name>c</name></parameter>)</parameter_list><block>:<block_content> <return>return <expr><name>a</name> <operator>or</operator> \
+    <name>b</name></expr></return></block_content></block></function>
+<expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>f</name><parameter_list>(<parameter><name>c</name></parameter>)</parameter_list><block>:<block_content> <return>return <expr><name>a</name> <operator>or</operator> \
+        <name>b</name></expr></return></block_content></block></function>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></class><expr_stmt><expr><name>y</name> <operator>=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
 </unit>

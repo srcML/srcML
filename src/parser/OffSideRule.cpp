@@ -104,6 +104,7 @@ void OffSideRule::handleBlocks(antlr::RefToken token) {
 
             --numIndents;
             isOneLineStatement = false;
+            statementContinues = false;
             addNextToken = false;
         }
 
