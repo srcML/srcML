@@ -45,6 +45,33 @@
 #define ANTLR_ALWAYS_INLINE inline
 #endif
 
+// code that is rarely run, apart from the check that is inlined at each of many calls
+#if defined(__GNUC__) || defined(__clang__)
+#define ANTLR_NOINLINE __attribute__((noinline))
+#elif defined(_MSC_VER)
+#define ANTLR_NOINLINE __declspec(noinline)
+#else
+#define ANTLR_NOINLINE
+#endif
+
+// a rarely run call that keeps most registers, so the code around its calls keeps its values in registers it does not
+// save
+#if defined(__clang__) && defined(__aarch64__)
+#if __has_attribute(preserve_most)
+#define ANTLR_PRESERVE_MOST __attribute__((preserve_most))
+#endif
+#endif
+#ifndef ANTLR_PRESERVE_MOST
+#define ANTLR_PRESERVE_MOST
+#endif
+
+// a function whose calls are all inlined into it, e.g., so a check in it leaves out the growth of a container
+#if defined(__GNUC__) || defined(__clang__)
+#define ANTLR_FLATTEN __attribute__((flatten))
+#else
+#define ANTLR_FLATTEN
+#endif
+
 namespace antlr {
 
 inline std::string charName(int ch) {
@@ -1430,6 +1457,34 @@ public:
 	void retry() { throw TokenStreamRetryException(); }
 	void select(TokenStream* stream) { input = stream; }
 	void select(const std::string& sname) { input = getStream(sname); }
+};
+
+// the storage of a vector that is destroyed, kept for the thread, so the next vector of the same kind starts with it,
+// e.g., for the parser of the next unit, instead of allocating its storage again
+template <class T, class Tag = void>
+struct SpareStorage {
+	static std::vector<T>& spare() {
+		static thread_local std::vector<T> storage;
+		return storage;
+	}
+
+	// an empty vector with room for at least n elements
+	static void take(std::vector<T>& v, size_t n) {
+		std::vector<T>& storage = spare();
+		if (storage.capacity() >= n) {
+			v.swap(storage);
+			return;
+		}
+		v.reserve(n);
+	}
+
+	// the storage of a vector that is no longer used, when it is larger than the one kept
+	static void give(std::vector<T>& v) {
+		v.clear();
+		std::vector<T>& storage = spare();
+		if (v.capacity() > storage.capacity())
+			v.swap(storage);
+	}
 };
 
 } // namespace antlr

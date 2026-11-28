@@ -32,15 +32,23 @@ public:
      *
      * Constructor.  Create mode stack from TokenParser and current language.
      */
-    ModeStack()
-    {}
+    ModeStack() {
+
+        // the stack rarely grows past this, so the states are not copied as it grows, with the storage of the stacks of
+        // the last unit of the thread
+        antlr::SpareStorage<srcMLState>::take(st, 64);
+        antlr::SpareStorage<int, ModeStack>::take(elements, 256);
+    }
 
     /**
      * ~ModeStack
      *
      * Destructor
      */
-    ~ModeStack() {}
+    ~ModeStack() {
+        antlr::SpareStorage<srcMLState>::give(st);
+        antlr::SpareStorage<int, ModeStack>::give(elements);
+    }
 
      /** token parser */
     TokenParser* parser;
@@ -107,10 +115,36 @@ protected:
      *
      * Delegate to create a new mode and place it on top of stack.
      */
-    void startNewMode(const srcMLState::MODE_TYPE& m) {
+    ANTLR_FLATTEN void startNewMode(const srcMLState::MODE_TYPE& m) {
 
+        // almost always, the stack has room, so the new state is built in place from the modes of the current one, where
+        // the room is checked as emplace_back() checks it, so its growth is left out
         const unsigned int start = (unsigned int) elements.size();
-        st.push_back(srcMLState(m, !empty() ? getTransparentMode() : 0));
+        if (!st.empty() && st.data() + st.size() < st.data() + st.capacity()) {
+            st.emplace_back(m, topTransparentMode);
+            st.back().elementsStart = start;
+            topMode = m;
+            topTransparentMode |= m;
+            return;
+        }
+
+        startNewModeSlow(m, start);
+    }
+
+    // the first state, or a state that grows the stack
+    ANTLR_NOINLINE void startNewModeSlow(const srcMLState::MODE_TYPE& m, unsigned int start) {
+
+        // the new state is built in place, from the modes of the current one, which are copied first since the stack may
+        // move its states as it grows
+        if (st.empty()) {
+            st.emplace_back(m);
+            st.back().elementsStart = start;
+            syncTopModes();
+            return;
+        }
+
+        const srcMLState::MODE_TYPE transparent = st.back().getTransparentMode();
+        st.emplace_back(m, transparent);
         st.back().elementsStart = start;
         syncTopModes();
     }
@@ -238,7 +272,7 @@ protected:
      *
      * Delegate to add the open element id to the top of the open element of the current mode.
      */
-    void push(int id) {
+    ANTLR_ALWAYS_INLINE void push(int id) {
         if (st.empty())
             throw Segmentation_Fault();
 
@@ -250,7 +284,7 @@ protected:
      *
      * Delegate to remove the top open element form the current mode.
      */
-     void pop() {
+    ANTLR_ALWAYS_INLINE void pop() {
         if (st.empty() || elements.size() <= st.back().elementsStart)
             throw Segmentation_Fault();
 
@@ -264,7 +298,7 @@ protected:
      *
      * @returns the number of open elements.
      */
-    int elementCount() const {
+    ANTLR_ALWAYS_INLINE int elementCount() const {
         return (int) (elements.size() - currentState().elementsStart);
     }
 
@@ -275,7 +309,7 @@ protected:
      *
      * @returns the open element.
      */
-    int topElement() const {
+    ANTLR_ALWAYS_INLINE int topElement() const {
         return elements.back();
     }
 
@@ -284,7 +318,7 @@ protected:
      *
      * Whether an element can be pushed without growing the open elements.
      */
-    bool canPush() const {
+    ANTLR_ALWAYS_INLINE bool canPush() const {
         return !st.empty() && elements.data() + elements.size() < elements.data() + elements.capacity();
     }
 
@@ -320,7 +354,7 @@ protected:
      *
      * @returns if in mode m.
      */
-    bool inMode(const srcMLState::MODE_TYPE& m) const {
+    ANTLR_ALWAYS_INLINE bool inMode(const srcMLState::MODE_TYPE& m) const {
 
         return (topMode & m) == m;
     }
@@ -333,7 +367,7 @@ protected:
      *
      * @returns if in previous mode m.
      */
-    bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
+    ANTLR_ALWAYS_INLINE bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
 
         // the modes of the state below, which do not change while it is below
         return st.size() > 1 ? (st[st.size() - 2].getMode() & m) == m : false;
@@ -347,7 +381,7 @@ protected:
      *
      * @returns if in transparent mode m.
      */
-    bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
+    ANTLR_ALWAYS_INLINE bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
 
         return (topTransparentMode & m) == m;
     }
