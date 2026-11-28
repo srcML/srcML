@@ -82,7 +82,7 @@ antlr::RefToken DocstringPython::nextToken() {
  * @param token the whitespace token (e.g., comment, docstring, etc.) to analyze.
  */
 void DocstringPython::countWSNewlineTokens(antlr::RefToken token) {
-    std::string text = token->getText();
+    std::string_view text = token->getText();
     auto newlines = std::count(text.begin(), text.end(), '\n');
 
     for (auto i = 0; i < newlines; ++i)
