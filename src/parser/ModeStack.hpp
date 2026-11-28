@@ -12,53 +12,7 @@
 
 #include <TokenParser.hpp>
 #include <srcMLState.hpp>
-#include <BlockPool.hpp>
-#include <list>
-
-/**
- * ModeAllocator
- *
- * Allocator for the mode stack that reuses the memory of popped modes, per thread,
- * since modes are pushed and popped constantly.
- */
-template <typename T>
-struct ModeAllocator {
-
-    using value_type = T;
-
-    ModeAllocator() = default;
-
-    template <typename U>
-    ModeAllocator(const ModeAllocator<U>&) {}
-
-    T* allocate(std::size_t n) {
-        if (n == 1) {
-            if (void* p = FreeBlocks::take())
-                return static_cast<T*>(p);
-        }
-        return static_cast<T*>(::operator new(n * sizeof(T)));
-    }
-
-    void deallocate(T* p, std::size_t n) {
-        if (n == 1 && FreeBlocks::give(p))
-            return;
-        ::operator delete(p);
-    }
-
-    template <typename U>
-    bool operator==(const ModeAllocator<U>&) const { return true; }
-
-    template <typename U>
-    bool operator!=(const ModeAllocator<U>&) const { return false; }
-
-private:
-
-    /** maximum number of blocks kept for reuse */
-    static constexpr std::size_t MAX_FREE_BLOCKS = 1024;
-
-    /** memory of popped modes, per thread */
-    typedef BlockPool<T, MAX_FREE_BLOCKS> FreeBlocks;
-};
+#include <vector>
 
 /**
  * ModeStack
@@ -92,7 +46,7 @@ public:
     TokenParser* parser;
 
     /** list of states/modes */
-    typedef std::list<srcMLState, ModeAllocator<srcMLState>> StateList;
+    typedef std::vector<srcMLState> StateList;
 
     /** stack of states/modes */
     StateList st;
@@ -552,7 +506,7 @@ protected:
         StateList alist;
         while((st.back().getMode() & m) != m) {
 
-            alist.push_front(st.back());
+            alist.insert(alist.begin(), st.back());
             st.pop_back();
 
         }
@@ -576,12 +530,12 @@ protected:
         StateList alist;
         while((st.back().getMode() & m).none()) {
 
-            alist.push_front(st.back());
+            alist.insert(alist.begin(), st.back());
             st.pop_back();
 
         }
 
-        alist.push_front(st.back());
+        alist.insert(alist.begin(), st.back());
         st.pop_back();
 
         alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
