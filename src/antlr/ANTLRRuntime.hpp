@@ -105,6 +105,7 @@ private:
 	static void release(Token* p);
 
 public:
+	ANTLR_ALWAYS_INLINE void releaseInline();
 	TokenRefCount(const Token* p = 0) : ptr(const_cast<Token*>(p)) { acquire(); }
 	TokenRefCount(const TokenRefCount<T>& other) : ptr(other.ptr) { acquire(); }
 	TokenRefCount(TokenRefCount<T>&& other) noexcept : ptr(other.ptr) { other.ptr = 0; }
@@ -138,6 +139,168 @@ public:
 
 typedef TokenRefCount<Token> RefToken;
 
+// token text, kept in the token when short, as most token text is
+class TokenString {
+public:
+	TokenString() { buffer[0] = '\0'; }
+	TokenString(std::string_view s) : TokenString() { assign(s.data(), s.size()); }
+	TokenString(const TokenString&) = delete;
+	TokenString& operator=(const TokenString&) = delete;
+	~TokenString() {
+		if (isLong())
+			freeText(longChars(), capacity + 1);
+	}
+
+	TokenString& operator=(std::string_view s) {
+		assign(s.data(), s.size());
+		return *this;
+	}
+	ANTLR_ALWAYS_INLINE void assign(const char* s, size_t n) {
+		resetExternal();
+		if (n > capacity) {
+			assignLong(s, n);
+			return;
+		}
+		char* chars = data();
+		copy(chars, s, n);
+		chars[n] = '\0';
+		count = static_cast<uint32_t>(n);
+	}
+
+	// short text from a source with at least sizeof(buffer) readable bytes, copied in fixed sizes
+	ANTLR_ALWAYS_INLINE void assignPadded(const char* s, size_t n) {
+		resetExternal();
+		if (n > sizeof(buffer) - 1 || isLong()) {
+			assign(s, n);
+			return;
+		}
+		std::memcpy(buffer, s, 16);
+		if (n > 16)
+			std::memcpy(buffer + 16, s + 16, 8);
+		buffer[n] = '\0';
+		count = static_cast<uint32_t>(n);
+	}
+
+	// text kept elsewhere for as long as the token, e.g., in the source of the unit, without a copy
+	ANTLR_ALWAYS_INLINE void assignExternal(const char* s, size_t n) {
+		if (isLong())
+			freeText(longChars(), capacity + 1);
+		std::memcpy(buffer, &s, sizeof(s));
+		count = static_cast<uint32_t>(n);
+		capacity = 0;
+	}
+
+	operator std::string_view() const { return { data(), count }; }
+
+private:
+	// copy short text with a few overlapping word moves instead of a call
+	ANTLR_ALWAYS_INLINE static void copy(char* d, const char* s, size_t n) {
+		if (n >= 8) {
+			if (n > 16) {
+				std::memmove(d, s, n);
+				return;
+			}
+			uint64_t first, last;
+			std::memcpy(&first, s, 8);
+			std::memcpy(&last, s + n - 8, 8);
+			std::memcpy(d, &first, 8);
+			std::memcpy(d + n - 8, &last, 8);
+		} else if (n >= 4) {
+			uint32_t first, last;
+			std::memcpy(&first, s, 4);
+			std::memcpy(&last, s + n - 4, 4);
+			std::memcpy(d, &first, 4);
+			std::memcpy(d + n - 4, &last, 4);
+		} else if (n > 0) {
+			const char c0 = s[0], c1 = s[n / 2], c2 = s[n - 1];
+			d[0] = c0;
+			d[n / 2] = c1;
+			d[n - 1] = c2;
+		}
+	}
+
+	// text longer than the capacity, which may be in the current chars
+	ANTLR_NOINLINE ANTLR_PRESERVE_MOST void assignLong(const char* s, size_t n) {
+		// heap text in sizes of powers of two, which are reused
+		size_t size = MIN_HEAP;
+		while (size < n + 1)
+			size *= 2;
+		if (size > MAX_HEAP)
+			size = n + 1;
+		char* longer = allocateText(size);
+		std::memcpy(longer, s, n);
+		longer[n] = '\0';
+		if (isLong())
+			freeText(longChars(), capacity + 1);
+		std::memcpy(buffer, &longer, sizeof(longer));
+		count = static_cast<uint32_t>(n);
+		capacity = static_cast<uint32_t>(size - 1);
+	}
+
+	// freed heap text of each size kept per thread, since long tokens, e.g., comments, are created constantly
+	static constexpr size_t MIN_HEAP = 32;
+	static constexpr size_t MAX_HEAP = 4096;
+	template <size_t N>
+	struct HeapTag {};
+	template <size_t N>
+	using HeapPool = BlockPool<HeapTag<N>, 256>;
+
+	// the pools of long text, which are rarely used, are kept out of the inlined code of tokens
+	ANTLR_NOINLINE static char* allocateText(size_t size) {
+		void* p = nullptr;
+		switch (size) {
+		case 32: p = HeapPool<32>::take(); break;
+		case 64: p = HeapPool<64>::take(); break;
+		case 128: p = HeapPool<128>::take(); break;
+		case 256: p = HeapPool<256>::take(); break;
+		case 512: p = HeapPool<512>::take(); break;
+		case 1024: p = HeapPool<1024>::take(); break;
+		case 2048: p = HeapPool<2048>::take(); break;
+		case 4096: p = HeapPool<4096>::take(); break;
+		default: break;
+		}
+		if (!p)
+			p = ::operator new(size);
+		return static_cast<char*>(p);
+	}
+	ANTLR_NOINLINE static void freeText(char* p, size_t size) {
+		bool kept = false;
+		switch (size) {
+		case 32: kept = HeapPool<32>::give(p); break;
+		case 64: kept = HeapPool<64>::give(p); break;
+		case 128: kept = HeapPool<128>::give(p); break;
+		case 256: kept = HeapPool<256>::give(p); break;
+		case 512: kept = HeapPool<512>::give(p); break;
+		case 1024: kept = HeapPool<1024>::give(p); break;
+		case 2048: kept = HeapPool<2048>::give(p); break;
+		case 4096: kept = HeapPool<4096>::give(p); break;
+		default: break;
+		}
+		if (!kept)
+			::operator delete(p);
+	}
+
+	// long text is on the heap, with its pointer kept in the buffer, as is the pointer to external text, which has no
+	// capacity
+	bool isLong() const { return capacity > sizeof(buffer) - 1; }
+	ANTLR_ALWAYS_INLINE void resetExternal() {
+		if (capacity == 0)
+			capacity = sizeof(buffer) - 1;
+	}
+	char* longChars() const {
+		char* p;
+		std::memcpy(&p, buffer, sizeof(p));
+		return p;
+	}
+	char* data() { return capacity != sizeof(buffer) - 1 ? longChars() : buffer; }
+	const char* data() const { return capacity != sizeof(buffer) - 1 ? longChars() : buffer; }
+
+	// without a pointer member, so the text fits in the padding of the token
+	uint32_t count = 0;
+	uint32_t capacity = sizeof(buffer) - 1;
+	char buffer[24];
+};
+
 /// the token of srcML, with its category and positions, allocated from a pool of deleted tokens
 class Token {
 public:
@@ -158,25 +321,32 @@ public:
 	int getLine() const { return line; }
 	int getEndLine() const { return endline; }
 	int getEndColumn() const { return endcolumn; }
-	const std::string& getText() const { return text; }
+	std::string_view getText() const { return text; }
 	int getType() const { return type; }
 	void setColumn(int c) { column = c; }
 	void setLine(int l) { line = l; }
 	void setText(std::string_view s) { text = s; }
+	void setText(const unsigned char* chars, size_t n) { text.assign(reinterpret_cast<const char*>(chars), n); }
+	void setQueueText(const unsigned char* chars, size_t n) {
+		text.assignPadded(reinterpret_cast<const char*>(chars), n);
+	}
+	void setSourceText(const unsigned char* chars, size_t n) {
+		text.assignExternal(reinterpret_cast<const char*>(chars), n);
+	}
 	void setType(int t) { type = t; }
 	std::string toString() const {
-		return "[\"" + getText() + "\",<" + std::to_string(type) + ">,line=" + std::to_string(getLine()) +
+		return "[\"" + std::string(getText()) + "\",<" + std::to_string(type) + ">,line=" + std::to_string(getLine()) +
 		       ",column=" + std::to_string(getColumn()) + "]";
 	}
 
 	/** memory of deleted tokens, per thread */
-	typedef BlockPool<Token, 4096> FreeTokens;
+	typedef BlockPool<Token, 65536> FreeTokens;
 
 	// reuse the memory of deleted tokens, since tokens are created and deleted constantly
 	static void* operator new(std::size_t size) {
 		if (void* p = FreeTokens::take())
 			return p;
-		return ::operator new(size);
+		return allocate();
 	}
 	static void operator delete(void* p) {
 		if (!FreeTokens::give(p))
@@ -188,11 +358,14 @@ public:
 	static Token* create(FreeTokens::List& pool, Args&&... args) {
 		void* p = FreeTokens::take(pool);
 		if (!p)
-			p = ::operator new(sizeof(Token));
+			p = allocate();
 		Token* token = ::new (p) Token(std::forward<Args>(args)...);
 		token->pool = &pool;
 		return token;
 	}
+
+	// memory for a token when its pool has none
+	ANTLR_NOINLINE ANTLR_PRESERVE_MOST static void* allocate() { return ::operator new(sizeof(Token)); }
 
 	// delete the token, to its pool when known
 	static void destroy(Token* token) {
@@ -206,16 +379,34 @@ public:
 			::operator delete(token);
 	}
 
+	ANTLR_ALWAYS_INLINE static void destroyInline(Token* token) {
+		FreeTokens::List* p = token->pool;
+		if (!p) {
+			delete token;
+			return;
+		}
+		token->~Token();
+		if (!FreeTokens::give(*p, token))
+			::operator delete(token);
+	}
+
+private:
+public:
+	// a token whose references are not counted, as it is never deleted
+	static constexpr unsigned int IMMORTAL = 0x80000000u;
+	void makeImmortal() { refCount |= IMMORTAL; }
+	void makeMortal() { refCount &= ~IMMORTAL; }
+
 private:
 	// number of references to the token, which is deleted with its last reference
 	template <class T>
 	friend class TokenRefCount;
 	unsigned int refCount = 0;
-	int type = INVALID_TYPE;
+	int16_t type = INVALID_TYPE;
 
 public:
 	/** token category */
-	int category = -1;
+	int8_t category = -1;
 
 	/** start and end positions */
 	int line = 0;
@@ -224,7 +415,7 @@ public:
 	int endcolumn = 0;
 
 	/** token text */
-	std::string text;
+	TokenString text;
 
 private:
 	/** pool of the memory of the token, when created from one */
@@ -238,14 +429,22 @@ private:
 
 template <class T>
 inline void TokenRefCount<T>::acquire() {
-	if (ptr)
+	if (ptr && !(ptr->refCount & Token::IMMORTAL))
 		++ptr->refCount;
 }
 
 template <class T>
 inline void TokenRefCount<T>::release(Token* p) {
-	if (p && --p->refCount == 0)
+	if (p && !(p->refCount & Token::IMMORTAL) && --p->refCount == 0)
 		Token::destroy(p);
+}
+
+template <class T>
+ANTLR_ALWAYS_INLINE void TokenRefCount<T>::releaseInline() {
+	Token* p = ptr;
+	ptr = 0;
+	if (p && !(p->refCount & Token::IMMORTAL) && --p->refCount == 0)
+		Token::destroyInline(p);
 }
 
 inline RefToken nullToken;
@@ -449,7 +648,7 @@ public:
 			return "unexpected end of file";
 		if (token->getType() == Token::NULL_TREE_LOOKAHEAD)
 			return "unexpected end of tree";
-		return "unexpected token: " + token->getText();
+		return "unexpected token: " + std::string(token->getText());
 	}
 };
 

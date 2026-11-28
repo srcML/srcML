@@ -11264,7 +11264,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         {
             setMode(MODE_CLASS_NAME);
 
-            class_namestack.push(LT(1)->getText());
+            class_namestack.push(std::string(LT(1)->getText()));
         }
 
         // suppress ()* warning
@@ -33699,7 +33699,7 @@ pseudo_generic_argument_list[] { CompleteElement element(this); int tempops_coun
             startElement(SGENERIC_ARGUMENT_LIST);
 
             // suppose each "<" was separate; handle a generic argument list as if this were true
-            std::string token_text = LT(1)->getText();
+            std::string_view token_text = LT(1)->getText();
             tempops_count = std::count(token_text.begin(), token_text.end(), '<');
         }
 
@@ -34293,14 +34293,14 @@ cmake_condition_expression[] { ENTRY_DEBUG
         startNewMode(MODE_LOCAL);
         startElement(SSTRING);
 
-        std::string bracket_start = LT(1)->getText();
+        std::string_view bracket_start = LT(1)->getText();
         int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
 
         consume();
 
         while (LA(1) != antlr::Token::EOF_TYPE) {
             if (LA(1) == BRACKET_ARGUMENT_END) {
-                std::string bracket_end = LT(1)->getText();
+                std::string_view bracket_end = LT(1)->getText();
                 if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
                     break;
                 }
@@ -34739,14 +34739,14 @@ cmake_expression[] { ENTRY_DEBUG
         startNewMode(MODE_LOCAL);
         startElement(SSTRING);
 
-        std::string bracket_start = LT(1)->getText();
+        std::string_view bracket_start = LT(1)->getText();
         int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
 
         consume();
 
         while (LA(1) != antlr::Token::EOF_TYPE) {
             if (LA(1) == BRACKET_ARGUMENT_END) {
-                std::string bracket_end = LT(1)->getText();
+                std::string_view bracket_end = LT(1)->getText();
                 if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
                     break;
                 }
@@ -34871,7 +34871,7 @@ cmake_process_one_token_argument_text[] { ENTRY_DEBUG
 init_command_cmake[] { ENTRY_DEBUG 
 
     CMakeOptionsSet& data = CMakeOptionsSet::getInstance();
-    if (data.checkCommand(LT(1)->getText())) {
+    if (data.checkCommand(std::string(LT(1)->getText()))) {
         builtin_command_cmake();
     }
     else {
@@ -34911,7 +34911,7 @@ builtin_command_cmake[] { ENTRY_DEBUG
         if (LA(1) == LPAREN) consume();
 
         // identify which command-structure this is
-        std::string command_type = LT(1)->getText();
+        std::string command_type(LT(1)->getText());
 
         // get the vector of command structure
         std::vector<std::string> values = data.getCommandVector(command_name, command_type);
@@ -34925,7 +34925,7 @@ builtin_command_cmake[] { ENTRY_DEBUG
             if (value_position < values.size())
                 possible_options = split(values[value_position],':');
 
-            std::string current_token = LT(1)->getText();
+            std::string_view current_token = LT(1)->getText();
 
             // check if current token is an option or not
             bool isOption = false;
@@ -34962,7 +34962,7 @@ builtin_command_cmake[] { ENTRY_DEBUG
                 }
                 else {
                     while(LA(1) != antlr::Token::EOF_TYPE) {
-                        std::string next_value = LT(1)->getText();
+                        std::string_view next_value = LT(1)->getText();
 
                         if (next_value == ")")
                             break;
@@ -34997,7 +34997,7 @@ builtin_command_cmake[] { ENTRY_DEBUG
                 }
                 endDownToMode(MODE_OPTION_CMAKE);
                 endMode(MODE_OPTION_CMAKE);
-                std::string next_value = LT(1)->getText();
+                std::string_view next_value = LT(1)->getText();
                 bool done_with_option_set = true;
                 for (auto next_option : possible_options) {
                     if (split(next_option,'|')[0] == next_value) {
