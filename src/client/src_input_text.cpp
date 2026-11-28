@@ -41,7 +41,7 @@ int src_input_text(ParseQueue& queue,
     const srcml_request_t& srcml_request,
     const srcml_input_src& input) {
 
-    std::string_view raw_text(input.resource);
+    const std::string& raw_text = input.resource;
     auto pCurrentChar = raw_text.begin();
 
     // process text, which may have more than one input due to use of ASCII NUL ('\0')
