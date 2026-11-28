@@ -55,7 +55,7 @@ struct Element {
  * Class for output of srcML. Consumes produced tokens.
  * progressively running the srcML parser and consuming tokens i.e. like a pull parser.
  */
-class srcMLOutput {
+class alignas(128) srcMLOutput {
 public:
 
     // constructor

@@ -766,7 +766,7 @@ private:
 	const CircularQueue& operator=(const CircularQueue&);
 };
 
-class InputBuffer {
+class alignas(128) InputBuffer {
 public:
 	InputBuffer() : nMarkers(0), markerOffset(0) {}
 	virtual ~InputBuffer() {}
@@ -835,7 +835,7 @@ private:
 	CharBuffer& operator=(const CharBuffer& other);
 };
 
-class LexerInputState {
+class alignas(128) LexerInputState {
 public:
 	LexerInputState(InputBuffer* inbuf)
 	    : column(1), line(1), tokenStartColumn(1), tokenStartLine(1), guessing(0), filename(""), input(inbuf),
@@ -1023,7 +1023,7 @@ public:
 	bool operator()(const std::string& x, const std::string& y) const;
 };
 
-class CharScanner : public TokenStream {
+class alignas(128) CharScanner : public TokenStream {
 public:
 	CharScanner(InputBuffer& cb, bool case_sensitive)
 	    : saveConsumedInput(true), caseSensitive(case_sensitive), literals(CharScannerLiteralsLess(this)),
@@ -1342,7 +1342,7 @@ inline void CharScanner::failNoViable() {
 
 /* Parser */
 
-class TokenBuffer {
+class alignas(128) TokenBuffer {
 public:
 	TokenBuffer(TokenStream& input_) : input(input_), nMarkers(0), markerOffset(0), numToConsume(0) {}
 	virtual ~TokenBuffer() {}
@@ -1413,7 +1413,7 @@ private:
 	const TokenBuffer& operator=(const TokenBuffer& other);
 };
 
-class ParserInputState {
+class alignas(128) ParserInputState {
 public:
 	ParserInputState(TokenBuffer* in) : guessing(0), filename(), input(in), inputResponsible(true) {}
 	ParserInputState(TokenBuffer& in) : guessing(0), filename(""), input(&in), inputResponsible(false) {}
@@ -1441,7 +1441,7 @@ private:
 
 typedef RefCount<ParserInputState> ParserSharedInputState;
 
-class Parser {
+class alignas(128) Parser {
 protected:
 	Parser(TokenBuffer& input) : inputState(new ParserInputState(input)) {}
 	Parser(TokenBuffer* input) : inputState(new ParserInputState(input)) {}
