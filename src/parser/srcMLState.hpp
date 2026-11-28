@@ -15,7 +15,85 @@
 #include <algorithm>
 
 #include <srcMLException.hpp>
-#include <bitset>
+#include <cstdint>
+
+/**
+ * ModeSet
+ *
+ * Set of mode flags, with constexpr operations so that combinations of
+ * mode constants are computed at compile time.
+ */
+class ModeSet {
+public:
+    /** number of 64-bit words, for up to 192 modes */
+    static constexpr int WORDS = 3;
+
+    constexpr ModeSet() = default;
+
+    /** the empty set, e.g., a default argument of 0 */
+    constexpr ModeSet(int) {}
+
+    /** the set with only the mode at position pos */
+    static constexpr ModeSet bit(int pos) {
+        ModeSet m;
+        m.w[pos / 64] = uint64_t(1) << (pos % 64);
+        return m;
+    }
+
+    constexpr ModeSet& operator|=(const ModeSet& other) {
+        for (int i = 0; i < WORDS; ++i)
+            w[i] |= other.w[i];
+        return *this;
+    }
+
+    constexpr ModeSet& operator&=(const ModeSet& other) {
+        for (int i = 0; i < WORDS; ++i)
+            w[i] &= other.w[i];
+        return *this;
+    }
+
+    friend constexpr ModeSet operator|(ModeSet a, const ModeSet& b) {
+        return a |= b;
+    }
+
+    friend constexpr ModeSet operator&(ModeSet a, const ModeSet& b) {
+        return a &= b;
+    }
+
+    constexpr ModeSet operator~() const {
+        ModeSet m;
+        for (int i = 0; i < WORDS; ++i)
+            m.w[i] = ~w[i];
+        return m;
+    }
+
+    friend constexpr bool operator==(const ModeSet& a, const ModeSet& b) {
+        for (int i = 0; i < WORDS; ++i) {
+            if (a.w[i] != b.w[i])
+                return false;
+        }
+        return true;
+    }
+
+    friend constexpr bool operator!=(const ModeSet& a, const ModeSet& b) {
+        return !(a == b);
+    }
+
+    constexpr bool any() const {
+        for (int i = 0; i < WORDS; ++i) {
+            if (w[i])
+                return true;
+        }
+        return false;
+    }
+
+    constexpr bool none() const {
+        return !any();
+    }
+
+private:
+    uint64_t w[WORDS] = {};
+};
 
 /**
  * srcMLState
@@ -28,7 +106,7 @@ class srcMLState {
 public:
 
     /** type of mode for GNU */
-    typedef std::bitset<256> MODE_TYPE;
+    typedef ModeSet MODE_TYPE;
 
     /**
      * stack of open elements

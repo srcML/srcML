@@ -13,73 +13,73 @@
 /* Set of mode flags */
 
 /** any srcMLstatement (broad definition includes declarations, etc.) */
-const static srcMLState::MODE_TYPE MODE_STATEMENT;
+static constexpr srcMLState::MODE_TYPE MODE_STATEMENT                  = srcMLState::MODE_TYPE::bit(0);
 
 /** list used for comma and right parentheses */
-const static srcMLState::MODE_TYPE MODE_LIST;
+static constexpr srcMLState::MODE_TYPE MODE_LIST                       = srcMLState::MODE_TYPE::bit(1);
 
 /** a particular mode is expected in the next start */
-const static srcMLState::MODE_TYPE MODE_EXPECT;
+static constexpr srcMLState::MODE_TYPE MODE_EXPECT                     = srcMLState::MODE_TYPE::bit(2);
 
 /** srcMLstatement may be nested inside of the current */
-const static srcMLState::MODE_TYPE MODE_DETECT_COLON;
+static constexpr srcMLState::MODE_TYPE MODE_DETECT_COLON               = srcMLState::MODE_TYPE::bit(3);
 
 /** mode for within a templare */
-const static srcMLState::MODE_TYPE MODE_TEMPLATE;
+static constexpr srcMLState::MODE_TYPE MODE_TEMPLATE                   = srcMLState::MODE_TYPE::bit(4);
 
 /** mode for within a template parameter list */
-const static srcMLState::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
+static constexpr srcMLState::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST    = srcMLState::MODE_TYPE::bit(59);
 
 /** an argument to a call */
-const static srcMLState::MODE_TYPE MODE_ARGUMENT;
+static constexpr srcMLState::MODE_TYPE MODE_ARGUMENT                   = srcMLState::MODE_TYPE::bit(5);
 
 /** mode for a namespace */
-const static srcMLState::MODE_TYPE MODE_NAMESPACE;
+static constexpr srcMLState::MODE_TYPE MODE_NAMESPACE                  = srcMLState::MODE_TYPE::bit(6);
 
 /** a parameter for a declaration/definition */
-const static srcMLState::MODE_TYPE MODE_PARAMETER;
+static constexpr srcMLState::MODE_TYPE MODE_PARAMETER                  = srcMLState::MODE_TYPE::bit(7);
 
 /** expressions */
-const static srcMLState::MODE_TYPE MODE_EXPRESSION;
+static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION                 = srcMLState::MODE_TYPE::bit(8);
 
 /** expecting a call (member initialization list) */
-const static srcMLState::MODE_TYPE MODE_CALL;
+static constexpr srcMLState::MODE_TYPE MODE_CALL                       = srcMLState::MODE_TYPE::bit(9);
 
 /**
  * setup for expecting a condition and detection of the end
  * of a condition at a left parentheses of the correct count
  */
- const static srcMLState::MODE_TYPE MODE_CONDITION;
+ static constexpr srcMLState::MODE_TYPE MODE_CONDITION                  = srcMLState::MODE_TYPE::bit(10);
 
 /** marks top of some sequence of operations mostly to stop ending modes */
- const static srcMLState::MODE_TYPE MODE_TOP;
+ static constexpr srcMLState::MODE_TYPE MODE_TOP                        = srcMLState::MODE_TYPE::bit(11);
 
 /** blocks that are not necessarily srcMLstatements */
- const static srcMLState::MODE_TYPE MODE_BLOCK;
+ static constexpr srcMLState::MODE_TYPE MODE_BLOCK                      = srcMLState::MODE_TYPE::bit(12);
 
 /** blocks that are not necessarily srcMLstatements */
- const static srcMLState::MODE_TYPE MODE_BLOCK_CONTENT;
+ static constexpr srcMLState::MODE_TYPE MODE_BLOCK_CONTENT              = srcMLState::MODE_TYPE::bit(74);
 
 /** mode for inititialization typically @code=<init>...</init>@endcode */
- const static srcMLState::MODE_TYPE MODE_INIT;
+ static constexpr srcMLState::MODE_TYPE MODE_INIT                       = srcMLState::MODE_TYPE::bit(13);
 
 /**
  * block tags from being issued.  Should be moved to
  * output handling
  */
- const static srcMLState::MODE_TYPE MODE_FUNCTION_TAIL;
+ static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_TAIL              = srcMLState::MODE_TYPE::bit(14);
 
 /**
  * whether to parse the end of line character
  * used with preprocessor directives
  */
- const static srcMLState::MODE_TYPE MODE_PARSE_EOL;
+ static constexpr srcMLState::MODE_TYPE MODE_PARSE_EOL                  = srcMLState::MODE_TYPE::bit(15);
 
 /** local mode only used within a grammar rule */
- const static srcMLState::MODE_TYPE MODE_LOCAL;
+ static constexpr srcMLState::MODE_TYPE MODE_LOCAL                      = srcMLState::MODE_TYPE::bit(16);
 
 /** Mode for a variable name */
- const static srcMLState::MODE_TYPE MODE_VARIABLE_NAME;
+ static constexpr srcMLState::MODE_TYPE MODE_VARIABLE_NAME              = srcMLState::MODE_TYPE::bit(17);
 
 /**
  * the if srcMLstatement includes some special processing
@@ -87,371 +87,371 @@ const static srcMLState::MODE_TYPE MODE_CALL;
  * and stopping the ending of srcMLstatements at the IF when
  * an ELSE is matched
  */
- const static srcMLState::MODE_TYPE MODE_IF;
+ static constexpr srcMLState::MODE_TYPE MODE_IF                         = srcMLState::MODE_TYPE::bit(18);
 
 /**
  * for special sections inside of mode such as in
  *  classes and switch srcMLstatement blocks
  */
- const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
+ static constexpr srcMLState::MODE_TYPE MODE_TOP_SECTION                = srcMLState::MODE_TYPE::bit(19);
 
 /** in a for heading group i.e. for init/condition/increment & if init/condition */
- const static srcMLState::MODE_TYPE MODE_CONTROL;
+ static constexpr srcMLState::MODE_TYPE MODE_CONTROL                    = srcMLState::MODE_TYPE::bit(20);
 
 /** for initialization (in header) */
- const static srcMLState::MODE_TYPE MODE_CONTROL_INITIALIZATION;
+ static constexpr srcMLState::MODE_TYPE MODE_CONTROL_INITIALIZATION     = srcMLState::MODE_TYPE::bit(21);
 
 /** for condition (in header) */
- const static srcMLState::MODE_TYPE MODE_CONTROL_CONDITION;
+ static constexpr srcMLState::MODE_TYPE MODE_CONTROL_CONDITION          = srcMLState::MODE_TYPE::bit(22);
 
 /** for increment (in header) */
- const static srcMLState::MODE_TYPE MODE_CONTROL_INCREMENT;
+ static constexpr srcMLState::MODE_TYPE MODE_CONTROL_INCREMENT          = srcMLState::MODE_TYPE::bit(23);
 
 /** preprocessor mode */
- const static srcMLState::MODE_TYPE MODE_PREPROC;
+ static constexpr srcMLState::MODE_TYPE MODE_PREPROC                    = srcMLState::MODE_TYPE::bit(24);
 
 /** mode for nesting srcMLstatements */
- const static srcMLState::MODE_TYPE MODE_NEST;
+ static constexpr srcMLState::MODE_TYPE MODE_NEST                       = srcMLState::MODE_TYPE::bit(25);
 
 /** mode fore expression block */
- const static srcMLState::MODE_TYPE MODE_EXPRESSION_BLOCK;
+ static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION_BLOCK           = srcMLState::MODE_TYPE::bit(26);
 
 /** mode marking to end at right parenthesis */
- const static srcMLState::MODE_TYPE MODE_INTERNAL_END_PAREN;
+ static constexpr srcMLState::MODE_TYPE MODE_INTERNAL_END_PAREN         = srcMLState::MODE_TYPE::bit(27);
 
 /** access regions in classes used for matching of */
- const static srcMLState::MODE_TYPE MODE_ACCESS_REGION;
+ static constexpr srcMLState::MODE_TYPE MODE_ACCESS_REGION              = srcMLState::MODE_TYPE::bit(28);
 
 /** mode for a do while srcMLstatement */
- const static srcMLState::MODE_TYPE MODE_DO_STATEMENT;
+ static constexpr srcMLState::MODE_TYPE MODE_DO_STATEMENT               = srcMLState::MODE_TYPE::bit(29);
 
 /** mode to ignore ; */
- const static srcMLState::MODE_TYPE MODE_IGNORE_TERMINATE;
+ static constexpr srcMLState::MODE_TYPE MODE_IGNORE_TERMINATE           = srcMLState::MODE_TYPE::bit(30);
 
 /** mode for extern */
- const static srcMLState::MODE_TYPE MODE_EXTERN;
+ static constexpr srcMLState::MODE_TYPE MODE_EXTERN                     = srcMLState::MODE_TYPE::bit(32);
 
 /** mode to end at right curly */
- const static srcMLState::MODE_TYPE MODE_INTERNAL_END_CURLY;
+ static constexpr srcMLState::MODE_TYPE MODE_INTERNAL_END_CURLY         = srcMLState::MODE_TYPE::bit(34);
 
 /** mode for a class */
- const static srcMLState::MODE_TYPE MODE_CLASS;
+ static constexpr srcMLState::MODE_TYPE MODE_CLASS                      = srcMLState::MODE_TYPE::bit(37);
 
 /** mode to end at block */
- const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK;
+ static constexpr srcMLState::MODE_TYPE MODE_END_AT_BLOCK               = srcMLState::MODE_TYPE::bit(39);
 
 /** mode to only end at right parentesis */
- const static srcMLState::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
+ static constexpr srcMLState::MODE_TYPE MODE_END_ONLY_AT_RPAREN         = srcMLState::MODE_TYPE::bit(40);
 
 /** mode to end at a block and not expect ; after */
- const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
+ static constexpr srcMLState::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE  = srcMLState::MODE_TYPE::bit(41);
 
 /** mode for a function name */
- const static srcMLState::MODE_TYPE MODE_FUNCTION_NAME;
+ static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_NAME              = srcMLState::MODE_TYPE::bit(44);
 
 /** mode for a if then */
- const static srcMLState::MODE_TYPE MODE_THEN;
+ static constexpr srcMLState::MODE_TYPE MODE_THEN                       = srcMLState::MODE_TYPE::bit(55);
 
 /** mode for an else */
- const static srcMLState::MODE_TYPE MODE_ELSE;
+ static constexpr srcMLState::MODE_TYPE MODE_ELSE                       = srcMLState::MODE_TYPE::bit(45);
 
 /** mode for a typdef */
- const static srcMLState::MODE_TYPE MODE_TYPEDEF;
+ static constexpr srcMLState::MODE_TYPE MODE_TYPEDEF                    = srcMLState::MODE_TYPE::bit(46);
 
 /** mode for a declaration of some type */
- const static srcMLState::MODE_TYPE MODE_DECL;
+ static constexpr srcMLState::MODE_TYPE MODE_DECL                       = srcMLState::MODE_TYPE::bit(47);
 
 /** mode to consume the type names */
- const static srcMLState::MODE_TYPE MODE_EAT_TYPE;
+ static constexpr srcMLState::MODE_TYPE MODE_EAT_TYPE                   = srcMLState::MODE_TYPE::bit(48);
 
 /** mode for funciton parameter */
- const static srcMLState::MODE_TYPE MODE_FUNCTION_PARAMETER;
+ static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_PARAMETER         = srcMLState::MODE_TYPE::bit(49);
 
 /** mode for an internal decl */
- const static srcMLState::MODE_TYPE MODE_INNER_DECL;
+ static constexpr srcMLState::MODE_TYPE MODE_INNER_DECL                 = srcMLState::MODE_TYPE::bit(52);
 
 /** mode to mark in an init */
- const static srcMLState::MODE_TYPE MODE_IN_INIT;
+ static constexpr srcMLState::MODE_TYPE MODE_IN_INIT                    = srcMLState::MODE_TYPE::bit(56);
 
 /** mode for a try */
- const static srcMLState::MODE_TYPE MODE_TRY;
+ static constexpr srcMLState::MODE_TYPE MODE_TRY                        = srcMLState::MODE_TYPE::bit(57);
 
 /** mode to end a list at a block */
- const static srcMLState::MODE_TYPE MODE_END_LIST_AT_BLOCK;
+ static constexpr srcMLState::MODE_TYPE MODE_END_LIST_AT_BLOCK          = srcMLState::MODE_TYPE::bit(58);
 
 /** mode to end at ; */
- const static srcMLState::MODE_TYPE MODE_ONLY_END_TERMINATE;
+ static constexpr srcMLState::MODE_TYPE MODE_ONLY_END_TERMINATE         = srcMLState::MODE_TYPE::bit(60);
 
 /** mode for enum */
- const static srcMLState::MODE_TYPE MODE_ENUM;
+ static constexpr srcMLState::MODE_TYPE MODE_ENUM                       = srcMLState::MODE_TYPE::bit(61);
 
 /** mode for anonymous item e.g. anonymous class */
- const static srcMLState::MODE_TYPE MODE_ANONYMOUS;
+ static constexpr srcMLState::MODE_TYPE MODE_ANONYMOUS                  = srcMLState::MODE_TYPE::bit(62);
 
 /** mode to end at a comma */
- const static srcMLState::MODE_TYPE MODE_END_AT_COMMA;
+ static constexpr srcMLState::MODE_TYPE MODE_END_AT_COMMA               = srcMLState::MODE_TYPE::bit(63);
 
 /** mode for in a using */
- const static srcMLState::MODE_TYPE MODE_USING;
+ static constexpr srcMLState::MODE_TYPE MODE_USING                      = srcMLState::MODE_TYPE::bit(31);
 
 /** mode for function trailing return */
- const static srcMLState::MODE_TYPE MODE_TRAILING_RETURN;
+ static constexpr srcMLState::MODE_TYPE MODE_TRAILING_RETURN            = srcMLState::MODE_TYPE::bit(33);
 
 /** mode to issue an empty element at pop */
- const static srcMLState::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
+ static constexpr srcMLState::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP         = srcMLState::MODE_TYPE::bit(35);
 
 /** mode to end at preprocessor endif */
- const static srcMLState::MODE_TYPE MODE_END_AT_ENDIF;
+ static constexpr srcMLState::MODE_TYPE MODE_END_AT_ENDIF               = srcMLState::MODE_TYPE::bit(38);
 
 /** mode for an argument list */
- const static srcMLState::MODE_TYPE MODE_ARGUMENT_LIST;
+ static constexpr srcMLState::MODE_TYPE MODE_ARGUMENT_LIST              = srcMLState::MODE_TYPE::bit(42);
 
 /** mode for an _Generic association list */
-const static srcMLState::MODE_TYPE MODE_ASSOCIATION_LIST;
+static constexpr srcMLState::MODE_TYPE MODE_ASSOCIATION_LIST           = srcMLState::MODE_TYPE::bit(43);
 
 /** mode for an tenary */
-const static srcMLState::MODE_TYPE MODE_TERNARY;
+static constexpr srcMLState::MODE_TYPE MODE_TERNARY                    = srcMLState::MODE_TYPE::bit(50);
 
 /** mode for Objectie-C call */
-const static srcMLState::MODE_TYPE MODE_OBJECTIVE_C_CALL;
+static constexpr srcMLState::MODE_TYPE MODE_OBJECTIVE_C_CALL           = srcMLState::MODE_TYPE::bit(51);
 
 /** mode for switch statement */
-const static srcMLState::MODE_TYPE MODE_SWITCH;
+static constexpr srcMLState::MODE_TYPE MODE_SWITCH                     = srcMLState::MODE_TYPE::bit(53);
 
 /** mode for ternary condition */
-const static srcMLState::MODE_TYPE MODE_TERNARY_CONDITION;
+static constexpr srcMLState::MODE_TYPE MODE_TERNARY_CONDITION          = srcMLState::MODE_TYPE::bit(54);
 
 /** mode for member initialization list */
-const static srcMLState::MODE_TYPE MODE_INITIALIZATION_LIST;
+static constexpr srcMLState::MODE_TYPE MODE_INITIALIZATION_LIST        = srcMLState::MODE_TYPE::bit(36);
 
 /** mode for C++ ranged for */
-const static srcMLState::MODE_TYPE MODE_RANGED_FOR;
+static constexpr srcMLState::MODE_TYPE MODE_RANGED_FOR                 = srcMLState::MODE_TYPE::bit(64);
 
 /** mode for associationt type */
-const static srcMLState::MODE_TYPE MODE_ASSOCIATION_TYPE;
+static constexpr srcMLState::MODE_TYPE MODE_ASSOCIATION_TYPE           = srcMLState::MODE_TYPE::bit(65);
 
 /** mode for friend */
-const static srcMLState::MODE_TYPE MODE_FRIEND;
+static constexpr srcMLState::MODE_TYPE MODE_FRIEND                     = srcMLState::MODE_TYPE::bit(66);
 
 /** mode for class header */
-const static srcMLState::MODE_TYPE MODE_CLASS_NAME;
+static constexpr srcMLState::MODE_TYPE MODE_CLASS_NAME                 = srcMLState::MODE_TYPE::bit(67);
 
 /** mode for function body */
-const static srcMLState::MODE_TYPE MODE_FUNCTION_BODY;
+static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_BODY              = srcMLState::MODE_TYPE::bit(68);
 
 /** mode for function type */
-const static srcMLState::MODE_TYPE MODE_FUNCTION_TYPE;
+static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_TYPE              = srcMLState::MODE_TYPE::bit(69);
 
 /** mode to mark end of for control for cppif duplication */
-const static srcMLState::MODE_TYPE MODE_END_CONTROL;
+static constexpr srcMLState::MODE_TYPE MODE_END_CONTROL                = srcMLState::MODE_TYPE::bit(70);
 
 /** mode for for-like statement */
-const static srcMLState::MODE_TYPE MODE_FOR_LIKE_LIST;
+static constexpr srcMLState::MODE_TYPE MODE_FOR_LIKE_LIST              = srcMLState::MODE_TYPE::bit(71);
 
 /** mode for in function call */
-const static srcMLState::MODE_TYPE MODE_FUNCTION_CALL;
+static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_CALL              = srcMLState::MODE_TYPE::bit(72);
 
 /** mode for in function call */
-const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
+static constexpr srcMLState::MODE_TYPE MODE_IF_STATEMENT               = srcMLState::MODE_TYPE::bit(73);
 
 /** mode to exclude the block content tag */
-const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
+static constexpr srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT           = srcMLState::MODE_TYPE::bit(75);
 
 /** mode for a property */
-const static srcMLState::MODE_TYPE MODE_PROPERTY;
+static constexpr srcMLState::MODE_TYPE MODE_PROPERTY                   = srcMLState::MODE_TYPE::bit(76);
 
 /** mode for c-attribute processing */
-const static srcMLState::MODE_TYPE MODE_INCLUDE_ATTRIBUTE;
+static constexpr srcMLState::MODE_TYPE MODE_INCLUDE_ATTRIBUTE          = srcMLState::MODE_TYPE::bit(77);
 
 // Python modes
-const static srcMLState::MODE_TYPE MODE_EXCLUDE_NO_PAREN_TUPLES_PY;
+static constexpr srcMLState::MODE_TYPE MODE_EXCLUDE_NO_PAREN_TUPLES_PY = srcMLState::MODE_TYPE::bit(78);
 
-const static srcMLState::MODE_TYPE MODE_COMPREHENSION_IF_PY;
+static constexpr srcMLState::MODE_TYPE MODE_COMPREHENSION_IF_PY        = srcMLState::MODE_TYPE::bit(79);
 
-const static srcMLState::MODE_TYPE MODE_TERNARY_CONTENT_PY;
+static constexpr srcMLState::MODE_TYPE MODE_TERNARY_CONTENT_PY         = srcMLState::MODE_TYPE::bit(80);
 
-const static srcMLState::MODE_TYPE MODE_WITH_EXPRESSION_PY;
+static constexpr srcMLState::MODE_TYPE MODE_WITH_EXPRESSION_PY         = srcMLState::MODE_TYPE::bit(81);
 
-const static srcMLState::MODE_TYPE MODE_LAMBDA_CONTENT_PY;
+static constexpr srcMLState::MODE_TYPE MODE_LAMBDA_CONTENT_PY          = srcMLState::MODE_TYPE::bit(82);
 
-const static srcMLState::MODE_TYPE MODE_OPERATOR_PAREN_PY;
+static constexpr srcMLState::MODE_TYPE MODE_OPERATOR_PAREN_PY          = srcMLState::MODE_TYPE::bit(83);
 
-const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_PY;
+static constexpr srcMLState::MODE_TYPE MODE_PARAMETER_LIST_PY          = srcMLState::MODE_TYPE::bit(84);
 
-const static srcMLState::MODE_TYPE MODE_TUPLE_NO_PAREN_PY;
+static constexpr srcMLState::MODE_TYPE MODE_TUPLE_NO_PAREN_PY          = srcMLState::MODE_TYPE::bit(85);
 
-const static srcMLState::MODE_TYPE MODE_COMPREHENSION_PY;
+static constexpr srcMLState::MODE_TYPE MODE_COMPREHENSION_PY           = srcMLState::MODE_TYPE::bit(86);
 
-const static srcMLState::MODE_TYPE MODE_EXCEPT_ALIAS_PY;
+static constexpr srcMLState::MODE_TYPE MODE_EXCEPT_ALIAS_PY            = srcMLState::MODE_TYPE::bit(87);
 
-const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_PY;
+static constexpr srcMLState::MODE_TYPE MODE_FOR_CONTROL_PY             = srcMLState::MODE_TYPE::bit(88);
 
-const static srcMLState::MODE_TYPE MODE_ANNOTATION_PY;
+static constexpr srcMLState::MODE_TYPE MODE_ANNOTATION_PY              = srcMLState::MODE_TYPE::bit(89);
 
-const static srcMLState::MODE_TYPE MODE_DICTIONARY_PY;
+static constexpr srcMLState::MODE_TYPE MODE_DICTIONARY_PY              = srcMLState::MODE_TYPE::bit(90);
 
-const static srcMLState::MODE_TYPE MODE_SUPER_LIST_PY;
+static constexpr srcMLState::MODE_TYPE MODE_SUPER_LIST_PY              = srcMLState::MODE_TYPE::bit(91);
 
-const static srcMLState::MODE_TYPE MODE_WHILE_LOOP_PY;
+static constexpr srcMLState::MODE_TYPE MODE_WHILE_LOOP_PY              = srcMLState::MODE_TYPE::bit(92);
 
-const static srcMLState::MODE_TYPE MODE_DECORATOR_PY;
+static constexpr srcMLState::MODE_TYPE MODE_DECORATOR_PY               = srcMLState::MODE_TYPE::bit(93);
 
-const static srcMLState::MODE_TYPE MODE_SPECIFIER_PY;
+static constexpr srcMLState::MODE_TYPE MODE_SPECIFIER_PY               = srcMLState::MODE_TYPE::bit(94);
 
-const static srcMLState::MODE_TYPE MODE_FOR_LOOP_PY;
+static constexpr srcMLState::MODE_TYPE MODE_FOR_LOOP_PY                = srcMLState::MODE_TYPE::bit(95);
 
-const static srcMLState::MODE_TYPE MODE_RANGE_IN_PY;
+static constexpr srcMLState::MODE_TYPE MODE_RANGE_IN_PY                = srcMLState::MODE_TYPE::bit(96);
 
-const static srcMLState::MODE_TYPE MODE_ASSERT_PY;
+static constexpr srcMLState::MODE_TYPE MODE_ASSERT_PY                  = srcMLState::MODE_TYPE::bit(97);
 
-const static srcMLState::MODE_TYPE MODE_EXCEPT_PY;
+static constexpr srcMLState::MODE_TYPE MODE_EXCEPT_PY                  = srcMLState::MODE_TYPE::bit(98);
 
-const static srcMLState::MODE_TYPE MODE_LAMBDA_PY;
+static constexpr srcMLState::MODE_TYPE MODE_LAMBDA_PY                  = srcMLState::MODE_TYPE::bit(99);
 
-const static srcMLState::MODE_TYPE MODE_ALIAS_PY;
+static constexpr srcMLState::MODE_TYPE MODE_ALIAS_PY                   = srcMLState::MODE_TYPE::bit(100);
 
-const static srcMLState::MODE_TYPE MODE_ARRAY_PY;
+static constexpr srcMLState::MODE_TYPE MODE_ARRAY_PY                   = srcMLState::MODE_TYPE::bit(101);
 
-const static srcMLState::MODE_TYPE MODE_INDEX_PY;
+static constexpr srcMLState::MODE_TYPE MODE_INDEX_PY                   = srcMLState::MODE_TYPE::bit(102);
 
-const static srcMLState::MODE_TYPE MODE_RAISE_PY;
+static constexpr srcMLState::MODE_TYPE MODE_RAISE_PY                   = srcMLState::MODE_TYPE::bit(103);
 
-const static srcMLState::MODE_TYPE MODE_SUPER_PY;
+static constexpr srcMLState::MODE_TYPE MODE_SUPER_PY                   = srcMLState::MODE_TYPE::bit(104);
 
-const static srcMLState::MODE_TYPE MODE_TUPLE_PY;
+static constexpr srcMLState::MODE_TYPE MODE_TUPLE_PY                   = srcMLState::MODE_TYPE::bit(105);
 
-const static srcMLState::MODE_TYPE MODE_YIELD_PY;
+static constexpr srcMLState::MODE_TYPE MODE_YIELD_PY                   = srcMLState::MODE_TYPE::bit(106);
 
-const static srcMLState::MODE_TYPE MODE_CASE_PY;
+static constexpr srcMLState::MODE_TYPE MODE_CASE_PY                    = srcMLState::MODE_TYPE::bit(107);
 
-const static srcMLState::MODE_TYPE MODE_FROM_PY;
+static constexpr srcMLState::MODE_TYPE MODE_FROM_PY                    = srcMLState::MODE_TYPE::bit(108);
 
-const static srcMLState::MODE_TYPE MODE_SET_PY;
+static constexpr srcMLState::MODE_TYPE MODE_SET_PY                     = srcMLState::MODE_TYPE::bit(109);
 
 // JavaScript modes
-const static srcMLState::MODE_TYPE MODE_FUNCTION_EXPRESSION_JS;
+static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_EXPRESSION_JS     = srcMLState::MODE_TYPE::bit(110);
 
-const static srcMLState::MODE_TYPE MODE_GLOBAL_CONTEXT_CALL_JS;
+static constexpr srcMLState::MODE_TYPE MODE_GLOBAL_CONTEXT_CALL_JS     = srcMLState::MODE_TYPE::bit(111);
 
-const static srcMLState::MODE_TYPE MODE_OBJECT_DESTRUCTURE_JS;
+static constexpr srcMLState::MODE_TYPE MODE_OBJECT_DESTRUCTURE_JS      = srcMLState::MODE_TYPE::bit(112);
 
-const static srcMLState::MODE_TYPE MODE_ARRAY_DESTRUCTURE_JS;
+static constexpr srcMLState::MODE_TYPE MODE_ARRAY_DESTRUCTURE_JS       = srcMLState::MODE_TYPE::bit(113);
 
-const static srcMLState::MODE_TYPE MODE_COMPUTED_FUNCTION_JS;
+static constexpr srcMLState::MODE_TYPE MODE_COMPUTED_FUNCTION_JS       = srcMLState::MODE_TYPE::bit(114);
 
-const static srcMLState::MODE_TYPE MODE_CLASS_EXPRESSION_JS;
+static constexpr srcMLState::MODE_TYPE MODE_CLASS_EXPRESSION_JS        = srcMLState::MODE_TYPE::bit(115);
 
-const static srcMLState::MODE_TYPE MODE_DECL_DESTRUCTURE_JS;
+static constexpr srcMLState::MODE_TYPE MODE_DECL_DESTRUCTURE_JS        = srcMLState::MODE_TYPE::bit(116);
 
-const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_JS;
+static constexpr srcMLState::MODE_TYPE MODE_DECL_STATEMENT_JS          = srcMLState::MODE_TYPE::bit(117);
 
-const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
+static constexpr srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS          = srcMLState::MODE_TYPE::bit(118);
 
-const static srcMLState::MODE_TYPE MODE_IGNORE_LABEL_JS;
+static constexpr srcMLState::MODE_TYPE MODE_IGNORE_LABEL_JS            = srcMLState::MODE_TYPE::bit(119);
 
-const static srcMLState::MODE_TYPE MODE_LCURLY_BLOCK_JS;
+static constexpr srcMLState::MODE_TYPE MODE_LCURLY_BLOCK_JS            = srcMLState::MODE_TYPE::bit(120);
 
-const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
+static constexpr srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS             = srcMLState::MODE_TYPE::bit(121);
 
-const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_JS;
+static constexpr srcMLState::MODE_TYPE MODE_FOR_CONTROL_JS             = srcMLState::MODE_TYPE::bit(122);
 
-const static srcMLState::MODE_TYPE MODE_IIFE_INNER_JS;
+static constexpr srcMLState::MODE_TYPE MODE_IIFE_INNER_JS              = srcMLState::MODE_TYPE::bit(123);
 
-const static srcMLState::MODE_TYPE MODE_INNER_NAME_JS;
+static constexpr srcMLState::MODE_TYPE MODE_INNER_NAME_JS              = srcMLState::MODE_TYPE::bit(124);
 
-const static srcMLState::MODE_TYPE MODE_OUTER_NAME_JS;
+static constexpr srcMLState::MODE_TYPE MODE_OUTER_NAME_JS              = srcMLState::MODE_TYPE::bit(125);
 
-const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
+static constexpr srcMLState::MODE_TYPE MODE_SUPER_LIST_JS              = srcMLState::MODE_TYPE::bit(126);
 
-const static srcMLState::MODE_TYPE MODE_DECL_INIT_JS;
+static constexpr srcMLState::MODE_TYPE MODE_DECL_INIT_JS               = srcMLState::MODE_TYPE::bit(127);
 
-const static srcMLState::MODE_TYPE MODE_IIFE_CALL_JS;
+static constexpr srcMLState::MODE_TYPE MODE_IIFE_CALL_JS               = srcMLState::MODE_TYPE::bit(128);
 
-const static srcMLState::MODE_TYPE MODE_NAME_LIST_JS;
+static constexpr srcMLState::MODE_TYPE MODE_NAME_LIST_JS               = srcMLState::MODE_TYPE::bit(129);
 
-const static srcMLState::MODE_TYPE MODE_PROPERTY_JS;
+static constexpr srcMLState::MODE_TYPE MODE_PROPERTY_JS                = srcMLState::MODE_TYPE::bit(130);
 
-const static srcMLState::MODE_TYPE MODE_EXTENDS_JS;
+static constexpr srcMLState::MODE_TYPE MODE_EXTENDS_JS                 = srcMLState::MODE_TYPE::bit(131);
 
-const static srcMLState::MODE_TYPE MODE_EXPORT_JS;
+static constexpr srcMLState::MODE_TYPE MODE_EXPORT_JS                  = srcMLState::MODE_TYPE::bit(132);
 
-const static srcMLState::MODE_TYPE MODE_IMPORT_JS;
+static constexpr srcMLState::MODE_TYPE MODE_IMPORT_JS                  = srcMLState::MODE_TYPE::bit(133);
 
-const static srcMLState::MODE_TYPE MODE_LAMBDA_JS;
+static constexpr srcMLState::MODE_TYPE MODE_LAMBDA_JS                  = srcMLState::MODE_TYPE::bit(134);
 
-const static srcMLState::MODE_TYPE MODE_OBJECT_JS;
+static constexpr srcMLState::MODE_TYPE MODE_OBJECT_JS                  = srcMLState::MODE_TYPE::bit(135);
 
-const static srcMLState::MODE_TYPE MODE_RETURN_JS;
+static constexpr srcMLState::MODE_TYPE MODE_RETURN_JS                  = srcMLState::MODE_TYPE::bit(136);
 
-const static srcMLState::MODE_TYPE MODE_ARRAY_JS;
+static constexpr srcMLState::MODE_TYPE MODE_ARRAY_JS                   = srcMLState::MODE_TYPE::bit(137);
 
-const static srcMLState::MODE_TYPE MODE_DECL_JS;
+static constexpr srcMLState::MODE_TYPE MODE_DECL_JS                    = srcMLState::MODE_TYPE::bit(138);
 
-const static srcMLState::MODE_TYPE MODE_WITH_JS;
+static constexpr srcMLState::MODE_TYPE MODE_WITH_JS                    = srcMLState::MODE_TYPE::bit(139);
 
 // TypeScript modes (appears as a namespace prefix)
-const static srcMLState::MODE_TYPE MODE_TEMPLATE_ARGUMENT_TS;
+static constexpr srcMLState::MODE_TYPE MODE_TEMPLATE_ARGUMENT_TS       = srcMLState::MODE_TYPE::bit(140);
 
-const static srcMLState::MODE_TYPE MODE_EXPRESSION_COLON_TS;
+static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION_COLON_TS        = srcMLState::MODE_TYPE::bit(141);
 
-const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_TS;
+static constexpr srcMLState::MODE_TYPE MODE_DECL_STATEMENT_TS          = srcMLState::MODE_TYPE::bit(142);
 
-const static srcMLState::MODE_TYPE MODE_GENERIC_LAMBDA_TS;
+static constexpr srcMLState::MODE_TYPE MODE_GENERIC_LAMBDA_TS          = srcMLState::MODE_TYPE::bit(143);
 
-const static srcMLState::MODE_TYPE MODE_LAMBDA_AS_TYPE_TS;
+static constexpr srcMLState::MODE_TYPE MODE_LAMBDA_AS_TYPE_TS          = srcMLState::MODE_TYPE::bit(144);
 
-const static srcMLState::MODE_TYPE MODE_FUNCTION_DECL_TS;
+static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_DECL_TS           = srcMLState::MODE_TYPE::bit(145);
 
-const static srcMLState::MODE_TYPE MODE_CONSTRAINT_TS;
+static constexpr srcMLState::MODE_TYPE MODE_CONSTRAINT_TS              = srcMLState::MODE_TYPE::bit(146);
 
-const static srcMLState::MODE_TYPE MODE_TYPE_ARRAY_TS;
+static constexpr srcMLState::MODE_TYPE MODE_TYPE_ARRAY_TS              = srcMLState::MODE_TYPE::bit(147);
 
-const static srcMLState::MODE_TYPE MODE_DECORATOR_TS;
+static constexpr srcMLState::MODE_TYPE MODE_DECORATOR_TS               = srcMLState::MODE_TYPE::bit(148);
 
-const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;
+static constexpr srcMLState::MODE_TYPE MODE_INTERFACE_TS               = srcMLState::MODE_TYPE::bit(149);
 
-const static srcMLState::MODE_TYPE MODE_NAMESPACE_TS;
+static constexpr srcMLState::MODE_TYPE MODE_NAMESPACE_TS               = srcMLState::MODE_TYPE::bit(150);
 
-const static srcMLState::MODE_TYPE MODE_DECLARE_TS;
+static constexpr srcMLState::MODE_TYPE MODE_DECLARE_TS                 = srcMLState::MODE_TYPE::bit(151);
 
-const static srcMLState::MODE_TYPE MODE_MIXINS_TS;
+static constexpr srcMLState::MODE_TYPE MODE_MIXINS_TS                  = srcMLState::MODE_TYPE::bit(152);
 
-const static srcMLState::MODE_TYPE MODE_INDEX_TS;
+static constexpr srcMLState::MODE_TYPE MODE_INDEX_TS                   = srcMLState::MODE_TYPE::bit(153);
 
-const static srcMLState::MODE_TYPE MODE_TYPE_TS;
+static constexpr srcMLState::MODE_TYPE MODE_TYPE_TS                    = srcMLState::MODE_TYPE::bit(154);
 
 
 // CMake modes
-const static srcMLState::MODE_TYPE MODE_PAREN_ENDS_STATEMENT_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_PAREN_ENDS_STATEMENT_CMAKE = srcMLState::MODE_TYPE::bit(155);
 
-const static srcMLState::MODE_TYPE MODE_BLOCK_STATEMENT_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_BLOCK_STATEMENT_CMAKE      = srcMLState::MODE_TYPE::bit(156);
 
-const static srcMLState::MODE_TYPE MODE_WHILE_LOOP_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_WHILE_LOOP_CMAKE           = srcMLState::MODE_TYPE::bit(157);
 
-const static srcMLState::MODE_TYPE MODE_PROPAGATE_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_PROPAGATE_CMAKE            = srcMLState::MODE_TYPE::bit(158);
 
-const static srcMLState::MODE_TYPE MODE_PROPAGATE_STATEMENT_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_PROPAGATE_STATEMENT_CMAKE  = srcMLState::MODE_TYPE::bit(159);
 
-const static srcMLState::MODE_TYPE MODE_ENDTOKEN_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_ENDTOKEN_CMAKE             = srcMLState::MODE_TYPE::bit(160);
 
-const static srcMLState::MODE_TYPE MODE_FUNCTION_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_FUNCTION_CMAKE             = srcMLState::MODE_TYPE::bit(161);
 
-const static srcMLState::MODE_TYPE MODE_COMMAND_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_COMMAND_CMAKE              = srcMLState::MODE_TYPE::bit(162);
 
-const static srcMLState::MODE_TYPE MODE_FOREACH_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_FOREACH_CMAKE              = srcMLState::MODE_TYPE::bit(163);
 
-const static srcMLState::MODE_TYPE MODE_INCLUDE_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_INCLUDE_CMAKE              = srcMLState::MODE_TYPE::bit(164);
 
-const static srcMLState::MODE_TYPE MODE_OPTION_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_OPTION_CMAKE               = srcMLState::MODE_TYPE::bit(165);
 
-const static srcMLState::MODE_TYPE MODE_MACRO_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_MACRO_CMAKE                = srcMLState::MODE_TYPE::bit(166);
 
-const static srcMLState::MODE_TYPE MODE_EXPRESSION_NAME_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION_NAME_CMAKE      = srcMLState::MODE_TYPE::bit(167);
 
-const static srcMLState::MODE_TYPE MODE_EXPRESSION_ENV_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION_ENV_CMAKE       = srcMLState::MODE_TYPE::bit(168);
 
-const static srcMLState::MODE_TYPE MODE_EXPRESSION_CACHE_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION_CACHE_CMAKE     = srcMLState::MODE_TYPE::bit(169);
 
-const static srcMLState::MODE_TYPE MODE_EXPRESSION_GENERATOR_CMAKE;
+static constexpr srcMLState::MODE_TYPE MODE_EXPRESSION_GENERATOR_CMAKE = srcMLState::MODE_TYPE::bit(170);
 
 #endif
