@@ -105,6 +105,7 @@ private:
 	static void release(Token* p);
 
 public:
+	ANTLR_ALWAYS_INLINE void releaseInline();
 	TokenRefCount(const Token* p = 0) : ptr(const_cast<Token*>(p)) { acquire(); }
 	TokenRefCount(const TokenRefCount<T>& other) : ptr(other.ptr) { acquire(); }
 	TokenRefCount(TokenRefCount<T>&& other) noexcept : ptr(other.ptr) { other.ptr = 0; }
@@ -390,6 +391,13 @@ public:
 	}
 
 private:
+public:
+	// a token whose references are not counted, as it is never deleted
+	static constexpr unsigned int IMMORTAL = 0x80000000u;
+	void makeImmortal() { refCount |= IMMORTAL; }
+	void makeMortal() { refCount &= ~IMMORTAL; }
+
+private:
 	// number of references to the token, which is deleted with its last reference
 	template <class T>
 	friend class TokenRefCount;
@@ -421,14 +429,22 @@ private:
 
 template <class T>
 inline void TokenRefCount<T>::acquire() {
-	if (ptr)
+	if (ptr && !(ptr->refCount & Token::IMMORTAL))
 		++ptr->refCount;
 }
 
 template <class T>
 inline void TokenRefCount<T>::release(Token* p) {
-	if (p && --p->refCount == 0)
+	if (p && !(p->refCount & Token::IMMORTAL) && --p->refCount == 0)
 		Token::destroy(p);
+}
+
+template <class T>
+ANTLR_ALWAYS_INLINE void TokenRefCount<T>::releaseInline() {
+	Token* p = ptr;
+	ptr = 0;
+	if (p && !(p->refCount & Token::IMMORTAL) && --p->refCount == 0)
+		Token::destroyInline(p);
 }
 
 inline RefToken nullToken;
