@@ -175,7 +175,7 @@ public:
 		}
 		std::memcpy(buffer, s, 16);
 		if (n > 16)
-			std::memcpy(buffer + 16, s + 16, 4);
+			std::memcpy(buffer + 16, s + 16, 8);
 		buffer[n] = '\0';
 		count = static_cast<uint32_t>(n);
 	}
@@ -297,7 +297,7 @@ private:
 	// without a pointer member, so the text fits in the padding of the token
 	uint32_t count = 0;
 	uint32_t capacity = sizeof(buffer) - 1;
-	char buffer[20];
+	char buffer[24];
 };
 
 /// the token of srcML, with its category and positions, allocated from a pool of deleted tokens
@@ -384,7 +384,7 @@ private:
 
 public:
 	/** token category */
-	int category = -1;
+	int8_t category = -1;
 
 	/** start and end positions */
 	int line = 0;
