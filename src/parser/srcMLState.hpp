@@ -116,8 +116,8 @@ public:
      *
      * Constructor.  Create a new mode with the perscribed mode, transparent mode, and previous mode.
      */
-    srcMLState(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0, const MODE_TYPE& prevmode = 0)
-        : flags(mode), flags_prev(prevmode), flags_all(transmode | mode), elementsStart(0), parencount(0), curlycount(0), typecount(0)
+    srcMLState(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0)
+        : flags(mode), flags_all(transmode | mode), elementsStart(0), parencount(0), curlycount(0), typecount(0)
     {}
 
     // copy constructor
@@ -141,18 +141,6 @@ public:
         return (flags & m) == m;
     }
 
-    /**
-     * inPrevMode
-     * @param m a mode to test if in
-     *
-     * Predicate to test if in the previous modes m.
-     *
-     * @returns if in previous modes m.
-     */
-     bool inPrevMode(const MODE_TYPE& m) const {
-
-        return (flags_prev & m) == m;
-    }
     /**
      * inTransaprentMode
      * @param m a mode to test if in
@@ -322,9 +310,6 @@ public:
 
     /** current mode */
     MODE_TYPE flags;
-
-    /** previous mode */
-    MODE_TYPE flags_prev;
 
     /** transparent (all) modes */
     MODE_TYPE flags_all;

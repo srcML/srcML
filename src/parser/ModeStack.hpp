@@ -110,7 +110,7 @@ protected:
     void startNewMode(const srcMLState::MODE_TYPE& m) {
 
         const unsigned int start = (unsigned int) elements.size();
-        st.push_back(srcMLState(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
+        st.push_back(srcMLState(m, !empty() ? getTransparentMode() : 0));
         st.back().elementsStart = start;
         syncTopModes();
     }
@@ -335,7 +335,8 @@ protected:
      */
     bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
 
-        return st.size() > 1 ? st.back().inPrevMode(m) : false;
+        // the modes of the state below, which do not change while it is below
+        return st.size() > 1 ? (st[st.size() - 2].getMode() & m) == m : false;
     }
 
      /**
