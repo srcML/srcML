@@ -54,7 +54,22 @@ public:
     /** open elements of all the modes, where each mode has the elements from its start */
     std::vector<int> elements;
 
-    void syncTopModes() {}
+    // the modes and transparent modes of the top state, or none without a state, so a mode test is one load from the
+    // parser instead of from the top of the stack, after a check for an empty stack
+    srcMLState::MODE_TYPE topMode;
+    srcMLState::MODE_TYPE topTransparentMode;
+
+    // the modes of the top state, after the stack changes other than as the mode operations here change it
+    void syncTopModes() {
+        if (st.empty()) {
+            topMode = 0;
+            topTransparentMode = 0;
+            return;
+        }
+
+        topMode = st.back().getMode();
+        topTransparentMode = st.back().getTransparentMode();
+    }
 
 protected:
 
@@ -152,19 +167,7 @@ protected:
      */
     srcMLState::MODE_TYPE getMode() const {
 
-        return !st.empty() ? st.back().getMode() : 0;
-    }
-
-    /**
-     * getPrevMode
-     *
-     * Delegate to get the previousmode from stack (top of stack).
-     *
-     * @returns the previous mode.
-     */
-    srcMLState::MODE_TYPE getPrevMode() const {
-
-        return !st.empty() ? st.back().getMode() : 0;
+        return topMode;
     }
 
     /**
@@ -176,7 +179,7 @@ protected:
      */
     srcMLState::MODE_TYPE getTransparentMode() const {
 
-        return !st.empty() ? st.back().getTransparentMode() : 0;
+        return topTransparentMode;
     }
 
     /**
@@ -210,6 +213,8 @@ protected:
             throw Segmentation_Fault();
 
         st.back().setMode(m);
+        topMode |= m;
+        topTransparentMode |= m;
     }
 
     /**
@@ -223,6 +228,8 @@ protected:
             throw Segmentation_Fault();
 
         st.back().clearMode(m);
+        topMode &= ~m;
+        topTransparentMode &= ~m;
     }
 
     /**
@@ -315,7 +322,7 @@ protected:
      */
     bool inMode(const srcMLState::MODE_TYPE& m) const {
 
-        return !st.empty() ? st.back().inMode(m) : false;
+        return (topMode & m) == m;
     }
 
     /**
@@ -341,7 +348,7 @@ protected:
      */
     bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
 
-        return !st.empty() ? st.back().inTransparentMode(m) : false;
+        return (topTransparentMode & m) == m;
     }
 
     /**
